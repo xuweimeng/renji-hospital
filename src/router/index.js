@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 // 导入所有项目路由
 import { LQ_PhysicalExamination } from './LQ_PhysicalExamination';// 乐清六院
+import { RJ_PhysicalExamination } from './RJ_PhysicalExamination';// 仁济体检中心
 Vue.use(Router);
 
 /* Layout */
@@ -72,7 +73,8 @@ export default new Router({
 });
 
 export const asyncRouterMap = [
-  ...LQ_PhysicalExamination,
+  // ...LQ_PhysicalExamination,
+  ...RJ_PhysicalExamination,
   {
     path: '/permission',
     component: Layout,

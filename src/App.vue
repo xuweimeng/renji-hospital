@@ -9,3 +9,21 @@
     name: 'App'
   };
 </script>
+<style lang="scss">
+  @font-face {
+    font-family: 'iconfont';
+    src: url('./static/iconfont/iconfont.eot');
+    src: url('./static/iconfont/iconfont.eot?#iefix') format('embedded-opentype'),
+    url('./static/iconfont/iconfont.woff') format('woff'),
+    url('./static/iconfont/iconfont.ttf') format('truetype'),
+    url('./static/iconfont/iconfont.svg#iconfont') format('svg');
+  }
+  .iconfont {
+    font-family:"iconfont" !important;
+    font-size:16px;
+    font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+  }
+</style>

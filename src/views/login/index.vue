@@ -105,7 +105,7 @@ export default {
           this.loading = true;
           this.$store
             .dispatch('LoginByUsername', this.loginForm)
-            .then(() => {
+            .then((res) => {
               this.loading = false;
               this.$router.push({ path: '/' });
             })
