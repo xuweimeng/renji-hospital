@@ -9,10 +9,12 @@ const getters = {
   name: state => state.user.name,
   introduction: state => state.user.introduction,
   status: state => state.user.status,
+  // 用户权限
   roles: state => state.user.roles,
   setting: state => state.user.setting,
   permission_routers: state => state.permission.routers,
+  // 动态新增的路由
   addRouters: state => state.permission.addRouters,
   errorLogs: state => state.errorLog.logs
-}
-export default getters
+};
+export default getters;

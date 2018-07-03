@@ -56,7 +56,16 @@ export default {
     exportZip: 'Export Zip',
     theme: '换肤',
     clipboardDemo: 'Clipboard',
-    i18n: '国际化'
+    i18n: '国际化',
+    // 自定义路由实例
+    // 乐青六院
+    PhysicalExaminationNotice: '体检通知',
+    InitiateNotification: '发起体检通知计划',
+    NoticePlan: '体检通知计划',
+    NoticeResult: '体检通知结果',
+    Statistics: '体检统计数据',
+    Patient: '患者列表',
+    PatientList: '患者列表'
   },
   navbar: {
     logOut: '退出登录',
@@ -145,4 +154,4 @@ export default {
     closeOthers: '关闭其它',
     closeAll: '关闭所有'
   }
-}
+};

@@ -33,8 +33,11 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
+    // 配置目录
     alias: {
       '@': resolve('src'),
+      'LQPE':resolve('src/views/LQ_PhysicalExamination'),
+      'LQPE_API':resolve('src/api/LQ_PhysicalExamination'),
     }
   },
   module: {

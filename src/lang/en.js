@@ -56,7 +56,16 @@ export default {
     exportZip: 'Export Zip',
     theme: 'Theme',
     clipboardDemo: 'Clipboard',
-    i18n: 'I18n'
+    i18n: 'I18n',
+    // 自定义路由实例
+    // 乐青六院
+    PhysicalExaminationNotice: 'PhysicalExaminationNotice',
+    InitiateNotification: 'InitiateNotification',
+    NoticePlan: 'NoticePlan',
+    NoticeResult: 'NoticeResult',
+    Statistics: 'Statistics',
+    Patient: 'Patient',
+    PatientList: 'PatientList'
   },
   navbar: {
     logOut: 'Log Out',
@@ -145,4 +154,4 @@ export default {
     closeOthers: 'Close Others',
     closeAll: 'Close All'
   }
-}
+};

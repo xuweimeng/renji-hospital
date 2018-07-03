@@ -1,29 +1,22 @@
-import request from '@/utils/request'
+import fetch from '@/utils/request';
 
-export function loginByUsername(username, password) {
-  const data = {
-    username,
-    password
+export const Login = {
+  /**
+     * @function 获取当前医院名称
+     * @param  {type} data {description}
+     * @return {type} {description}
+     */
+  hospatilName(data) {
+    return fetch('post', '/wechat/visit/getYymc', data);
+  },
+  /**
+     * @function 登录接口
+     * @param  {type} username {用户账号}
+     * @param  {type} password {用户密码}
+     * @return {type} {description}
+     */
+  login(data) {
+    return fetch('post', '/client/login/check', data);
   }
-  return request({
-    url: '/login/login',
-    method: 'post',
-    data
-  })
-}
-
-export function logout() {
-  return request({
-    url: '/login/logout',
-    method: 'post'
-  })
-}
-
-export function getUserInfo(token) {
-  return request({
-    url: '/user/info',
-    method: 'get',
-    params: { token }
-  })
-}
+};
 

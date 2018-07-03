@@ -1,10 +1,11 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-
-Vue.use(Router)
+import Vue from 'vue';
+import Router from 'vue-router';
+// 导入所有项目路由
+import { LQ_PhysicalExamination } from './LQ_PhysicalExamination';// 乐清六院
+Vue.use(Router);
 
 /* Layout */
-import Layout from '@/views/layout/Layout'
+import Layout from '@/views/layout/Layout';
 
 /** note: submenu only apppear when children.length>=1
 *   detail see  https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -62,15 +63,16 @@ export const constantRouterMap = [
       meta: { title: 'guide', icon: 'guide', noCache: true }
     }]
   }
-]
+];
 
 export default new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
-})
+});
 
 export const asyncRouterMap = [
+  ...LQ_PhysicalExamination,
   {
     path: '/permission',
     component: Layout,
@@ -300,4 +302,4 @@ export const asyncRouterMap = [
   },
 
   { path: '*', redirect: '/404', hidden: true }
-]
+];
