@@ -32,7 +32,7 @@ service.interceptors.request.use(config => {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
     };
   }
-  console.log(config);
+  // console.log(config);
   return config;
 }, error => {
   // Do something with request error

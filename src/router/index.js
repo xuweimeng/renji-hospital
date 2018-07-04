@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 // 导入所有项目路由
 import { LQ_PhysicalExamination } from './LQ_PhysicalExamination';// 乐清六院
+import { HN_DoctorClient } from './HN_DoctorClient';// 乐清六院
 Vue.use(Router);
 
 /* Layout */
@@ -71,8 +72,8 @@ export default new Router({
   routes: constantRouterMap
 });
 
-export const asyncRouterMap = [
-  ...LQ_PhysicalExamination,
+
+const default_asyncRouterMap = [
   {
     path: '/permission',
     component: Layout,
@@ -302,4 +303,9 @@ export const asyncRouterMap = [
   },
 
   { path: '*', redirect: '/404', hidden: true }
+]
+export const asyncRouterMap = [
+  // ...LQ_PhysicalExamination,
+  ...HN_DoctorClient, // 海宁医生端
+  // ...default_asyncRouterMap
 ];

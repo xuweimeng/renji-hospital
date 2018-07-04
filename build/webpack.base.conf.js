@@ -38,6 +38,8 @@ module.exports = {
       '@': resolve('src'),
       'LQPE':resolve('src/views/LQ_PhysicalExamination'),
       'LQPE_API':resolve('src/api/LQ_PhysicalExamination'),
+      'HNDC':resolve('src/views/HN_DoctorClient'),
+      'HNDC_API':resolve('src/api/HN_DoctorClient'),
     }
   },
   module: {
