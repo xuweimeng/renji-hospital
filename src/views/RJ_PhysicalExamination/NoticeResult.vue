@@ -42,7 +42,7 @@
           </el-col>
         </el-col>
         <el-col :span="24"  class="searchRow2">
-          <el-col :span="6" style="float:left">
+          <el-col :span="8" style="float:left">
           <el-form-item label="通知时间" class="inputLength">
             <el-date-picker
               @change="selectDate"
@@ -56,7 +56,7 @@
             </el-date-picker>
           </el-form-item>
           </el-col>
-          <el-col :span="6" style="float:left">
+          <el-col :span="4" style="float:left">
           <el-form-item label="是否本人" class="seclectLength">
             <el-select v-model="searchParams.isMySelf" placeholder="请选择" popper-class="mdRtSelect">
               <el-option label="全部" value=""></el-option>
@@ -100,7 +100,7 @@
     <!--活动通知 -->
     <el-row class="mdRt">
       <el-col :span="24">
-        <el-table :data="tableData" border style="margin-left:10px;" ref="patientlist" class="mdRtTable" v-loading="loading1">
+        <el-table :data="tableData" border style="margin-bottom: 10px" ref="patientlist" class="mdRtTable" v-loading="loading1">
           <el-table-column prop="brxm" label="姓名" align="center">
           </el-table-column>
           <el-table-column prop="mobile" label="联系电话" align="center">
@@ -216,11 +216,11 @@
                   </el-tag>
                 </div>
                 <el-row v-if="!dataTail.isComeDge&&!dataTail.isMySelfDge">
-                 <!--// <el-col :span="12" style="height: 250px;line-height:286px;text-align:right;"><img src="../../assets/images/animal.png" style="margin-right:20px;" alt=""></el-col>-->
+                  <el-col :span="12" style="height: 250px;line-height:286px;text-align:right;"><img src="../../assets/images/animal.png" style="margin-right:20px;" alt=""></el-col>
                   <el-col :span="12" style="height: 250px;line-height:250px;text-align:left;"><span>这个病人没有随访指标哦...</span></el-col>
                 </el-row>
               </el-row>
-              <el-row >
+              <el-row v-if="dataTail.isComeDge||dataTail.isMySelfDge">
                 <div style="text-align: left;margin-bottom: 10px;" >审核意见： <span >{{patientInfo.vetRemark}}</span></div>
                 <div style="text-align: left;" v-if="patientInfo.isArtificialCall==1">人工外呼：<span style="">{{patientInfo.callRemark}}</span></div>
               </el-row>
@@ -298,67 +298,67 @@
   export default {
     data() {
       return {
-        y:1,
-        urlAddress:"",
-        dataTail:{},
-        patientInfo:{},
-        isCare: false, //点击记录后，查看病人是否被关注
-        dialogWay:false,
+        y: 1,
+        urlAddress: '',
+        dataTail: {},
+        patientInfo: {},
+        isCare: false, // 点击记录后，查看病人是否被关注
+        dialogWay: false,
         diseaseList: [], /* 疾病列表 */
-        modelData:[],
-        loading1:true,
+        modelData: [],
+        loading1: true,
         resultDg: false, // 详情弹窗
-        createTime: "" /* 创建时间 */,
+        createTime: '',  // 创建时间
         currentPage: 1, // 当前页
         totalPage: 2000, // 总页数
-        endBirthday:'',
-        gztag:"",
+        endBirthday: '',
+        gztag: '',
         /* 搜索条件 */
         searchParams: {
-          backStatus:"",
-          adminId:sessionStorage.getItem("userID"),
-          sfzh:"",
-          pager: 1, //当前页码
-          limit: 10, //每页条数
-          brxm: "", //患者姓名（可选）
-          dateBeginBegin: null, //预约开始时间（可选）
-          dateBeginEnd: null, //预约结束时间（可选）
-          activeType: 5, //0，随访；1，通知，2，临时随访；3，是出院随访;4入院通知；5体检
-          mobile: null, //联系方式
-          isMySelf: "", //是否本人（1：是，0：否）
-          isCome: "", //是否过来入院（0：不来，1：来，2：改约）
-          icd:''                 //体检套餐名称id
+          backStatus: '',
+          adminId: sessionStorage.getItem("userId"),
+          sfzh: '',
+          pager: 1, // 当前页码
+          limit: 10, // 每页条数
+          brxm: '', // 患者姓名（可选）
+          dateBeginBegin: null, // 预约开始时间（可选）
+          dateBeginEnd: null, // 预约结束时间（可选）
+          activeType: 5, // 0，随访；1，通知，2，临时随访；3，是出院随访;4入院通知；5体检
+          mobile: null, // 联系方式
+          isMySelf: '', // 是否本人（1：是，0：否）
+          isCome: '', // 是否过来入院（0：不来，1：来，2：改约）
+          icd: ''                 // 体检套餐名称id
         },
-        input10: "",
-        activeName: "first", // tab
+        input10: '',
+        activeName: 'first', // tab
         tableData: [],
         dataLoading: false, // 表格数据请求等待;
         checkoptions: [
           {
-            value: "",
-            label: "请选择"
+            value: '',
+            label: '请选择'
           },
           {
-            //审核不通过options
-            value: "1",
-            label: "患者已死亡"
+            // 审核不通过options
+            value: '1',
+            label: '患者已死亡'
           },
           {
-            value: "2",
-            label: "患者不接受随访"
+            value: '2',
+            label: '患者不接受随访'
           },
           {
-            value: "3",
-            label: "随访方案重复"
+            value: '3',
+            label: '随访方案重复'
           },
           {
-            value: "4",
-            label: "方案不匹配"
+            value: '4',
+            label: '方案不匹配'
           }
         ],
-        selectCheck: "", //选中的审核不通过
-        checkId: [], //随访通过的id(多选时),
-        noCheck: false //审核不通过弹框
+        selectCheck: '', // 选中的审核不通过
+        checkId: [], // 随访通过的id(多选时),
+        noCheck: false // 审核不通过弹框
       };
     },
 
@@ -436,7 +436,7 @@
               NoticeResult
                 .updateGz({
                   diagnoseType: 3,
-                  adminId: sessionStorage.getItem("userID"),
+                  adminId: sessionStorage.getItem("userId"),
                   patientId: this.patientId, //患者的id （必填）
                   operateType: 0, //(操作类型 1:关注 0：取消关注) （必填）
                   operateTag: "" //关注的标签
@@ -472,7 +472,7 @@
                 NoticeResult
                   .updateGz({
                     diagnoseType: 3,
-                    adminId: sessionStorage.getItem("userID"),
+                    adminId: sessionStorage.getItem("userId"),
                     patientId: this.patientId, //患者的id （必填）
                     operateType: 1, //(操作类型 1:关注 0：取消关注) （必填）
                     operateTag: value //关注的标签
@@ -513,7 +513,7 @@
         NoticeResult.getPatientRecord({
           id:scope.row.id,
 //         id:"03a5832e-f835-11e7-b52b-6cae8b369de2",
-          adminId: sessionStorage.getItem("userID"),
+          adminId: sessionStorage.getItem("userId"),
         }).then(res => {
           if(res.code==0){
             this.dialogWay = true;
@@ -689,380 +689,10 @@
           this.$refs.multipleTable.clearSelection();
         }
       },
-
     }
   };
 </script>
 <style lang="scss">
-
   @import "../../styles/common";
-  /*@import '../../assets/scss/mixin';*/
-  /*@import '../../assets/scss/reset';*/
-  /*@import '../../common/style/base';*/
-
- /** .followplan {
-    .mdNoticeRtRow {
-      height: 104px;
-      margin-bottom: 10px;
-
-      .el-form {
-        height: 104px;
-        padding-left: 25px;
-        .searchRow1, .searchRow2{
-          .el-form-item:nth-of-type(1),.el-form-item:nth-of-type(2), .el-form-item:nth-of-type(3), .el-form-item:nth-of-type(4){
-            margin-bottom: 0;
-            margin-left: 20px;
-            float: left;
-            height: 26px;
-            .el-form-item__label {
-              height: 26px;
-              line-height: 52px;
-              color: #333;
-              font-size: 13px;
-              padding-right: 5px;
-            }
-            .el-form-item__content{
-              height: 26px;
-              line-height: 52px;
-              .el-input {
-                width: 134px;
-                height: 26px;
-                .el-input__inner {
-                  border-radius: 12px;
-                  height: 26px;
-                  padding-left: 10px;
-                }
-              }
-            }
-          }
-        }
-        .searchRow1 .el-form-item:nth-of-type(1) .el-form-item__content .el-input {
-          width: 130px;
-        }
-        .searchRow1 .el-form-item:nth-of-type(2) .el-form-item__content .el-input {
-          width: 150px;
-        }
-        .searchRow1 .el-form-item:nth-of-type(3) .el-form-item__content .el-input {
-          width: 180px;
-        }
-        .searchRow1 .el-form-item:nth-of-type(4) .el-form-item__content .el-input {
-          width: 150px;
-        }
-        .searchRow2 .el-form-item:nth-of-type(1) .el-form-item__content .el-date-editor {
-          width: 300px;
-          height: 26px;
-          .el-input__icon {
-            line-height: 0;
-          }
-          .el-range-separator {
-            margin: -12px 0 0 -5px;
-            color: #b8b8b8;
-          }
-        }
-        //搜索
-        .searchRow2 .el-form-item:nth-of-type(5) {
-          margin-bottom: 0;
-          float: left;
-          height: 26px;
-          .el-form-item__label {
-            height: 26px;
-            line-height: 52px;
-            color: #333;
-            font-size: 13px;
-            padding-right: 10px;
-          }
-          .el-form-item__content{
-            height: 26px;
-            line-height: 52px;
-            .el-button {
-              height: 26px;
-              line-height: 0;
-              margin-top: 13px;
-              background: #fff9f7;
-              border-color: #fdd3c4;
-              color: #ff6e40;
-              font-size: 14px;
-            }
-          }
-        }
-      }
-    }
-
-    .mdRt {
-      .mdRtTable {
-        margin-left: 0!important;
-        /*width: 1130px!important;*/
-      /**}
-    }
-  }
-  .followplan .el-col-offset-10{
-    float: right;
-    .el-pagination{
-      float: right;
-      margin-right: 40px;
-      margin-top: 20px;
-    }
-  }
-  //操作按钮
-  .operationBtn {
-    padding:0;
-    margin:0;
-    height:22px;
-    width:52px;
-    font-size:13px;
-  }
-  // 日起选择的高度
-  .mdRtDate {
-    top: 174px!important;
-  }
-  // select下拉框
-  .mdRtSelect {
-    top: 173px !important;
-  }
-
-  .followplan .mdNoticeRtRow,.followplan .mdNoticeRtRow .el-form{
-    height: auto;
-    overflow: hidden;
-  }
-  .followplan .mdNoticeRtRow .el-form .searchRow1 .el-form-item:nth-of-type(1), .followplan .mdNoticeRtRow .el-form .searchRow1 .el-form-item:nth-of-type(2), .followplan .mdNoticeRtRow .el-form .searchRow1 .el-form-item:nth-of-type(3), .followplan .mdNoticeRtRow .el-form .searchRow1 .el-form-item:nth-of-type(4), .followplan .mdNoticeRtRow .el-form .searchRow2 .el-form-item:nth-of-type(1), .followplan .mdNoticeRtRow .el-form .searchRow2 .el-form-item:nth-of-type(2), .followplan .mdNoticeRtRow .el-form .searchRow2 .el-form-item:nth-of-type(3), .followplan .mdNoticeRtRow .el-form .searchRow2 .el-form-item:nth-of-type(4){
-    height: 44px;
-  }
-  .followplan .mdNoticeRtRow .el-form .searchRow1 .el-form-item:nth-of-type(1) .el-form-item__content .el-input, .followplan .mdNoticeRtRow .el-form .searchRow1 .el-form-item:nth-of-type(2) .el-form-item__content .el-input, .followplan .mdNoticeRtRow .el-form .searchRow1 .el-form-item:nth-of-type(3) .el-form-item__content .el-input, .followplan .mdNoticeRtRow .el-form .searchRow1 .el-form-item:nth-of-type(4) .el-form-item__content .el-input, .followplan .mdNoticeRtRow .el-form .searchRow2 .el-form-item:nth-of-type(1) .el-form-item__content .el-input, .followplan .mdNoticeRtRow .el-form .searchRow2 .el-form-item:nth-of-type(2) .el-form-item__content .el-input, .followplan .mdNoticeRtRow .el-form .searchRow2 .el-form-item:nth-of-type(3) .el-form-item__content .el-input, .followplan .mdNoticeRtRow .el-form .searchRow2 .el-form-item:nth-of-type(4) .el-form-item__content .el-input{
-    height: auto;
-  }
-
-
-  .sfDialog{
-    .el-dialog__header {
-      text-align: left;
-      border-bottom: 1px solid #ececec;
-      .el-dialog__title {
-        font-size: 14px;
-        color: #666;
-      }
-    }
-    .el-dialog__body {
-      padding: 20px 20px 0;
-      .content{
-        // 姓名
-        .personInfo {
-          line-height: 27px;
-          height: 27px;
-          margin-bottom: 8px;
-          .elCol1 {
-            line-height: 27px;
-            height: 27px;
-            text-align: left;
-            .personName {
-              font-size: 19px;
-            }
-            .personSex {
-              font-size: 12px;
-              margin-left: 12px;
-            }
-            .personXg {
-              font-size: 12px;
-              color: #c0c0c0;
-              margin-left: 12px;
-            }
-          }
-          .elCol2 {
-            line-height: 27px;
-            height: 27px;
-            text-align: right;
-            .el-button {
-              padding: 5px 7px;
-              color: #777;
-              background: #fdfdfd;
-              border: 1px solid #ffe6de;
-            }
-          }
-        }
-        //手机号，诊断名称
-        .personResult {
-          .elCol3 {
-            font-size: 13px;
-            text-align: left;
-            .elCol3Span1 {
-              color: #777;
-            }
-            .elCol3Span2 {
-              color: #333;
-            }
-          }
-          .elCol4 {
-            text-align: right;
-          }
-        }
-        //处理意见
-        .resolveBtn {
-          margin-top: 18px;
-          .el-col {
-            .is-round {
-              padding: 7px 31px;
-              color: #838383;
-            }
-          }
-        }
-        //随访结果
-        .resultNumber {
-          height: 43px;
-          line-height: 43px;
-          margin-bottom: 5px;
-          .elCol5 {
-            text-align:left;
-            color:#000;
-            font-size: 13px;
-          }
-          .elCol6 {
-            margin-top: 21px;
-            height: 0;
-            border-bottom: 1px dotted #ebebeb;
-          }
-          .elCol7 {
-            .el-select {
-              .el-input {
-                .el-input__inner {
-                  border: 0;
-                  font-size: 12px;
-                  padding-right: 13px;
-                }
-                .el-input__suffix {
-                  .el-input__suffix-inner {
-                    .el-input__icon {
-                      width: 14px;
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        .targetResult {
-          min-height: 100px;
-          max-height: 250px;
-          overflow-y: auto;
-          //指标详情
-          .targetDetails {
-            .el-col {
-              height: 20px;
-              line-height: 20px;
-              text-align: left;
-              margin-bottom: 10px;
-              span {
-                font-size: 13px;
-              }
-              .el-tag {
-                height: 20px;
-                line-height: 20px;
-              }
-            }
-          }
-          .targetEcharts {
-            background: #f9f9f9;
-            margin-top: 5px;
-            .el-col .el-tabs .el-tabs__header .el-tabs__nav-wrap .el-tabs__nav-scroll {
-              padding-left: 20px;
-              .el-tabs__nav {
-                .el-tabs__item {
-                  color: #999;
-                }
-
-              }
-            }
-          }
-        }
-        //语音详情
-        .resultVoice {
-          .elCol18 {
-            .el-collapse {
-              .el-collapse-item {
-                .el-collapse-item__header {
-
-                }
-                .el-collapse-item__content .voiceRow  {
-                  .aiyuyin{
-                    .ai {
-                      float: left;
-                      width: 40px;
-                      height: 40px;
-                      border-radius: 40px;
-                      background: #ffb782;
-                      color: #fff;
-                      line-height: 40px;
-                    }
-                    .aiWords {
-                      margin-top: 10px;
-                      padding: 2px 0;
-                      float: left;
-                      width: 205px;
-                      text-align: left;
-                      color: #666;
-                      line-height: 20px;
-                      min-height: 40px;
-                      background: #f4f4f4;
-                      border-radius: 5px;
-                      padding-left: 10px;
-                      margin-left: 10px;
-                      background: #f4f4f4 ;
-                      position: relative;
-                      span{
-                        font-size: 12px;
-                      }
-                      .arrows {
-                        width: 5px;
-                        height: 8px;
-                        position: absolute;
-                        left: -4px;
-                        top: 10px;
-                       // background: url(../../assets/images/aizc.png) left center no-repeat;
-                      }
-                    }
-                  }
-                  .hzyuyin {
-                    .hzhead {
-                      float: right;
-                      width: 40px;
-                      height: 40px;
-                      border-radius: 40px;
-                      background: #8bc4ff;
-                      color: #fff;
-                      line-height: 40px;
-                    }
-                    .hzWords {
-                      margin-top: 10px;
-                      float: right;
-                      width: 270px;
-                      min-height: 40px;
-                      background: #dfefff;
-                      border-radius: 5px;
-                      padding-right: 10px;
-                      margin-right: 10px;
-                      position: relative;
-                      audio {
-                        width: 90%;
-                      }
-                      .arrows1 {
-                        width: 5px;
-                        height: 8px;
-                        position: absolute;
-                        right: -4px;
-                        top: 10px;
-                        /*?background: url(../../assets/images/hzzc.png) left center no-repeat;*/
-                      /**}
-                    }
-                  }
-                  .hzms {
-                    text-align: right;
-                    color: #8bc4ff;
-                    padding-right: 55px;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }**/
+  @import "../../styles/base";
 </style>

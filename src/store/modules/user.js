@@ -60,7 +60,7 @@ const user = {
             // 配置用户id作为token值
             commit('SET_TOKEN', data.id);
             setToken(data.id);
-            response.data.roles = [response.data.departmentName];
+            // response.data.roles = [response.data.departmentName];
             localStorage.setItem('userInfo', JSON.stringify(response));
             sessionStorage.setItem('userId', response.data.id); // 用户id
             sessionStorage.setItem('laterhours', response.laterhours);// 距离上次登录
@@ -77,33 +77,31 @@ const user = {
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         Login.hospatilName().then(res => {
+          const getInfo = () => {
+            setTimeout(() => {
+              const response = JSON.parse(localStorage.getItem('userInfo'));
+              const data = response.data;
+              if (data.username) {
+                let roles = [res.data];
+                // 判断是否属于仁济医院.仁济医院分为两个客户端
+                if (res.data.indexOf('仁济') > -1) {
+                  roles = [res.data + data.departmentName];
+                }
+                commit('SET_ROLES', roles);
+                commit('SET_NAME', data.username);
+                commit('SET_AVATAR', response.aipictureurl);
+                commit('SET_INTRODUCTION', data.realname);
+                resolve(response);
+              } else {
+                getInfo();
+              }
+            }, 2000);
+          };
+          getInfo();
           console.log(res);
         }).catch(error => {
-          console.log(error);
+          reject(error);
         });
-        const getInfo = () => {
-          setTimeout(() => {
-            const response = JSON.parse(localStorage.getItem('userInfo'));
-            const data = response.data;
-            if (data.username) {
-              if (data.roles && data.roles.length > 0) {
-              // 验证返回的roles是否是一个非空数组
-                commit('SET_ROLES', data.roles);
-              } else {
-                reject('getInfo: roles must be a non-null array !');
-              }
-              commit('SET_NAME', data.username);
-              commit('SET_AVATAR', response.aipictureurl);
-              commit('SET_INTRODUCTION', data.realname);
-              resolve(
-                response
-              );
-            } else {
-              getInfo();
-            }
-          }, 2000);
-        };
-        getInfo();
       });
     },
 

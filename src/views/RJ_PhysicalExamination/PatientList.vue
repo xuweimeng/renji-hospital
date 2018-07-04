@@ -173,7 +173,7 @@
               </el-col>
             </el-row>
             <el-row style="padding: 0 36px;text-align:left;">
-              <el-col :span="24" style="border-bottom: 1px solid #d8f1ff;color:#333;text-indent:10px;font-size: 14px;margin-top:10px;">
+              <el-col :span="24" style="margin-left: -14px;border-bottom: 1px solid #d8f1ff;color:#333;text-indent:10px;font-size: 14px;margin-top:10px;">
                 体检结果
               </el-col>
             </el-row>
@@ -207,7 +207,7 @@
 
           <!-- 无信息的时候 -->
           <el-row v-if="isNull" style="height: 250px;">
-            <!--<el-col :span="12" style="height: 250px;line-height:386px;text-align:right;"><img src="../../assets/images/animal.png" style="margin-right:20px;" alt=""></el-col>-->
+            <el-col :span="12" style="height: 250px;line-height:386px;text-align:right;"><img src="../../assets/images/animal.png" style="margin-right:20px;" alt=""></el-col>
             <el-col :span="12" style="height: 250px;line-height:350px;text-align:left;"><span>这个病人没有就诊信息哦...</span></el-col>
           </el-row>
         </el-row>
@@ -329,7 +329,6 @@
 </template>
 
 <script>
-
   import { PatientList } from '../../api/RJ_PhysicalExamination/PatientList';     // 引入 api
 
   /**
@@ -695,9 +694,8 @@
         this.patientInfo = ''
         PatientList.clientInformation({
           'patientId': id , //
-          adminId:sessionStorage.getItem("userId")
+          adminId: sessionStorage.getItem("userId")
         }).then((res)=>{
-          console.log(res)
           if(res.code==0){
             this.dialogVisible = true;
             console.log(res.data)
@@ -754,21 +752,19 @@
        * @param {String} limit 每页显示条数
        */
       list() {
-//        this.loading1 = false
         PatientList.listDate(
           this.followwaySearch
         ).then((res)=>{
-//          this.loading1 = false
-          if(res.code == 0) {
+          if (res.code == 0) {
             this.tableAll = res.data
-            if(this.followwaySearch.pager ==1){
-              this.totalPage1 = res.count
+            if (this.followwaySearch.pager ==1) {
+              this.totalPage1 = res.count;
             }
             this.loading1 = false;
-            return false
+            return false;
           }
         }).catch((error)=>{
-          console.log(error)
+          console.log(error);
         })
       },
       /**
@@ -835,6 +831,7 @@
             this.isNull = true;
           }
         }).catch((error)=>{
+          this.isNull = true;
           console.log(error)
         })
       },
@@ -851,10 +848,10 @@
               style:'text-align:center'
             }, [
               h('img', {
-                //attrs: {src: require('../../../static/images/animal.png')},
-                style:'width: 60px;height:52px;margin:0 auto;'
-              },null),
-              h('p', null, '确定取消关心吗?'),
+                attrs: { src: require('../../static/images/animal.png') },
+                style: 'width: 60px;height:52px;margin:0 auto;'
+              }, null),
+              h('p', null, '确定取消关心吗?' ),
             ]),
             showCancelButton: true,
             confirmButtonText: '确定',
@@ -902,13 +899,12 @@
             }else if(value.toString().length<6){
               PatientList.updateGz({
                 diagnoseType:3,
-                'adminId': sessionStorage.getItem('userId'), //医生ID
-                'patientId': this.patientId,//患者的id （必填）
-                'operateType': 1,//(操作类型 1:关注 0：取消关注) （必填）
-                'operateTag': value //关注的标签
+                'adminId': sessionStorage.getItem('userId'), // 医生ID
+                'patientId': this.patientId, // 患者的id （必填）
+                'operateType': 1, // (操作类型 1:关注 0：取消关注) （必填）
+                'operateTag': value // 关注的标签
               }).then((res)=>{
                 if(res.code == 0) {
-//                  this.isCare = true
                   this.$message({
                     type: 'success',
                     message: '关注成功!'
@@ -944,347 +940,4 @@
       width: 104px;
     }
   }
-  /**@import '../../assets/scss/mixin';
-  @import '../../assets/scss/reset';
-  @import '../../common/style/base';
-  .ctList {
-    background: $background;
-    .ctListRow {
-      height: 52px;
-      margin-bottom: 10px;
-      background: $white;
-      .el-form {
-        height: 52px;
-        padding-left: 25px;
-        //姓名，随访方案，疾病诊断
-        .el-form-item:nth-of-type(1),.el-form-item:nth-of-type(2), .el-form-item:nth-of-type(3){
-          margin-bottom: 0;
-          float: left;
-          height: 26px;
-          .el-form-item__label {
-            height: 26px;
-            line-height: 52px;
-            color: #333;
-            font-size: 13px;
-            padding-right: 5px;
-          }
-          .el-form-item__content{
-            height: 26px;
-            line-height: 52px;
-            .el-input {
-              width: 134px;
-              height: 26px;
-              .el-input__inner {
-                border-radius: 12px;
-                height: 26px;
-                padding-left: 5px;
-              }
-            }
-          }
-        }
-        .el-form-item:nth-of-type(1) .el-form-item__content .el-input {
-          width: 95px;
-        }
-        .el-form-item:nth-of-type(2) .el-form-item__content .el-input {
-          width: 124px;
-        }
-        .el-form-item:nth-of-type(3) .el-form-item__content .el-input {
-          width: 180px;
-        }
-        //性别
-        .el-form-item:nth-of-type(4){
-          margin-bottom: 0;
-          float: left;
-          height: 26px;
-          .el-form-item__label {
-            height: 26px;
-            line-height: 52px;
-            color: #333;
-            font-size: 13px;
-            padding-right: 10px;
-          }
-          .el-form-item__content{
-            height: 26px;
-            line-height: 52px;
-            .el-input {
-              width: 90px;
-              height: 26px;
-              .el-input__inner {
-                border-radius: 12px;
-                height: 26px;
-                text-align: center;
-              }
-            }
-          }
-        }
-        //出生年月
-        .el-form-item:nth-of-type(5) {
-          margin-bottom: 0;
-          float: left;
-          height: 26px;
-          .el-form-item__label {
-            height: 26px;
-            line-height: 52px;
-            color: #333;
-            font-size: 13px;
-            padding-right: 10px;
-          }
-          .el-form-item__content{
-            // padding-top: 7px;.
-            height: 26px;
-            line-height: 52px;
-            .el-date-editor {
-              width: 236px;
-              height: 26px;
-              .el-input__icon {
-                line-height: 0;
-              }
-              .el-range-separator {
-                margin: -12px 0 0 -5px;
-                color: #b8b8b8;
-              }
-            }
-          }
-        }
-        //搜索
-        .el-form-item:nth-of-type(6) {
-          margin-bottom: 0;
-          float: left;
-          height: 26px;
-          .el-form-item__label {
-            height: 26px;
-            line-height: 52px;
-            color: #333;
-            font-size: 13px;
-            padding-right: 10px;
-          }
-          .el-form-item__content{
-            height: 26px;
-            line-height: 52px;
-            .el-button {
-              height: 26px;
-              line-height: 0;
-              margin-top: 13px;
-              background: #fff9f7;
-              border-color: #fdd3c4;
-              color: #ff6e40;
-              font-size: 14px;
-            }
-          }
-        }
-      }
-    }
-  }
-  .hztz {
-    width: 100%;
-    background: #fff;
-  }
-  //表格
-  .wayTable {
-    //表头
-    .el-table__header-wrapper .el-table__header thead tr th{
-      color: #888;
-      font-weight: normal;
-      .is-leaf{
-        border: 0!important;
-      }
-    }
-    //tbody
-    .el-table__body-wrapper {
-      .el-table__body tbody{
-        //tr
-        .el-table__row {
-          td {
-            padding: 8px 0;
-            .cell {
-              padding: 0;
-            }
-          }
-        }
-      }
-    }
-  }
-  // .el-table__header, .el-table__body{
-  //   width: 1110px!important;
-  // }
-
-  //分页
-  .block {
-    height: 40px;
-    background: #fff;
-    .el-pagination {
-      padding-top: 8px;
-    }
-  }
-  //弹框
-  .ctListDialog {
-    .el-dialog__header {
-      border-bottom: 1px solid #e6e6e6;
-      .aTitle {
-        font-size: 16px;
-      }
-    }
-    .el-dialog__body {
-      padding: 20px;
-    }
-  }
-  /*webkit placeholder居右*/
-  /**.dateInput::-webkit-input-placeholder
-  {
-    color: #b8b8b8;
-    // text-indent: 10px;
-    color: #f00;
-  }
-  /**
-  /*.dateInput:-moz-placeholder
-  {
-    color: #b8b8b8;
-    // text-indent: 10px;
-    color: #f00;
-  }
-  /***
-  .dateInput::-moz-placeholder
-  /*{
-    color: #b8b8b8;
-    // text-indent: 10px;
-    color: #f00;
-
-  }
-  /*
-  /*.dateInput:-ms-input-placeholder
-  {
-    color: #b8b8b8;
-    // text-indent: 10px;
-    color: #f00;
-  }
-  // 日起选择的高度
-  .mdDate {
-    top: 120px!important;
-  }
-  /**
- * 12生肖model
- */
-  /*.hzDialog {
-    padding: 0;
-    .el-dialog__body {
-      padding: 0;
-      .stepTwo {
-        width: 449px;
-        height: 29px;
-        //font-size: 20px;
-        text-align: center;
-        line-height: 29px;
-      }
-      /*生肖div*/
-  /* .zooSelect{
-     margin-top: 20px;
-     width: 449px;
-     height: 186px;
-     overflow: hidden;
-     .zooIcon {
-       width: 468px;
-       height: 186px;
-       // background-color:#f7f7f7;
-       li {
-         float: left;
-         .imgzoo {
-           width: 55px;
-           height: 89px;
-           margin-right: 23px;
-
-           img {
-             width: 55px;
-             height: 55px;
-             border-radius: 50%;
-             border: 0;
-             display: block;
-           }
-           i{
-             color: transparent;
-             right:0;
-             bottom:38px;
-             font-size: 18px;
-           }
-           p {
-             line-height: 13px;
-             margin: 6px 0 14px 0;
-             text-align: center;
-             font-size: 13px;
-             color: #949494;
-           }
-         }
-       }
-     }
-   }
-   .stepfinish {
-     width: 449px;
-     height: 44px;
-     text-align: center;
-     background: url(../../assets/images/aibg.png) center center no-repeat;
-     .nextBtn {
-       margin-top: 12px;
-     }
-   }
- }
-}
-
-.ctList .ctListRow .el-form .el-form-item:nth-of-type(6) .el-form-item__content{
- height: auto;
- overflow: hidden;
-}
-.ctList .ctListRow .el-form{
- height: auto;
-}
-.ctList .ctListRow .el-form .el-form-item:nth-of-type(5){
- height: 39px;
-}
-.ctList .ctListRow .el-form .el-form-item:nth-of-type(5) .el-form-item__content{
- height: auto;
-}
-.ctList .ctListRow .el-form .el-form-item:nth-of-type(6){
- height: auto;
-}
-.ctList .ctListRow{
- height: auto;
-}
-.ctList .ctListRow .el-form .el-form-item:nth-of-type(4) .el-form-item__content .el-input{
- height: 46px;
-}
-.ctList .ctListRow .el-form .el-form-item:nth-of-type(1), .ctList .ctListRow .el-form .el-form-item:nth-of-type(2), .ctList .ctListRow .el-form .el-form-item:nth-of-type(3){
- height: 34px;
-}
-.hzDialog .el-dialog__body .content .visitRecords .bed, .daDialog .el-dialog__body .content .visitRecords .bed{
- margin: 15px 0 6px 0;
-}
-.ctList .ctListRow .el-form .el-form-item:nth-of-type(4){
- height: 35px;
-}
-.ctList .addPatients{
- height: 26px;
- line-height: 0;
- margin-top: 13px;
- background: #fff9f7;
- border-color: #fdd3c4;
- color: #ff6e40;
- font-size: 14px;
-}
-.patientDialog{
- .el-dialog__header{
-   text-align: left;
-   border-bottom: 1px solid #ececec;
- }
-}
-.ModifyDialog{
- .el-form-item__content{
-   float: left;
- }
- .el-input--suffix{
-   width: 300px;
- }
- .physicalName{
-   .el-form-item__label{
-     width: 106px;
-   }
- }
-}**/
 </style>

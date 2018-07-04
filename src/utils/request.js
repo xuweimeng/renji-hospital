@@ -6,7 +6,8 @@ import qs from 'qs';
 
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.BASE_API, // api的base_url
+  // baseURL: process.env.BASE_API, // api的base_url
+  baseURL: 'http://192.168.1.218:8082', // api的base_url
   timeout: 50000 // request timeout
 });
 
@@ -131,6 +132,8 @@ const fetch = (type, url, params) => {
       .then(response => {
         const resultData = JSON.parse(response.data);
         if (resultData.code === 0) {
+          resolve(resultData);
+        } else if (resultData.code === 1) {
           resolve(resultData);
         } else {
           Message({
