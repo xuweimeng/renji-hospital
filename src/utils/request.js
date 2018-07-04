@@ -132,6 +132,8 @@ const fetch = (type, url, params) => {
         const resultData = JSON.parse(response.data);
         if (resultData.code === 0) {
           resolve(resultData);
+        } else if (resultData.code === 1) {
+          resolve(resultData);
         } else {
           Message({
             message: resultData.message,
