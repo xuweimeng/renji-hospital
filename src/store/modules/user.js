@@ -73,6 +73,11 @@ const user = {
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
+        Login.hospatilName().then(res => {
+          console.log(res);
+        }).catch(error => {
+          console.log(error);
+        });
         const getInfo = () => {
           setTimeout(() => {
             const response = JSON.parse(localStorage.getItem('userInfo'));
