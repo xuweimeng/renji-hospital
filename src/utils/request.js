@@ -11,7 +11,7 @@ const service = axios.create({
 });
 
 // 请求参数验证
-const JsonData = ['/visit/order/temp/visit', '/visit/ordertask/batchcancelall', 'visit/ordertask/vet', '/visit/ordertask/physicalTemporary'];
+const JsonData = ['/visit/order/temp/visit', '/visit/ordertask/batchcancelall', 'visit/ordertask/vet', '/visit/ordertask/physicalTemporary', '/visit/ordertask/physicalNewTemporary'];
 // request interceptor
 service.interceptors.request.use(config => {
   // 判断是否是需要使用json数据格式的接口

@@ -62,6 +62,9 @@ const user = {
             setToken(data.id);
             response.data.roles = [response.data.departmentName];
             localStorage.setItem('userInfo', JSON.stringify(response));
+            sessionStorage.setItem('userId', response.data.id); // 用户id
+            sessionStorage.setItem('laterhours', response.laterhours);// 距离上次登录
+            sessionStorage.setItem('realname', response.data.realname); // 姓名
             resolve();
           })
           .catch(error => {
