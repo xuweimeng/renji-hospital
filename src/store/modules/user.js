@@ -119,16 +119,13 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token)
-          .then(() => {
-            commit('SET_TOKEN', '');
-            commit('SET_ROLES', []);
-            removeToken();
-            resolve();
-          })
-          .catch(error => {
-            reject(error);
-          });
+        removeToken('Admin-Token');
+        commit('SET_TOKEN', '');
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('realname');
+        sessionStorage.removeItem('laterhours');
+        localStorage.removeItem('userInfo');
+        resolve();
       });
     },
 
@@ -136,7 +133,11 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '');
-        removeToken();
+        removeToken('Admin-Token');
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('realname');
+        sessionStorage.removeItem('laterhours');
+        localStorage.removeItem('userInfo');
         resolve();
       });
     },

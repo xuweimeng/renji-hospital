@@ -91,7 +91,7 @@
           </el-col>
           <el-col :span="4" style="float:left">
             <el-form-item style="float:left;height: 44px">
-              <el-button type="button" @click.native="waySearch">查询</el-button>
+              <el-button type="primary" @click.native="waySearch">查询</el-button>
             </el-form-item>
           </el-col>
         </el-col>

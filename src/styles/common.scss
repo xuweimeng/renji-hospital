@@ -149,7 +149,7 @@ html,body{
 
 /** 输入框统一样式**/
 .el-form--inline .el-form-item{
-  display: flex;
+  display: flex!important;
   flex: 0 0 auto;
 }
  .el-form--inline .el-form-item__label{
