@@ -7,7 +7,8 @@ export const Login = {
      * @return {type} {description}
      */
   hospatilName(data) {
-    return fetch('post', '/client/visit/getYymc', data);
+    return fetch('post', '/wechat/visit/getYymc', data); // 8084 todo 暂时注释，否则无法使用8084的接口
+    // return fetch('post', '/client/visit/getYymc', data);
   },
   /**
      * @function 登录接口

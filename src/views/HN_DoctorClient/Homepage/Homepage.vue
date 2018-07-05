@@ -24,9 +24,10 @@
       <!-- 随访数量统计 -->
       <div class="sfinfo left">
         <div class="visitedRowLeft">
-          <!--<p><i class="iconfont">&#xe682;</i>已随访{{getAdminInfo.hadVisitCount}}人次</p>-->
-          <p><svg-icon icon-class="peoples" style="color: #17be43;margin-right: 9px;height: 17px;" />已随访{{getAdminInfo.hadVisitCount || 0}}人次</p>
-          <p><svg-icon icon-class="peoples" style="color: #17be43;margin-right: 9px;height: 17px;" />共{{getAdminInfo.hadVisitPeopleCount || 0}}位患者</p>
+          <p><i class="iconfont">&#xe682;</i>已随访{{getAdminInfo.hadVisitCount || 0}}人次</p>
+          <p><i class="iconfont">&#xe682;</i>共{{getAdminInfo.hadVisitPeopleCount || 0}}位患者</p>
+          <!--<p><svg-icon icon-class="peoples" style="color: #17be43;margin-right: 9px;font-size: 17px;" />已随访{{getAdminInfo.hadVisitCount || 0}}人次</p>-->
+          <!--<p><svg-icon icon-class="peoples" style="color: #17be43;margin-right: 9px;font-size: 17px;" />共{{getAdminInfo.hadVisitPeopleCount || 0}}位患者</p>-->
           <p>随访计划待审核</p>
           <p class="orange" @click="routerToWay1" style="cursor: pointer;"><em style="font-style: normal">{{getAdminInfo.needShCount || 0}}</em><span class="orange" >条</span></p>
         </div>

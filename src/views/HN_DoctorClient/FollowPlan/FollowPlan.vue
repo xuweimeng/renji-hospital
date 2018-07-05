@@ -329,7 +329,7 @@ const typeMap = ['wait','pass','nopass']; // 依次是 待审核、已通过、�
        * @param {String} userId 获取医生id
        */
       getUserId() {
-        this.userId = sessionStorage.getItem('userId')//用户名
+        this.userId = sessionStorage.getItem('userId'); // 用户名
       },
       /**
        * 列表数据获取

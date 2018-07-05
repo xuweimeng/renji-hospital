@@ -76,7 +76,7 @@
  * 随访计划
  * @module followPlan
  */
-import { FollowPlan } from '@/api/HN_DoctorClient/common/FollowPlan'
+import { CommonAPI } from '@/api/HN_DoctorClient/common'
 import mixin from '@/assets/HN_DoctorClient/js/mixin'
   export default {
     data() {
@@ -121,7 +121,7 @@ import mixin from '@/assets/HN_DoctorClient/js/mixin'
        */
       getPtWay() {
         this.modelFollplanData = {};
-        FollowPlan.getVisitOrderDetail({
+        CommonAPI.getVisitOrderDetail({
           'taskId': this.taskId
         }).then((res)=>{
           if(res.code == 0) {

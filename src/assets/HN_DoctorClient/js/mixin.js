@@ -61,7 +61,7 @@ const mixin = {
             style:'text-align:center'
           }, [
             h('img', {
-              attrs: {src: '../../static/images/animal.png'},
+              attrs: {src: 'static/images/animal.png'},
               style:'width: 60px;height:52px;margin:0 auto;'
             },null),
             h('p', null, '确定取消关心吗?'),

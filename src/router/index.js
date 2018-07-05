@@ -302,11 +302,12 @@ const default_asyncRouterMap = [
     path: '/i18n',
     component: Layout,
     children: [{ path: 'index', component: () => import('@/views/i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
-  },
+  }
+  ];
 
 export const asyncRouterMap = [
   ...LQ_PhysicalExamination,
-  ...RJ_PhysicalExamination,
+  // ...RJ_PhysicalExamination,
   ...HN_DoctorClient, // 海宁医生端
   // ...default_asyncRouterMap
   { path: '*', redirect: '/404', hidden: true }
