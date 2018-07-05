@@ -19,16 +19,30 @@
 
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
-          <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
+          <!--<img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">-->
+          <img class="user-avatar" src="../../../assets/images/logoadmin.png">
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
+<<<<<<< HEAD
           <el-dropdown-item >
             <span @click="changePassword" style="display:block;">修改密码</span>
           </el-dropdown-item>
           <el-dropdown-item >
             <span @click="Feedback" style="display:block;">意见反馈</span>
           </el-dropdown-item>
+=======
+          <router-link to="/">
+            <el-dropdown-item>
+              {{$t('navbar.dashboard')}}
+            </el-dropdown-item>
+          </router-link>
+          <!--<a target='_blank' href="https://github.com/PanJiaChen/vue-element-admin/">-->
+            <!--<el-dropdown-item>-->
+              <!--{{$t('navbar.github')}}-->
+            <!--</el-dropdown-item>-->
+          <!--</a>-->
+>>>>>>> dev_geji
           <el-dropdown-item divided>
             <span @click="logout" style="display:block;">{{$t('navbar.logOut')}}</span>
           </el-dropdown-item>
@@ -66,6 +80,7 @@ export default {
   methods: {
     toggleSideBar() {
       this.$store.dispatch('toggleSideBar');
+<<<<<<< HEAD
     },
     changePassword() {
 
@@ -76,6 +91,13 @@ export default {
     logout() {
       this.$store.dispatch('LogOut').then(() => {
         location.reload();// In order to re-instantiate the vue-router object to avoid bugs
+=======
+    },
+    logout() {
+      this.$store.dispatch('LogOut').then(() => {
+        console.log(1111111)
+        location.reload();    // In order to re-instantiate the vue-router object to avoid bugs
+>>>>>>> dev_geji
       });
     }
   }

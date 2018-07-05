@@ -77,7 +77,7 @@
 		        </el-form-item>
 					</el-col>
 				  <el-col :span="5" style="width: 3%;float:left" >
-				  	<el-button type="primary" @click="getData" style="padding: 6px 20px;margin-top: 3px;">查询</el-button>
+				  	<el-button type="primary" @click="getData">查询</el-button>
 				  </el-col>
 				</el-form>
 			</el-row>
