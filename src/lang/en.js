@@ -82,8 +82,10 @@ export default {
     mzSurveyPlanHN: 'OutpatientInvestigationPlan',
     zySurveyResultHN: 'HospitalizationInvestigationResult',
     mzSurveyResultHN: 'OutpatientInvestigationResult',
-    statisticalDataHN: 'statisticalData'
+    statisticalDataHN: 'statisticalData',
+    Home: 'Home'
   },
+  // 主题导航那一块
   navbar: {
     logOut: 'Log Out',
     dashboard: 'Dashboard',
@@ -91,6 +93,7 @@ export default {
     screenfull: 'screenfull',
     theme: 'theme'
   },
+  // 登录那一块
   login: {
     title: 'Login Form',
     logIn: 'Log in',

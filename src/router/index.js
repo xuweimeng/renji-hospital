@@ -2,10 +2,11 @@ import Vue from 'vue';
 import Router from 'vue-router';
 // 导入所有项目路由
 import { LQ_PhysicalExamination } from './LQ_PhysicalExamination';// 乐清六院
-import { HN_DoctorClient } from './HN_DoctorClient';// 乐清六院
+import { HN_DoctorClient } from './HN_DoctorClient';// 海宁医生端
+import { RJ_PhysicalExamination } from './RJ_PhysicalExamination';// 仁济体检中心
 Vue.use(Router);
 
-/* Layout */
+/* Layout布局器文件 */
 import Layout from '@/views/layout/Layout';
 
 /** note: submenu only apppear when children.length>=1
@@ -28,42 +29,42 @@ import Layout from '@/views/layout/Layout';
 **/
 export const constantRouterMap = [
   { path: '/login', component: () => import('@/views/login/index'), hidden: true },
-  { path: '/authredirect', component: () => import('@/views/login/authredirect'), hidden: true },
+  // { path: '/authredirect', component: () => import('@/views/login/authredirect'), hidden: true },
   { path: '/404', component: () => import('@/views/errorPage/404'), hidden: true },
-  { path: '/401', component: () => import('@/views/errorPage/401'), hidden: true },
-  {
-    path: '',
-    component: Layout,
-    redirect: 'dashboard',
-    children: [{
-      path: 'dashboard',
-      component: () => import('@/views/dashboard/index'),
-      name: 'dashboard',
-      meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
-    }]
-  },
-  {
-    path: '/documentation',
-    component: Layout,
-    redirect: '/documentation/index',
-    children: [{
-      path: 'index',
-      component: () => import('@/views/documentation/index'),
-      name: 'documentation',
-      meta: { title: 'documentation', icon: 'documentation', noCache: true }
-    }]
-  },
-  {
-    path: '/guide',
-    component: Layout,
-    redirect: '/guide/index',
-    children: [{
-      path: 'index',
-      component: () => import('@/views/guide/index'),
-      name: 'guide',
-      meta: { title: 'guide', icon: 'guide', noCache: true }
-    }]
-  }
+  { path: '/401', component: () => import('@/views/errorPage/401'), hidden: true }
+  // {
+  //   path: '',
+  //   component: Layout,
+  //   redirect: 'dashboard',
+  //   children: [{
+  //     path: 'dashboard',
+  //     component: () => import('@/views/dashboard/index'),
+  //     name: 'dashboard',
+  //     meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
+  //   }]
+  // }
+  // {
+  //   path: '/documentation',
+  //   component: Layout,
+  //   redirect: '/documentation/index',
+  //   children: [{
+  //     path: 'index',
+  //     component: () => import('@/views/documentation/index'),
+  //     name: 'documentation',
+  //     meta: { title: 'documentation', icon: 'documentation', noCache: true }
+  //   }]
+  // },
+  // {
+  //   path: '/guide',
+  //   component: Layout,
+  //   redirect: '/guide/index',
+  //   children: [{
+  //     path: 'index',
+  //     component: () => import('@/views/guide/index'),
+  //     name: 'guide',
+  //     meta: { title: 'guide', icon: 'guide', noCache: true }
+  //   }]
+  // }
 ];
 
 export default new Router({
@@ -71,6 +72,7 @@ export default new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 });
+
 
 
 const default_asyncRouterMap = [
@@ -302,10 +304,10 @@ const default_asyncRouterMap = [
     children: [{ path: 'index', component: () => import('@/views/i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
   },
 
-  { path: '*', redirect: '/404', hidden: true }
-]
 export const asyncRouterMap = [
-  // ...LQ_PhysicalExamination,
+  ...LQ_PhysicalExamination,
+  ...RJ_PhysicalExamination,
   ...HN_DoctorClient, // 海宁医生端
   // ...default_asyncRouterMap
-];
+  { path: '*', redirect: '/404', hidden: true }
+]

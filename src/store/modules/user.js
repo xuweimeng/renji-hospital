@@ -60,8 +60,11 @@ const user = {
             // 配置用户id作为token值
             commit('SET_TOKEN', data.id);
             setToken(data.id);
-            response.data.roles = [response.data.departmentName];
+            // response.data.roles = [response.data.departmentName];
             localStorage.setItem('userInfo', JSON.stringify(response));
+            sessionStorage.setItem('userId', response.data.id); // 用户id
+            sessionStorage.setItem('laterhours', response.laterhours);// 距离上次登录
+            sessionStorage.setItem('realname', response.data.realname); // 姓名
             resolve();
           })
           .catch(error => {
@@ -73,29 +76,32 @@ const user = {
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        const getInfo = () => {
-          setTimeout(() => {
-            const response = JSON.parse(localStorage.getItem('userInfo'));
-            const data = response.data;
-            if (data.username) {
-              if (data.roles && data.roles.length > 0) {
-              // 验证返回的roles是否是一个非空数组
-                commit('SET_ROLES', data.roles);
+        Login.hospatilName().then(res => {
+          const getInfo = () => {
+            setTimeout(() => {
+              const response = JSON.parse(localStorage.getItem('userInfo'));
+              const data = response.data;
+              if (data.username) {
+                let roles = [res.data];
+                // 判断是否属于仁济医院.仁济医院分为两个客户端
+                if (res.data.indexOf('仁济') > -1) {
+                  roles = [res.data + data.departmentName];
+                }
+                commit('SET_ROLES', roles);
+                commit('SET_NAME', data.username);
+                commit('SET_AVATAR', response.aipictureurl);
+                commit('SET_INTRODUCTION', data.realname);
+                resolve(response);
               } else {
-                reject('getInfo: roles must be a non-null array !');
+                getInfo();
               }
-              commit('SET_NAME', data.username);
-              commit('SET_AVATAR', response.aipictureurl);
-              commit('SET_INTRODUCTION', data.realname);
-              resolve(
-                response
-              );
-            } else {
-              getInfo();
-            }
-          }, 2000);
-        };
-        getInfo();
+            }, 2000);
+          };
+          getInfo();
+          console.log(res);
+        }).catch(error => {
+          reject(error);
+        });
       });
     },
 
@@ -116,16 +122,13 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token)
-          .then(() => {
-            commit('SET_TOKEN', '');
-            commit('SET_ROLES', []);
-            removeToken();
-            resolve();
-          })
-          .catch(error => {
-            reject(error);
-          });
+        removeToken('Admin-Token');
+        commit('SET_TOKEN', '');
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('realname');
+        sessionStorage.removeItem('laterhours');
+        localStorage.removeItem('userInfo');
+        resolve();
       });
     },
 
@@ -133,7 +136,11 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '');
-        removeToken();
+        removeToken('Admin-Token');
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('realname');
+        sessionStorage.removeItem('laterhours');
+        localStorage.removeItem('userInfo');
         resolve();
       });
     },

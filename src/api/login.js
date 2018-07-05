@@ -7,7 +7,7 @@ export const Login = {
      * @return {type} {description}
      */
   hospatilName(data) {
-    return fetch('post', '/wechat/visit/getYymc', data);
+    return fetch('post', '/client/visit/getYymc', data);
   },
   /**
      * @function 登录接口

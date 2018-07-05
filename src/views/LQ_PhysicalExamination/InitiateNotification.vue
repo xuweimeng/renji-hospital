@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="app-container"　>
 		<!-- 步骤 -->
 		<el-row>
 		  <el-col :span="12" :offset="6">
@@ -76,7 +76,7 @@
 			</el-row>
 			<!-- 通知患者 -->
 			<el-row>
-				<el-col :span="24">
+				<el-col :span="24" >
 					<el-table :data="dataList" style="width: 100%" class="upTable" ref="multipleTable" border fit highlight-current-row>
 						<el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
 						<el-table-column prop="jtdh" label="联系方式" align="center"></el-table-column>
@@ -99,8 +99,8 @@
 			</el-row>
 			<el-row v-if="dataList.length">
 				<!-- 批量通过 -->
-				<el-col :span="12">
-					<div class="checkPiliang">
+				<el-col :span="12"  >
+					<div class="checkPiliang" >
 						<el-button type="primary" @click="addAll">添加当前页</el-button>
 						<el-button type="primary" @click="addAllPages">添加所有页</el-button>
 					</div>

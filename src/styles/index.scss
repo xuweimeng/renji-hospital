@@ -191,3 +191,42 @@ code {
 .multiselect--active {
   z-index: 1000 !important;
 }
+// 通用搜索栏样式
+.common{
+  &_search{
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    &_single{
+      list-style: none;
+      width: 25%;
+      min-width: 200px;
+      display: flex;
+      box-sizing: border-box;
+      padding: 0 10px;
+      margin-bottom: 10px;
+      >label{
+        width: 100px;
+        padding: 0;
+        flex-grow: 0;
+        flex-shrink: 0;
+        text-align: center;
+        box-sizing: border-box;
+        line-height: 36px;
+        border-radius: 5px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        background-color: #f1f1f1;
+        // padding-right: 10px;
+      }
+      &_time{
+        width: 520px;
+      }
+      >div{
+        flex-grow: 1;
+      }
+
+    }
+  }
+}
