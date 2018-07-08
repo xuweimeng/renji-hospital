@@ -42,7 +42,8 @@ module.exports = {
       'LQPE_API':resolve('src/api/LQ_PhysicalExamination'),
       'RJCD':resolve('src/views/RJ_ClinicalDepartments'),
       'RJCD_API':resolve('src/api/RJ_ClinicalDepartments'),
-
+      'HNDC':resolve('src/views/HN_DoctorClient'),
+      'HNDC_API':resolve('src/api/HN_DoctorClient'),
     }
   },
   module: {

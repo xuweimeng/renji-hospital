@@ -37,10 +37,11 @@ router.beforeEach((to, from, next) => {
             next({ ...to, replace: true }); // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           });
         }).catch((err) => {
-          store.dispatch('FedLogOut').then(() => {
-            Message.error(err || 'Verification failed, please login again');
-            next({ path: '/' });
-          });
+          // todo 暂时注释，否则无法使用8084的接口
+          // store.dispatch('FedLogOut').then(() => {
+          //   Message.error(err || 'Verification failed, please login again');
+          //   next({ path: '/' });
+          // });
         });
       } else {
         // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓

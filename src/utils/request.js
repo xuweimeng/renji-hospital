@@ -6,8 +6,9 @@ import qs from 'qs';
 
 // create an axios instance
 const service = axios.create({
-  // baseURL: process.env.BASE_API, // api的base_url
-  baseURL: 'http://192.168.1.218:8082', // api的base_url
+  // todo 海宁8084使用
+  baseURL: process.env.BASE_API, // api的base_url
+  // baseURL: 'http://192.168.1.218:8082', // api的base_url
   timeout: 50000 // request timeout
 });
 
@@ -33,6 +34,7 @@ service.interceptors.request.use(config => {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
     };
   }
+  // console.log(config);
   return config;
 }, error => {
   // Do something with request error

@@ -66,6 +66,23 @@ export default {
     Statistics: 'Statistics',
     Patient: 'Patient',
     PatientList: 'PatientList',
+    // 海宁医生端
+    HomeHN: 'Homepage',
+    HomepageHN: 'Homepage',
+    FollowPlanHN: 'FollowPlan',
+    FollowPlanListHN: 'FollowPlan',
+    FollowRecordHN: 'FollowRecord',
+    FollowRecordListHN: 'FollowRecord',
+    PatientHN: 'Patient',
+    PatientListHN: 'PatientList',
+    AbnormalStatisticHN: 'AbnormalStatistic',
+    AbnormalStatisticListHN: 'AbnormalStatisticList',
+    MySurveyHN: 'SatisfactionSurvey', // 满意度调查
+    zySurveyPlanHN: 'HospitalizationInvestigationPlan',
+    mzSurveyPlanHN: 'OutpatientInvestigationPlan',
+    zySurveyResultHN: 'HospitalizationInvestigationResult',
+    mzSurveyResultHN: 'OutpatientInvestigationResult',
+    statisticalDataHN: 'statisticalData',
     Home: 'Home'
   },
   // 主题导航那一块
