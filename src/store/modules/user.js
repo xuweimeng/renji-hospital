@@ -52,11 +52,18 @@ const user = {
             // 配置用户id作为token值
             commit('SET_TOKEN', data.id);
             setToken(data.id);
-            // response.data.roles = [response.data.departmentName];
-            localStorage.setItem('userInfo', JSON.stringify(response));
-            sessionStorage.setItem('userId', response.data.id); // 用户id
-            sessionStorage.setItem('laterhours', response.laterhours);// 距离上次登录
-            sessionStorage.setItem('realname', response.data.realname); // 姓名
+            // 配置用户名
+            commit('SET_NAME', data.username);
+            setParameter('name', data.username);
+            // 配置用户头像
+            commit('SET_AVATAR', response.aipictureurl);
+            setParameter('avatar', data.aipictureurl);
+            // 配置最后登录时间
+            commit('SET_LATERHOURS', data.laterhours);
+            setParameter('laterhours', data.laterhours);
+            // 配置科室名字
+            commit('SET_DEPARTMENTNAME', data.departmentName);
+            setParameter('departmentName', data.departmentName);
             resolve();
           })
           .catch(error => {
@@ -71,21 +78,14 @@ const user = {
         Login.hospatilName().then(res => {
           const getInfo = () => {
             setTimeout(() => {
-              const response = JSON.parse(localStorage.getItem('userInfo'));
-              const data = response.data;
-              if (data.username) {
+              if (getParameter('name')) {
                 let roles = [res.data];
                 // 判断是否属于仁济医院.仁济医院分为两个客户端
                 if ((res.data).indexOf('仁济') > -1) {
-                  roles = [res.data + data.departmentName];
+                  roles = [res.data + getParameter('departmentName')];
                 }
                 commit('SET_ROLES', roles);
-                commit('SET_NAME', data.username);
-                commit('SET_AVATAR', response.aipictureurl);
-                commit('SET_INTRODUCTION', data.realname);
-                response.data.roles = roles;
-                localStorage.setItem('userInfo', JSON.stringify(response));
-                resolve(response);
+                resolve(roles);
               } else {
                 getInfo();
               }
@@ -103,10 +103,18 @@ const user = {
       return new Promise((resolve, reject) => {
         removeToken('Admin-Token');
         commit('SET_TOKEN', '');
-        sessionStorage.removeItem('userId');
-        sessionStorage.removeItem('realname');
-        sessionStorage.removeItem('laterhours');
-        localStorage.removeItem('userInfo');
+        // 清除用户名
+        commit('SET_NAME', '');
+        removeParameter('name');
+        // 清除用户头像
+        commit('SET_AVATAR', '');
+        removeParameter('avatar');
+        // 清除最后登录时间
+        commit('SET_LATERHOURS', '');
+        removeParameter('laterhours');
+        // 清除科室名字
+        commit('SET_DEPARTMENTNAME', '');
+        removeParameter('departmentName');
         resolve();
       });
     },
@@ -115,11 +123,18 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '');
-        removeToken('Admin-Token');
-        sessionStorage.removeItem('userId');
-        sessionStorage.removeItem('realname');
-        sessionStorage.removeItem('laterhours');
-        localStorage.removeItem('userInfo');
+        // 清除用户名
+        commit('SET_NAME', '');
+        removeParameter('name');
+        // 清除用户头像
+        commit('SET_AVATAR', '');
+        removeParameter('avatar');
+        // 清除最后登录时间
+        commit('SET_LATERHOURS', '');
+        removeParameter('laterhours');
+        // 清除科室名字
+        commit('SET_DEPARTMENTNAME', '');
+        removeParameter('departmentName');
         resolve();
       });
     },
@@ -129,7 +144,7 @@ const user = {
       return new Promise(resolve => {
         commit('SET_TOKEN', role);
         setToken(role);
-        getUserInfo(role).then(response => {
+        Login.hospatilName().then(response => {
           const data = response.data;
           commit('SET_ROLES', data.roles);
           commit('SET_NAME', data.name);
