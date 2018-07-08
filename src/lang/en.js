@@ -67,23 +67,20 @@ export default {
     Patient: 'Patient',
     PatientList: 'PatientList',
     // 海宁医生端
-    HomeHN: 'Homepage',
-    HomepageHN: 'Homepage',
-    FollowPlanHN: 'FollowPlan',
-    FollowPlanListHN: 'FollowPlan',
-    FollowRecordHN: 'FollowRecord',
-    FollowRecordListHN: 'FollowRecord',
-    PatientHN: 'Patient',
-    PatientListHN: 'PatientList',
-    AbnormalStatisticHN: 'AbnormalStatistic',
-    AbnormalStatisticListHN: 'AbnormalStatisticList',
-    MySurveyHN: 'SatisfactionSurvey', // 满意度调查
-    zySurveyPlanHN: 'HospitalizationInvestigationPlan',
-    mzSurveyPlanHN: 'OutpatientInvestigationPlan',
-    zySurveyResultHN: 'HospitalizationInvestigationResult',
-    mzSurveyResultHN: 'OutpatientInvestigationResult',
-    statisticalDataHN: 'statisticalData',
-    Home: 'Home'
+    Home: 'Homepage',
+    Homepage: 'Homepage',
+    FollowPlan: 'FollowPlan',
+    FollowPlanList: 'FollowPlan',
+    FollowRecord: 'FollowRecord',
+    FollowRecordList: 'FollowRecord',
+    AbnormalStatistic: 'AbnormalStatistic',
+    AbnormalStatisticList: 'AbnormalStatisticList',
+    MySurvey: 'SatisfactionSurvey', // 满意度调查
+    zySurveyPlan: 'HospitalizationInvestigationPlan',
+    mzSurveyPlan: 'OutpatientInvestigationPlan',
+    zySurveyResult: 'HospitalizationInvestigationResult',
+    mzSurveyResult: 'OutpatientInvestigationResult',
+    statisticalData: 'statisticalData'
   },
   // 主题导航那一块
   navbar: {

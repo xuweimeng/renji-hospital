@@ -67,7 +67,6 @@ export default {
   methods: {
     toggleSideBar() {
       this.$store.dispatch('toggleSideBar');
-<<<<<<< HEAD
     },
     changePassword() {
 
@@ -78,26 +77,6 @@ export default {
     logout() {
       this.$store.dispatch('LogOut').then(() => {
         location.reload();// In order to re-instantiate the vue-router object to avoid bugs
-=======
-// <<<<<<< HEAD
-//     },
-//     changePassword() {
-//
-//     },
-//     Feedback() {
-//
-//     },
-//     logout() {
-//       this.$store.dispatch('LogOut').then(() => {
-//         location.reload();// In order to re-instantiate the vue-router object to avoid bugs
-// =======
-    },
-    logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        console.log(1111111)
-        location.reload();    // In order to re-instantiate the vue-router object to avoid bugs
-// >>>>>>> dev_geji
->>>>>>> dev_yugou
       });
     }
   }

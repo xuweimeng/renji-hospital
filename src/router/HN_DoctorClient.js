@@ -1,110 +1,111 @@
 
 import Layout from '@/views/layout/Layout';
 
-const roles = roles;
+const roles = ['测试系统'];
 
 // todo roles的值待改，权限控制
 export const HN_DoctorClient = [
   {
-    path: '/HomeHN',
+    path: '',
     component: Layout,
-    meta: { title: 'HomeHN', roles: roles, icon: 'dashboard', noCache: true },
+    redirect: 'Home',
+    meta: { title: '', roles: roles, icon: 'dashboard', noCache: true },
     children: [
       {
-        path: 'HomepageHN',
+        path: 'Home',
         component: () => import('HNDC/Homepage/Homepage.vue'),
-        name: 'HomepageHN',
-        meta: { title: 'HomepageHN', icon: 'dashboard', roles: roles, noCache: true }
+        name: 'Home',
+        meta: { title: 'Home', icon: 'dashboard', roles: roles, noCache: true }
       }
     ]
   },
   {
-    path: '/FollowPlanHN',
+    path: '/FollowPlan',
     component: Layout,
-    meta: { title: 'FollowPlanHN', roles: roles, icon: 'guide', noCache: true },
+    meta: { title: 'FollowPlan', roles: roles, icon: 'guide', noCache: true },
     children: [
       {
-        path: 'FollowPlanListHN',
+        path: 'FollowPlanList',
         component: () => import('HNDC/FollowPlan/FollowPlan.vue'),
-        name: 'FollowPlanHN',
-        meta: { title: 'FollowPlanHN', icon: 'guide', roles: roles, noCache: true }
+        name: 'FollowPlan',
+        meta: { title: 'FollowPlan', icon: 'guide', roles: roles, noCache: true }
       }
     ]
   },
   {
-    path: '/FollowRecordHN',
+    path: '/FollowRecord',
     component: Layout,
-    meta: { title: 'FollowRecordHN', roles: roles, icon: 'documentation', noCache: true },
+    meta: { title: 'FollowRecord', roles: roles, icon: 'documentation', noCache: true },
     children: [
       {
-        path: 'FollowRecordListHN',
+        path: 'FollowRecordList',
         component: () => import('HNDC/FollowRecord/FollowRecord.vue'),
-        name: 'FollowRecordHN',
-        meta: { title: 'FollowRecordHN', icon: 'documentation', roles: roles, noCache: true }
+        name: 'FollowRecord',
+        meta: { title: 'FollowRecord', icon: 'documentation', roles: roles, noCache: true }
       }
     ]
   },
   {
-    path: '/PatientHN',
+    path: '/Patient',
     component: Layout,
-    meta: { title: 'PatientHN', roles: roles, icon: 'list', noCache: true },
+    meta: { title: 'Patient', roles: roles, icon: 'list', noCache: true },
     children: [
       {
-        path: 'PatientListHN',
+        path: 'PatientList',
         component: () => import('HNDC/Patientlist/Patientlist.vue'),
-        name: 'PatientListHN',
-        meta: { title: 'PatientListHN', icon: 'list', roles: roles, noCache: true }
+        name: 'PatientList',
+        meta: { title: 'PatientList', icon: 'list', roles: roles, noCache: true }
       }
     ]
   },
   {
-    path: '/AbnormalStatisticHN',
+    path: '/AbnormalStatistic',
     component: Layout,
-    meta: { title: 'AbnormalStatisticHN', roles: roles, icon: 'bug', noCache: true },
+    meta: { title: 'AbnormalStatistic', roles: roles, icon: 'bug', noCache: true },
     children: [
       {
-        path: 'AbnormalStatisticHN',
+        path: 'AbnormalStatistic',
         component: () => import('HNDC/AbnormalStatistic/AbnormalStatistic.vue'),
-        name: 'AbnormalStatisticHN',
-        meta: { title: 'AbnormalStatisticHN', icon: 'bug', roles: roles, noCache: true }
+        name: 'AbnormalStatistic',
+        meta: { title: 'AbnormalStatistic', icon: 'bug', roles: roles, noCache: true }
       }
     ]
   },
   {
-    path: '/MySurveyHN',
+    path: '/MySurvey',
     component: Layout,
-    meta: { title: 'MySurveyHN', roles: roles, icon: 'form', noCache: true },
+    meta: { title: 'MySurvey', roles: roles, icon: 'form', noCache: true },
     children: [
       {
-        path: 'zySurveyPlanHN',
+        path: 'zySurveyPlan',
         component: () => import('HNDC/MySurvey/zySurveyPlan.vue'),
-        name: 'zySurveyPlanHN',
-        meta: { title: 'zySurveyPlanHN', roles: roles, noCache: true }
+        name: 'zySurveyPlan',
+        meta: { title: 'zySurveyPlan', roles: roles, noCache: true }
       },
       {
-        path: 'mzSurveyPlanHN',
+        path: 'mzSurveyPlan',
         component: () => import('HNDC/MySurvey/mzSurveyPlan.vue'),
-        name: 'mzSurveyPlanHN',
-        meta: { title: 'mzSurveyPlanHN', roles: roles, noCache: true }
+        name: 'mzSurveyPlan',
+        meta: { title: 'mzSurveyPlan', roles: roles, noCache: true }
       },
       {
-        path: 'zySurveyResultHN',
+        path: 'zySurveyResult',
         component: () => import('HNDC/MySurvey/zySurveyResult.vue'),
-        name: 'zySurveyResultHN',
-        meta: { title: 'zySurveyResultHN', roles: roles, noCache: true }
+        name: 'zySurveyResult',
+        meta: { title: 'zySurveyResult', roles: roles, noCache: true }
       },
       {
-        path: 'mzSurveyResultHN',
+        path: 'mzSurveyResult',
         component: () => import('HNDC/MySurvey/mzSurveyResult.vue'),
-        name: 'mzSurveyResultHN',
-        meta: { title: 'mzSurveyResultHN', roles: roles, noCache: true }
+        name: 'mzSurveyResult',
+        meta: { title: 'mzSurveyResult', roles: roles, noCache: true }
       },
       {
-        path: 'statisticalDataHN',
+        path: 'statisticalData',
         component: () => import('HNDC/MySurvey/statisticalData.vue'),
-        name: 'statisticalDataHN',
-        meta: { title: 'statisticalDataHN', roles: roles, noCache: true }
+        name: 'statisticalData',
+        meta: { title: 'statisticalData', roles: roles, noCache: true }
       }
     ]
-  },
+  }
 ];

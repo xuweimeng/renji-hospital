@@ -9,20 +9,8 @@ export const RJ_PhysicalExamination = [
   {
     path: '',
     component: Layout,
-    redirect: 'Index',
-    children: [
-      {
-        path: 'Index',
-        component: () => import('RJPE/Index.vue'),
-        name: 'Index',
-        meta: { title: 'Index', icon: 'dashboard', roles: roles, noCache: true }
-      }
-    ]
-  },
-  {
-    path: '',
-    component: Layout,
     redirect: 'Home',
+    meta: { title: '', roles: roles, icon: 'dashboard', noCache: true },
     children: [
       {
         path: 'Home',
