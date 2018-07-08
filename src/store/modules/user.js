@@ -1,44 +1,36 @@
 import { Login } from '@/api/login';
-import { getToken, setToken, removeToken } from '@/utils/auth';
-import { setInterval } from 'timers';
+import { getToken, setToken, removeToken, getParameter, setParameter, removeParameter } from '@/utils/auth';
 
 const user = {
   state: {
     user: '',
-    status: '',
-    code: '',
     token: getToken(),
     name: '',
     avatar: '',
-    introduction: '',
-    roles: [],
-    // 配置
-    setting: {
-      articlePlatform: []
-    }
+    laterhours: '',
+    departmentName: '',
+    roles: []
   },
   // 操作全局基础用户数据
   mutations: {
-    SET_CODE: (state, code) => {
-      state.code = code;
-    },
     SET_TOKEN: (state, token) => {
       state.token = token;
     },
-    SET_INTRODUCTION: (state, introduction) => {
-      state.introduction = introduction;
-    },
-    SET_SETTING: (state, setting) => {
-      state.setting = setting;
-    },
-    SET_STATUS: (state, status) => {
-      state.status = status;
-    },
+    // 设置用户名
     SET_NAME: (state, name) => {
       state.name = name;
     },
+    // 设置用户头像
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar;
+    },
+    // 设置最后登录时间
+    SET_LATERHOURS: (state, laterhours) => {
+      state.laterhours = laterhours;
+    },
+    // 设置部门名字
+    SET_DEPARTMENTNAME: (state, departmentName) => {
+      state.laterhours = departmentName;
     },
     // 配置路有权限
     SET_ROLES: (state, roles) => {
@@ -84,13 +76,15 @@ const user = {
               if (data.username) {
                 let roles = [res.data];
                 // 判断是否属于仁济医院.仁济医院分为两个客户端
-                if (res.data.indexOf('仁济') > -1) {
+                if ((res.data).indexOf('仁济') > -1) {
                   roles = [res.data + data.departmentName];
                 }
                 commit('SET_ROLES', roles);
                 commit('SET_NAME', data.username);
                 commit('SET_AVATAR', response.aipictureurl);
                 commit('SET_INTRODUCTION', data.realname);
+                response.data.roles = roles;
+                localStorage.setItem('userInfo', JSON.stringify(response));
                 resolve(response);
               } else {
                 getInfo();
@@ -98,26 +92,11 @@ const user = {
             }, 2000);
           };
           getInfo();
-          console.log(res);
         }).catch(error => {
           reject(error);
         });
       });
     },
-
-    // 第三方验证登录
-    // LoginByThirdparty({ commit, state }, code) {
-    //   return new Promise((resolve, reject) => {
-    //     commit('SET_CODE', code)
-    //     loginByThirdparty(state.status, state.email, state.code).then(response => {
-    //       commit('SET_TOKEN', response.data.token)
-    //       setToken(response.data.token)
-    //       resolve()
-    //     }).catch(error => {
-    //       reject(error)
-    //     })
-    //   })
-    // },
 
     // 登出
     LogOut({ commit, state }) {

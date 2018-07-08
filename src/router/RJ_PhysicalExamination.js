@@ -3,9 +3,22 @@
  */
 import Layout from '@/views/layout/Layout';
 
-const roles = roles;
+const roles = ['上海市仁济医院健康保健中心'];
 
 export const RJ_PhysicalExamination = [
+  {
+    path: '',
+    component: Layout,
+    redirect: 'Index',
+    children: [
+      {
+        path: 'Index',
+        component: () => import('RJPE/Index.vue'),
+        name: 'Index',
+        meta: { title: 'Index', icon: 'dashboard', roles: roles, noCache: true }
+      }
+    ]
+  },
   {
     path: '',
     component: Layout,
@@ -13,7 +26,7 @@ export const RJ_PhysicalExamination = [
     children: [
       {
         path: 'Home',
-        component: () => import('RJPE/home.vue'),
+        component: () => import('RJPE/Home.vue'),
         name: 'Home',
         meta: { title: 'Home', icon: 'dashboard', roles: roles, noCache: true }
       }
