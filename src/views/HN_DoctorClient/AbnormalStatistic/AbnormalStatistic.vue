@@ -96,129 +96,130 @@
  * 异常数据
  * @module abnormalStatistic
  */
-import { AbnormalStatistic } from '@/api/HN_DoctorClient/AbnormalStatistic'
+import { AbnormalStatistic } from '@/api/HN_DoctorClient/AbnormalStatistic';
 
 // 随访时间，默认是当天
-const follow_default_time = [new Date(new Date().setHours(0, 0, 0, 0)),new Date(new Date().setHours(23, 59, 59, 59))];
+const follow_default_time = [new Date(new Date().setHours(0, 0, 0, 0)), new Date(new Date().setHours(23, 59, 59, 59))];
 function getToday() {
-  let now_date = new Date();
-  let year = now_date.getFullYear();
-  let month = (now_date.getMonth()+1+'').padStart(2,'0');
-  let day = (now_date.getDate()+'').padStart(2,'0');
+  const now_date = new Date();
+  const year = now_date.getFullYear();
+  const month = (now_date.getMonth() + 1 + '').padStart(2, '0');
+  const day = (now_date.getDate() + '').padStart(2, '0');
   // month = month<10 ? `0${month}` : month;
   // day = day<10? `0${day}` : day;
   return `${year}-${month}-${day}`;
 }
 const today_format = getToday();
-const follow_default_time_format = [today_format+' 00:00',today_format+' 23:59'];
-  export default {
-    data() {
-      return {
-        userId: '', //医生id sessionStorage中
-        searchParam: {
-          patientName: '', // 患者姓名
-          sex: '', // 性别
-          schemeName: '', // 随访方案
-          mobile: '', // 联系电话
-          startDate: follow_default_time_format[0], //随访时间开始时间
-          endDate: follow_default_time_format[1], //随访时间结束时间
-          diagnoseStartDate: "", // 出院开始时间
-          diagnoseEndDate: "", // 出院结束时间
-          pager: 1,
-          limit: 10,
-        },
-        tableData: [], // 表格数据
-        tableLoading: false,
-        total: 0, // 表格数据总条数
-        followTime: follow_default_time, // 随访时间-搜索
-        outTime: [], // 出院时间-搜索
-        sum_start: follow_default_time_format[0], // 表格上方的一行数据的时间
-        sum_end: follow_default_time_format[1],
-      }
-    },
-    mounted() {
-      this.getData();
-    },
-    methods: {
-      /**
+const follow_default_time_format = [today_format + ' 00:00', today_format + ' 23:59'];
+export default {
+  data() {
+    return {
+      userId: '', // 医生id sessionStorage中
+      searchParam: {
+        patientName: '', // 患者姓名
+        sex: '', // 性别
+        schemeName: '', // 随访方案
+        mobile: '', // 联系电话
+        startDate: follow_default_time_format[0], // 随访时间开始时间
+        endDate: follow_default_time_format[1], // 随访时间结束时间
+        diagnoseStartDate: '', // 出院开始时间
+        diagnoseEndDate: '', // 出院结束时间
+        pager: 1,
+        limit: 10
+      },
+      tableData: [], // 表格数据
+      tableLoading: false,
+      total: 0, // 表格数据总条数
+      followTime: follow_default_time, // 随访时间-搜索
+      outTime: [], // 出院时间-搜索
+      sum_start: follow_default_time_format[0], // 表格上方的一行数据的时间
+      sum_end: follow_default_time_format[1]
+    };
+  },
+  mounted() {
+    this.getData();
+  },
+  methods: {
+    /**
        * @description 获取表格数据
        * @function getData
        */
-      getData() {
-        this.tableLoading = true;
-        this.tableData = [];
-        this.total = 0;
-        this.sum_start = this.searchParam.startDate;
-        this.sum_end = this.searchParam.endDate;
-        AbnormalStatistic.list(this.searchParam)
-          .then( (res) => {
-            this.tableLoading = false;
-            res.data.forEach( value => {
-              value.outHspitalTime = value.outHspitalTime ? value.outHspitalTime.split(' ')[0] : value.outHspitalTime;
-              value.dateEnd = value.dateEnd ?  value.dateEnd.substring(0,value.dateEnd.length-3) : value.dateEnd;
-            });
-            this.tableData = res.data;
-            this.total = res.count;
-          })
-          .catch(error => {
-            this.tableLoading = false;
+    getData() {
+      this.tableLoading = true;
+      this.tableData = [];
+      this.total = 0;
+      this.sum_start = this.searchParam.startDate;
+      this.sum_end = this.searchParam.endDate;
+      AbnormalStatistic.list(this.searchParam)
+        .then((res) => {
+          this.tableLoading = false;
+          res.data.forEach(value => {
+            value.outHspitalTime = value.outHspitalTime ? value.outHspitalTime.split(' ')[0] : value.outHspitalTime;
+            value.dateEnd = value.dateEnd ? value.dateEnd.substring(0, value.dateEnd.length - 3) : value.dateEnd;
           });
-      },
-      /**
+          this.tableData = res.data;
+          this.total = res.count;
+        })
+        .catch(error => {
+          console.log(error);
+          this.tableLoading = false;
+        });
+    },
+    /**
        * 分页
        * @function pageChange
        * @param {String} page 当前页码
        * @description
        */
-      pageChange(page) {
-        this.searchParam.pager = page;
-        this.getData();
-      },
-      /**
+    pageChange(page) {
+      this.searchParam.pager = page;
+      this.getData();
+    },
+    /**
        * @description 随访时间改变触发函数
        * @function followTimePick
        * @param  {array} date 返回的时间值数组
        */
-      followTimePick(date) {
-        if (date) {
-          this.searchParam.startDate = date[0];
-          this.searchParam.endDate = date[1];
-        } else {
-          this.searchParam.startDate = '';
-          this.searchParam.endDate = '';
-        }
-      },
-      /**
+    followTimePick(date) {
+      if (date) {
+        this.searchParam.startDate = date[0];
+        this.searchParam.endDate = date[1];
+      } else {
+        this.searchParam.startDate = '';
+        this.searchParam.endDate = '';
+      }
+    },
+    /**
        * @description 出院时间改变触发函数
        * @function outTimePick
        * @param  {array} date 返回的时间值数组
        */
-      outTimePick(date) {
-        if (date) {
-          this.searchParam.diagnoseStartDate = date[0];
-          this.searchParam.diagnoseEndDate = date[1];
-        } else {
-          this.searchParam.diagnoseStartDate = "";
-          this.searchParam.diagnoseEndDate = "";
-        }
-      },
-      /**
+    outTimePick(date) {
+      if (date) {
+        this.searchParam.diagnoseStartDate = date[0];
+        this.searchParam.diagnoseEndDate = date[1];
+      } else {
+        this.searchParam.diagnoseStartDate = '';
+        this.searchParam.diagnoseEndDate = '';
+      }
+    },
+    /**
        * @description 查询数据
        * @function searchBtn
        */
-      searchBtn() {
-        this.searchParam.pager = 1;
-        this.getData();
-      },
-      /**
+    searchBtn() {
+      this.searchParam.pager = 1;
+      this.getData();
+    },
+    /**
        * @description 导出数据
        * @function exportBtn
        */
-      exportBtn() {
-        AbnormalStatistic.export(this.searchParam);
-      },
+    exportBtn() {
+      AbnormalStatistic.export(this.searchParam);
     }
   }
+};
 </script>
 
 <style lang="scss">

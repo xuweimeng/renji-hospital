@@ -230,81 +230,81 @@
  * 随访结果
  * @module followway
  */
-import { FollowRecord } from '@/api/HN_DoctorClient/FollowRecord'
-import patientFile from 'HNDC/common/patientFile'
-import followPlan from 'HNDC/common/FollowPlan'
-import followRecord from 'HNDC/common/followRecord'
-const typeMap = ['unhandled','handled']; // 对应：未处理、已处理；用来匹配 不同的param_
-  export default {
-    data() {
-      return {
-        userId: '',//医生id
-        searchParam: {
-          sex:"",   // 病人性别
-          patientName: '',  // 姓名
-          icdName: '', // 疾病类型
-          fromAge: '', // 搜索起始年龄
-          endAge: '', // 搜索结束年龄
-          type: '1', // 时间 3：全部，2：近7天，1：近30天
-          schemeName: '', // 方案名称
-          backStatus: '', // 通话状态
-          scquisitionState: '', // 采集状态 1、无异常。2、有异常。3、部分采集。4、接通未采集。5、接通无应答。6、未接通未采集。
-          limit: 10, // 每页条数
-        },
-        /* 未处理的数据集合 */
-        param_unhandled: {
-          page: 1,
-          total: 0,
-          loading: false,
-          tableData: [],
-          status: 1
-        },
-        /* 已处理的数据集合 */
-        param_handled: {
-          page: 1,
-          total: 0,
-          loading: false,
-          tableData: [],
-          status: 11
-        },
-        cjsb: 'cjsb',//采集失败(灰色)--采集情况不同时，文字颜色不同的处理
-        wyc: 'wyc',//无异常(绿色)
-        yyc: 'yyc',//有异常(红色)
-        originC: 'originC',//橙色
-        patientId: '',//病人id
-        visitOrderId: '', // 选中的行的visitOrderId
-        taskId: '',//获取病人的taskId
-        sfNumber: '',//选中第几次
-        tabActive: 0, // 当前选中的tab 0未处理，1已处理
-      }
-    },
-    mounted() {
-      this.getUserId(11)
-      this.getList(this.param_unhandled);
-    },
-    components:{
-      followRecord,
-      patientFile,
-      followPlan,
-    },
-    methods: {
-      /**
+import { FollowRecord } from '@/api/HN_DoctorClient/FollowRecord';
+import patientFile from 'HNDC/common/patientFile';
+import followPlan from 'HNDC/common/FollowPlan';
+import followRecord from 'HNDC/common/followRecord';
+const typeMap = ['unhandled', 'handled']; // 对应：未处理、已处理；用来匹配 不同的param_
+export default {
+  data() {
+    return {
+      userId: '', // 医生id
+      searchParam: {
+        sex: '', // 病人性别
+        patientName: '', // 姓名
+        icdName: '', // 疾病类型
+        fromAge: '', // 搜索起始年龄
+        endAge: '', // 搜索结束年龄
+        type: '1', // 时间 3：全部，2：近7天，1：近30天
+        schemeName: '', // 方案名称
+        backStatus: '', // 通话状态
+        scquisitionState: '', // 采集状态 1、无异常。2、有异常。3、部分采集。4、接通未采集。5、接通无应答。6、未接通未采集。
+        limit: 10 // 每页条数
+      },
+      /* 未处理的数据集合 */
+      param_unhandled: {
+        page: 1,
+        total: 0,
+        loading: false,
+        tableData: [],
+        status: 1
+      },
+      /* 已处理的数据集合 */
+      param_handled: {
+        page: 1,
+        total: 0,
+        loading: false,
+        tableData: [],
+        status: 11
+      },
+      cjsb: 'cjsb', // 采集失败(灰色)--采集情况不同时，文字颜色不同的处理
+      wyc: 'wyc', // 无异常(绿色)
+      yyc: 'yyc', // 有异常(红色)
+      originC: 'originC', // 橙色
+      patientId: '', // 病人id
+      visitOrderId: '', // 选中的行的visitOrderId
+      taskId: '', // 获取病人的taskId
+      sfNumber: '', // 选中第几次
+      tabActive: 0 // 当前选中的tab 0未处理，1已处理
+    };
+  },
+  mounted() {
+    this.getUserId(11);
+    this.getList(this.param_unhandled);
+  },
+  components: {
+    followRecord,
+    patientFile,
+    followPlan
+  },
+  methods: {
+    /**
        * 刷新当前列表数据--特别关注切换后--子组件调用
        * @function refreshList
        */
-      refreshList() {
-        let param_name = `param_${typeMap[this.tabActive]}`;
-        this.getList(this[param_name]);
-      },
-      /**
+    refreshList() {
+      const param_name = `param_${typeMap[this.tabActive]}`;
+      this.getList(this[param_name]);
+    },
+    /**
       * 从sessionStorage获取医生id
       * @function getUserId
       * @param {String} userId 获取医生id
       */
-      getUserId() {
-        this.userId = sessionStorage.getItem('userId')//用户名
-      },
-      /**
+    getUserId() {
+      this.userId = sessionStorage.getItem('userId');// 用户名
+    },
+    /**
       * 列表数据获取
       * @function getList
       * @param {Object} param search参数
@@ -321,118 +321,119 @@ const typeMap = ['unhandled','handled']; // 对应：未处理、已处理；用
       * @param {String} pager 当前页码
       * @param {String} limit 每页显示条数
       */
-      getList(param) {
-        param.loading = true;
-        FollowRecord.list({
-          ...this.searchParam,
-          vetStatus: param.status,
-          pager: param.page,
-          adminId: this.userId,
-        }).then((res)=>{
-          param.loading = false
-          if(res.code == 0) {
-            const scquisitionStateMap = ['','无异常','有异常','部分采集','接通未采集','接通无应答','未接通未采集'];
-            const stateColorMap = ['','wyc','yyc','yyc','cjsb','originC',''];
-            //匹配当前病人是否被关注
-            res.data.forEach((item)=>{
-              if(item.islike == 0 || !item.islike) {
-                item.islike = false
-              }else if(item.islike == 1) {
-                item.islike = true
-              }
-              item.stateClass = stateColorMap[item.scquisitionState];
-              item.scquisitionStateText = scquisitionStateMap[item.scquisitionState];
-            });
-            param.tableData = res.data;
-            param.total = res.count;
-          }
-        }).catch((error)=>{
-          param.loading = false;
-        });
-      },
-      /**
+    getList(param) {
+      param.loading = true;
+      FollowRecord.list({
+        ...this.searchParam,
+        vetStatus: param.status,
+        pager: param.page,
+        adminId: this.userId
+      }).then((res) => {
+        param.loading = false;
+        if (res.code === 0) {
+          const scquisitionStateMap = ['', '无异常', '有异常', '部分采集', '接通未采集', '接通无应答', '未接通未采集'];
+          const stateColorMap = ['', 'wyc', 'yyc', 'yyc', 'cjsb', 'originC', ''];
+          // 匹配当前病人是否被关注
+          res.data.forEach((item) => {
+            if (item.islike === 0 || item.islike === '0' || !item.islike) {
+              item.islike = false;
+            } else if (item.islike === 1 || item.islike === '1') {
+              item.islike = true;
+            }
+            item.stateClass = stateColorMap[item.scquisitionState];
+            item.scquisitionStateText = scquisitionStateMap[item.scquisitionState];
+          });
+          param.tableData = res.data;
+          param.total = res.count;
+        }
+      }).catch((error) => {
+        console.log(error);
+        param.loading = false;
+      });
+    },
+    /**
        * 分页--未处理
        * @function handleCurrentUnhandled
        * @param {String} val 当前页码
        * @description
        */
-      handleCurrentUnhandled(page) {
-        this.param_unhandled.page = page;
-        this.getList(this.param_unhandled);
-      },
-      /**
+    handleCurrentUnhandled(page) {
+      this.param_unhandled.page = page;
+      this.getList(this.param_unhandled);
+    },
+    /**
        * 分页--已处理
        * @function handleCurrentHandled
        * @param {String} page 当前页码
        * @description
        */
-      handleCurrentHandled(page) {
-        this.param_handled.page = page;
-        this.getList(this.param_handled);
-      },
-      /**
+    handleCurrentHandled(page) {
+      this.param_handled.page = page;
+      this.getList(this.param_handled);
+    },
+    /**
       * 查询
       * @function waySearchBtn
       */
-      waySearchBtn() {
-        // 修改page会触发 分页方法的调用,无需在调用getList
-        let param_name = `param_${typeMap[this.tabActive]}`;
-        if(this[param_name].page !== 1){
-          this[param_name].page = 1;
-          return false;
-        }
-        this.getList(this[param_name]);
-      },
-     /**
+    waySearchBtn() {
+      // 修改page会触发 分页方法的调用,无需在调用getList
+      const param_name = `param_${typeMap[this.tabActive]}`;
+      if (this[param_name].page !== 1) {
+        this[param_name].page = 1;
+        return false;
+      }
+      this.getList(this[param_name]);
+    },
+    /**
       * 获取表格选中行信息
       * @function wayButton
       * @param {Object} scope 点击列表的scope的信息
       */
-      wayButton(scope) {
-        this.patientId = scope.row.hzxxId
-        this.visitOrderId = scope.row.visitOrderId
-        this.taskId = scope.row.taskId
-        this.sfNumber = scope.row.currentVisitTime;
-       setTimeout(() => {
-         this.$refs.followRecord.toggleShowModal();
-       },0);
-      },
-      /**
+    wayButton(scope) {
+      this.patientId = scope.row.hzxxId;
+      this.visitOrderId = scope.row.visitOrderId;
+      this.taskId = scope.row.taskId;
+      this.sfNumber = scope.row.currentVisitTime;
+      setTimeout(() => {
+        this.$refs.followRecord.toggleShowModal();
+      }, 0);
+    },
+    /**
        *列表上方的tab切换--不改变page
        *@function handleClick
        *@param {object} tab tab信息
        *@param {event} event 点击事件
        */
-      handleClick(tab, event) {
-        this.tabActive = tab.index;
-        let param_name = `param_${typeMap[tab.index]}`;
-        this.getList(this[param_name]);
-      },
-      /**
+    handleClick(tab, event) {
+      this.tabActive = tab.index;
+      const param_name = `param_${typeMap[tab.index]}`;
+      this.getList(this[param_name]);
+    },
+    /**
        *@function tdClick
        *@description 点击表格中的患者姓名
        */
-      tdClick(scope) {
-        this.patientId = scope.row.hzxxId
-        this.visitOrderId = scope.row.visitOrderId
-        setTimeout(() => {
-          this.$refs.patientFile.toggleShowModal();
-        },0);
-      },
-      /**
+    tdClick(scope) {
+      this.patientId = scope.row.hzxxId;
+      this.visitOrderId = scope.row.visitOrderId;
+      setTimeout(() => {
+        this.$refs.patientFile.toggleShowModal();
+      }, 0);
+    },
+    /**
        *@function sfjhModel
        *@description 点击表格中的随访计划，弹出 随访方案 框
        */
-      sfjhModel(scope) {
-        this.patientId = scope.row.hzxxId
-        this.visitOrderId = scope.row.visitOrderId
-        this.taskId = scope.row.taskId;
-        setTimeout(() => {
-          this.$refs.followPlan.toggleShowModal();
-        },0);
-      }
+    sfjhModel(scope) {
+      this.patientId = scope.row.hzxxId;
+      this.visitOrderId = scope.row.visitOrderId;
+      this.taskId = scope.row.taskId;
+      setTimeout(() => {
+        this.$refs.followPlan.toggleShowModal();
+      }, 0);
     }
   }
+};
 </script>
 
 <style lang="scss">

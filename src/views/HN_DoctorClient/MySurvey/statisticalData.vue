@@ -95,127 +95,127 @@
   </div>
 </template>
 <script>
-  import { MySurvey } from '@/api/HN_DoctorClient/MySurvey'
+  import { MySurvey } from '@/api/HN_DoctorClient/MySurvey';
   export default {
     name: 'AddUp',
-    data () {
+    data() {
       return {
         activeName: '6', // tab默认选择第几个
-        zyYearQuarters:'', //年份
-        mzYearQuarters:'',
-        Loading:false,
-        zyTableData:[],
-        mzTableData:[],
-        zyPage:1,//当前页
-        mzPage:1,
-        zyOptions:[],
-        mzOptions:[],
-        limit:10,
-        zyTotal:0,
-        mzTotal:0,
-      }
+        zyYearQuarters: '', // 年份
+        mzYearQuarters: '',
+        Loading: false,
+        zyTableData: [],
+        mzTableData: [],
+        zyPage: 1, // 当前页
+        mzPage: 1,
+        zyOptions: [],
+        mzOptions: [],
+        limit: 10,
+        zyTotal: 0,
+        mzTotal: 0
+      };
     },
-    mounted (){
+    mounted() {
       this.getSelectTime();
     },
-    watch:{
+    watch: {
       activeName() {
-        if(!this.mzYearQuarters && this.mzTotal==0){
+        if (!this.mzYearQuarters && this.mzTotal === 0) {
           this.getSelectTime();
         }
       }
     },
     methods: {
-      searchBtn () {
-        if(this.activeName==6){
-          this.zyPage=1;
-        }else{
-          this.mzPage=1;
+      searchBtn() {
+        if (this.activeName === '6') {
+          this.zyPage = 1;
+        } else {
+          this.mzPage = 1;
         }
         this.getTableData();
       },
-      /**导出报表*/
-      exportBtn(){
-        let yearQuarters=this.activeName==6?this.zyYearQuarters:this.mzYearQuarters;
-        let year=yearQuarters.split('_')[0];
-        let quarter=yearQuarters.split('_')[1];
+      /** 导出报表*/
+      exportBtn() {
+        const yearQuarters = this.activeName === '6' ? this.zyYearQuarters : this.mzYearQuarters;
+        const year = yearQuarters.split('_')[0];
+        const quarter = yearQuarters.split('_')[1];
         MySurvey.calculationResultExport({
-          activeType: this.activeName,   //类型(6:住院满意度,7：门诊满意度)
-          year: year,      //年份（如：2018）
-          quarter: quarter //季度（1:第一季度,2:第二季度,3:第三季度,4:第四季度）
+          activeType: this.activeName, // 类型(6:住院满意度,7：门诊满意度)
+          year: year, // 年份（如：2018）
+          quarter: quarter // 季度（1:第一季度,2:第二季度,3:第三季度,4:第四季度）
         });
       },
-      handleCurrentChangeZY (val) {
-        this.zyPage=val;
+      handleCurrentChangeZY(val) {
+        this.zyPage = val;
         this.getTableData();
       },
-      handleCurrentChangeMZ (val) {
-        this.mzPage=val;
+      handleCurrentChangeMZ(val) {
+        this.mzPage = val;
         this.getTableData();
       },
       /**
        * 满意度 医生端 统计数据-表格数据
        */
-      getTableData(){
-        let yearQuarters=this.activeName==6?this.zyYearQuarters:this.mzYearQuarters;
-        if(!yearQuarters){
-          this.$message.error("请选择季度!");
+      getTableData() {
+        const yearQuarters = this.activeName === '6' ? this.zyYearQuarters : this.mzYearQuarters;
+        if (!yearQuarters) {
+          this.$message.error('请选择季度!');
           return false;
         }
-        let year=yearQuarters.split('_')[0];
-        let quarter=yearQuarters.split('_')[1];
-        let pager=this.activeName==6?this.zyPage:this.mzPage;
-        this.Loading=true;
+        const year = yearQuarters.split('_')[0];
+        const quarter = yearQuarters.split('_')[1];
+        const pager = this.activeName === '6' ? this.zyPage : this.mzPage;
+        this.Loading = true;
         MySurvey.calculationResult({
-          pager:pager,
-          limit:this.limit,
-          activeType: this.activeName,   //类型(6:住院满意度,7：门诊满意度)
-          year: year,      //年份（如：2018）
-          quarter: quarter //季度（1:第一季度,2:第二季度,3:第三季度,4:第四季度）
+          pager: pager,
+          limit: this.limit,
+          activeType: this.activeName, // 类型(6:住院满意度,7：门诊满意度)
+          year: year, // 年份（如：2018）
+          quarter: quarter // 季度（1:第一季度,2:第二季度,3:第三季度,4:第四季度）
         }).then(res => {
-          this.Loading=false;
-          if(this.activeName==6){
-            this.zyTableData=res.data;
-            this.zyTotal=res.total;
-          }else{
-            this.mzTableData=res.data;
-            this.mzTotal=res.total;
+          this.Loading = false;
+          if (this.activeName === '6') {
+            this.zyTableData = res.data;
+            this.zyTotal = res.total;
+          } else {
+            this.mzTableData = res.data;
+            this.mzTotal = res.total;
           }
         });
       },
       /**
        * 统计数据 查询添加初始化--select的数据获取
        */
-      getSelectTime(){
+      getSelectTime() {
         MySurvey.satisfactionTime({
-          activeType: this.activeName  //类型(6:住院满意度,7：门诊满意度)
+          activeType: this.activeName // 类型(6:住院满意度,7：门诊满意度)
         }).then(res => {
-          let options=[];
-          const quarter_map=['0','第一季度(1-3月)','第二季度(4-6月)','第三季度(7-9月)','第四季度(10-12月)'];
-          if(!res.data){
+          const options = [];
+          const quarter_map = ['0', '第一季度(1-3月)', '第二季度(4-6月)', '第三季度(7-9月)', '第四季度(10-12月)'];
+          if (!res.data) {
             return false;
           }
-          for(let item of res.data){
-            let per_ops={};
-            per_ops.label=item.years+'年'+quarter_map[item.quarters];
-            per_ops.value=item.years+'_'+item.quarters;
+          for (const item of res.data) {
+            const per_ops = {};
+            per_ops.label = item.years + '年' + quarter_map[item.quarters];
+            per_ops.value = item.years + '_' + item.quarters;
             options.push(per_ops);
           }
-          if(this.activeName==6){
-            this.zyOptions=options;
-            this.zyYearQuarters=options[0].value;
+          if (this.activeName === '6') {
+            this.zyOptions = options;
+            this.zyYearQuarters = options[0].value;
             this.getTableData();
-          }else{
-            this.mzOptions=options;
-            this.mzYearQuarters=options[0].value;
+          } else {
+            this.mzOptions = options;
+            this.mzYearQuarters = options[0].value;
             this.getTableData();
           }
         }).catch(reason => {
           console.log(reason);
         });
       }
-    },
-  }
+    }
+  };
 </script>
 <style lang="scss">
   .zySurveyPlan {

@@ -151,74 +151,75 @@
  * 患者列表
  * @module patientList
  */
-import { PatientList } from '@/api/HN_DoctorClient/PatientList'
-import patientFile from 'HNDC/common/patientFile'
-import updateTel from "HNDC/dialog/patientList/updateTel";
-const typeMap = ['all','liked']; // 依次是 全部、已关注；用来匹配 不同的param_
-  export default {
-    data() {
-      return {
-        hideInput: false, // 隐藏了搜索栏的方案名称
-        searchParam: {
-          patientName: '', // 患者姓名
-          icdName: '', // 疾病类型
-          sex: '', // 性别
-          fromAge: '', // 搜索起始年龄
-          endAge: '', // 搜索借宿年龄
-          schemeName: '', // 方案名称
-        },
-        /* 全部的数据集合 */
-        param_all: {
-          page: 1,
-          total: 0,
-          loading: false,
-          tableData: [],
-          status: 0
-        },
-        /* 已关注的数据集合 */
-        param_liked: {
-          page: 1,
-          total: 0,
-          loading: false,
-          tableData: [],
-          status: 1
-        },
-        userId: '', // 医生id sessionStorage中
-        patientId: '',//病人id
-        tabActive: '0',//当前选中的tab0全部患者1特别关心
-        taskId:'',
-        visitOrderId:'',
-      }
-    },
-    components:{
-      updateTel,
-      patientFile,
-    },
-    mounted() {
-      this.getUserId();
-      if(this.$route.query.paName) {
-        this.searchParam.patientName = this.$route.query.paName;
-      }
-      this.getList(this.param_all);
-    },
-    methods: {
-      /**
+import { CommonAPI } from '@/api/HN_DoctorClient/common';
+import patientFile from 'HNDC/common/patientFile';
+import updateTel from 'HNDC/dialog/patientList/updateTel';
+const typeMap = ['all', 'liked']; // 依次是 全部、已关注；用来匹配 不同的param_
+export default {
+  data() {
+    return {
+      hideInput: false, // 隐藏了搜索栏的方案名称
+      searchParam: {
+        patientName: '', // 患者姓名
+        icdName: '', // 疾病类型
+        sex: '', // 性别
+        fromAge: '', // 搜索起始年龄
+        endAge: '', // 搜索借宿年龄
+        schemeName: '', // 方案名称
+        limit: 10 // 每页条数
+      },
+      /* 全部的数据集合 */
+      param_all: {
+        page: 1,
+        total: 0,
+        loading: false,
+        tableData: [],
+        status: 0
+      },
+      /* 已关注的数据集合 */
+      param_liked: {
+        page: 1,
+        total: 0,
+        loading: false,
+        tableData: [],
+        status: 1
+      },
+      userId: '', // 医生id sessionStorage中
+      patientId: '', // 病人id
+      tabActive: '0', // 当前选中的tab0全部患者1特别关心
+      taskId: '',
+      visitOrderId: ''
+    };
+  },
+  components: {
+    updateTel,
+    patientFile
+  },
+  mounted() {
+    this.getUserId();
+    if (this.$route.query.paName) {
+      this.searchParam.patientName = this.$route.query.paName;
+    }
+    this.getList(this.param_all);
+  },
+  methods: {
+    /**
        * 刷新当前列表数据--特别关注切换后--子组件调用
        * @function refreshList
        */
-      refreshList() {
-        let param_name = `param_${typeMap[this.tabActive]}`;
-        this.getList(this[param_name]);
-      },
-     /**
+    refreshList() {
+      const param_name = `param_${typeMap[this.tabActive]}`;
+      this.getList(this[param_name]);
+    },
+    /**
       * 从sessionStorage获取医生id
       * @function getUserId
       * @param {String} userId 获取医生id
       */
-      getUserId() {
-        this.userId = sessionStorage.getItem('userId')//用户名
-      },
-      /**
+    getUserId() {
+      this.userId = sessionStorage.getItem('userId');// 用户名
+    },
+    /**
       * 获取列表数据
       * @function getList
       * @param {Object} param search参数
@@ -233,109 +234,110 @@ const typeMap = ['all','liked']; // 依次是 全部、已关注；用来匹配 
       * @param {String} pager 当前页码
       * @param {String} limit 每页显示条数
       */
-      getList(param) {
-        param.loading = true;
-        PatientList.list({
-          ...this.searchParam,
-          gz: param.status,
-          pager: param.page,
-          adminId: this.userId,
-        }).then((res)=>{
-          param.loading = false
-          if(res.code == 0) {
-            //匹配当前病人是否被关注
-            res.data.forEach((item)=>{
-              if(item.islike == 0 || !item.islike) {
-                item.islike = false
-              }else if(item.islike == 1) {
-                item.islike = true
-              }
-            });
-            param.tableData = res.data;
-            param.total = res.count;
-          }
-        }).catch((error)=>{
-          param.loading = false;
-        });
-      },
-      /**
+    getList(param) {
+      param.loading = true;
+      CommonAPI.patientList({
+        ...this.searchParam,
+        gz: param.status,
+        pager: param.page,
+        adminId: this.userId
+      }).then((res) => {
+        param.loading = false;
+        if (res.code === 0) {
+          // 匹配当前病人是否被关注
+          res.data.forEach((item) => {
+            if (item.islike === 0 || item.islike === '0' || !item.islike) {
+              item.islike = false;
+            } else if (item.islike === 1 || item.islike === '1') {
+              item.islike = true;
+            }
+          });
+          param.tableData = res.data;
+          param.total = res.count;
+        }
+      }).catch((error) => {
+        console.log(error);
+        param.loading = false;
+      });
+    },
+    /**
        * 分页--全部
        * @function handleCurrentAll
        * @param {String} page 当前页码
        * @description
        */
-      handleCurrentAll(page) {
-        this.param_all.page = page;
-        this.getList(this.param_all);
-      },
-      /**
+    handleCurrentAll(page) {
+      this.param_all.page = page;
+      this.getList(this.param_all);
+    },
+    /**
        * 分页--已关注
        * @function handleCurrentLiked
        * @param {String} page 当前页码
        * @description
        */
-      handleCurrentLiked(page) {
-        this.param_liked.page = page;
-        this.getList(this.param_liked);
-      },
-      /**
+    handleCurrentLiked(page) {
+      this.param_liked.page = page;
+      this.getList(this.param_liked);
+    },
+    /**
        * 查询
        * @function waySearchBtn
        */
-      waySearchBtn() {
-        // 修改page会触发 分页方法的调用,无需在调用getList
-        let param_name = `param_${typeMap[this.tabActive]}`;
-        if(this[param_name].page !== 1){
-          this[param_name].page = 1;
-          return false;
-        }
-        this.getList(this[param_name]);
-      },
-      /**
+    waySearchBtn() {
+      // 修改page会触发 分页方法的调用,无需在调用getList
+      const param_name = `param_${typeMap[this.tabActive]}`;
+      if (this[param_name].page !== 1) {
+        this[param_name].page = 1;
+        return false;
+      }
+      this.getList(this[param_name]);
+    },
+    /**
        * 获取表格选中行信息  查看患者档案
        * @function wayButton
        * @param {Object} scope 点击列表的scope的信息
        */
-      wayButton(scope) {
-        this.patientId = scope.row.hzxxId;
-        this.taskId = scope.row.taskId;
-        this.visitOrderId = scope.row.id;
-        setTimeout(() => {
-          this.$refs.patientFile.toggleShowModal();
-        },0);
-      },
-      /**
+    wayButton(scope) {
+      this.patientId = scope.row.hzxxId;
+      this.taskId = scope.row.taskId;
+      this.visitOrderId = scope.row.id;
+      setTimeout(() => {
+        this.$refs.patientFile.toggleShowModal();
+      }, 0);
+    },
+    /**
        *列表上方的tab切换--不改变page
        *@function handleClick
        *@param {object} tab tab信息
        *@param {event} event 点击事件
        */
-      handleClick(tab, event) {
-        this.tabActive = tab.index;
-        let param_name = `param_${typeMap[tab.index]}`;
-        this.getList(this[param_name]);
-      },
-      /**
+    handleClick(tab, event) {
+      this.tabActive = tab.index;
+      const param_name = `param_${typeMap[tab.index]}`;
+      this.getList(this[param_name]);
+    },
+    /**
        * 列表 修改手机号 按钮
        * @function updateTelBtn
        * @param {Object} scope 点击列表的scope的信息
        */
-      updateTelBtn(scope) {
-        this.patientId = scope.row.hzxxId;
-        setTimeout(() => {
-          this.$refs.updateTel.toggleShowModal();
-        },0);
+    updateTelBtn(scope) {
+      this.patientId = scope.row.hzxxId;
+      setTimeout(() => {
+        this.$refs.updateTel.toggleShowModal();
+      }, 0);
+    }
+  },
+  watch: {
+    $route(to, from) {
+      if (to.path === '/PatientList' && this.$route.query.paName) {
+        this.searchParam.patientName = this.$route.query.paName;
+        this.getList(this.param_all);
       }
-    },
-    watch: {
-      $route(to, from) {
-        if(to.path==='/PatientList' && this.$route.query.paName) {
-          this.searchParam.patientName = this.$route.query.paName;
-          this.getList(this.param_all);
-        }
-      },
-    },
+    }
   }
+};
 </script>
 
 <!--<style lang="scss">-->

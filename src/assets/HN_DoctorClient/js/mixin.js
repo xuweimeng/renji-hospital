@@ -1,5 +1,6 @@
 // import {API} from '@/serve'
 import { mixinAPI } from '@/api/HN_DoctorClient/mixin_dialog'
+import { CommonAPI } from '@/api/HN_DoctorClient/common'
 const mixin = {
   mounted() {
     this.getUserId();
@@ -30,7 +31,7 @@ const mixin = {
       if (this.visitOrderId) {
         search_param.visitOrderId = this.visitOrderId; // 随访记录 弹框必须传
       }
-      mixinAPI.getPatientRecord(search_param).then((res)=>{
+      CommonAPI.getPatientRecord(search_param).then((res)=>{
         // 判断当前患者是否被关注
         if(res.code == 0) {
           if(res.data.gz == 0 || !res.data.gz) {
