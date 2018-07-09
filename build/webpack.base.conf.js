@@ -36,10 +36,14 @@ module.exports = {
     // 配置目录
     alias: {
       '@': resolve('src'),
-      'LQPE':resolve('src/views/LQ_PhysicalExamination'),
       'RJPE':resolve('src/views/RJ_PhysicalExamination'),
       'RJPE_API':resolve('src/api/RJ_PhysicalExamination'),
+      'LQPE':resolve('src/views/LQ_PhysicalExamination'),
       'LQPE_API':resolve('src/api/LQ_PhysicalExamination'),
+      'RJCD':resolve('src/views/RJ_ClinicalDepartments'),
+      'RJCD_API':resolve('src/api/RJ_ClinicalDepartments'),
+      'HNDC':resolve('src/views/HN_DoctorClient'),
+      'HNDC_API':resolve('src/api/HN_DoctorClient'),
     }
   },
   module: {

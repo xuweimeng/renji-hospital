@@ -83,7 +83,15 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: lineChartData.newVisitis,
+      // 顶部列表数据
+      PanelGroupData: {
+        total: 0, // 总客户数量
+        yesterdayNotice: 0, // 昨日通知客户数量
+        Informed: 0, // 已通知数量
+        waiting: 0, // 等待时间
+        logInTime: 0// 上次登录时间
+      }
     };
   },
   methods: {

@@ -30,16 +30,6 @@
           <el-dropdown-item >
             <span @click="Feedback" style="display:block;">意见反馈</span>
           </el-dropdown-item>
-          <router-link to="/">
-            <el-dropdown-item>
-              {{$t('navbar.dashboard')}}
-            </el-dropdown-item>
-          </router-link>
-          <!--<a target='_blank' href="https://github.com/PanJiaChen/vue-element-admin/">-->
-            <!--<el-dropdown-item>-->
-              <!--{{$t('navbar.github')}}-->
-            <!--</el-dropdown-item>-->
-          <!--</a>-->
           <el-dropdown-item divided>
             <span @click="logout" style="display:block;">{{$t('navbar.logOut')}}</span>
           </el-dropdown-item>
@@ -87,10 +77,10 @@ export default {
     logout() {
       this.$store.dispatch('LogOut').then(() => {
         location.reload();// In order to re-instantiate the vue-router object to avoid bugs
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

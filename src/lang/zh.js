@@ -66,7 +66,21 @@ export default {
     NoticeResult: '体检通知结果',
     Statistics: '体检统计数据',
     Patient: '患者列表',
-    PatientList: '患者列表'
+    PatientList: '患者列表',
+    // 海宁医生端
+    Homepage: '首页',
+    FollowPlan: '随访计划',
+    FollowPlanList: '随访计划',
+    FollowRecord: '随访记录',
+    FollowRecordList: '随访记录',
+    AbnormalStatistic: '异常数据',
+    AbnormalStatisticList: '异常数据',
+    MySurvey: '满意度调查', // 满意度调查
+    zySurveyPlan: '住院满意度计划',
+    mzSurveyPlan: '门诊满意度计划',
+    zySurveyResult: '住院满意度结果',
+    mzSurveyResult: '门诊满意度结果',
+    statisticalData: '数据统计'
   },
   navbar: {
     logOut: '退出登录',

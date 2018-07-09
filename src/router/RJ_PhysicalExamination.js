@@ -3,17 +3,18 @@
  */
 import Layout from '@/views/layout/Layout';
 
-const roles = roles;
+const roles = ['上海市仁济医院健康保健中心'];
 
 export const RJ_PhysicalExamination = [
   {
     path: '',
     component: Layout,
     redirect: 'Home',
+    meta: { title: '', roles: roles, icon: 'dashboard', noCache: true },
     children: [
       {
         path: 'Home',
-        component: () => import('RJPE/home.vue'),
+        component: () => import('RJPE/Home.vue'),
         name: 'Home',
         meta: { title: 'Home', icon: 'dashboard', roles: roles, noCache: true }
       }
