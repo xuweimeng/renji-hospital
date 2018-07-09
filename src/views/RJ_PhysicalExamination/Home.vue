@@ -390,7 +390,6 @@
   import { swiper, swiperSlide } from 'vue-awesome-swiper';
 //  import {Point} from '@/common/js/selectOptions'
 //  import Bus from '@/assets/js/bus'
-  import { mapGetters } from 'vuex';
 
   export default {
     data() {
@@ -520,11 +519,6 @@
           self.dataSourceThree.resize();
         });
       });
-    },
-    computed: {
-      ...mapGetters([
-        'userID'
-      ])
     },
     methods: {
       /**
@@ -963,11 +957,11 @@
           this.syhz = false;
           this.SpecialtableData = res.data;
           this.totalPagehome = res.total;
-          if (res.data.length < 1) {
-            this.sfyd = true;
-          }
+          // if (res.data.length < 1) {
+          //   this.sfyd = true;
+          // }
         }).catch((error) => {
-          this.$message.error(res.message);
+          this.$message.error(error.message);
           this.syhz = false;
         });
       },
@@ -1030,13 +1024,13 @@
           adminId: this.userId //
         }).then((res) => {
           console.log(res);
-          if (res.code == 0) {
+          if (res.code === 0) {
             this.dialogVisible = true;
             this.patientInfo = res.data;
             this.jzTime(res.data.clientId); // 历史体检日期  需要传客户id
           } else {
             this.dialogVisible = false;
-            this.$message.error(res.message);
+            // this.$message.error(res.message);
           }
           if (res.data.gzTag) {
             this.isCare = true;

@@ -49,6 +49,7 @@ const user = {
         // 配置用户名
         commit('SET_NAME', data.username);
         setParameter('name', data.username);
+        sessionStorage.setItem('userId', data.id)//用户id
         // 配置用户头像
         commit('SET_AVATAR', response.aipictureurl);
         setParameter('avatar', data.aipictureurl);
