@@ -4,6 +4,7 @@ import Router from 'vue-router';
 import { LQ_PhysicalExamination } from './LQ_PhysicalExamination';// 乐清六院
 import { HN_DoctorClient } from './HN_DoctorClient';// 海宁医生端
 import { RJ_PhysicalExamination } from './RJ_PhysicalExamination';// 仁济体检中心
+import { RJ_OncologyDepartment } from './RJ_OncologyDepartment';// 仁济体检中心
 Vue.use(Router);
 
 /* Layout布局器文件 */
@@ -43,6 +44,7 @@ export default new Router({
 export const asyncRouterMap = [
   ...RJ_PhysicalExamination,
   ...LQ_PhysicalExamination,
+  ...RJ_OncologyDepartment,
   // ...RJ_PhysicalExamination,
   ...HN_DoctorClient, // 海宁医生端
   // ...default_asyncRouterMap

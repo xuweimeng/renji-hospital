@@ -80,7 +80,20 @@ export default {
     mzSurveyPlan: 'OutpatientInvestigationPlan',
     zySurveyResult: 'HospitalizationInvestigationResult',
     mzSurveyResult: 'OutpatientInvestigationResult',
-    statisticalData: 'statisticalData'
+    statisticalData: 'statisticalData',
+    // 仁济--肿瘤科
+    homePage: 'homePage',
+    dischargeFollowupPlanReview: 'dischargeFollowupPlanReview',
+    dischargeFollowupResults: 'dischargeFollowupResults',
+    notificationsOfAdmission: 'notificationsOfAdmission',
+    admissionNoticePlan: 'admissionNoticePlan',
+    admissionNoticeResults: 'admissionNoticeResults',
+    initiatingNoticeOfInspection: 'initiatingNoticeOfInspection',
+    initiatingNoticePlan: 'initiatingNoticePlan',
+    checkTheResultOfTheNotice: 'checkTheResultOfTheNotice',
+    hzList: 'hzList',
+    addPatient: 'addPatient',
+    imperfectMessage: 'imperfectMessage'
   },
   // 主题导航那一块
   navbar: {

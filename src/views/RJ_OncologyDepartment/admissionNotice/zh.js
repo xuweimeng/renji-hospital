@@ -67,22 +67,7 @@ export default {
     Statistics: '体检统计数据',
     Patient: '患者列表',
     PatientList: '患者列表',
-    // 海宁医生端
-    Homepage: '首页',
-    FollowPlan: '随访计划',
-    FollowPlanList: '随访计划',
-    FollowRecord: '随访记录',
-    FollowRecordList: '随访记录',
-    AbnormalStatistic: '异常数据',
-    AbnormalStatisticList: '异常数据',
-    MySurvey: '满意度调查', // 满意度调查
-    zySurveyPlan: '住院满意度计划',
-    mzSurveyPlan: '门诊满意度计划',
-    zySurveyResult: '住院满意度结果',
-    mzSurveyResult: '门诊满意度结果',
-    statisticalData: '数据统计',
     // 仁济--肿瘤科
-    homePage: '首页',
     dischargeFollowupPlanReview: '出院随访计划审核',
     dischargeFollowupResults: '出院随访结果',
     notificationsOfAdmission: '发起入院通知',
@@ -91,7 +76,7 @@ export default {
     initiatingNoticeOfInspection: '发起检查通知',
     initiatingNoticePlan: '检查通知计划',
     checkTheResultOfTheNotice: '检查通知结果',
-    hzList: '患者列表',
+    patientList: '患者列表',
     addPatient: '批量添加患者',
     imperfectMessage: '未完善信息'
   },
