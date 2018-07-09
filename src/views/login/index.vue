@@ -106,6 +106,7 @@ export default {
           this.$store
             .dispatch('LoginByUsername', this.loginForm)
             .then((res) => {
+//              debugger
               this.loading = false;
               this.$router.push({ path: '/' });
             })

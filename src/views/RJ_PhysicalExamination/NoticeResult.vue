@@ -288,7 +288,7 @@
 </template>
 
 <script>
-  import { NoticeResult } from '../../api/RJ_PhysicalExamination/NoticeResult';     // 引入 api
+  import { NoticeResult } from '../../api/RJ_PhysicalExamination/NoticeResult'; // 引入 api
 
   /**
    * 随访计划
@@ -308,7 +308,7 @@
         modelData: [],
         loading1: true,
         resultDg: false, // 详情弹窗
-        createTime: '',  // 创建时间
+        createTime: '', // 创建时间
         currentPage: 1, // 当前页
         totalPage: 2000, // 总页数
         endBirthday: '',
@@ -316,7 +316,7 @@
         /* 搜索条件 */
         searchParams: {
           backStatus: '',
-          adminId: sessionStorage.getItem("userId"),
+          adminId: sessionStorage.getItem('userId'),
           sfzh: '',
           pager: 1, // 当前页码
           limit: 10, // 每页条数
@@ -327,7 +327,7 @@
           mobile: null, // 联系方式
           isMySelf: '', // 是否本人（1：是，0：否）
           isCome: '', // 是否过来入院（0：不来，1：来，2：改约）
-          icd: ''                 // 体检套餐名称id
+          icd: '' // 体检套餐名称id
         },
         input10: '',
         activeName: 'first', // tab
@@ -363,35 +363,35 @@
     },
 
     mounted() {
-      this.endBirthday=[this.getCurrent(),this.getCurrent()];
-      this.searchParams.dateEndBegin = this.getCurrent()+' 00:00:00';
-      this.searchParams.dateEndEnd = this.getCurrent()+' 23:59:59';
+      this.endBirthday = [this.getCurrent(), this.getCurrent()];
+      this.searchParams.dateEndBegin = this.getCurrent() + ' 00:00:00';
+      this.searchParams.dateEndEnd = this.getCurrent() + ' 23:59:59';
       this.getData();
     },
     methods: {
       getCurrent() {
-        let nowDate = new Date();
-        let year = nowDate.getFullYear();
-        let month =
+        const nowDate = new Date();
+        const year = nowDate.getFullYear();
+        const month =
           nowDate.getMonth() + 1 < 10
-            ? "0" + (nowDate.getMonth() + 1)
+            ? '0' + (nowDate.getMonth() + 1)
             : nowDate.getMonth() + 1;
-        let day =
-          nowDate.getDate() < 10 ? "0" + nowDate.getDate() : nowDate.getDate();
-        let dateStr = year + "-" + month + "-" + day;
+        const day =
+          nowDate.getDate() < 10 ? '0' + nowDate.getDate() : nowDate.getDate();
+        const dateStr = year + '-' + month + '-' + day;
         return dateStr;
       },
       /**
        * 选中时间
        **/
-      selectDate(val){
-        if(val){
-          let startDate = new Date(val[0]);
-          let endDate = new Date(val[1])
-          this.searchParams.dateEndBegin = startDate.getFullYear()+"-"+(startDate.getMonth()+1)+"-"+startDate.getDate()+' 00:00:00';
-          this.searchParams.dateEndEnd = endDate.getFullYear()+"-"+(endDate.getMonth()+1)+"-"+endDate.getDate()+' 23:59:59';
-        }else{
-          this.searchParams.dateEndBegin ='';
+      selectDate(val) {
+        if (val) {
+          const startDate = new Date(val[0]);
+          const endDate = new Date(val[1]);
+          this.searchParams.dateEndBegin = startDate.getFullYear() + '-' + (startDate.getMonth() + 1) + '-' + startDate.getDate() + ' 00:00:00';
+          this.searchParams.dateEndEnd = endDate.getFullYear() + '-' + (endDate.getMonth() + 1) + '-' + endDate.getDate() + ' 23:59:59';
+        } else {
+          this.searchParams.dateEndBegin = '';
           this.searchParams.dateEndEnd = '';
         }
       },
@@ -400,46 +400,46 @@
        */
       handleislike() {
         if (this.isCare) {
-          //取消关注
+          // 取消关注
           const h = this.$createElement;
           this.$msgbox({
-            title: "消息",
+            title: '消息',
             message: h(
-              "div",
+              'div',
               {
-                style: "text-align:center"
+                style: 'text-align:center'
               },
               [
                 h(
-                  "img",
+                  'img',
                   {
-//                    attrs: { src: require("../../../static/images/animal.png") },
-                    style: "width: 60px;height:52px;margin:0 auto;"
+                  //                    attrs: { src: require("../../../static/images/animal.png") },
+                    style: 'width: 60px;height:52px;margin:0 auto;'
                   },
                   null
                 ),
-                h("p", null, "确定取消关心吗?")
+                h('p', null, '确定取消关心吗?')
               ]
             ),
             showCancelButton: true,
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            customClass: "careMsgBox",
-            cancelButtonClass: "cancelButtonStyle",
-            confirmButtonClass: "confirmButtonStyle",
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            customClass: 'careMsgBox',
+            cancelButtonClass: 'cancelButtonStyle',
+            confirmButtonClass: 'confirmButtonStyle',
             beforeClose: (action, instance, done) => {
               done();
             }
           })
             .then(action => {
-              //取消关注
+              // 取消关注
               NoticeResult
                 .updateGz({
                   diagnoseType: 3,
-                  adminId: sessionStorage.getItem("userId"),
-                  patientId: this.patientId, //患者的id （必填）
-                  operateType: 0, //(操作类型 1:关注 0：取消关注) （必填）
-                  operateTag: "" //关注的标签
+                  adminId: sessionStorage.getItem('userId'),
+                  patientId: this.patientId, // 患者的id （必填）
+                  operateType: 0, // (操作类型 1:关注 0：取消关注) （必填）
+                  operateTag: '' // 关注的标签
                 })
                 .then(res => {
                   if (res.code == 0) {
@@ -456,66 +456,66 @@
             })
             .catch(() => {});
         } else {
-          //增加关注
-          this.$prompt("  ", "添加标签", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            inputPlaceholder: "请输入标签",
-            customClass: "careMsgBoxAdd",
-            cancelButtonClass: "cancelButtonStyle",
-            confirmButtonClass: "confirmButtonStyle"
+          // 增加关注
+          this.$prompt('  ', '添加标签', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            inputPlaceholder: '请输入标签',
+            customClass: 'careMsgBoxAdd',
+            cancelButtonClass: 'cancelButtonStyle',
+            confirmButtonClass: 'confirmButtonStyle'
           })
             .then(({ value }) => {
               if (!value) {
-                this.$message.error("标签不能为空!");
+                this.$message.error('标签不能为空!');
               } else if (value.toString().length < 6) {
                 NoticeResult
                   .updateGz({
                     diagnoseType: 3,
-                    adminId: sessionStorage.getItem("userId"),
-                    patientId: this.patientId, //患者的id （必填）
-                    operateType: 1, //(操作类型 1:关注 0：取消关注) （必填）
-                    operateTag: value //关注的标签
+                    adminId: sessionStorage.getItem('userId'),
+                    patientId: this.patientId, // 患者的id （必填）
+                    operateType: 1, // (操作类型 1:关注 0：取消关注) （必填）
+                    operateTag: value // 关注的标签
                   })
                   .then(res => {
                     if (res.code == 0) {
                       this.isCare = true;
                       this.gztag = value;
                       this.$message({
-                        type: "success",
-                        message: "关注成功!"
+                        type: 'success',
+                        message: '关注成功!'
                       });
-//                    this.showInfo(this.scope);
+                    //                    this.showInfo(this.scope);
                     }
                   })
                   .catch(error => {
                     console.log(error);
                   });
               } else {
-                this.$message.error("标签长度不能大于5!");
+                this.$message.error('标签长度不能大于5!');
               }
             })
             .catch(() => {
               this.$message({
-                type: "info",
-                message: "取消输入"
+                type: 'info',
+                message: '取消输入'
               });
             });
         }
       },
       /** 详情 */
-      detailBtn (scope) {
+      detailBtn(scope) {
         this.dataTail = scope.row;
         this.patientId = scope.row.hzxxId;
-        this.detailView(scope)
+        this.detailView(scope);
       },
-      detailView(scope){
+      detailView(scope) {
         NoticeResult.getPatientRecord({
-          id:scope.row.id,
-//         id:"03a5832e-f835-11e7-b52b-6cae8b369de2",
-          adminId: sessionStorage.getItem("userId"),
+          id: scope.row.id,
+          //         id:"03a5832e-f835-11e7-b52b-6cae8b369de2",
+          adminId: sessionStorage.getItem('userId')
         }).then(res => {
-          if(res.code==0){
+          if (res.code == 0) {
             this.dialogWay = true;
             if (res.islike) {
               this.isCare = true;
@@ -523,50 +523,50 @@
               this.isCare = false;
             }
             this.gztag = res.gztag;
-            if(res.data){
+            if (res.data) {
               this.patientInfo = res.data;
             }
-            this.urlAddress =res.AIVOICURL;
-            if(res.data){
-              console.log(111111)
-              if(res.data.orderReplyQuestions.length){
-                this.modelData =res.data.orderReplyQuestions;
-              }else{
-                this.modelData =[];
+            this.urlAddress = res.AIVOICURL;
+            if (res.data) {
+              console.log(111111);
+              if (res.data.orderReplyQuestions.length) {
+                this.modelData = res.data.orderReplyQuestions;
+              } else {
+                this.modelData = [];
               }
             }
-          }else{
-            this.$message.error(res.message)
+          } else {
+            this.$message.error(res.message);
           }
-        })
+        });
       },
       /** 监听弹窗子组件的关闭动作 */
-      closeChildren (val) {
-        this.resultDg = val
+      closeChildren(val) {
+        this.resultDg = val;
       },
       /**
        * 点击查询
        **/
-      waySearch(){
-        console.log(this.searchParams.icd)
+      waySearch() {
+        console.log(this.searchParams.icd);
         this.loading1 = true;
-        this.searchParams.pager =1;
-        this.getData();   //获取数据
+        this.searchParams.pager = 1;
+        this.getData(); // 获取数据
       },
-      /**@description
+      /** @description
        * 体检中心-体检套餐自动补全搜索
        */
       remoteMethod(query) {
-        if (query == "") {
+        if (query == '') {
           return false;
         }
         this.diseaseList = [];
         NoticeResult.autoComplete({
           zjm: query,
-          diseaseType:1,
+          diseaseType: 1
         })
           .then(res => {
-//            this.value9 = res.data;
+          //            this.value9 = res.data;
             this.diseaseList = res.data;
           })
           .catch(error => {});
@@ -574,38 +574,38 @@
       /* 获取数据 */
       getData() {
         NoticeResult.resultList(this.searchParams).then(res => {
-          if(res.data){
-            for(const item of res.data){
-              switch (item.isCome){
+          if (res.data) {
+            for (const item of res.data) {
+              switch (item.isCome) {
                 case 0:
-                  item.isComeDge = '不来'
+                  item.isComeDge = '不来';
                   break;
                 case 1:
-                  item.isComeDge = '来'
+                  item.isComeDge = '来';
                   break;
                 case 2:
-                  item.isComeDge = '改约'
+                  item.isComeDge = '改约';
                   break;
                 case -1:
-                  item.isComeDge = ''
+                  item.isComeDge = '';
                   break;
               }
-              switch (item.isMySelf){
+              switch (item.isMySelf) {
                 case 1:
-                  item.isMySelfDge = '是'
+                  item.isMySelfDge = '是';
                   break;
                 case 0:
-                  item.isMySelfDge = '否'
+                  item.isMySelfDge = '否';
                   break;
                 case -1:
-                  item.isMySelfDge = ''
+                  item.isMySelfDge = '';
                   break;
               }
             }
             this.loading1 = false;
             this.tableData = res.data;
             this.totalPage = res.total;
-          }else{
+          } else {
             this.tableData = [];
             this.totalPage = 0;
           }
@@ -625,7 +625,7 @@
        *@description 点击表格操作弹框不通过
        */
       noothroughCkeck() {
-        let id = this.checkId.join(",");
+        const id = this.checkId.join(',');
         this.handleCheck(1, 2, id, this.selectCheck);
         this.dialogVisible = false;
         this.list(this.currentPage);
@@ -653,8 +653,8 @@
           .then(res => {
             if (res.code == 0) {
               this.$message({
-                message: "操作已完成",
-                type: "success"
+                message: '操作已完成',
+                type: 'success'
               });
               this.list(this.currentPage);
               this.list1(this.currentPage1);
@@ -688,7 +688,7 @@
         } else {
           this.$refs.multipleTable.clearSelection();
         }
-      },
+      }
     }
   };
 </script>
