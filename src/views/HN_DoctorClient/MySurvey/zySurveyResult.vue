@@ -429,7 +429,7 @@
           orderReplyQuestions: []
         },
         voiceUrl: '',
-        adminId: sessionStorage.getItem('userId'),
+        adminId: this.$store.state.user.token,
         activeType: '6', // 住院:6,门诊：7
         mzResultData: [
           {
@@ -439,7 +439,7 @@
         mzLoading: false, // 门诊loading
         searchParam: {
           backStatus: '', // 通话状态
-          adminId: sessionStorage.getItem('userId'),
+          adminId: this.$store.state.user.token,
           pager: 1,
           limit: 10,
           activeType: '6',

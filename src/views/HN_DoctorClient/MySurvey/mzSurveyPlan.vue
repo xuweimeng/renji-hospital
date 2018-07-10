@@ -239,7 +239,7 @@ export default {
       userId: '', // 从localStorage获取登录页的医生id
       searchParam: {
         limit: 10, // 每页数量
-        adminId: sessionStorage.getItem('userId'), // 医生ID
+        adminId: this.$store.state.user.token, // 医生ID
         brxm: '', // 患者姓名
         mobile: '', // 联系电话
         departmentId: '', // 科室ID
@@ -457,7 +457,7 @@ export default {
      * @param {String} userId 获取医生id
      */
     getUserId() {
-      this.userId = sessionStorage.getItem('userId'); // 用户名
+      this.userId = this.$store.state.user.token; // 用户名
     },
     /**
      * @description 获取表格数据

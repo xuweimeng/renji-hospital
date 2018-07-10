@@ -51,6 +51,7 @@
       :visible.sync="finishShow"
       title="修改确认"
       width="750px"
+      center
     >
       <el-alert
         :title="'您所修改的手机号码  '+phone+'  有其他计划正在执行'"
@@ -63,7 +64,7 @@
       <el-table
         v-show="tableData.length>0"
         :data="tableData"
-        height="500"
+        max-height="500"
       >
         <el-table-column
           prop="brxm"
@@ -104,8 +105,8 @@
         </el-table-column>
       </el-table>
       <div slot="footer">
-        <el-button @click="finishShow = false">取消</el-button>
-        <el-button type="primary" @click="changeCode">确定</el-button>
+        <el-button type="primary" @click="changeCode">确定修改</el-button>
+        <el-button @click="finishShow = false">放弃修改</el-button>
       </div>
     </el-dialog>
     <!-- 弹出终止随访的选项 -->
@@ -281,7 +282,8 @@
             newPhone: this.phone // 要修改成的号码
           })
           .then(res => {
-            if (res.data.length > 0) {
+            // 多加了一个参数isNeedShow判断是否要弹出 正在执行的随访弹框
+            if (res.data.length > 0 && res.isNeedShow) {
               /* 展示终止页面 */
               this.finishShow = true;
               this.tableData = res.data;

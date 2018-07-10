@@ -199,6 +199,8 @@
   import { CommonAPI } from '@/api/HN_DoctorClient/common';
   import echart from 'echarts';
   import patientFile from 'HNDC/common/patientFile';
+
+  import { setParameter } from '@/utils/auth';
   export default {
     data() {
       return {
@@ -275,13 +277,15 @@
        * @param {String} userId 获取医生id
        */
       getUserId() {
-        this.userId = sessionStorage.getItem('userId'); // 用户名
-        this.laterhours = sessionStorage.getItem('laterhours'); // 距上次登录
+        this.userId = this.$store.state.user.token; // 用户名
+        // this.laterhours = sessionStorage.getItem('laterhours'); // 距上次登录
+        this.laterhours = this.$store.state.user.laterhours;
         // 如果没有返回时间，则表示空
         if (this.laterhours === 'undefined' || this.laterhours === '') {
           this.laterhours = 0;
         }
-        const aipictureurl = sessionStorage.getItem('aipictureurl'); // 宠物头像
+        // const aipictureurl = sessionStorage.getItem('aipictureurl'); // 宠物头像
+        const aipictureurl = this.$store.state.user.avatar;
         if (aipictureurl === '') {
           this.innerVisible = true;
           this.findAiPictureList(this.userId); // 获取12生肖
@@ -373,7 +377,9 @@
               res.data.aipicTureUrl =
                 this.currenthref + '/' + res.data.aipicTureUrl;
               this.getAdminInfo = res.data;
-              sessionStorage.setItem('aipictureurl', res.data.aipicTureUrl);
+              // sessionStorage.setItem('aipictureurl', res.data.aipicTureUrl);
+              this.$store.commit('SET_AVATAR', res.data.aipicTureUrl);
+              setParameter('avatar', res.data.aipicTureUrl);
             } else {
               this.$message.error(res.message);
             }
@@ -666,7 +672,7 @@
       routerToWay() {
         // this.$router.push({ path: "/FollowRecord" });
         // Bus.$emit("activeIndex", "/FollowRecord");
-        this.$router.push({ path: '/FollowRecordHN/FollowRecordListHN' });
+        this.$router.push({ path: '/FollowRecord/FollowRecordList' });
       },
       /*
       *跳转随访计划
@@ -674,7 +680,7 @@
       routerToWay1() {
         // this.$router.push({ path: "/FollowParam" });
         // Bus.$emit("activeIndex1", "/FollowParam");
-        this.$router.push({ path: '/FollowPlanHN/FollowPlanListHN' });
+        this.$router.push({ path: '/FollowPlan/FollowPlanList' });
       },
       /*
       *跳转随访计划
@@ -682,7 +688,7 @@
       toHz() {
         // this.$router.push({ path: "/PatientList" });
         // Bus.$emit("activeIndex2", "/PatientList");
-        this.$router.push({ path: '/PatientHN/PatientListHN' });
+        this.$router.push({ path: '/Patient/PatientList' });
       },
 
       /*

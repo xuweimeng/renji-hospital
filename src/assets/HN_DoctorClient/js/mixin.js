@@ -12,7 +12,7 @@ const mixin = {
      * @param {String} userId 获取医生id
      */
     getUserId() {
-      this.userId = sessionStorage.getItem('userId')//用户名
+      this.userId = this.$store.state.user.token//用户名
     },
     /**
      * 获取弹框患者个人信息(刷新特别关注的标签)
