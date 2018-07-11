@@ -4,8 +4,12 @@
 		<el-row class="btnOption">
 			<el-col :span="24">
 				<el-button type="primary" size="medium" @click="addListBtn">添加患者</el-button>
-				<el-button type="success" size="medium" @click="addPlBtn">批量添加</el-button>
-				<el-button type="info" size="medium" @click="halfBtn">未完善信息<span v-if="errorNumber > 0">({{errorNumber}})</span></el-button>
+				<router-link :to="`/UploadHz`">
+					<el-button type="success" size="medium">批量添加</el-button>
+				</router-link>
+				<router-link :to="`/HalfInfo`">
+					<el-button type="info" size="medium">未完善信息<span v-if="errorNumber > 0">({{errorNumber}})</span></el-button>
+				</router-link>
 			</el-col>
 		</el-row>
 		<!-- 查询 -->
@@ -76,7 +80,7 @@
 		<!-- 表格 -->
     <el-row class="common-table">
       <el-col :span="24">
-        <el-table border :data="tableData" :header-row-style="headerRowStyle" v-loading="loading">
+        <el-table border :data="tableData" v-loading="loading">
           <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
           <el-table-column prop="jtdh" label="联系电话" align="center"></el-table-column>
           <el-table-column label="性别/年龄" align="center" width="110">
@@ -128,9 +132,9 @@
 		<!-- 添加患者 -->
 		<add-list :elDialog="showDialog" v-on:closeDialogFun="closeDialogFun"></add-list>
 
-		<transition name="el-fade-in-linear">
+		<!-- <transition name="el-fade-in-linear">
 			<router-view></router-view>
-		</transition>
+		</transition> -->
 		<!-- 患者档案 -->
 		<hz-file
 			:hzDialog="hzDialog"
@@ -268,12 +272,6 @@
 			this.failList()
 		},
 		methods: {
-      /** 表头背景颜色 */
-      headerRowStyle ({row, rowIndex}) {
-        if (rowIndex === 0) {
-          return 'background: #f8f8f9;';
-        }
-      },
       /** 疾病搜索 */
 			remoteMethod(query) {
         if (query !== '') {

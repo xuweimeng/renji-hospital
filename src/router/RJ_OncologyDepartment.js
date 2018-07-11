@@ -45,7 +45,7 @@ export const RJ_OncologyDepartment = [
         }
       },
       {
-        path: 'UploadHz',
+        path: '/UploadHz',
         component: () => import('RJZL/patientList/uploadHz.vue'),
         name: 'UploadHz',
         meta: {
@@ -57,7 +57,7 @@ export const RJ_OncologyDepartment = [
         hidden: true
       },
       {
-        path: 'HalfInfo',
+        path: '/HalfInfo',
         component: () => import('RJZL/patientList/HalfInfo.vue'),
         name: 'HalfInfo',
         meta: {

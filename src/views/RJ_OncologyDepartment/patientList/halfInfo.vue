@@ -92,18 +92,18 @@
 			<el-button type="success" @click="saveOkHzzTemp">保存已完善的信息</el-button>
 		</el-row>
 		<!-- 完善疾病名称diglog -->
-		<!-- <disease
+		<disease
 			:diseaseDg="diseaseDg"
 			:hzid="hzid"
 			@closeDialogFun="closeDialogFun"
 			@saveIcdName="saveIcdName"
-			></disease> -->
+			></disease>
 	</div>
 </template>
 
 <script>
 	import { hzList } from 'RJZL_API/patientList'
-	// import Disease from '@/components/dialog/disease'
+	import Disease from '@/components/dialog/disease'
 	export default {
 		data () {
 			return {
@@ -127,7 +127,7 @@
 			}
 		},
 		components: {
-			// Disease
+			Disease
 		},
 		mounted () {
 			this.list(1)
@@ -180,7 +180,7 @@
 			editjb (scope) {
 				this.diseaseDg = true
 				this.nowIndex = scope.$index
-				this.$store.dispatch('ppid', scope.row.id)
+				this.hzid = scope.row.id
 			},
 			/**
 			 * [saveBtn description]
@@ -271,13 +271,7 @@
 @import '~styles/search';
 
 .halfInfo {
-	position: absolute;
-	top: 0;
-	bottom:0;
-	left:0;
-	right: 0;
 	background: #fff;
-	z-index: 100;
 	.upnum .el-col{
 		color: #999;
 		padding: 20px 20px;

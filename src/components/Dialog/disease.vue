@@ -35,7 +35,6 @@
 <script>
 import { hzList } from 'RJZL_API/patientList'
 import { commonUrl } from 'RJZL_API/commonUrl'
-import { mapState } from 'vuex'
 	export default {
 		data () {
 			return {
@@ -48,13 +47,9 @@ import { mapState } from 'vuex'
 		},
 		props: [
 		'diseaseDg',
-
+		'hzid'
 		],
-		computed: {
-			...mapState({
-				hzid: 'ppid'
-			})
-		},
+
 		methods: {
 			remoteMethod(query) {
         if (query !== '') {
