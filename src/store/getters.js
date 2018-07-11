@@ -7,6 +7,7 @@ const getters = {
   token: state => state.user.token,
   avatar: state => state.user.avatar,
   name: state => state.user.name,
+  scopeRowData: state => state.user.scopeRowData,
   // 用户权限
   roles: state => state.user.roles,
   permission_routers: state => state.permission.routers,

@@ -93,7 +93,12 @@ export default {
     checkTheResultOfTheNotice: '检查通知结果',
     hzList: '患者列表',
     addPatient: '批量添加患者',
-    imperfectMessage: '未完善信息'
+    imperfectMessage: '未完善信息',
+    dischargeFollowUp: '出院随访',
+    admissionNotice: '入院通知',
+    inspectionNotice: '检查通知',
+    UploadHz: '批量添加',
+    HalfInfo: '未完善信息'
   },
   navbar: {
     logOut: '退出登录',

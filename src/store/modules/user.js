@@ -1,6 +1,8 @@
 import { Login } from '@/api/login';
 import { getToken, setToken, removeToken, getParameter, setParameter, removeParameter } from '@/utils/auth';
 
+const SCOPE_ROW_DATA = 'SCOPE_ROW_DATA';
+
 const user = {
   state: {
     token: getToken(),
@@ -8,7 +10,9 @@ const user = {
     avatar: getParameter('avatar'),
     laterhours: getParameter('laterhours'),
     departmentName: getParameter('departmentName'),
-    roles: []
+    roles: [],
+    scopeRowData: {},
+    visitTime: ''
   },
   // 操作全局基础用户数据
   mutations: {
@@ -34,6 +38,14 @@ const user = {
     // 配置路有权限
     SET_ROLES: (state, roles) => {
       state.roles = roles;
+    },
+    // 表格scope.row.data
+    SCOPE_ROW_DATA: (state, scopeRowData) => {
+      state.scopeRowData = scopeRowData;
+    },
+    // 个人档案的随访日期
+    VISIT_TIME: (state, visitTime) => {
+      state.visitTime = visitTime;
     }
   },
 
@@ -170,7 +182,18 @@ const user = {
           resolve();
         });
       });
+    },
+
+    // 同步scope.row.data
+    getScopeRowData({ commit }, scopeRowData) {
+      commit('SCOPE_ROW_DATA', scopeRowData);
+    },
+
+    // 获取个人档案的随访日期(默认获取第一个)
+    getVisitTime({ commit }, visitTime) {
+      commit('VISIT_TIME', visitTime);
     }
+
   }
 };
 

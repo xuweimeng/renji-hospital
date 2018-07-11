@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Message, MessageBox } from 'element-ui';
+import { Message } from 'element-ui';
 import store from '@/store';
 import { getToken } from '@/utils/auth';
 import qs from 'qs';
@@ -9,7 +9,7 @@ const service = axios.create({
   // todo 海宁8084使用
   // baseURL: process.env.BASE_API, // api的base_url
   // baseURL: 'http://192.168.1.218:8084', // 海宁api的base_url
-  baseURL: 'http://192.168.1.218:8082', // api的base_url
+  baseURL: 'http://192.168.1.218:8082', // 仁济api的base_url
   timeout: 50000 // request timeout
 });
 

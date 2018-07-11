@@ -93,7 +93,12 @@ export default {
     checkTheResultOfTheNotice: 'checkTheResultOfTheNotice',
     hzList: 'hzList',
     addPatient: 'addPatient',
-    imperfectMessage: 'imperfectMessage'
+    imperfectMessage: 'imperfectMessage',
+    dischargeFollowUp: 'dischargeFollowUp',
+    admissionNotice: 'admissionNotice',
+    inspectionNotice: 'inspectionNotice',
+    UploadHz: 'UploadHz',
+    HalfInfo: 'HalfInfo'
   },
   // 主题导航那一块
   navbar: {
