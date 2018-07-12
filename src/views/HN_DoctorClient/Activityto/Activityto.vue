@@ -90,7 +90,7 @@ import echarts from 'echarts'
         numberPercent: 0,//未通知人数百分比
       }
     },
-    
+
     mounted() {
       this.getUserId()
       this.list(1)
@@ -102,9 +102,9 @@ import echarts from 'echarts'
       * @param {String} userId 获取医生id
       */
       getUserId() {
-        this.userId = sessionStorage.getItem('userId')//用户名
+        this.userId = this.$store.state.user.token//用户名
       },
-     
+
      /**
       * 通知方案列表
       * @function list
@@ -116,8 +116,8 @@ import echarts from 'echarts'
       list(page) {
         this.loading1 = true
         API.activityTo.list({
-          'adminId': this.userId, 
-          'schemeName': this.followwaySearch.taskName, 
+          'adminId': this.userId,
+          'schemeName': this.followwaySearch.taskName,
           'pager': page,
           'limit': '10'
         }).then((res)=>{
@@ -146,9 +146,9 @@ import echarts from 'echarts'
       * @param {String} 1 返回第一页
       */
       waySearch() {
-        this.loading1 = true 
+        this.loading1 = true
         this.list(1)
-      },  
+      },
       /**
       * 关闭弹框
       * @function handleClose
@@ -204,7 +204,7 @@ import echarts from 'echarts'
               height: 26px;
               line-height: 52px;
               .el-input {
-                width: 179px; 
+                width: 179px;
                 height: 26px;
                 .el-input__inner {
                   border-radius: 12px;

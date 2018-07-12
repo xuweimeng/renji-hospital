@@ -29,7 +29,7 @@ const user = {
     },
     // 设置部门名字
     SET_DEPARTMENTNAME: (state, departmentName) => {
-      state.laterhours = departmentName;
+      state.departmentName = departmentName;
     },
     // 配置路有权限
     SET_ROLES: (state, roles) => {

@@ -193,201 +193,146 @@
  * 患者档案
  * @module patientFile
  */
-import { PatientFile } from '@/api/HN_DoctorClient/common/patientFile'
-import 'swiper/dist/css/swiper.css'
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import mixin from '@/assets/HN_DoctorClient/js/mixin'
-import followRecord from 'HNDC/common/followRecord'
-  export default {
-    data() {
-      return {
-        userId: '',//从localStorage获取登录页的医生id
-        leaveHospital: '',//出院小结手风情默认展示索引
-        isNull: false, // 病人的住院、门诊信息都为空时true
-        ypxx: '1',  // 患者档案--门诊处方信息
-        patientRecord: {}, // 患者基本信息
-        isCare: '',//点击记录后，查看病人是否被关注
-        patientFileLoading: false, // 患者档案 加载动画
-        zyData: [], // 患者档案-住院信息
-        mzData: [], // 患者档案-门诊信息,
-        dialogVisible: false, // 患者档案弹框是否显示
-        selectNumber: null, // 患者档案-选中的就诊时间的index
-        taskIdRecord:'', // 传给随访记录的taskid
-        swiperDate: [], // 患者档案-就诊时间的数据
-        swiperOption: {//swiper组件的配置参数
-          slidesPerView: 4,
-          spaceBetween: 30,
-          slidesPerGroup: 4,
-          loop: false,
-          loopFillGroupWithBlank: true,
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev'
-          },
-        },
+import { PatientFile } from '@/api/HN_DoctorClient/common/patientFile';
+import 'swiper/dist/css/swiper.css';
+import { swiper, swiperSlide } from 'vue-awesome-swiper';
+import mixin from '@/assets/HN_DoctorClient/js/mixin';
+import followRecord from 'HNDC/common/followRecord';
+export default {
+  data() {
+    return {
+      userId: '', // 从localStorage获取登录页的医生id
+      leaveHospital: '', // 出院小结手风情默认展示索引
+      isNull: false, // 病人的住院、门诊信息都为空时true
+      ypxx: '1', // 患者档案--门诊处方信息
+      patientRecord: {}, // 患者基本信息
+      isCare: '', // 点击记录后，查看病人是否被关注
+      patientFileLoading: false, // 患者档案 加载动画
+      zyData: [], // 患者档案-住院信息
+      mzData: [], // 患者档案-门诊信息,
+      dialogVisible: false, // 患者档案弹框是否显示
+      selectNumber: null, // 患者档案-选中的就诊时间的index
+      taskIdRecord: '', // 传给随访记录的taskid
+      swiperDate: [], // 患者档案-就诊时间的数据
+      swiperOption: {// swiper组件的配置参数
+        slidesPerView: 4,
+        spaceBetween: 30,
+        slidesPerGroup: 4,
+        loop: false,
+        loopFillGroupWithBlank: true,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
+        }
       }
+    };
+  },
+  props: ['patientId', 'visitOrderId', 'showRecordLink', 'taskId', 'sfNumber'],
+  // 含getPatientInfo,handleislike两个方法
+  mixins: [mixin],
+  components: {
+    swiper,
+    swiperSlide,
+    followRecord
+  },
+  methods: {
+    // 有 随访记录 按钮时调用
+    sfDialog(taskId) {
+      this.taskIdRecord = taskId;
+      setTimeout(() => {
+        this.$refs.followRecord.toggleShowModal();
+      }, 0);
+      // this.dialogWay = true;
+      // this.targetTab = [];
+      // this.modelData = [];
+      // this.getWayResult(1); //判断是否被处理
     },
-    props:['patientId','visitOrderId','showRecordLink','taskId','sfNumber'],
-    // 含getPatientInfo,handleislike两个方法
-    mixins: [mixin],
-    components:{
-      swiper,
-      swiperSlide,
-      followRecord
-    },
-    methods: {
-      // 有 随访记录 按钮时调用
-      sfDialog(taskId) {
-        this.taskIdRecord = taskId;
-        setTimeout(() => {
-          this.$refs.followRecord.toggleShowModal();
-        },0);
-        // this.dialogWay = true;
-        // this.targetTab = [];
-        // this.modelData = [];
-        // this.getWayResult(1); //判断是否被处理
-      },
-      /**
+    /**
        * 切换患者档案弹框的显示
        * @function toggleShowModal
        */
-      toggleShowModal() {
-        this.dialogVisible = !this.dialogVisible;
-        if (this.dialogVisible) {
+    toggleShowModal() {
+      this.dialogVisible = !this.dialogVisible;
+      if (this.dialogVisible) {
+        // 解决偶现的patientId为空的情况
+        if (this.patientId) {
           this.getPtTime();
-          // 获取患者的基本信息
           this.getPatientInfo();
+        } else {
+          console.log('再次获取--patientId为空时');
+          setTimeout(() => {
+            this.getPtTime();
+            this.getPatientInfo();
+          }, 0);
         }
-      },
-      /*
+      }
+    },
+    /*
      *点击就诊时间
      */
-      sliderClick(item, index) {
-        this.zyData = []
-        this.mzData = []
-        this.selectNumber = index
-        this.currentPartientInfo(item.diagnosetime)
-      },
-      /*
+    sliderClick(item, index) {
+      this.zyData = [];
+      this.mzData = [];
+      this.selectNumber = index;
+      this.currentPartientInfo(item.diagnosetime);
+    },
+    /*
       *请求当前时间的患者信息
       */
-      currentPartientInfo(item) {
-        this.isNull = false;
-        this.patientFileLoading = true;
-        this.mzData = [];
-        this.zyData = [];
-        PatientFile.getRecordByDate({
-          'adminId': this.userId,
-          'patientId': this.patientId,
-          'date': item
-        }).then((res)=>{
-          this.patientFileLoading = false
-          if(res.code == 0) {
-            res.data.forEach((item)=> {
-              if(item.mzOrZy == 'zy') {
-                this.zyData.push(item)
-              }else if(item.mzOrZy == 'mz') {
-                this.mzData.push(item)
-              }
-            })
-            //当住院&&门诊都为空时，显示宠物
-            if(!this.zyData.length&&!this.mzData.length) {
-              this.isNull = true
+    currentPartientInfo(item) {
+      this.isNull = false;
+      this.patientFileLoading = true;
+      this.mzData = [];
+      this.zyData = [];
+      PatientFile.getRecordByDate({
+        'adminId': this.userId,
+        'patientId': this.patientId,
+        'date': item
+      }).then((res) => {
+        this.patientFileLoading = false;
+        if (res.code === 0) {
+          res.data.forEach((item) => {
+            if (item.mzOrZy === 'zy') {
+              this.zyData.push(item);
+            } else if (item.mzOrZy === 'mz') {
+              this.mzData.push(item);
             }
+          });
+          // 当住院&&门诊都为空时，显示宠物
+          if (!this.zyData.length && !this.mzData.length) {
+            this.isNull = true;
           }
-        }).catch((error)=>{
-          console.log(error);
-          // this.patientFileLoading = false;
-        })
-      },
-      /**
+        }
+      }).catch((error) => {
+        console.log(error);
+        // this.patientFileLoading = false;
+      });
+    },
+    /**
        * 请求患者随访时间
        */
-      getPtTime() {
-        this.swiperDate = [];
-        PatientFile.getRecordDate({
-          'adminId': this.userId,
-          'patientId': this.patientId
-        }).then((res)=>{
-          if(res.code == 0) {
-            this.swiperDate= res.data
-            this.zyData = []
-            this.mzData = []
-            this.selectNumber = 0
-            if(res.data.length) {
-              this.patientFileLoading = true
-              this.currentPartientInfo(res.data[0].diagnosetime)
-            }
+    getPtTime() {
+      this.swiperDate = [];
+      PatientFile.getRecordDate({
+        'adminId': this.userId,
+        'patientId': this.patientId
+      }).then((res) => {
+        if (res.code === 0) {
+          this.swiperDate = res.data;
+          this.zyData = [];
+          this.mzData = [];
+          this.selectNumber = 0;
+          if (res.data.length) {
+            this.patientFileLoading = true;
+            this.currentPartientInfo(res.data[0].diagnosetime);
           }
-        }).catch((error)=>{
-          console.log(error)
-        })
-      },
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
     }
   }
+};
 </script>
 
-<style lang="scss">
-  /*
- @import '../../assets/scss/mixin';
- @import '../../assets/scss/reset';
- @import '../../common/style/base';
-  .followplan {
-    background: $background;
-  }
- */
-  //model指标遍历
-  .targetLeft {
-    text-align: left;
-    color: #209eff;
-  }
-  //审核不通过弹框
-  .checknoPass {
-    .el-dialog__header {
-      text-align: left;
-      font-size: 18px;
-      .el-dialog__title {
-        color: #323333;
-        line-height: 18px;
-      }
-    }
-    .el-dialog__body {
-      .el-row .btnCheck {
-        .el-button {
-          padding: 6px 19px;
-          color: #fff;
-        }
-        .el-button:nth-of-type(1) {
-          background: #ff602d;
-        }
-        .el-button:nth-of-type(2) {
-          background: #afafaf;
-        }
-      }
-    }
-  }
-  //批量审核
-  .checkPiliang .el-button{
-    padding: 6px 12px;
-    background: #ff6e40;
-    color: #fff;
-    margin-top: 20px;
-    margin-left: 40px;
-    float:left;
-  }
-  //审核不通过下拉框
-  .selectOut {
-    margin-top: 12px!important;
-    //top: 278px !important;
-     //下拉框
-    .el-scrollbar {
-      .el-select-dropdown__wrap .el-select-dropdown__list .el-select-dropdown__item {
-        padding: 0 14px;
-      }
-    }
-    //箭头
-    .popper__arrow {
-     left: 188px !important;
-    }
-  }
-</style>
+

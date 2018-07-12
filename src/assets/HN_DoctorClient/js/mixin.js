@@ -1,5 +1,6 @@
 // import {API} from '@/serve'
 import { mixinAPI } from '@/api/HN_DoctorClient/mixin_dialog'
+import { CommonAPI } from '@/api/HN_DoctorClient/common'
 const mixin = {
   mounted() {
     this.getUserId();
@@ -11,7 +12,7 @@ const mixin = {
      * @param {String} userId 获取医生id
      */
     getUserId() {
-      this.userId = sessionStorage.getItem('userId')//用户名
+      this.userId = this.$store.state.user.token//用户名
     },
     /**
      * 获取弹框患者个人信息(刷新特别关注的标签)
@@ -30,7 +31,7 @@ const mixin = {
       if (this.visitOrderId) {
         search_param.visitOrderId = this.visitOrderId; // 随访记录 弹框必须传
       }
-      mixinAPI.getPatientRecord(search_param).then((res)=>{
+      CommonAPI.getPatientRecord(search_param).then((res)=>{
         // 判断当前患者是否被关注
         if(res.code == 0) {
           if(res.data.gz == 0 || !res.data.gz) {

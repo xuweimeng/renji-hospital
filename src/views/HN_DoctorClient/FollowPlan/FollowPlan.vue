@@ -236,102 +236,102 @@
  * 随访计划
  * @module followParam
  */
-import { FollowPlan } from '@/api/HN_DoctorClient/FollowPlan'
-import patientFile from 'HNDC/common/patientFile'
-import followPlan from 'HNDC/common/FollowPlan'
-const typeMap = ['wait','pass','nopass']; // 依次是 待审核、已通过、未通过；用来匹配 不同的param_
-  export default {
-    data() {
-      return {
-        userId: '',//从localStorage获取登录页的医生id
-        searchParam: {
-          limit: 10, // 每页数量
-          patientName: '', // 病人名称
-          icdName: '', // 疾病类型
-          sex: '', // 病人性别
-          fromAge: '', // 搜索起始年龄
-          endAge: '', // 搜索结束年龄
-          schemeName: '', // 方案名称
-        },
-        //(1:已通过 2:未通过 3:已审核 4:未审核)
-        /* 待审核的数据集合 */
-        param_wait: {
-          page: 1,
-          total: 0,
-          loading: false,
-          tableData: [],
-          status: 4
-        },
-        /* 已通过的数据集合 */
-        param_pass: {
-          page: 1,
-          total: 0,
-          loading: false,
-          tableData: [],
-          status: 1
-        },
-        /* 未通过的数据集合 */
-        param_nopass: {
-          page: 1,
-          total: 0,
-          loading: false,
-          tableData: [],
-          status: 2
-        },
-        patientId: '',//病人id
-        tabActive: 0,//当前选中的tab 0：待审核，1：已通过，2：未通过
-        multipleSelection: [], // 待审核表格中的选中结果
-        noCheck: false, //审核不通过弹框
-        selectCheck: '', //选中的审核不通过
-        //审核不通过options
-        checkoptions: [{
-          value: '',
-          label: '请选择'
-        },
-        {
-          value: '1',
-          label: '患者已死亡'
-        }, {
-          value: '2',
-          label: '患者不接受随访'
-        }, {
-          value: '3',
-          label: '随访方案重复'
-        }, {
-          value: '4',
-          label: '方案不匹配'
-        }],
-        checkId: [],//随访通过的id(多选时),
-        taskId: '', // 选中的行的id ?
-        visitOrderId: '', // 选中的行的visitOrderId
-      }
-    },
-    mounted() {
-      this.getUserId();
-      this.getList(this.param_wait);
-    },
-    components:{
-      patientFile,
-      followPlan,
-    },
-    methods: {
-      /**
+import { FollowPlan } from '@/api/HN_DoctorClient/FollowPlan';
+import patientFile from 'HNDC/common/patientFile';
+import followPlan from 'HNDC/common/FollowPlan';
+const typeMap = ['wait', 'pass', 'nopass']; // 依次是 待审核、已通过、未通过；用来匹配 不同的param_
+export default {
+  data() {
+    return {
+      userId: '', // 从localStorage获取登录页的医生id
+      searchParam: {
+        limit: 10, // 每页数量
+        patientName: '', // 病人名称
+        icdName: '', // 疾病类型
+        sex: '', // 病人性别
+        fromAge: '', // 搜索起始年龄
+        endAge: '', // 搜索结束年龄
+        schemeName: '' // 方案名称
+      },
+      // (1:已通过 2:未通过 3:已审核 4:未审核)
+      /* 待审核的数据集合 */
+      param_wait: {
+        page: 1,
+        total: 0,
+        loading: false,
+        tableData: [],
+        status: 4
+      },
+      /* 已通过的数据集合 */
+      param_pass: {
+        page: 1,
+        total: 0,
+        loading: false,
+        tableData: [],
+        status: 1
+      },
+      /* 未通过的数据集合 */
+      param_nopass: {
+        page: 1,
+        total: 0,
+        loading: false,
+        tableData: [],
+        status: 2
+      },
+      patientId: '', // 病人id
+      tabActive: 0, // 当前选中的tab 0：待审核，1：已通过，2：未通过
+      multipleSelection: [], // 待审核表格中的选中结果
+      noCheck: false, // 审核不通过弹框
+      selectCheck: '', // 选中的审核不通过
+      // 审核不通过options
+      checkoptions: [{
+        value: '',
+        label: '请选择'
+      },
+      {
+        value: '1',
+        label: '患者已死亡'
+      }, {
+        value: '2',
+        label: '患者不接受随访'
+      }, {
+        value: '3',
+        label: '随访方案重复'
+      }, {
+        value: '4',
+        label: '方案不匹配'
+      }],
+      checkId: [], // 随访通过的id(多选时),
+      taskId: '', // 选中的行的id ?
+      visitOrderId: '' // 选中的行的visitOrderId
+    };
+  },
+  mounted() {
+    this.getUserId();
+    this.getList(this.param_wait);
+  },
+  components: {
+    patientFile,
+    followPlan
+  },
+  methods: {
+    /**
        * 刷新当前列表数据--特别关注切换后--子组件调用
        * @function refreshList
        */
-      refreshList() {
-        let param_name = `param_${typeMap[this.tabActive]}`;
-        this.getList(this[param_name]);
-      },
-      /**
+    refreshList() {
+      const param_name = `param_${typeMap[this.tabActive]}`;
+      this.getList(this[param_name]);
+    },
+    /**
        * 从sessionStorage获取医生id
        * @function getUserId
        * @param {String} userId 获取医生id
        */
-      getUserId() {
-        this.userId = sessionStorage.getItem('userId'); // 用户名
-      },
-      /**
+    getUserId() {
+      this.userId = this.$store.state.user.token; // 用户名
+    },
+    /**
        * 列表数据获取
        * @function getList
        * @param {Object} param search参数
@@ -346,214 +346,215 @@ const typeMap = ['wait','pass','nopass']; // 依次是 待审核、已通过、�
        * @param {String} pager 当前页码
        * @param {String} limit 每页显示条数
        */
-      getList(param) {
-        param.loading = true;
-        FollowPlan.list({
-          ...this.searchParam,
-          status: param.status,
-          pager: param.page,
-          adminId: this.userId,
-        }).then((res) => {
-          param.loading = false;
-          if (res.code == 0) {
-            res.data.forEach((item) => {
-              if (item.islike == 0 || !item.islike) {
-                item.islike = false
-              } else if (item.islike == 1) {
-                item.islike = true
-              }
-              //匹配审核不通过原因
-              const reasonMap = ['', '患者已死亡', '患者不接受随访', '随访方案重复', '方案不匹配'];
-              item.notPassReason = reasonMap[item.notPassReason];
-              //随访类型
-              if (!item.activeType) {
-                item.activeType = 0;
-              }
-              const activeTypeMap = ['随访', '通知', '临时随访'];
-              item.activeType = activeTypeMap[item.activeType];
-            });
-            param.tableData = res.data;
-            // param.total = res.count;
+    getList(param) {
+      param.loading = true;
+      FollowPlan.list({
+        ...this.searchParam,
+        status: param.status,
+        pager: param.page,
+        adminId: this.userId
+      }).then((res) => {
+        param.loading = false;
+        if (res.code === 0) {
+          res.data.forEach((item) => {
+            if (item.islike === 0 || item.islike === '0' || !item.islike) {
+              item.islike = false;
+            } else if (item.islike === 1 || item.islike === '1') {
+              item.islike = true;
+            }
+            // 匹配审核不通过原因
+            const reasonMap = ['', '患者已死亡', '患者不接受随访', '随访方案重复', '方案不匹配'];
+            item.notPassReason = reasonMap[item.notPassReason];
+            // 随访类型
+            if (!item.activeType) {
+              item.activeType = 0;
+            }
+            const activeTypeMap = ['随访', '通知', '临时随访'];
+            item.activeType = activeTypeMap[item.activeType];
+          });
+          param.tableData = res.data;
+          // param.total = res.count;
 
-            // "hadExamineCount" : 1760 , //已审核
-            // "count" : 1865 , // 待审核
-            //  passCount通过
-            // "noPassCount" : 5 , //未通过总数
-            // "unExamineCount" : 104 , //未审核
-            const countMap = ['count','passCount','noPassCount'];
-            param.total = res[countMap[this.tabActive]];
-          }
-        }).catch((error) => {
-          param.loading = false;
-        });
-      },
-      /**
+          // "hadExamineCount" : 1760 , //已审核
+          // "count" : 1865 , // 待审核
+          //  passCount通过
+          // "noPassCount" : 5 , //未通过总数
+          // "unExamineCount" : 104 , //未审核
+          const countMap = ['count', 'passCount', 'noPassCount'];
+          param.total = res[countMap[this.tabActive]];
+        }
+      }).catch((error) => {
+        console.log(error);
+        param.loading = false;
+      });
+    },
+    /**
        * 待审核分页
        * @function pageChange_wait
        * @param {String} page 当前页码
        * @description
        */
-      pageChange_wait(page) {
-        this.param_wait.page = page;
-        this.getList(this.param_wait);
-      },
-      /**
+    pageChange_wait(page) {
+      this.param_wait.page = page;
+      this.getList(this.param_wait);
+    },
+    /**
        * 已通过分页
        * @function pageChange_wait
        * @param {String} page 当前页码
        * @description
        */
-      pageChange_pass(page) {
-        this.param_pass.page = page;
-        this.getList(this.param_pass);
-      },
-      /**
+    pageChange_pass(page) {
+      this.param_pass.page = page;
+      this.getList(this.param_pass);
+    },
+    /**
        * 不通过分页
        * @function pageChange_wait
        * @param {String} page 当前页码
        * @description
        */
-      pageChange_nopass(page) {
-        this.param_nopass.page = page;
-        this.getList(this.param_nopass);
-      },
-      /**
+    pageChange_nopass(page) {
+      this.param_nopass.page = page;
+      this.getList(this.param_nopass);
+    },
+    /**
        * 查询
        * @function waySearchBtn
        */
-      waySearchBtn() {
-        // 修改page会触发 分页方法的调用,无需在调用getList
-        let param_name = `param_${typeMap[this.tabActive]}`;
-        if (this[param_name].page !== 1) {
-          this[param_name].page = 1;
-          return false;
-        }
-        this.getList(this[param_name]);
-      },
-      /**
+    waySearchBtn() {
+      // 修改page会触发 分页方法的调用,无需在调用getList
+      const param_name = `param_${typeMap[this.tabActive]}`;
+      if (this[param_name].page !== 1) {
+        this[param_name].page = 1;
+        return false;
+      }
+      this.getList(this[param_name]);
+    },
+    /**
        * 获取表格选中行信息-点击 详情
        * @function wayButton
        * @param {Object} scope 点击列表的scope的信息
        */
-      wayButton(scope) {
-        this.checkId = []
-        this.checkId.push(scope.row.id)
-        this.isCare = scope.row.islike //获取当前患者是否被关注
-        this.patientId = scope.row.hzxxId
-        this.taskId = scope.row.id;
-        this.visitOrderId = scope.row.visitOrderId
-        setTimeout(() => {
-          this.$refs.followPlan.toggleShowModal();
-        },0);
-      },
-      /**
+    wayButton(scope) {
+      this.checkId = [];
+      this.checkId.push(scope.row.id);
+      this.isCare = scope.row.islike; // 获取当前患者是否被关注
+      this.patientId = scope.row.hzxxId;
+      this.taskId = scope.row.id;
+      this.visitOrderId = scope.row.visitOrderId;
+      setTimeout(() => {
+        this.$refs.followPlan.toggleShowModal();
+      }, 0);
+    },
+    /**
        *列表上方的三个tab切换--不改变page
        *@function handleClick
        *@param {object} tab tab信息
        *@param {event} event 点击事件
        */
-      handleClick(tab, event) {
-        this.tabActive = tab.index;
-        let param_name = `param_${typeMap[tab.index]}`;
-        this.getList(this[param_name]);
-      },
-      /**
+    handleClick(tab, event) {
+      this.tabActive = tab.index;
+      const param_name = `param_${typeMap[tab.index]}`;
+      this.getList(this[param_name]);
+    },
+    /**
        *待审核表格全选
        *@function toggleSelection
        *@param {object} rows 选中的行（参见element-ui的table-rows）
        */
-      toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
-        } else {
-          this.$refs.multipleTable.clearSelection();
-        }
-      },
-      /**
+    toggleSelection(rows) {
+      if (rows) {
+        rows.forEach(row => {
+          this.$refs.multipleTable.toggleRowSelection(row);
+        });
+      } else {
+        this.$refs.multipleTable.clearSelection();
+      }
+    },
+    /**
        *待审核表格多选
        */
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-      },
-      /**
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    /**
        *批量审核
        *@function numCheck
        *@description 批量审核，传入多学值，参考handleCheck
        */
-      numCheck() {
-        let id_arr = []
-        this.multipleSelection.forEach((item) => {
-          id_arr.push(item.id)
-        })
-        if (!id_arr.length) {
-          this.$message.error('请选择患者!')
-        } else {
-          this.handleCheck(2, 2, id_arr.join(','),)
-        }
-      },
-      /**
+    numCheck() {
+      const id_arr = [];
+      this.multipleSelection.forEach((item) => {
+        id_arr.push(item.id);
+      });
+      if (!id_arr.length) {
+        this.$message.error('请选择患者!');
+      } else {
+        this.handleCheck(2, 2, id_arr.join(','));
+      }
+    },
+    /**
        *表格内审核通过
        *@function throughCheck
        *@param {object} scope 当前行内容（参加element-ui的table的scope概念）
        */
-      throughCheck(scope) {
-        this.handleCheck(2, 2, scope.row.id)
-      },
-      /**
+    throughCheck(scope) {
+      this.handleCheck(2, 2, scope.row.id);
+    },
+    /**
        *表格内审核不通过
        *@function throughCheck
        *@param {object} scope 当前行内容（参加element-ui的table的scope概念）
        */
-      noThroughCheck(scope) {
-        this.checkId = []//每次点击时清空选中的患者id
-        this.checkId.push(scope.row.id)
-        this.noCheck = true
-        this.selectCheck = ''
-      },
-      /**
+    noThroughCheck(scope) {
+      this.checkId = [];// 每次点击时清空选中的患者id
+      this.checkId.push(scope.row.id);
+      this.noCheck = true;
+      this.selectCheck = '';
+    },
+    /**
        *审核不通过的原因
        *@function changeSelect
        *@param {String} value 审核不通过的原因
        */
-      changeSelect(value) {
-        this.selectCheck = value
-      },
-      /**
+    changeSelect(value) {
+      this.selectCheck = value;
+    },
+    /**
        *审核不通过原因弹框 点击确定
        *@function noothroughCheck
        *@description 点击表格操作弹框不通过
        */
-      noothroughCheck() {
-        if (this.selectCheck) {
-          let id = this.checkId.join(',')
-          this.handleCheck(1, 2, id, this.selectCheck)
-          this.$refs.followPlan.closeDialog();
-          this.getList(this.param_wait);
-        } else {
-          this.$message.error('请选择不通过原因!')
-        }
-      },
-      /**
+    noothroughCheck() {
+      if (this.selectCheck) {
+        const id = this.checkId.join(',');
+        this.handleCheck(1, 2, id, this.selectCheck);
+        this.$refs.followPlan.closeDialog();
+        this.getList(this.param_wait);
+      } else {
+        this.$message.error('请选择不通过原因!');
+      }
+    },
+    /**
        *随访计划详情弹框中 点击通过
        *@function modelPass
        */
-      modelPass() {
-        let id = this.checkId.join(',')
-        this.handleCheck(2, 2, id)
-        this.$refs.followPlan.toggleShowModal();
-        this.getList(this.param_wait);
-      },
-      /**
+    modelPass() {
+      const id = this.checkId.join(',');
+      this.handleCheck(2, 2, id);
+      this.$refs.followPlan.toggleShowModal();
+      this.getList(this.param_wait);
+    },
+    /**
        *随访计划详情弹框中 点击不通过
        *@function modelOut
        */
-      modelOut() {
-        this.noCheck = true
-        this.selectCheck = ''
-      },
-      /**
+    modelOut() {
+      this.noCheck = true;
+      this.selectCheck = '';
+    },
+    /**
        *审核功能
        *@function handleCheck
        *@description 审核功能均调用这一个函数
@@ -563,103 +564,39 @@ const typeMap = ['wait','pass','nopass']; // 依次是 待审核、已通过、�
        *@param {String} ids 患者id集合,数组转字符串
        *@param {String} noPassReason 审核不通过原因
        */
-      handleCheck(operateType, isAll, ids, noPassReason) {
-        FollowPlan.editVisitProjectStatus({
-          'adminId': this.userId,
-          'operateType': operateType,
-          'isAll': isAll,
-          'ids': ids,
-          'noPassReason': noPassReason,
-        }).then((res) => {
-          if (res.code == 0) {
-            this.$message({
-              message: '操作已完成',
-              type: 'success'
-            });
-            this.getList(this.param_wait);
-            this.noCheck = false
-          }
-        }).catch((error) => {
-        })
-      },
-      /**
+    handleCheck(operateType, isAll, ids, noPassReason) {
+      FollowPlan.editVisitProjectStatus({
+        'adminId': this.userId,
+        'operateType': operateType,
+        'isAll': isAll,
+        'ids': ids,
+        'noPassReason': noPassReason
+      }).then((res) => {
+        if (res.code === 0) {
+          this.$message({
+            message: '操作已完成',
+            type: 'success'
+          });
+          this.getList(this.param_wait);
+          this.noCheck = false;
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
+    },
+    /**
        *@function tdClick
        *@description 点击患者姓名展示患者就诊档案
        *@param {object} scope 当前行内容（参加element-ui的table的scope概念）
        */
-      tdClick(scope) {
-        this.patientId = scope.row.hzxxId
-        this.visitOrderId = scope.row.visitOrderId
-        setTimeout(() => {
-          this.$refs.patientFile.toggleShowModal();
-        },0);
-      },
+    tdClick(scope) {
+      this.patientId = scope.row.hzxxId;
+      this.visitOrderId = scope.row.visitOrderId;
+      setTimeout(() => {
+        this.$refs.patientFile.toggleShowModal();
+      }, 0);
     }
   }
+};
 </script>
 
-<style lang="scss">
- /*@import '../../assets/scss/mixin';*/
- /*@import '../../assets/scss/reset';*/
- /*@import '../../common/style/base';*/
-
- /*
-  .followplan {
-    background: $background;
-  }
-  */
-  //model指标遍历
-  .targetLeft {
-    text-align: left;
-    color: #209eff;
-  }
-  //审核不通过弹框
-  .checknoPass {
-    .el-dialog__header {
-      text-align: left;
-      font-size: 18px;
-      .el-dialog__title {
-        color: #323333;
-        line-height: 18px;
-      }
-    }
-    .el-dialog__body {
-      .el-row .btnCheck {
-        .el-button {
-          padding: 6px 19px;
-          color: #fff;
-        }
-        .el-button:nth-of-type(1) {
-          background: #ff602d;
-        }
-        .el-button:nth-of-type(2) {
-          background: #afafaf;
-        }
-      }
-    }
-  }
-  //批量审核
-  .checkPiliang .el-button{
-    padding: 6px 12px;
-    background: #ff6e40;
-    color: #fff;
-    margin-top: 20px;
-    margin-left: 40px;
-    float:left;
-  }
-  //审核不通过下拉框
-  .selectOut {
-    margin-top: 12px!important;
-    //top: 278px !important;
-     //下拉框
-    .el-scrollbar {
-      .el-select-dropdown__wrap .el-select-dropdown__list .el-select-dropdown__item {
-        padding: 0 14px;
-      }
-    }
-    //箭头
-    .popper__arrow {
-     left: 188px !important;
-    }
-  }
-</style>

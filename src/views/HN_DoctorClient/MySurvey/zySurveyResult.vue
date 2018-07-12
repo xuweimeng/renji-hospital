@@ -1,242 +1,4 @@
-<style lang="scss">
-.result_info {
-  h3 {
-    color: #f80;
-    text-align: left;
-    font-size: 20px;
-    margin-bottom: 5px;
-  }
-  h4 {
-    text-align: left;
-    margin: 10px 0;
-    border-radius: 5px;
-    background-color: #f1f1f1;
-    color: #333;
-    text-indent: 5px;
-    padding: 5px 0;
-  }
-  &_message {
-    li {
-      display: inline-block;
-      margin-right: 5px;
-      background-color: #209eff;
-      padding: 2px 5px;
-      border-radius: 3px;
-      color: #fff;
-      font-size: 12px;
-    }
-  }
-  &_result {
-    li {
-      text-align: left;
-      text-indent: 10px;
-      font-size: 12px;
-      > span {
-        color: #209eff;
-        font-size: 12px;
-        display: inline-block;
-      }
-    }
-  }
-  &_recode {
-    max-height: 300px;
-    overflow-y: auto;
-    li {
-      height: 30px;
-      margin-bottom: 10px;
-      span {
-        border-radius: 50%;
-        height: 30px;
-        width: 30px;
-        line-height: 30px;
-        text-align: center;
-        border: 1px solid #f80;
-        font-size: 12px;
-        display: inline-block;
-        color: #f80;
-        float: right;
-        margin-right: 10px;
-      }
-      p {
-        background-color: #f1f1f1;
-        display: inline-block;
-        border-radius: 3px;
-        float: left;
-        display: inline-block;
-        height: 30px;
-        text-align: left;
-        font-size: 12px;
-        box-sizing: border-box;
-        padding-right: 10px;
-        line-height: 30px;
-        max-width: calc(100% - 40px);
-        text-indent: 10px;
-      }
-      audio {
-        float: right;
-        margin-right: 10px;
-        border: 1px solid #f80;
-        border-radius: 5px;
-      }
-    }
-    .isAi {
-      span {
-        float: left;
-        border-color: #209eff;
-        color: #209eff;
-      }
-    }
-  }
-  &_base {
-    border-bottom: 5px solid #dadada;
-    padding-bottom: 5px;
-    margin-bottom: 5px;
-    li {
-      text-align: left;
-      font-size: 12px;
-    }
-  }
-}
-.mzSurveyResult {
-  .searchList {
-    border-bottom: 15px solid #f0f0f0;
-  }
-  .middleRow {
-    // padding: 20px;
-    margin: 0 15px;
-    padding-left: 10px;
-    height: 50px;
-    text-align: left;
-    line-height: 50px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    .middleRowDetail {
-      span {
-        padding-right: 20px;
-      }
-    }
-    .outputExcel {
-      .el-button {
-        padding: 6px 12px;
-      }
-    }
-  }
-}
 
-.searchList {
-  /*  height: 52px; */
-  margin-bottom: 10px;
-  background: #fff;
-  .el-col {
-    .el-form {
-      height: 100px;
-      padding-left: 25px;
-      &:after {
-        content: "";
-        display: block;
-        clear: both;
-      }
-      .el-form-item:nth-of-type(1),
-      .el-form-item:nth-of-type(2) {
-        margin-bottom: 0;
-        float: left;
-
-        .el-form-item__label {
-          line-height: 52px;
-          color: #333;
-          font-size: 13px;
-          padding-right: 10px;
-        }
-        .el-form-item__content {
-          line-height: 52px;
-          .el-input {
-            width: 125px;
-
-            .el-input__inner {
-              border-radius: 18px;
-
-              padding-left: 5px;
-            }
-          }
-        }
-      }
-      .el-form-item:nth-of-type(3), .el-form-item:nth-of-type(4) {
-        margin-bottom: 0;
-        float: left;
-
-        .el-form-item__label {
-          line-height: 52px;
-          color: #333;
-          font-size: 13px;
-          padding-right: 10px;
-        }
-        .el-form-item__content {
-          line-height: 52px;
-          .el-input {
-            width: 90px;
-
-            .el-input__inner {
-              border-radius: 18px;
-
-              text-align: center;
-            }
-          }
-        }
-      }
-      .el-form-item:nth-of-type(5),
-      .el-form-item:nth-of-type(6) {
-        margin-bottom: 0;
-        float: left;
-
-        .el-form-item__label {
-          line-height: 52px;
-          color: #333;
-          font-size: 13px;
-          padding-right: 10px;
-        }
-        .el-form-item__content {
-          line-height: 52px;
-          .el-date-editor {
-             border-radius: 18px;
-            .el-input__inner {
-              text-align: center;
-            }
-          }
-        }
-      }
-      .el-form-item:nth-of-type(7) {
-        margin-bottom: 0;
-        float: left;
-
-        .el-form-item__label {
-          line-height: 52px;
-          color: #333;
-          font-size: 13px;
-          padding-right: 10px;
-        }
-        .el-form-item__content {
-          line-height: 52px;
-          .el-button {
-            line-height: 0;
-            margin-top: 13px;
-            background: #fff9f7;
-            border-color: #fdd3c4;
-            color: #ff6e40;
-            font-size: 14px;
-          }
-        }
-      }
-    }
-  }
-}
-.operationBtn {
-  padding: 0;
-  margin: 0;
-  height: 22px;
-  width: 52px;
-  font-size: 13px;
-}
-</style>
 <template>
   <div class="mzSurveyResult">
     <!-- 搜索 -->
@@ -413,267 +175,267 @@
   </div>
 </template>
 <script>
-  import { MySurvey } from '@/api/HN_DoctorClient/MySurvey'
-  import TablePagination from "HNDC/common/pagination";
-export default {
-  data() {
-    return {
-      infoData: {
-        brxm: "",
-        brxb: "",
-        brage: "",
-        medGpName: "",
-        departmentName: "",
-        schemeName: "",
-        orderResult: {},
-        orderReplyQuestions: []
-      },
-      voiceUrl: "",
-      adminId: sessionStorage.getItem("userId"),
-      activeType: "6", // 住院:6,门诊：7
-      mzResultData: [
-        {
-          name: ""
-        }
-      ], //表格数据
-      mzLoading: false, // 门诊loading
-      searchParam: {
-        backStatus:"",//通话状态
-        adminId: sessionStorage.getItem("userId"),
-        pager: 1,
-        limit: 10,
-        activeType: "6",
-        brxm: "",
-        mobile: "",
-        deparmentId: "",
-        VisitStartTimeBegin: "", //计划执行时间开始时间
-        VisitStartTimeEnd: "", //计划执行时间结束时间
-        dateAddBegin: "", //就诊(出院)开始时间
-        dateAddEnd: "", // 就诊（出院）结束时间
-        medGpId: "" //医疗组ID
-      },
-      tableType: {
-        Okay: 0,
-        General: 0,
-        NOkay: 0
-      },
-      deparmentId: [],
-      departMentList: [] /* 科室 */,
-      groupList: [] /* 医疗组 */,
-      time_plan: [], //计划执行时间
-      time_disease: [], //就诊时间
-      total: 0, // 总条数
-      surveyResultDialog: false // 详情弹框
-    };
-  },
-  components: {
-    TablePagination
-  },
-  mounted() {
-    this.searchData();
-    this.getDepartMentList();
-    this.getGroupList();
-  },
-  methods: {
-    /**
-     * @description 科室变化
-     * @function {function name}
-     * @return {type} {description}
-     */
-    getDepartchange(data) {
-      this.searchParam.deparmentId = data[data.length - 1];
-    },
-    /**
-     * @description 获取科室组
-     * @function getDepartMentList
-     * @return {type} {description}
-     */
-    getDepartMentList() {
-      MySurvey.getDepart().then(res => {
-        this.departMentList = this.dataFormat(res.data);
-      });
-    },
-    /**
-     * @description 获取医疗组
-     * @function getGroupList
-     * @return {type} {description}
-     */
-    getGroupList() {
-      MySurvey.getGroup().then(res => {
-        this.groupList = res.data;
-      });
-    },
-    /**
-     * @description 科室格式化
-     * @function dataFormat
-     * @param  {type} data {description}
-     * @return {type} {description}
-     */
-    dataFormat(data) {
-      let arrList = [];
-      /**
-       * 等级分组
-       */
-      for (let item of data) {
-        item.expand = true;
-        item.label = item.name;
-        item.value = item.id;
-        if (!arrList[item.level]) {
-          arrList[item.level] = [];
-        }
-        arrList[item.level].push(item);
-      }
-      let appendChild = (child, parent) => {
-        for (let item of child) {
-          for (const ite of parent) {
-            if (item.parentId == ite.id) {
-              if (!ite.children) {
-                ite.children = [];
-              }
-              ite.children.push(item);
-            }
+  import { MySurvey } from '@/api/HN_DoctorClient/MySurvey';
+  import TablePagination from 'HNDC/common/pagination';
+  export default {
+    data() {
+      return {
+        infoData: {
+          brxm: '',
+          brxb: '',
+          brage: '',
+          medGpName: '',
+          departmentName: '',
+          schemeName: '',
+          orderResult: {},
+          orderReplyQuestions: []
+        },
+        voiceUrl: '',
+        adminId: this.$store.state.user.token,
+        activeType: '6', // 住院:6,门诊：7
+        mzResultData: [
+          {
+            name: ''
           }
-        }
+        ], // 表格数据
+        mzLoading: false, // 门诊loading
+        searchParam: {
+          backStatus: '', // 通话状态
+          adminId: this.$store.state.user.token,
+          pager: 1,
+          limit: 10,
+          activeType: '6',
+          brxm: '',
+          mobile: '',
+          deparmentId: '',
+          VisitStartTimeBegin: '', // 计划执行时间开始时间
+          VisitStartTimeEnd: '', // 计划执行时间结束时间
+          dateAddBegin: '', // 就诊(出院)开始时间
+          dateAddEnd: '', // 就诊（出院）结束时间
+          medGpId: '' // 医疗组ID
+        },
+        tableType: {
+          Okay: 0,
+          General: 0,
+          NOkay: 0
+        },
+        deparmentId: [],
+        departMentList: [] /* 科室 */,
+        groupList: [] /* 医疗组 */,
+        time_plan: [], // 计划执行时间
+        time_disease: [], // 就诊时间
+        total: 0, // 总条数
+        surveyResultDialog: false // 详情弹框
       };
-      for (let i = arrList.length - 1; i > 0; i--) {
-        appendChild(arrList[i], arrList[i - 1]);
-      }
-      return arrList[0];
     },
-    /**
-     * @description 就诊时间改变触发函数
-     * @function diseaseTime
-     * @param  {array} date 返回的时间值数组
-     */
-    diseaseTime(date) {
-      if (date) {
-        this.searchParam.dateAddBegin = date[0];
-        this.searchParam.dateAddEnd = date[1];
-      } else {
-        this.searchParam.dateAddBegin = "";
-        this.searchParam.dateAddEnd = "";
-      }
+    components: {
+      TablePagination
     },
-    /**
-     * @description 计划执行时间改变触发函数
-     * @function planTime
-     * @param  {array} date 返回的时间值数组
-     */
-    planTime(date) {
-      if (date) {
-        this.searchParam.VisitStartTimeBegin = date[0];
-        this.searchParam.VisitStartTimeEnd = date[1];
-      } else {
-        this.searchParam.VisitStartTimeBegin = "";
-        this.searchParam.VisitStartTimeEnd = "";
-      }
-    },
-    /**
-     * @function {function name}
-     * @return {type} {description}
-     */
-    searchData() {
-      this.mzLoading = true;
-      MySurvey
-        .queryResultMYDList(this.searchParam)
-        .then(res => {
-          this.mzLoading = false;
-          if (res.code === 0) {
-            let dataForam = [];
-            for (let item of res.data) {
-              item = {
-                ...item.orderResult,
-                ...item
-              };
-              item.medicalEthics =
-                item.medicalEthics === 0
-                  ? "满意"
-                  : item.medicalEthics === 1
-                    ? "不满意"
-                    : item.medicalEthics === 2 ? "一般" : "";
-              item.environmental =
-                item.environmental === 0
-                  ? "满意"
-                  : item.environmental === 1
-                    ? "不满意"
-                    : item.environmental === 2 ? "一般" : "";
-              item.technical =
-                item.technical === 0
-                  ? "满意"
-                  : item.technical === 1
-                    ? "不满意"
-                    : item.technical === 2 ? "一般" : "";
-              item.service =
-                item.service === 0
-                  ? "满意"
-                  : item.service === 1
-                    ? "不满意"
-                    : item.service === 2 ? "一般" : "";
-              item.evaluate =
-                item.evaluate === 0
-                  ? "满意"
-                  : item.evaluate === 1
-                    ? "不满意"
-                    : item.evaluate === 2 ? "一般" : "";
-              item.medicalExpense =
-                item.medicalExpense === 0
-                  ? "满意"
-                  : item.medicalExpense === 1
-                    ? "不满意"
-                    : item.medicalExpense === 2 ? "一般" : "";
-              dataForam.push(item);
-            }
-            this.mzResultData = dataForam;
-            this.tableType = {
-              Okay: res.Okay,
-              NOkay: res.NOkay,
-              General: res.General
-            };
-            this.total = res.total;
-          }
-        })
-        .catch(error => {
-          this.mzLoading = false;
-          this.$message.error(error.message);
-        });
-    },
-    /** 分页 */
-    pageChange(page) {
-      this.searchParam.pager = page;
-      console.log(page)
+    mounted() {
       this.searchData();
+      this.getDepartMentList();
+      this.getGroupList();
     },
-    /** 监听子组件搜索数据 */
-    /** 详情 */
-    detailBtn(scope) {
-      MySurvey
-        .resultDetail({
-          id: scope.row.id
-        })
-        .then(res => {
-          this.infoData = res.data;
-          this.infoData.orderResult = {
-            technical: scope.row.technical,
-            service: scope.row.service,
-            medicalEthics: scope.row.medicalEthics,
-            environmental: scope.row.environmental,
-            medicalExpense: scope.row.medicalExpense,
-            evaluate: scope.row.evaluate
-          };
-          this.infoData.diagnoseTime = scope.row.orderTime;
-          this.infoData.departmentName = scope.row.medGpName;
-          this.voiceUrl = res.AIVOICURL;
+    methods: {
+      /**
+       * @description 科室变化
+       * @function {function name}
+       * @return {type} {description}
+       */
+      getDepartchange(data) {
+        this.searchParam.deparmentId = data[data.length - 1];
+      },
+      /**
+       * @description 获取科室组
+       * @function getDepartMentList
+       * @return {type} {description}
+       */
+      getDepartMentList() {
+        MySurvey.getDepart().then(res => {
+          this.departMentList = this.dataFormat(res.data);
         });
-      this.surveyResultDialog = true;
-    },
-    /** 详情关闭 */
-    planClose(val) {
-      this.surveyResultDialog = val;
-    },
-    /** 导出Excel */
-    outputExcel() {
-      MySurvey.getLink(this.searchParam);
+      },
+      /**
+       * @description 获取医疗组
+       * @function getGroupList
+       * @return {type} {description}
+       */
+      getGroupList() {
+        MySurvey.getGroup().then(res => {
+          this.groupList = res.data;
+        });
+      },
+      /**
+       * @description 科室格式化
+       * @function dataFormat
+       * @param  {type} data {description}
+       * @return {type} {description}
+       */
+      dataFormat(data) {
+        const arrList = [];
+        /**
+         * 等级分组
+         */
+        for (const item of data) {
+          item.expand = true;
+          item.label = item.name;
+          item.value = item.id;
+          if (!arrList[item.level]) {
+            arrList[item.level] = [];
+          }
+          arrList[item.level].push(item);
+        }
+        const appendChild = (child, parent) => {
+          for (const item of child) {
+            for (const ite of parent) {
+              if (item.parentId == ite.id) {
+                if (!ite.children) {
+                  ite.children = [];
+                }
+                ite.children.push(item);
+              }
+            }
+          }
+        };
+        for (let i = arrList.length - 1; i > 0; i--) {
+          appendChild(arrList[i], arrList[i - 1]);
+        }
+        return arrList[0];
+      },
+      /**
+       * @description 就诊时间改变触发函数
+       * @function diseaseTime
+       * @param  {array} date 返回的时间值数组
+       */
+      diseaseTime(date) {
+        if (date) {
+          this.searchParam.dateAddBegin = date[0];
+          this.searchParam.dateAddEnd = date[1];
+        } else {
+          this.searchParam.dateAddBegin = '';
+          this.searchParam.dateAddEnd = '';
+        }
+      },
+      /**
+       * @description 计划执行时间改变触发函数
+       * @function planTime
+       * @param  {array} date 返回的时间值数组
+       */
+      planTime(date) {
+        if (date) {
+          this.searchParam.VisitStartTimeBegin = date[0];
+          this.searchParam.VisitStartTimeEnd = date[1];
+        } else {
+          this.searchParam.VisitStartTimeBegin = '';
+          this.searchParam.VisitStartTimeEnd = '';
+        }
+      },
+      /**
+       * @function {function name}
+       * @return {type} {description}
+       */
+      searchData() {
+        this.mzLoading = true;
+        MySurvey
+          .queryResultMYDList(this.searchParam)
+          .then(res => {
+            this.mzLoading = false;
+            if (res.code === 0) {
+              const dataForam = [];
+              for (let item of res.data) {
+                item = {
+                  ...item.orderResult,
+                  ...item
+                };
+                item.medicalEthics =
+                  item.medicalEthics === 0
+                    ? '满意'
+                    : item.medicalEthics === 1
+                      ? '不满意'
+                      : item.medicalEthics === 2 ? '一般' : '';
+                item.environmental =
+                  item.environmental === 0
+                    ? '满意'
+                    : item.environmental === 1
+                      ? '不满意'
+                      : item.environmental === 2 ? '一般' : '';
+                item.technical =
+                  item.technical === 0
+                    ? '满意'
+                    : item.technical === 1
+                      ? '不满意'
+                      : item.technical === 2 ? '一般' : '';
+                item.service =
+                  item.service === 0
+                    ? '满意'
+                    : item.service === 1
+                      ? '不满意'
+                      : item.service === 2 ? '一般' : '';
+                item.evaluate =
+                  item.evaluate === 0
+                    ? '满意'
+                    : item.evaluate === 1
+                      ? '不满意'
+                      : item.evaluate === 2 ? '一般' : '';
+                item.medicalExpense =
+                  item.medicalExpense === 0
+                    ? '满意'
+                    : item.medicalExpense === 1
+                      ? '不满意'
+                      : item.medicalExpense === 2 ? '一般' : '';
+                dataForam.push(item);
+              }
+              this.mzResultData = dataForam;
+              this.tableType = {
+                Okay: res.Okay,
+                NOkay: res.NOkay,
+                General: res.General
+              };
+              this.total = res.total;
+            }
+          })
+          .catch(error => {
+            this.mzLoading = false;
+            this.$message.error(error.message);
+          });
+      },
+      /** 分页 */
+      pageChange(page) {
+        this.searchParam.pager = page;
+        console.log(page);
+        this.searchData();
+      },
+      /** 监听子组件搜索数据 */
+      /** 详情 */
+      detailBtn(scope) {
+        MySurvey
+          .resultDetail({
+            id: scope.row.id
+          })
+          .then(res => {
+            this.infoData = res.data;
+            this.infoData.orderResult = {
+              technical: scope.row.technical,
+              service: scope.row.service,
+              medicalEthics: scope.row.medicalEthics,
+              environmental: scope.row.environmental,
+              medicalExpense: scope.row.medicalExpense,
+              evaluate: scope.row.evaluate
+            };
+            this.infoData.diagnoseTime = scope.row.orderTime;
+            this.infoData.departmentName = scope.row.medGpName;
+            this.voiceUrl = res.AIVOICURL;
+          });
+        this.surveyResultDialog = true;
+      },
+      /** 详情关闭 */
+      planClose(val) {
+        this.surveyResultDialog = val;
+      },
+      /** 导出Excel */
+      outputExcel() {
+        MySurvey.getLink(this.searchParam);
+      }
     }
-  }
-};
+  };
 </script>
