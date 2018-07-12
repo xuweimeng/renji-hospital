@@ -1,29 +1,4 @@
-<style lang="scss">
-  .update_tel{
-    font-size: 14px;
-    .el-dialog__header{
-      text-align: left;
-      border-bottom: 1px solid #ececec;
-    }
-    .el-dialog__title{
-      font-size: 14px;
-      color: #666;
-    }
-    .el-alert__description{
-      text-align: left;
-    }
-    .el-form-item__content{
-      text-align: left;
-    }
-    /*去掉谷歌，火狐下的type="number"中的右边箭头*/
-    input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
-      -webkit-appearance: none !important;
-    }
-    .el-input.is-disabled .el-input__inner {
-      color: #606266;
-    }
-  }
-</style>
+
 <template>
   <div class="update_tel">
     <!-- 弹出手机号码修改 -->

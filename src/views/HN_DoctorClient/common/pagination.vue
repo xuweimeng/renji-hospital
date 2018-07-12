@@ -33,11 +33,3 @@
     }
   };
 </script>
-<style lang="scss">
-  .tablePagination {
-    height: 48px;
-    .el-col {
-      padding: 10px 0
-    }
-  }
-</style>

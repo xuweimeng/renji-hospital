@@ -82,9 +82,10 @@
           </el-row>
           <el-row>
             <el-col :span="4" class="elCol5" style="line-height:30px;text-align: left;">审核意见&nbsp;:&nbsp;</el-col>
-            <el-col :span="20" style="text-align: left;line-height:30px;">{{checkAdvice?checkAdvice:'暂无意见'}}</el-col>
+            <el-col :span="20" style="text-align: left;line-height:30px;">{{checkAdvice || '暂无意见'}}</el-col>
             <!--add by yugou 添加人工外呼意见callRemark 外呼审核意见-->
-            <el-col :span="20" style="text-align: left;line-height:30px;margin-left: 93px;">{{patientRecord.callRemark?patientRecord.callRemark:'暂无人工外呼意见'}}</el-col>
+            <el-col :span="20" style="text-align: left;line-height:30px;margin-left: 93px;" v-if="patientRecord.isArtificialCall == 1">
+              {{patientRecord.callRemark || '暂无人工外呼意见'}}</el-col>
           </el-row>
           <!-- 指标tab -->
           <el-row class="targetEcharts" style="background:#f9f9f9;">
@@ -123,10 +124,10 @@
                   </el-row>
                 </template>
                 <el-row v-if="!modelData.length" style="padding-top:20px;"><span>这个病人没有语音记录哦...</span></el-row>
-                <el-row class="voiceRow" v-for="item in modelData" :key="item.id" v-if="modelData.length">
+                <el-row class="voiceRow" v-for="item,index in modelData" :key="item.id" v-if="modelData.length">
                   <!--add by yugou 添加人工外呼标签-->
                   <!--isArtificialCall 是否人工外呼 0:不是（默认），1:是-->
-                  <el-tag type="info" v-if="patientRecord.isArtificialCall == 1">人工外呼</el-tag>
+                  <el-tag type="info" v-if="patientRecord.isArtificialCall == 1 && index === 0">人工外呼</el-tag>
                   <el-col :span="24" class="aiyuyin">
                     <div class="ai">AI</div>
                     <div class="aiWords">
@@ -584,175 +585,4 @@
   };
 </script>
 
-<style lang="scss">
-  /*
-  @import '../../assets/scss/mixin';
-  @import '../../assets/scss/reset';
-  @import '../../common/style/base';
-  .followway {
-    background: $background;
-  }
-  */
-  /*************搜索************/
-  .form-search {
-    /*height: 52px;*/
-    margin-bottom: 10px;
-    background: #fff;
-    .el-col {
-      .el-form {
-        /*height: 52px;*/
-        padding-left: 25px;
-        .el-form-item{
-          margin-bottom: 5px;
-        }
-        //姓名，随访方案，疾病诊断
-        .el-form-item:nth-of-type(1),.el-form-item:nth-of-type(2), .el-form-item:nth-of-type(3){
-          margin-bottom: 0;
-          float: left;
-          height: 26px;
-          .el-form-item__label {
-            height: 26px;
-            line-height: 52px;
-            color: #333;
-            font-size: 13px;
-            padding-right: 10px;
-          }
-          .el-form-item__content{
-            height: 26px;
-            line-height: 52px;
-            .el-input {
-              width: 125px;
-              height: 26px;
-              .el-input__inner {
-                border-radius: 12px;
-                height: 26px;
-                padding-left: 5px;
-              }
-            }
-          }
-        }
-        //性别
-        .el-form-item:nth-of-type(4), .el-form-item:nth-of-type(5){
-          margin-bottom: 0;
-          float: left;
-          height: 26px;
-          .el-form-item__label {
-            height: 26px;
-            line-height: 52px;
-            color: #333;
-            font-size: 13px;
-            padding-right: 10px;
-          }
-          .el-form-item__content{
-            height: 26px;
-            line-height: 52px;
-            .el-input {
-              width: 90px;
-              height: 26px;
-              .el-input__inner {
-                border-radius: 12px;
-                height: 26px;
-                text-align: center;
-              }
-            }
-          }
-        }
-        //年龄
-        .el-form-item:nth-of-type(6) {
-          margin-bottom: 0;
-          float: left;
-          height: 26px;
-          .el-form-item__label {
-            height: 26px;
-            line-height: 52px;
-            color: #333;
-            font-size: 13px;
-            padding-right: 10px;
-          }
-          .el-form-item__content{
-            height: 26px;
-            line-height: 52px;
-            .el-input {
-              width: 57px;
-              height: 26px;
-              .el-input__inner {
-                border-radius: 12px;
-                height: 26px;
-                padding: 0 10px;
-              }
-            }
-            span {
-              margin: 0 3px;
-            }
-          }
-        }
-        //搜索
-        /*.el-form-item:nth-of-type(8) {*/
-        /*update by yugou*/
-        .el-form-item:last-child{
-          margin-bottom: 0;
-          float: left;
-          height: 26px;
-          .el-form-item__label {
-            height: 26px;
-            line-height: 52px;
-            color: #333;
-            font-size: 13px;
-            padding-right: 10px;
-          }
-          .el-form-item__content{
-            height: 26px;
-            line-height: 52px;
-            .el-button {
-              height: 26px;
-              line-height: 0;
-              margin-top: 13px;
-              background: #fff9f7;
-              border-color: #fdd3c4;
-              color: #ff6e40;
-              font-size: 14px;
-            }
-          }
-        }
-      }
-    }
-  }
-  .wyc {
-    color: #00ae00;
-  }
-  .yyc {
-    color: #ff2626;
-  }
-  .cjsb {
-    color: #ffb15d;
-  }
-  .originC {
-    color: #ff6800;
-  }
-  //表格详情按钮
-  .operateBtn {
-    height:23px;
-    width:62px;
-    padding:0!important;
-    font-size:13px;
-  }
-  //失效按钮
-  .disabledBtn {
-    pointer-events: none;
-    background: #9E9E9E!important;
-    border: none!important;
-  }
-  .el-input--suffix .el-input__inner{
-    border-radius: 12px;
-    height: 26px;
-    text-align: center;
-  }
-  /*add  by yugou*/
-  /*较宽的select--通话状态、采集情况*/
-  .searchSelectLarge{
-    top: 163px !important;
-  }
-  .searchSelectLarge .popper__arrow{
-    left: 222.5px !important;
-  }
-</style>
+

@@ -1,71 +1,67 @@
 <template>
-  <div class="abnormalStatistic">
+  <div class="app-container">
     <!-- 搜索 -->
-    <el-row class="form-search">
-      <el-col :span="24">
-        <el-form :inline="true" :model="searchParam" class="demo-form-inline">
-          <el-form-item label="姓名" class="inputLength">
-            <el-input v-model.trim="searchParam.patientName" clearable placeholder="请输入患者姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="性别" class="seclectLength">
-            <el-select v-model="searchParam.sex" placeholder="请选择" popper-class="searchSelect">
-              <el-option label="全部" value=""></el-option>
-              <el-option label="男" value="男"></el-option>
-              <el-option label="女" value="女"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="联系电话" class="inputLength">
-            <el-input v-model.trim="searchParam.mobile" clearable placeholder="请输入患者电话"></el-input>
-          </el-form-item>
-          <el-form-item label="随访方案" class="inputLength">
-            <el-input v-model.trim="searchParam.schemeName" clearable placeholder="请输入随访方案"></el-input>
-          </el-form-item>
-          <el-col :span="24" style="margin-top: 20px;height: 50px;">
-          <el-form-item label="随访时间" class="seclectLength">
-            <el-date-picker
-              v-model="followTime"
-              popper-class="popper-timepicker"
-              type="datetimerange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="yyyy-MM-dd HH:mm"
-              format="yyyy-MM-dd HH:mm"
-              default-time="00:00"
-              size="mini"
-              @change="followTimePick"
-            >
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item label="出院时间" class="seclectLength">
-            <el-date-picker
-              v-model="outTime"
-              popper-class="popper-timepicker"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="yyyy-MM-dd"
-              size="mini"
-              @change="outTimePick"
-            >
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item class="searchBtn">
-            <el-button type="button" @click="searchBtn">查询</el-button>
-          </el-form-item>
-            <el-form-item class="searchBtn exportBtn">
-              <el-button type="button" @click="exportBtn">导出数据</el-button>
-            </el-form-item>
-          </el-col>
-        </el-form>
-      </el-col>
-    </el-row>
-    <el-row class="info-tag">
-      <span v-show="sum_start">{{sum_start}}至{{sum_end}}</span>
-      异常指标人数共计：{{total}}人
-    </el-row>
-    <el-table :data="tableData" style="width: 1110px" class="rsTable" v-loading="tableLoading">
+    <ul class="common_search">
+      <li class="common_search_single">
+        <label class="radio-label" >姓名</label>
+        <el-input  placeholder="请输入患者姓名"  v-model="searchParam.patientName"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >性别</label>
+        <el-select class="filter-item" v-model="searchParam.sex" placeholder="请选择">
+          <el-option label="全部" value=""></el-option>
+          <el-option label="男" value="男"></el-option>
+          <el-option label="女" value="女"></el-option>
+        </el-select>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >联系电话</label>
+        <el-input  placeholder="请输入患者电话"  v-model="searchParam.mobile"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >联系电话</label>
+        <el-input  placeholder="请输入联系电话"  v-model="searchParam.schemeName"></el-input>
+      </li>
+      <li class="common_search_single common_search_single_time">
+        <label class="radio-label">随访时间</label>
+        <el-date-picker
+          @change="followTimePick"
+          v-model="followTime"
+          type="datetimerange"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          range-separator="至"
+          value-format="yyyy-MM-dd HH:mm"
+          format="yyyy-MM-dd HH:mm"
+          default-time="00:00"
+        >
+        </el-date-picker>
+      </li>
+      <li class="common_search_single common_search_single_time">
+        <label class="radio-label">出院时间</label>
+        <el-date-picker
+          @change="outTimePick"
+          v-model="outTime"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
+        >
+        </el-date-picker>
+      </li>
+      <li class="common_search_single">
+        <el-button style='margin-right:10px;' type="primary" icon="el-icon-search"  @click="searchBtn" :loading="tableLoading">查询</el-button>
+        <el-button class="filter-item" type="primary"  icon="el-icon-download" @click="exportBtn">导出</el-button>
+      </li>
+    </ul>
+    <el-alert style="white-space: pre;"
+              :closable="false"
+              :title="`${sum_start}至${sum_end}    异常指标人数共计：${total}人`"
+              type="success">
+    </el-alert>
+
+    <el-table :data="tableData" class="rsTable" v-loading="tableLoading">
       <el-table-column prop="brxm" label="姓名" align="center" width="70"></el-table-column>
       <el-table-column prop="sexAge" label="性别/年龄" align="center" width="90">
         <template slot-scope="scope">
@@ -221,134 +217,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
- /*@import '../../assets/scss/mixin';*/
- /*@import '../../assets/scss/reset';*/
- /*@import '../../common/style/base';*/
-  /*************搜索************/
- .abnormalStatistic{
-   .form-search {
-     background: #fff;
-     border-bottom: 13px solid #ececec;
-     .el-col {
-       .el-form {
-         /*height: 52px;*/
-         padding-left: 25px;
-         .el-form-item{
-           margin-bottom: 5px;
-           float: left;
-         }
-         //姓名，随访方案，疾病诊断
-         .inputLength{
-           margin-bottom: 0;
-           float: left;
-           height: 26px;
-           .el-form-item__label {
-             height: 26px;
-             line-height: 52px;
-             color: #333;
-             font-size: 13px;
-             padding-right: 10px;
-           }
-           .el-form-item__content{
-             height: 26px;
-             line-height: 52px;
-             .el-input {
-               width: 125px !important;
-               height: 26px;
-               .el-input__inner {
-                 border-radius: 12px;
-                 height: 26px;
-                 padding-left: 5px;
-               }
-             }
-           }
-         }
-         //性别
-         .seclectLength{
-           margin-bottom: 0;
-           float: left;
-           height: 26px;
-           .el-form-item__label {
-             height: 26px;
-             line-height: 52px;
-             color: #333;
-             font-size: 13px;
-             padding-right: 10px;
-           }
-           .el-form-item__content{
-             height: 26px;
-             line-height: 52px;
-             .el-input {
-               width: 90px;
-               height: 26px;
-               .el-input__inner {
-                 border-radius: 12px;
-                 height: 26px;
-                 text-align: center;
-               }
-             }
-           }
-         }
-         .el-input__inner{
-           border-radius: 18px;
-         }
-         //搜索,导出
-         .searchBtn{
-           margin-bottom: 0;
-           height: 26px;
-           .el-form-item__label {
-             height: 26px;
-             line-height: 52px;
-             color: #333;
-             font-size: 13px;
-             padding-right: 10px;
-           }
-           .el-form-item__content{
-             height: 26px;
-             line-height: 40px;
-             .el-button {
-               height: 26px;
-               line-height: 0;
-               margin-top: 13px !important;
-               background: #fff9f7;
-               border-color: #fdd3c4;
-               color: #ff6e40;
-               font-size: 14px;
-             }
-           }
-         }
-         .el-form-item:last-child.exportBtn{
-           .el-form-item__content {
-             .el-button {
-               background: #ecf5ff;
-               border-color: #b3d8ff;
-               color: #409eff;
-             }
-           }
-         }
-       }
-     }
-   }
-   .el-input--suffix .el-input__inner{
-     border-radius: 12px;
-     height: 26px;
-     text-align: center;
-   }
-   .info-tag{
-     background-color: white;
-     text-align: left;
-     margin: 0 15px;
-     margin-top: 10px;
-     padding-left: 10px;
-     height: 50px;
-     line-height: 50px;
-     border: 1px solid #ccc;
-     border-radius: 5px;
-   }
- }
- .popper-timepicker{
-   top: 168px !important;
- }
-</style>
