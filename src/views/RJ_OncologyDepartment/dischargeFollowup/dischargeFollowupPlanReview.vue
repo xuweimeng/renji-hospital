@@ -57,7 +57,7 @@
 			  	</el-form-item>
 			  </el-col>
 			  <el-col :span="6">
-			  	<el-button type="primary" @click="onSearch">查询</el-button>
+			  	<el-button type="primary" size="small" @click="onSearch">查询</el-button>
 			  </el-col>
 			</el-form>
 		</el-row>
@@ -87,46 +87,43 @@
 			    		<el-table-column prop="visitStartTime" label="计划开始时间" align="center" show-overflow-tooltip></el-table-column>
 			    		<el-table-column label="审核" width="180" align="center">
 			    			<template slot-scope="scope">
-                  <el-button type="success" @click="passBtn(scope)" class="operationBtn">通过</el-button>
-                  <el-button type="warning" @click="passoutBtn(scope)" plain class="operationBtn">不通过</el-button>
+                  <el-button type="success" @click="passBtn(scope)" size="mini">通过</el-button>
+                  <el-button type="warning" @click="passoutBtn(scope)" plain size="mini">不通过</el-button>
                 </template>
 			    		</el-table-column>
 			    		<el-table-column label="详情" align="center" width="80">
 			    			<template slot-scope="scope">
-                  <el-button type="primary" class="operationBtn" @click="lookDetailes(scope)">详情</el-button>
+                  <el-button type="primary" size="mini" @click="lookDetailes(scope)">详情</el-button>
                 </template>
 			    		</el-table-column>
 			    	</el-table>
-			    	<el-row v-if="tableData.length">
+			    	<el-row v-if="tableData.length" style="margin-top: 11px;">
               <!-- 批量通过 -->
               <el-col :span="12">
-                <div class="checkPiliang">
-                  <el-button type="primary" @click="numCheck">批量通过</el-button>
-                </div>
+                <el-button type="primary" size="small" @click="numCheck">批量通过</el-button>
               </el-col>
               <!-- 分页 -->
               <el-col :span="12">
-                <div class="block" style="margin-top: 11px;">
-                  <el-pagination
-										@current-change="handleCurrentChange"
-										:current-page.sync="currentPage"
-										:page-size="10"
-										layout="total,prev, pager, next, jumper"
-                    :total="totalPage"
-										v-if="totalPage">
-                  </el-pagination>
-                </div>
+                <el-pagination
+                  @current-change="handleCurrentChange"
+                  :current-page.sync="currentPage"
+                  :page-size="10"
+                  layout="total,prev, pager, next, jumper"
+                  :total="totalPage"
+                  v-if="totalPage">
+                </el-pagination>
               </el-col>
             </el-row>
 			    </el-tab-pane>
 			    <el-tab-pane label="已通过" name="second">
 						<el-table
+              border
 							:data="tableData2"
 							style="width: 100%;"
 							v-loading="loading2">
 			    		<el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
 			    		<el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
-			    		<el-table-column label="性别/年龄" align="center">
+			    		<el-table-column label="性别/年龄" align="center" width="110">
 								<template slot-scope="scope">
 									{{scope.row.brxb}} <span v-show="scope.row.brxb && scope.row.age >= 0">/</span> {{scope.row.age}}
 								</template>
@@ -138,29 +135,28 @@
 							<el-table-column prop="dateVet" label="审核时间" align="center" show-overflow-tooltip></el-table-column>
 			    		<el-table-column label="详情" align="center" width="80">
 			    			<template slot-scope="scope">
-                  <el-button type="primary" class="operationBtn" @click="lookDetailes(scope)">详情</el-button>
+                  <el-button type="primary" size="mini" @click="lookDetailes(scope)">详情</el-button>
                 </template>
 			    		</el-table-column>
 			    	</el-table>
-						<el-row v-if="tableData2.length" class="">
+						<el-row v-if="tableData2.length" style="margin-top: 11px;">
               <!-- 分页 -->
               <el-col :span="12" :offset="12">
-                <div class="block" style="margin-top: 11px;">
-                  <el-pagination  @current-change="handleCurrentChange2" :current-page.sync="currentPage2" :page-size="10" layout="total,prev, pager, next, jumper"
-                    :total="totalPage2" v-if="totalPage2">
-                  </el-pagination>
-                </div>
+                <el-pagination  @current-change="handleCurrentChange2" :current-page.sync="currentPage2" :page-size="10" layout="total,prev, pager, next, jumper"
+                  :total="totalPage2" v-if="totalPage2">
+                </el-pagination>
               </el-col>
             </el-row>
 					</el-tab-pane>
 			    <el-tab-pane label="未通过" name="third">
 						<el-table
+              border
 							:data="tableData3"
 							style="width: 100%;"
 							v-loading="loading3">
 			    		<el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
 			    		<el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
-			    		<el-table-column label="性别/年龄" align="center">
+			    		<el-table-column label="性别/年龄" align="center" width="110">
 								<template slot-scope="scope">
 									{{scope.row.brxb}} <span v-show="scope.row.brxb && scope.row.age >= 0">/</span> {{scope.row.age}}
 								</template>
@@ -172,29 +168,28 @@
 							<el-table-column prop="dateVet" label="审核时间" align="center" show-overflow-tooltip></el-table-column>
 			    		<el-table-column label="详情" align="center" width="80">
 			    			<template slot-scope="scope">
-                  <el-button type="primary" class="operationBtn" @click="lookDetailes(scope)">详情</el-button>
+                  <el-button type="primary" size="mini" @click="lookDetailes(scope)">详情</el-button>
                 </template>
 			    		</el-table-column>
 			    	</el-table>
-						<el-row v-if="tableData3.length">
+						<el-row v-if="tableData3.length" style="margin-top: 11px;">
               <!-- 分页 -->
               <el-col :span="12" :offset="12">
-                <div class="block" style="margin-top: 11px;">
-                  <el-pagination  @current-change="handleCurrentChange3" :current-page.sync="currentPage3" :page-size="10" layout="total,prev, pager, next, jumper"
-                    :total="totalPage3">
-                  </el-pagination>
-                </div>
+                <el-pagination  @current-change="handleCurrentChange3" :current-page.sync="currentPage3" :page-size="10" layout="total,prev, pager, next, jumper"
+                  :total="totalPage3">
+                </el-pagination>
               </el-col>
             </el-row>
 					</el-tab-pane>
 					<el-tab-pane label="已终止" name="fourth">
 						<el-table
+              border
 							:data="tableData4"
 							style="width: 100%;"
 							v-loading="loading4">
 			    		<el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
 			    		<el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
-			    		<el-table-column label="性别/年龄" align="center">
+			    		<el-table-column label="性别/年龄" align="center" width="110">
 								<template slot-scope="scope">
 									{{scope.row.brxb}} <span v-show="scope.row.brxb && scope.row.age >= 0">/</span> {{scope.row.age}}
 								</template>
@@ -205,22 +200,20 @@
 							<el-table-column prop="dateVet" label="终止时间" align="center" show-overflow-tooltip></el-table-column>
 			    		<el-table-column label="详情" align="center" width="80">
 			    			<template slot-scope="scope">
-                  <el-button type="primary" class="operationBtn" @click="lookDetailes(scope)">详情</el-button>
+                  <el-button type="primary" size="mini" @click="lookDetailes(scope)">详情</el-button>
                 </template>
 			    		</el-table-column>
 			    	</el-table>
-						<el-row v-if="tableData4.length">
+						<el-row v-if="tableData4.length" style="margin-top: 11px;">
               <!-- 分页 -->
               <el-col :span="12" :offset="12">
-                <div class="block" style="margin-top: 11px;">
-                  <el-pagination
-										@current-change="handleCurrentChange4"
-										:current-page.sync="currentPage4"
-										:page-size="10"
-										layout="total,prev, pager, next, jumper"
-                    :total="totalPage4">
-                  </el-pagination>
-                </div>
+                <el-pagination
+                  @current-change="handleCurrentChange4"
+                  :current-page.sync="currentPage4"
+                  :page-size="10"
+                  layout="total,prev, pager, next, jumper"
+                  :total="totalPage4">
+                </el-pagination>
               </el-col>
             </el-row>
 					</el-tab-pane>
@@ -228,22 +221,22 @@
 			</el-col>
 		</el-row>
 		<!-- 审核不通过原因弹框 -->
-		<!-- <ex-select
+		<ex-select
 			:noCheck="noCheck"
 			@sendReason="sendReason"
 			@closeChildren="closeChildren">
-		</ex-select> -->
+		</ex-select>
 		<!-- 随访计划 -->
-		<!-- <plan
+		<plan
 		:planDg="planDg"
-		@closeChildrenPlan="closeChildrenPlan"></plan> -->
+		@closeChildrenPlan="closeChildrenPlan"></plan>
   </div>
 </template>
 <script>
 import { followUp } from 'RJZL_API/followPlan'
 import { commonUrl } from 'RJZL_API/commonUrl'
-// import ExSelect from 'components/dialog/exSelect'
-// import Plan from 'components/dialog/plan/plan'
+import ExSelect from 'components/dialog/exSelect'
+import Plan from 'components/dialog/plan/plan'
 import { mapState } from 'vuex'
   export default {
     name: 'dischargeFollowupPlanReview',
@@ -291,10 +284,10 @@ import { mapState } from 'vuex'
 				hzxxId: '' // 患者id
       }
     },
-    // components: {
-		// 	ExSelect,
-		// 	Plan
-		// },
+    components: {
+			ExSelect,
+			Plan
+		},
 		mounted () {
 			this.list()
 		},
@@ -612,7 +605,7 @@ import { mapState } from 'vuex'
 				// hzxxId
 				this.hzxxId = scope.row.hzxxId
 				this.planDg = true
-				this.$store.dispatch('hzFileRows', scope.row)
+				this.$store.dispatch('getScopeRowData', scope)
 			},
 			/** 监听详情的关闭操作 */
 			closeChildrenPlan (val) {

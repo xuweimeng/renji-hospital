@@ -38,6 +38,7 @@ module.exports = {
       '@': resolve('src'),
       'components': resolve('src/components'), // 公用组件库
       'styles': resolve('src/styles'),
+      'utils': resolve('src/utils'),
       'RJPE':resolve('src/views/RJ_PhysicalExamination'),
       'RJPE_API':resolve('src/api/RJ_PhysicalExamination'),
       'LQPE':resolve('src/views/LQ_PhysicalExamination'),

@@ -23,10 +23,10 @@
 </template>
 
 <script>
-  import { API } from "@/serve"
+  import { AdmissionNotice } from 'RJZL_API/hospitalNotice'
   import { mapState } from 'vuex'
-  import HzInfo from '../hzFile/hzInfo'
-  import HzResult from '@/components/dialog/aDresult/pphzResult'
+  import HzInfo from 'components/Dialog/hzFile/hzInfo'
+  import HzResult from './pphzResult'
   export default {
     data () {
       return {
@@ -46,7 +46,7 @@
 		},
     computed: {
       ...mapState({
-        scope: 'hzFileRows'
+        "patientInfo": state => state.user.scopeRowData.row
       })
     },
     methods: {
@@ -63,7 +63,7 @@
         this.islike = false
         this.GzTag = ''
         // this.AIVOICURL = ''
-        API.AdmissionNotice.resultDetail({
+        AdmissionNotice.resultDetail({
           'adminId':sessionStorage.getItem('userId'),
           'id': id,
         }).then((res)=>{
@@ -94,7 +94,7 @@
        * 详情语音合成
        */
       mergeWav(id){
-        API.AdmissionNotice.mergeWav({
+        AdmissionNotice.mergeWav({
           id:id
         })
           .then(res => {
@@ -106,7 +106,7 @@
       }
     },
     watch: {
-      scope(newV, oldV) {
+      patientInfo(newV, oldV) {
         if(newV.id) {
           this.careFun(newV.id)
         }

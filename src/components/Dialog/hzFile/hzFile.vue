@@ -21,7 +21,7 @@
 
 <script>
 import { hzList } from "RJZL_API/patientList";
-import HzInfo from './hzInfo'
+import HzInfo from 'components/Dialog/hzFile/hzInfo'
 import VisitTimes from './visitTimes'
 import LeaveText from './leaveText'
 import { mapState } from 'vuex'

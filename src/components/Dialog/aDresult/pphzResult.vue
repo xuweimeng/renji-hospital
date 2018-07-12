@@ -92,9 +92,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import {API} from '@/serve'
-import {Point} from '@/common/js/selectOptions'
+// import { mapState } from 'vuex'
+// import {Point} from '@/common/js/selectOptions'
   export default {
     data () {
       return {

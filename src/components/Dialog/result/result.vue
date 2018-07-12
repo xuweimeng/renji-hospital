@@ -20,10 +20,10 @@
 </template>
 
 <script>
-  import { API } from "@/serve"
   import { mapState } from 'vuex'
-  import HzInfo from '../hzFile/hzInfo'
-  import HzResult from '@/components/dialog/result/hzResult'
+  import { hzList } from 'RJZL_API/patientList'
+	import HzInfo from 'components/Dialog/hzFile/hzInfo'
+  import HzResult from './hzResult'
   export default {
     data () {
       return {
@@ -40,11 +40,8 @@
 		},
     computed: {
       ...mapState({
-        scope: 'hzFileRows'
+        "patientInfo": state => state.user.scopeRowData.row
       })
-    },
-    mounted () {
-      this.careFun()
     },
     methods: {
 			/**
@@ -57,9 +54,9 @@
       },
       /** 请求特别关注 */
       careFun () {
-        API.hzList.getPatientRecord({
+        hzList.getPatientRecord({
           'adminId': sessionStorage.getItem('userId'),
-          'patientId': this.scope.id,
+          'patientId': this.patientInfo.id,
         }).then((res)=>{
           if(res.code == 0) {
             this.GzTag = res.data.GzTag
@@ -78,7 +75,16 @@
         this.islike = val.isCare
         this.GzTag = val.GzTag
       }
-		}
+    },
+    watch: {
+      patientInfo(newV, oldV) {
+        console.log(newV, 'test');
+
+        if(newV.id) {
+          this.careFun(newV.id)
+        }
+      }
+    }
   }
 </script>
 

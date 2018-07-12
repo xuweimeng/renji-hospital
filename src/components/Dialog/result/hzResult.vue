@@ -111,9 +111,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import {API} from '@/serve'
-import {Point} from '@/common/js/selectOptions'
-import { data1 } from '@/assets/js/result'
+import { followUp } from 'RJZL_API/followPlan'
+import { Point } from 'utils/selectOptions'
   export default {
     data () {
       return {
@@ -130,7 +129,7 @@ import { data1 } from '@/assets/js/result'
     },
     computed: {
       ...mapState({
-        scope: 'hzFileRows'
+        "patientInfo": state => state.user.scopeRowData.row
       })
     },
     mounted () {
@@ -145,7 +144,7 @@ import { data1 } from '@/assets/js/result'
       /** total随访次数 */
       selecList () {
         this.options.length = 0
-        let numMax = this.scope.totalNum.split('/')
+        let numMax = this.patientInfo.totalNum.split('/')
         for(let i =1;i<=numMax[1];i++) {
           this.options.push(new Point(i))
         }
@@ -156,8 +155,8 @@ import { data1 } from '@/assets/js/result'
 
       },
       getDetails (num) {
-        API.followUp.getVisistOrderResult({
-          'taskId': this.scope.taskId,
+        followUp.getVisistOrderResult({
+          'taskId': this.patientInfo.taskId,
           'num': num
         }).then((res)=>{
           if (res.code == 0) {
@@ -217,8 +216,7 @@ import { data1 } from '@/assets/js/result'
       // }
     },
     watch: {
-      scope(newV, oldV) {
-        console.log(newV.taskId, oldV.taskId);
+      patientInfo(newV, oldV) {
         if( newV.taskId != oldV.taskId) {
           this.selecList()
         }

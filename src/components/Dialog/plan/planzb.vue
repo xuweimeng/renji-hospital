@@ -7,14 +7,18 @@
       <el-row>
         <el-col :span="24" class="colLabel">随访次数&nbsp;:&nbsp;<span v-if="numbers">共{{numbers}}次</span></el-col>
       </el-row>
-      <el-row v-for="(item,index) in modelFollplanData.orders" :key="index" style="margin-bottom: 20px;">
+      <el-row v-for="(item,index) in modelFollplanData.orders" :key="index">
         <el-row>
           <el-col :span="24" class="colLabel">
             {{item.startDate}}
           </el-col>
         </el-row>
         <el-row style="padding-left: 42px;">
-          <span v-for="(item1,index1) in item.CollectionIndex" :key="index1" style="color:#209eff; margin-right:20px;">{{item1}}</span>
+          <el-tag type="primary"
+            v-for="(item1,index1) in item.CollectionIndex"
+            :key="index1"
+            style="margin: 5px 20px 5px 0;">{{item1}}
+          </el-tag>
         </el-row>
       </el-row>
      </div>
@@ -43,9 +47,10 @@
 </template>
 
 <script>
-import {API} from '@/serve'
+import { followUp } from 'RJZL_API/followPlan'
+import { hzList } from 'RJZL_API/patientList'
 import { mapState } from 'vuex'
-import ExSelect from '@/components/dialog/exSelect'
+import ExSelect from 'components/dialog/exSelect'
   export default {
     data () {
       return {
@@ -65,12 +70,12 @@ import ExSelect from '@/components/dialog/exSelect'
 		},
 		computed: {
 			...mapState({
-				patientInfo: 'hzFileRows'
+				"patientInfo": state => state.user.scopeRowData.row
 			})
     },
     methods: {
       getView () {
-        API.followUp.detail({
+        followUp.detail({
           'id': this.patientInfo.id,
         }).then((res)=>{
           if(res.code === 0) {
@@ -126,7 +131,7 @@ import ExSelect from '@/components/dialog/exSelect'
 			 *@param {String} notPassReason 审核不通过原因
 			 */
 				handleCheck2(status, ids, notPassReason) {
-					API.followUp.vet({
+					followUp.vet({
 						'status': status,
 						'ids': ids,
 						'notPassReason': notPassReason,
@@ -154,7 +159,7 @@ import ExSelect from '@/components/dialog/exSelect'
         },
         // 审核原因未死亡时执行标签死亡操作
 			  updateIsLiveFun () {
-					API.hzList.updateIsLive({
+					hzList.updateIsLive({
 						'hzxxId': this.patientInfo.hzxxId,
 						'isDed': '1'
 					}).then((res)=>{
@@ -176,7 +181,7 @@ import ExSelect from '@/components/dialog/exSelect'
 <style lang="scss">
   .planZb {
     .planList {
-      height: 330px;
+      height: 400px;
       overflow-y: auto;
       margin-top: 16px;
       padding: 16px 20px;
@@ -193,7 +198,6 @@ import ExSelect from '@/components/dialog/exSelect'
             line-height: 31px;
             font-size: 15px;
             .el-button {
-
               font-size: 15px;
               margin-top: 8px;
               border-radius: 15px;

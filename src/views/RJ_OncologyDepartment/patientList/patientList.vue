@@ -73,7 +73,7 @@
 			  	</el-form-item>
 			  </el-col>
 			  <el-col :span="6">
-			  	<el-button type="primary" size="medium" @click="searchBtn">查询</el-button>
+			  	<el-button type="primary" size="small" @click="searchBtn">查询</el-button>
 			  </el-col>
 			</el-form>
 		</el-row>
@@ -96,7 +96,7 @@
                 @click="isdeathBtn(scope.row)"
                 :type="scope.row.state === 1?'danger':'success'"
                 plain
-                class="operationBtn">
+                size="mini">
                 {{scope.row.state === 1?'死亡':'正常'}}
               </el-button>
             </template>
@@ -106,13 +106,13 @@
               <el-button
                 @click="fileBtn(scope)"
                 type="primary"
-                class="operationBtn">
+                size="mini">
                 档案
               </el-button>
               <el-button
                 @click="resetMobile(scope)"
                 type="warning"
-                class="operationBtn">
+                size="mini">
                 修改手机号
               </el-button>
             </template>
@@ -195,7 +195,7 @@
 							@click="cancelAllBtn(scope)"
 							:type="scope.row.buttonType"
 							:disabled="scope.row.buttonDisabled"
-							class="operationBtn">
+							size="mini">
 							{{scope.row.buttonText}}
 						</el-button>
 					</template>

@@ -42,12 +42,17 @@
 .common-table {
   padding: 10px;
   background: #fff;
+  // 表格头部背景色
+  .el-table th {
+    background: rgb(248, 248, 249);
+  }
 }
-/** 按钮 **/
-.operationBtn {
-  height: 24px;
-  line-height: 24px;
-  width: auto;
-  font-size: 13px;
-  padding: 0 10px;
+.wyc {
+  color: #00ae00;
+}
+.yyc {
+  color: #ff2626;
+}
+.cjsb {
+  color: #ffb15d;
 }

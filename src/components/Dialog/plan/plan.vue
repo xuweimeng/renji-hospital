@@ -3,12 +3,12 @@
     <el-dialog
       title="随访方案"
       :visible.sync="planDg"
-      width="525px" top="30px"
+      width="650px"
+      top="30px"
       :before-close="closeFun"
       :center = "false"
       custom-class="hzDialog">
         <!-- 患者个人信息 -->
-        <!-- 患者姓名 -->
         <hz-info
         :isCare="islike"
         :GzTag="GzTag"
@@ -21,9 +21,9 @@
 </template>
 
 <script>
-  import { API } from "@/serve";
+  import { followUp } from 'RJZL_API/followPlan'
   import { mapState } from 'vuex'
-  import HzInfo from '../hzFile/hzInfo'
+  import HzInfo from 'components/Dialog/hzFile/hzInfo'
   import PlanZb from './planzb'
   export default {
     data () {
@@ -41,7 +41,7 @@
 		},
     computed: {
       ...mapState({
-        patientInfo: 'hzFileRows'
+        "patientInfo": state => state.user.scopeRowData.row
       })
     },
     methods: {
@@ -55,7 +55,7 @@
       },
       /** 请求特别关注 */
       careFun () {
-        API.followUp.detail({
+        followUp.detail({
           'id': this.patientInfo.id,
         }).then((res)=>{
           if(res.code == 0) {

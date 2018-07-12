@@ -68,11 +68,11 @@
 							<el-button
 								v-if="icdSpan"
 								@click="editjb(scope)"
-								class="operationBtn"
+								size="mini"
 								:type="`${scope.row.icdName === ''? 'primary':'default'}`">
 								{{scope.row.icdName=== ''?'完善':'修改'}}
 							</el-button>
-							<el-button @click="passoutBtn(scope.row)" class="operationBtn">删除</el-button>
+							<el-button @click="passoutBtn(scope.row)" size="mini">删除</el-button>
 						</template>
           </el-table-column>
   			</el-table>
