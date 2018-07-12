@@ -95,7 +95,7 @@ export default {
             name: '套餐分布详情',
             type: 'pie',
             roseType: 'radius',
-            radius: [15, 95],
+            radius: [15, 90],
             center: ['50%', '38%'],
             data: dataArray,
             animationEasing: 'cubicInOut',

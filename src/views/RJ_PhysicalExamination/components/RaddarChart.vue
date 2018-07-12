@@ -59,14 +59,9 @@ export default {
   },
   methods: {
     setOption(chartData) {
-      const dataArray = [];
       const legendList = [];
       chartData.forEach(element => {
-        dataArray.push({
-          name: element.diagnoseName,
-          value: element.itemCount
-        });
-        legendList.push(element.diagnoseName);
+        legendList.push(element.name);
       });
       this.chart.setOption({
         tooltip: {
@@ -85,14 +80,14 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['Allocated Budget', 'Expected Spending', 'Actual Spending']
+          data: legendList
         },
         series: [{
           type: 'pie',
           name: '到院详情',
           symbolSize: 0,
-          radius: [60, 95],
-          center: ['50%', '38%'],
+          radius: [60, 85],
+          center: ['50%', '45%'],
           areaStyle: {
             normal: {
               shadowBlur: 13,
@@ -102,20 +97,7 @@ export default {
               opacity: 1
             }
           },
-          data: [
-            {
-              value: 500,
-              name: 'Allocated Budget'
-            },
-            {
-              value: 500,
-              name: 'Expected Spending'
-            },
-            {
-              value: 500,
-              name: 'Actual Spending'
-            }
-          ],
+          data: chartData,
           animationDuration: animationDuration
         }]
       });
