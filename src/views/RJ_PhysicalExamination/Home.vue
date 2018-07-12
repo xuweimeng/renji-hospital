@@ -379,7 +379,7 @@
 </template>
 
 <script>
-  import { home } from '../../api/RJ_PhysicalExamination/home'; // 引入 api
+  import { Home } from '../../api/RJ_PhysicalExamination/Home'; // 引入 api
   /**
    * 首页
    * @module Homepage
@@ -523,7 +523,7 @@
     },
     computed: {
       ...mapGetters([
-        'userID'
+        'token'
       ])
     },
     methods: {
@@ -552,7 +552,7 @@
        * @param {String} fromsys 医生端
        */
       findAiPictureList(userId) {
-        home.findAiPictureList({
+        Home.findAiPictureList({
           'adminId': sessionStorage.getItem('userId'),
           'fromsys': 'web'
         }).then((res) => {
@@ -576,8 +576,8 @@
         const DateLoading = this.$loading({
           target: document.getElementsByClassName('content-wrapper')[0]
         });
-        home.getNoticed({
-          'adminId': this.userId
+        Home.getNoticed({
+          'adminId': this.token
         }).then((res) => {
           if (res.code == '0') {
             this.getAdminInfo.realname = res.data.realname; // 医生名字
@@ -620,8 +620,8 @@
       finBtn() {
         if (this.selectKey) {
           this.innerVisible = false;
-          home.bindAiPicture({
-            'adminId': this.userId,
+          Home.bindAiPicture({
+            'adminId': this.token,
             'aiPictureCode': this.selectKey
           }).then((res) => {
             if (res.code == '0') {
@@ -643,8 +643,8 @@
        * @param {String} adminId 医生id
        */
       adminInfo() {
-        home.adminInfo({
-          'adminId': this.userId
+        Home.adminInfo({
+          'adminId': this.token
         }).then((res) => {
           if (res.code == 0) {
             // 获取当前url
@@ -669,7 +669,7 @@
        * @param {String} dateType type
        */
       diagnoseInfo(type) {
-        home.clientDistribute({
+        Home.clientDistribute({
           'dateType': type
         }).then((res) => {
           if (res.code == 0) {
@@ -771,7 +771,7 @@
        * @param {String} dateType type
        */
       getUseEatInfo(type) {
-        home.arriveHospital({
+        Home.arriveHospital({
           'dateType': type
         }).then((res) => {
           if (res.code == 0) {
@@ -904,7 +904,7 @@
        * @param {String} dateType value
        */
       visitCountInfo(value) {
-        home.noticedCountDate({
+        Home.noticedCountDate({
           'type': value
         }).then((res) => {
           if (res.code == 0) {
@@ -955,10 +955,10 @@
       *特别关心
       */
       SpecialCare() {
-        home.specialClient({
+        Home.specialClient({
           'limit': 4,
           'page': this.page,
-          adminId: this.userId
+          adminId: this.token
         }).then((res) => {
           this.syhz = false;
           this.SpecialtableData = res.data;
@@ -997,10 +997,10 @@
        * 客户档案-历史体检日期
        */
       jzTime(id) {
-        home.clientInspectDate({
+        Home.clientInspectDate({
           'patientId': this.patientId,
           'clientId': id,
-          adminId: this.userId
+          adminId: this.token
         }).then((res) => {
           console.log(11111111111111111);
           console.log(res);
@@ -1025,9 +1025,9 @@
        */
       getPatinetInfo() {
         this.patientInfo = '';
-        home.clientInformation({
+        Home.clientInformation({
           'patientId': this.patientId,
-          adminId: this.userId //
+          adminId: this.token //
         }).then((res) => {
           console.log(res);
           if (res.code == 0) {
@@ -1064,11 +1064,11 @@
       */
       currentPartientInfo(item) {
       //        this.isNull = false
-        home.clientTotalInspect({
+        Home.clientTotalInspect({
           'patientId': this.patientId, //
           'date': item,
           'clientId': this.clientId,
-          adminId: this.userId
+          adminId: this.token
         }).then((res) => {
           this.loading4 = false;
           if (res.code == 0) {
@@ -1117,9 +1117,9 @@
             }
           }).then(action => {
             // 取消关注
-            home.updateGz({
+            Home.updateGz({
               diagnoseType: 3,
-              'adminId': this.userId,
+              'adminId': this.token,
               'patientId': this.patientId, // 患者的id （必填）
               'operateType': 0, // (操作类型 1:关注 0：取消关注) （必填）
               'operateTag': '' // 关注的标签
@@ -1155,9 +1155,9 @@
             if (!value) {
               this.$message.error('标签不能为空!');
             } else if (value.toString().length < 6) {
-              home.updateGz({
+              Home.updateGz({
                 diagnoseType: 3,
-                'adminId': this.userId,
+                'adminId': this.token,
                 'patientId': this.patientId, // 患者的id （必填）
                 'operateType': 1, // (操作类型 1:关注 0：取消关注) （必填）
                 'operateTag': value // 关注的标签
@@ -1223,7 +1223,7 @@
        * 处理意见
        */
       clyj(btnState) {
-        home.updateDiseaseInfo({
+        Home.updateDiseaseInfo({
           'visitOrderId': this.visitOrderId,
           'diseaseInfo': btnState
         }).then((res) => {
@@ -1298,7 +1298,7 @@
        * 查询处理意见接口
        */
       getDiseaseInfo() {
-        home.getDiseaseInfo({
+        Home.getDiseaseInfo({
           'visitOrderId': this.visitOrderId1
         }).then((res) => {
           if (res.code == 0) {
@@ -1357,7 +1357,7 @@
         this.xChart = [];
         this.yChart = [];
         // 获取模态框指标信息
-        home.getChartData({
+        Home.getChartData({
           'hzxxId': this.patientId,
           'fieldName': label
         }).then((res) => {

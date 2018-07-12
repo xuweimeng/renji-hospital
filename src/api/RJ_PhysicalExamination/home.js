@@ -1,5 +1,5 @@
 import fetch from '@/utils/request';
-export const home = {
+export const Home = {
   /*
    *获取12生肖
    *adminId:3 //医生id

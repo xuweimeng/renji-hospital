@@ -3,9 +3,9 @@
 </template>
 
 <script>
-import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
-import { debounce } from '@/utils'
+import echarts from 'echarts';
+require('echarts/theme/macarons'); // echarts theme
+import { debounce } from '@/utils';
 
 export default {
   props: {
@@ -20,65 +20,90 @@ export default {
     height: {
       type: String,
       default: '300px'
+    },
+    dataList: {
+      type: Array
     }
   },
   data() {
     return {
       chart: null
+    };
+  },
+  watch: {
+    dataList: {
+      deep: true,
+      handler(val) {
+        this.setOption(val);
+      }
     }
   },
   mounted() {
-    this.initChart()
+    this.initChart();
     this.__resizeHanlder = debounce(() => {
       if (this.chart) {
-        this.chart.resize()
+        this.chart.resize();
       }
-    }, 100)
-    window.addEventListener('resize', this.__resizeHanlder)
+    }, 100);
+    window.addEventListener('resize', this.__resizeHanlder);
   },
   beforeDestroy() {
     if (!this.chart) {
-      return
+      return;
     }
-    window.removeEventListener('resize', this.__resizeHanlder)
-    this.chart.dispose()
-    this.chart = null
+    window.removeEventListener('resize', this.__resizeHanlder);
+    this.chart.dispose();
+    this.chart = null;
   },
   methods: {
     initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
-
+      this.chart = echarts.init(this.$el, 'macarons');
+      this.setOption(this.dataList);
+    },
+    setOption(chartData) {
+      const dataArray = [];
+      const legendList = [];
+      chartData.forEach(element => {
+        dataArray.push({
+          name: element.diagnoseName,
+          value: element.itemCount
+        });
+        legendList.push(element.diagnoseName);
+      });
       this.chart.setOption({
         tooltip: {
           trigger: 'item',
           formatter: '{a} <br/>{b} : {c} ({d}%)'
         },
+        title: {
+          text: '套餐分布情况',
+          left: 'left',
+          top: 2,
+          textStyle: {
+            color: '#333',
+            fontSize: 12
+          }
+        },
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
+          data: legendList
         },
         calculable: true,
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: '套餐分布详情',
             type: 'pie',
             roseType: 'radius',
             radius: [15, 95],
             center: ['50%', '38%'],
-            data: [
-              { value: 320, name: 'Industries' },
-              { value: 240, name: 'Technology' },
-              { value: 149, name: 'Forex' },
-              { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
-            ],
+            data: dataArray,
             animationEasing: 'cubicInOut',
-            animationDuration: 2600
+            animationDuration: 2000
           }
         ]
-      })
+      });
     }
   }
-}
+};
 </script>
