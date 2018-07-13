@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sfjhDialog">
     <!-- 随访计划 -->
     <el-dialog title="随访方案" :visible.sync="dialogVisible" width="600px" top="30px" :center = "false" custom-class="sfjhDialog">
       <div class="content" slot>
@@ -186,5 +186,7 @@ export default {
   }
 };
 </script>
-
+<style lang="scss">
+  @import '../../../assets/HN_DoctorClient/style/base';
+</style>
 

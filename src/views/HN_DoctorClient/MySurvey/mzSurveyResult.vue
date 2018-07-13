@@ -1,86 +1,75 @@
-
 <template>
-  <div class="mzSurveyResult">
+  <div class="app-container">
     <!-- 搜索 -->
-    <el-row class="searchList">
-      <el-col :span="24">
-        <el-form :inline="true" :model="searchParam" class="demo-form-inline">
-          <el-form-item label="姓名" class="inputLength">
-            <el-input size="small" v-model.trim="searchParam.brxm" clearable placeholder="请输入患者姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="联系电话" class="inputLength">
-            <el-input size="small" v-model.trim="searchParam.mobile" clearable placeholder="请输入联系电话"></el-input>
-          </el-form-item>
-          <el-form-item label="科室" class="seclectLength">
-            <el-cascader
-              popper-class="searchSelect"
-              size="small"
-              :options="departMentList"
-              v-model="deparmentId"
-              @change="getDepartchange"
-              filterable
-              clearable
-              >
-            </el-cascader>
-          </el-form-item>
-          <el-form-item label="通话状态" class="seclectLength">
-            <el-select size="small" clearable v-model="searchParam.backStatus" placeholder="请选择" popper-class="searchSelect">
-              <el-option label="全部" value=""></el-option>
-              <el-option label="呼叫失败" value="1"></el-option>
-              <el-option label="正常通话" value="2"></el-option>
-              <el-option label="通话中" value="3"></el-option>
-              <el-option label="关停机" value="4"></el-option>
-              <el-option label="无人接听" value="5"></el-option>
-              <el-option label="空号" value="6"></el-option>
-              <el-option label="号码有误" value="7"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="就诊时间">
-            <el-date-picker
-                size="small"
-                v-model="time_disease"
-                type="datetimerange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                @change="diseaseTime" >
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item label="计划执行时间">
-            <el-date-picker
-                size="small"
-                v-model="time_plan"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                type="datetimerange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                @change="planTime"
-                >
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="button" @click="searchData">查询</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
+    <ul class="common_search">
+      <li class="common_search_single">
+        <label class="radio-label" >姓名</label>
+        <el-input  placeholder="请输入患者姓名"  v-model.trim="searchParam.brxm"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >联系电话</label>
+        <el-input  placeholder="请输入患者电话"  v-model.trim="searchParam.mobile"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >科室</label>
+        <el-cascader
+          popper-class="searchSelect"
+          :options="departMentList"
+          v-model="deparmentId"
+          @change="getDepartchange"
+          filterable
+          clearable
+        >
+        </el-cascader>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >通话状态</label>
+        <el-select clearable v-model="searchParam.backStatus" placeholder="请选择">
+          <el-option label="全部" value=""></el-option>
+          <el-option label="呼叫失败" value="1"></el-option>
+          <el-option label="正常通话" value="2"></el-option>
+          <el-option label="通话中" value="3"></el-option>
+          <el-option label="关停机" value="4"></el-option>
+          <el-option label="无人接听" value="5"></el-option>
+          <el-option label="空号" value="6"></el-option>
+          <el-option label="号码有误" value="7"></el-option>
+        </el-select>
+      </li>
+      <li class="common_search_single common_search_single_time">
+        <label class="radio-label">就诊时间</label>
+        <el-date-picker
+          v-model="time_disease"
+          type="datetimerange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          @change="diseaseTime" >
+        </el-date-picker>
+      </li>
+      <li class="common_search_single common_search_single_time">
+        <label class="radio-label">计划执行时间</label>
+        <el-date-picker
+          v-model="time_plan"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          type="datetimerange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          @change="planTime">
+        </el-date-picker>
+      </li>
+      <li class="common_search_single">
+        <el-button type="primary" icon="el-icon-search" @click="searchData" :loading="mzLoading">查询</el-button>
+      </li>
+    </ul>
     <!-- 满意度 -->
-    <el-row class="middleRow">
-      <el-col :span="6" class="middleRowDetail">
-        <!-- <span>医疗组 全部</span>
-        <span>出院时间 2018-04-1 至 2018-06-12</span> -->
-        <span>满意 {{tableType.Okay}}</span>
-        <span>一般 {{tableType.General}}</span>
-        <span>不满意 {{tableType.NOkay}}</span>
-      </el-col>
-      <el-col :span="10" class="outputExcel">
+    <div class="el-alert el-alert--success el-alert__title">
+      <span style="white-space: pre;">满意 {{tableType.Okay}}   一般 {{tableType.General}}    不满意 {{tableType.NOkay}}               </span>
       <el-button type="primary" plain @click="outputExcel">导出报表</el-button>
-      </el-col>
-    </el-row>
+    </div>
     <!-- table -->
-    <el-table :data="mzResultData" style="width: 1110px" class="rsTable" v-loading="mzLoading">
+    <el-table :data="mzResultData" class="rsTable" v-loading="mzLoading">
       <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
       <el-table-column prop="mobile" label="联系电话" align="center" show-overflow-tooltip></el-table-column>
       <el-table-column prop="medGpName" label="科室" align="center"></el-table-column>
@@ -97,6 +86,7 @@
         <template slot-scope="scope">
           <el-button
             type="primary"
+            size="mini"
             @click.stop="detailBtn(scope)"
             class="operationBtn">
             详情
@@ -105,7 +95,9 @@
       </el-table-column>
     </el-table>
     <!-- 分页 -->
-    <table-pagination :total="total"  @currentPageFail="pageChange" v-if="total"></table-pagination>
+    <div class="pagination-container">
+      <table-pagination :total="total"  @currentPageFail="pageChange" v-if="total"></table-pagination>
+    </div>
     <!-- 详情 -->
     <el-dialog top="5vh" class="result_info" title="调查计划" :visible.sync="surveyResultDialog">
         <h3>

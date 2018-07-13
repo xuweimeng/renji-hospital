@@ -2059,7 +2059,7 @@
   .left{
     float: left;
   }
-  .notice-content-one,.notice-content,.notice-content-two,.notice-content-three{
+  .notice-content-one,.notice-content,.notice-content-two,.notice-content-three {
     text-align: center;
   }
 </style>

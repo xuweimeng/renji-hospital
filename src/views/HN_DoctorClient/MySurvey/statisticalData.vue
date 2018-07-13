@@ -1,97 +1,80 @@
 <template>
-  <div class="zySurveyPlan">
+  <div class="app-container">
     <!-- 搜索 -->
-    <el-row class="addUp-search">
-      <el-col :span="24">
-        <el-form>
-          <el-form-item label="季度">
-            <el-select v-model="zyYearQuarters" placeholder="请选择" popper-class="searchSelect" v-show="activeName==6">
-              <el-option
-                v-for="item in zyOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-select v-model="mzYearQuarters" placeholder="请选择" popper-class="searchSelect" v-show="activeName==7">
-              <el-option
-                v-for="item in mzOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item>
-            <el-button type="button" @click="searchBtn">查询</el-button>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="button" @click="exportBtn">导出报表</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
+    <ul class="common_search">
+      <li class="common_search_single common_search_single_time">
+        <label class="radio-label" >季度</label>
+        <el-select clearable v-model="zyYearQuarters" placeholder="请选择" v-show="activeName==6">
+          <el-option
+            v-for="item in zyOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <el-select clearable v-model="mzYearQuarters" placeholder="请选择" v-show="activeName==7">
+          <el-option
+            v-for="item in mzOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </li>
+      <li class="common_search_single">
+        <el-button type="primary" style="margin-right: 10px;" icon="el-icon-search" @click="searchBtn" :loading="Loading">查询</el-button>
+        <el-button class="filter-item" type="primary"  icon="el-icon-download" @click="exportBtn">导出</el-button>
+      </li>
+    </ul>
     <!-- table -->
     <!-- tab切换 -->
-    <el-row class="rsTabs">
-      <el-col :span="24">
-        <el-tabs type="border-card" v-model="activeName">
-          <!-- 住院满意度调查 -->
-          <el-tab-pane label="住院满意度调查" name="6">
-            <el-table :data="zyTableData"
-                      style="width: 1130px"
-                      class="rsTable"
-                      v-loading="Loading"
-            >
-              <el-table-column prop="name" label="医疗组" align="center"></el-table-column>
-              <el-table-column prop="percent" label="住院满意度"  align="center"></el-table-column>
-              <el-table-column prop="nice" label="满意" align="center"></el-table-column>
-              <el-table-column prop="normal" label="一般" align="center"></el-table-column>
-              <el-table-column prop="bad" label="不满意" align="center"></el-table-column>
-            </el-table>
+    <el-tabs type="border-card" v-model="activeName">
+      <!-- 住院满意度调查 -->
+      <el-tab-pane label="住院满意度调查" name="6">
+        <el-table :data="zyTableData"
+                  class="rsTable"
+                  v-loading="Loading"
+        >
+          <el-table-column prop="name" label="医疗组" align="center"></el-table-column>
+          <el-table-column prop="percent" label="住院满意度"  align="center"></el-table-column>
+          <el-table-column prop="nice" label="满意" align="center"></el-table-column>
+          <el-table-column prop="normal" label="一般" align="center"></el-table-column>
+          <el-table-column prop="bad" label="不满意" align="center"></el-table-column>
+        </el-table>
 
-            <el-row class="tablePagination" v-show="zyTotal">
-              <el-col :span="12" :offset="12">
-                <el-pagination
-                  @current-change="handleCurrentChangeZY"
-                  :current-page.sync="zyPage"
-                  :page-size="limit"
-                  layout="total,prev, pager, next, jumper"
-                  :total="zyTotal">
-                </el-pagination>
-              </el-col>
-            </el-row>
-
-          </el-tab-pane>
-          <!-- 门诊满意度调查 -->
-          <el-tab-pane label="门诊满意度调查" name="7">
-            <el-table :data="mzTableData"
-                      style="width: 1130px"
-                      class="rsTable"
-                      v-loading="Loading"
-            >
-              <el-table-column prop="name" label="科室" align="center"></el-table-column>
-              <el-table-column prop="percent" label="门诊满意度"  align="center"></el-table-column>
-              <el-table-column prop="nice" label="满意" align="center"></el-table-column>
-              <el-table-column prop="normal" label="一般" align="center"></el-table-column>
-              <el-table-column prop="bad" label="不满意" align="center"></el-table-column>
-            </el-table>
-            <el-row class="tablePagination" v-show="mzTotal">
-              <el-col :span="12" :offset="12">
-                <el-pagination
-                  @current-change="handleCurrentChangeMZ"
-                  :current-page.sync="mzPage"
-                  :page-size="limit"
-                  layout="total,prev, pager, next, jumper"
-                  :total="mzTotal">
-                </el-pagination>
-              </el-col>
-            </el-row>
-          </el-tab-pane>
-        </el-tabs>
-      </el-col>
-    </el-row>
+        <div class="pagination-container" v-if="zyTotal">
+          <el-pagination
+            @current-change="handleCurrentChangeZY"
+            :current-page.sync="zyPage"
+            :page-size="limit"
+            layout="total,prev, pager, next, jumper"
+            :total="zyTotal">
+          </el-pagination>
+        </div>
+      </el-tab-pane>
+      <!-- 门诊满意度调查 -->
+      <el-tab-pane label="门诊满意度调查" name="7">
+        <el-table :data="mzTableData"
+                  class="rsTable"
+                  v-loading="Loading"
+        >
+          <el-table-column prop="name" label="科室" align="center"></el-table-column>
+          <el-table-column prop="percent" label="门诊满意度"  align="center"></el-table-column>
+          <el-table-column prop="nice" label="满意" align="center"></el-table-column>
+          <el-table-column prop="normal" label="一般" align="center"></el-table-column>
+          <el-table-column prop="bad" label="不满意" align="center"></el-table-column>
+        </el-table>
+        <div class="pagination-container" v-if="mzTotal">
+          <el-pagination
+            @current-change="handleCurrentChangeMZ"
+            :current-page.sync="mzPage"
+            :page-size="limit"
+            layout="total,prev, pager, next, jumper"
+            :total="mzTotal">
+          </el-pagination>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 <script>

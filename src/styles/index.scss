@@ -138,6 +138,7 @@ code {
 
 .pagination-container {
   margin-top: 30px;
+  text-align: right;
 }
 
 .text-center {
@@ -232,7 +233,10 @@ code {
       >div{
         flex-grow: 1;
       }
-
+      .input-separator{
+        line-height: 36px;
+        padding: 0 3px;
+      }
     }
   }
 }

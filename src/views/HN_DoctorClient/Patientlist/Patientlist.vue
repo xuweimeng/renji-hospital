@@ -1,135 +1,114 @@
 <template>
-  <div class="patientList">
+  <div class="app-container">
     <!-- 搜索 -->
-    <el-row class="formSearch">
-      <el-col :span="24">
-        <el-form :inline="true" :model="searchParam" class="demo-form-inline">
-          <el-form-item label="姓名" class="inputLength">
-            <el-input v-model.trim="searchParam.patientName" clearable placeholder="请输入患者姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="随访方案" class="inputLength" v-show="hideInput">
-            <el-input v-model.trim="searchParam.schemeName" clearable placeholder="请输入随访方案"></el-input>
-          </el-form-item>
-          <el-form-item label="疾病诊断" class="inputLength">
-            <el-input v-model.trim="searchParam.icdName" clearable placeholder="请输入疾病类型"></el-input>
-          </el-form-item>
-          <el-form-item label="性别" class="seclectLength">
-            <el-select v-model="searchParam.sex" placeholder="请选择" popper-class="searchSelect">
-              <el-option label="全部" value=""></el-option>
-              <el-option label="男" value="男"></el-option>
-              <el-option label="女" value="女"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="年龄" class="seclectLength">
-            <el-input v-model="searchParam.fromAge" placeholder="0"></el-input>
-            <span>-</span>
-            <el-input v-model="searchParam.endAge" placeholder="99"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="button" @click.native="waySearchBtn">查询</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
+    <ul class="common_search">
+      <li class="common_search_single">
+        <label class="radio-label" >姓名</label>
+        <el-input  placeholder="请输入患者姓名"  v-model.trim="searchParam.patientName"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >疾病名称</label>
+        <el-input  placeholder="请输入疾病名称"  v-model.trim="searchParam.icdName"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >性别</label>
+        <el-select class="filter-item" v-model="searchParam.sex" placeholder="请选择">
+          <el-option label="全部" value=""></el-option>
+          <el-option label="男" value="男"></el-option>
+          <el-option label="女" value="女"></el-option>
+        </el-select>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label">年龄</label>
+        <el-input placeholder="0" v-model.trim="searchParam.fromAge"></el-input>
+        <span class="input-separator">-</span>
+        <el-input placeholder="99" v-model.trim="searchParam.endAge"></el-input>
+      </li>
+      <li class="common_search_single">
+        <el-button type="primary" icon="el-icon-search"  @click="waySearchBtn"
+                   :loading="param_all.loading || param_liked.loading">查询</el-button>
+      </li>
+    </ul>
     <!-- tab切换 -->
-    <el-row class="rsTabs">
-      <el-col :span="24">
-        <el-tabs type="border-card" @tab-click="handleClick">
-          <!-- 全部患者 -->
-          <el-tab-pane :label="`全部患者`">
-            <el-table :data="param_all.tableData" style="width: 1110px" class="rsTable"  v-loading="param_all.loading">
-              <el-table-column label="姓名" width="120" align="center">
-                <template slot-scope="scope">
-                  <div class="tbCare fl-left"><i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i></div>
-                  <div class="fl-left" style="width:70px;"><span>{{ scope.row.patientName }}</span></div>
-                </template>
-              </el-table-column>
-              <el-table-column prop="name" label="性别/年龄" width="204" align="center">
-                <template slot-scope="scope">
-                  <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="nation" label="民族" align="center">
-              </el-table-column>
-              <el-table-column prop="diagnoseTime" label="就诊日期" align="center">
-              </el-table-column>
-              <el-table-column prop="icdName" label="疾病诊断" align="center">
-                <template slot-scope="scope">
-                  <div style="text-align: left;margin-left: 18px;">
-                    <div class="tags">{{scope.row.diagnosetype ==1?'门诊':'住院'}}</div>
-                    {{scope.row.icdName}}
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column prop="address" label="就诊档案" align="center">
-                <template slot-scope="scope">
-                  <el-button type="primary" @click="wayButton(scope)" style="height:23px;width:52px;padding:0;font-size
-                  :13px;background:#1899ff;">档案</el-button>
-                  <el-button type="primary" @click="updateTelBtn(scope)" style="height: 23px;width: 90px;padding: 0;
-                  font-size:13px;background:#1899ff;">修改手机号</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <el-row class="rsfy">
-              <el-col :span="14" :offset="10">
-                <el-pagination  @current-change="handleCurrentAll" :current-page.sync="param_all.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
-                  :total="param_all.total" v-if="param_all.tableData.length">
-                </el-pagination>
-              </el-col>
-            </el-row>
-          </el-tab-pane>
-          <!-- 特别关心 -->
-          <el-tab-pane :label="`特别关心`">
-            <el-table :data="param_liked.tableData" style="width: 1110px" class="rsTable"  v-loading="param_liked.loading">
-              <el-table-column label="姓名" width="120" align="center">
-                <template slot-scope="scope">
-                  <div class="tbCare fl-left"><i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i></div>
-                  <div class="fl-left" style="width:70px;"><span>{{ scope.row.patientName }}</span></div>
-                </template>
-              </el-table-column>
-              <el-table-column prop="name" label="性别/年龄" width="204" align="center">
-                <template slot-scope="scope">
-                  <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="nation" label="民族" align="center">
-              </el-table-column>
-              <el-table-column prop="diagnoseTime" label="就诊日期" align="center">
-              </el-table-column>
-              <el-table-column prop="icdName" label="疾病诊断" align="center">
-                <template slot-scope="scope">
-                  <div style="text-align: left;margin-left: 18px;">
-                    <div class="tags">{{scope.row.diagnosetype ==1?'门诊':'住院'}}</div>
-                    {{scope.row.icdName}}
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column prop="address" label="就诊档案" align="center">
-                <template slot-scope="scope">
-                  <el-button type="primary" @click="wayButton(scope)" class="tableBtn" style="">档案</el-button>
-                  <el-button type="primary" @click="updateTelBtn(scope)" style="height: 23px;width: 90px;padding: 0;
-                  font-size:13px;background:#1899ff;">修改手机号</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <el-row class="rsfy">
-              <el-col :span="16" :offset="8">
-                <el-pagination  @current-change="handleCurrentLiked" :current-page.sync="param_liked.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
-                  :total="param_liked.total" v-if="param_liked.tableData.length">
-                </el-pagination>
-              </el-col>
-            </el-row>
-          </el-tab-pane>
-        </el-tabs>
-      </el-col>
-    </el-row>
+    <el-tabs type="border-card" @tab-click="handleClick">
+      <!-- 全部患者 -->
+      <el-tab-pane :label="`全部患者`">
+        <el-table :data="param_all.tableData" class="rsTable"  v-loading="param_all.loading">
+          <el-table-column label="" align="center" width="25">
+            <template slot-scope="scope">
+              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
+            </template>
+          </el-table-column>
+          <el-table-column label="姓名" align="center" width="120" prop="patientName">
+          </el-table-column>
+          <el-table-column prop="name" label="性别/年龄" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="nation" label="民族" align="center">
+          </el-table-column>
+          <el-table-column prop="diagnoseTime" label="就诊日期" align="center">
+          </el-table-column>
+          <el-table-column prop="icdName" label="疾病名称/病种" align="center">
+            <template slot-scope="scope">
+              <!--<el-tag>{{ scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>-->
+              {{scope.row.icdName}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="address" label="操作" align="center" width="190">
+            <template slot-scope="scope">
+              <el-button type="primary" @click="wayButton(scope)" size="mini">档案</el-button>
+              <el-button type="primary" @click="updateTelBtn(scope)" size="mini">修改手机号</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="pagination-container">
+          <el-pagination  @current-change="handleCurrentAll" :current-page.sync="param_all.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
+                          :total="param_all.total" v-if="param_all.tableData.length">
+          </el-pagination>
+        </div>
+      </el-tab-pane>
+      <!-- 特别关心 -->
+      <el-tab-pane :label="`特别关心`">
+        <el-table :data="param_liked.tableData" class="rsTable"  v-loading="param_liked.loading">
+          <el-table-column label="" align="center" width="25">
+            <template slot-scope="scope">
+              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
+            </template>
+          </el-table-column>
+          <el-table-column label="姓名" align="center" width="120" prop="patientName">
+          </el-table-column>
+          <el-table-column prop="name" label="性别/年龄" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="nation" label="民族" align="center">
+          </el-table-column>
+          <el-table-column prop="diagnoseTime" label="就诊日期" align="center">
+          </el-table-column>
+          <el-table-column prop="icdName" label="疾病名称/病种" align="center">
+            <template slot-scope="scope">
+              <!--<el-tag>{{ scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>-->
+              {{scope.row.icdName}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="address" label="操作" align="center">
+            <template slot-scope="scope">
+              <el-button type="primary" @click="wayButton(scope)" class="tableBtn" size="mini">档案</el-button>
+              <el-button type="primary" @click="updateTelBtn(scope)" size="mini">修改手机号</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="pagination-container">
+          <el-pagination  @current-change="handleCurrentLiked" :current-page.sync="param_liked.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
+                          :total="param_liked.total" v-if="param_liked.tableData.length">
+          </el-pagination>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
     <!-- 弹框 -->
-    <!-- 就诊档案 -->
-    <!--<patient-file-->
-      <!--:patient-id="patientId"-->
-      <!--showRecordLink="true"-->
-      <!--ref="patientFile"-->
-    <!--&gt;</patient-file>-->
     <!-- 就诊档案 -->
     <patient-file
       :patient-id="patientId"
@@ -339,12 +318,3 @@ export default {
   }
 };
 </script>
-
-<!--<style lang="scss">-->
- <!--@import '../../assets/scss/mixin';-->
- <!--@import '../../assets/scss/reset';-->
- <!--@import '../../common/style/base';-->
-  <!--.patientList {-->
-    <!--background: $background;-->
-  <!--}-->
-<!--</style>-->

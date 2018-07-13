@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sffaDailog sfDialog">
     <!-- 随访记录 -->
     <el-dialog title="随访记录"
                :visible.sync="dialogVisible"
@@ -584,5 +584,7 @@
     }
   };
 </script>
-
+<style lang="scss">
+  @import '../../../assets/HN_DoctorClient/style/base';
+</style>
 

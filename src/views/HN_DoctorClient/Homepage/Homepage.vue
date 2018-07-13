@@ -1,5 +1,5 @@
 <template>
-  <div class="homecontainer">
+  <div class="app-container">
     <!-- 上部 -->
     <div class="homeinfo">
       <!-- 医生信息 -->
@@ -42,7 +42,7 @@
               </el-radio-group>
             </div>
           </div>
-          <div id="homeEchart1" style="width: 465px;height: 148px;">
+          <div id="homeEchart1" style="height: 148px;">
           </div>
         </div>
       </div>
@@ -51,15 +51,18 @@
     <div class="hzxq">
       <!-- 患者分析 -->
       <div class="hzfx fl-left">
-        <el-tabs v-model="hzfxTabActive" @tab-click="tabTimeSelect">
-          <el-tab-pane label="患者总体情况分析" name="first" disabled>患者总体情况分析</el-tab-pane>
-          <el-tab-pane label="近7天" name="1"></el-tab-pane>
-          <el-tab-pane label="近30天" name="2" ></el-tab-pane>
-          <el-tab-pane label="3个月" name="3"></el-tab-pane>
-          <el-tab-pane label="6个月" name="4"></el-tab-pane>
-          <el-tab-pane label="一年" name="5"></el-tab-pane>
-          <el-tab-pane label="全部" name="0"></el-tab-pane>
-        </el-tabs>
+        <div class="tabs-wrapper">
+          <div class="tabs-title">患者总体情况分析</div>
+          <el-tabs v-model="hzfxTabActive" @tab-click="tabTimeSelect">
+            <!--<el-tab-pane label="患者总体情况分析" name="first" disabled>患者总体情况分析</el-tab-pane>-->
+            <el-tab-pane label="近7天" name="1"></el-tab-pane>
+            <el-tab-pane label="近30天" name="2" ></el-tab-pane>
+            <el-tab-pane label="3个月" name="3"></el-tab-pane>
+            <el-tab-pane label="6个月" name="4"></el-tab-pane>
+            <el-tab-pane label="一年" name="5"></el-tab-pane>
+            <el-tab-pane label="全部" name="0"></el-tab-pane>
+          </el-tabs>
+        </div>
         <div class="sft">
           <!-- 疾病分布情况 -->
           <div class="sft1">
@@ -112,21 +115,21 @@
       <div class="tbgx fl-right">
         <p>特别关心</p>
         <div class="resultsProgress">
-          <el-table :data="SpecialtableData" style="width: 100%" class="homepageTable1" :show-header="false" v-loading="syhz" v-if="SpecialtableData.length">
-            <el-table-column label="姓名" prop="patientName" align="left" width="60px"></el-table-column>
-            <el-table-column label="本次异常" align="center" width="110px">
+          <el-table :data="SpecialtableData" class="homepageTable1" :show-header="false" v-loading="syhz" v-if="SpecialtableData.length">
+            <el-table-column label="姓名" prop="patientName" align="left"></el-table-column>
+            <el-table-column label="本次异常" align="center">
               <template slot-scope="scope">
-                <el-tag style="background:#fff;font-size:12px;height:20px;line-height:18px;border-radius:10px;">{{scope.row.gzTag}}</el-tag>
+                <el-tag size="mini">{{scope.row.gzTag}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="性别/年龄" align="center" width="70px">
+            <el-table-column label="性别/年龄" align="center">
               <template slot-scope="scope">
                 <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="icdName" label="诊断名称" align="center" width="100px" show-overflow-tooltip>
+            <el-table-column prop="icdName" label="诊断名称" align="center" show-overflow-tooltip>
             </el-table-column>
-            <el-table-column prop="address" label="档案" align="center"  width="70px">
+            <el-table-column prop="address" label="档案" align="center"  width="70">
               <template slot-scope="scope">
                 <el-button type="primary" @click="wayButton(scope)" style="height:23px;line-height:22px;width:45px;padding:0;font-size
                 :13px;">档案</el-button>
@@ -134,13 +137,11 @@
             </el-table-column>
           </el-table>
           <!-- 分页 -->
-          <el-row class="homepagefy" v-if="SpecialtableData.length">
-            <el-col :span="24" class="text-right" style="margin-top:10px;">
-              <el-pagination  @current-change="homeCurrentPage" :current-page.sync="currentPageHome" :page-size="limit" layout="total,prev, pager, next"
-                              :total="totalPagehome">
-              </el-pagination>
-            </el-col>
-          </el-row>
+          <div class="pagination-container" v-if="totalPagehome">
+            <el-pagination  @current-change="homeCurrentPage" :current-page.sync="currentPageHome" :page-size="limit" layout="total,prev, pager, next"
+                            :total="totalPagehome">
+            </el-pagination>
+          </div>
           <!-- 无数据的时候 -->
           <div class="nullData" v-show="sfyd">
             <div class="nullImg">
@@ -174,7 +175,7 @@
             </li>
           </ul>
         </el-col>
-        <el-col :span="24" class="stepfinish"><button class="nextBtn" @click="finBtn">完成</button></el-col>
+        <el-col :span="24" class="stepfinish"><el-button class="nextBtn" type="primary" @click="finBtn">完成</el-button></el-col>
       </el-row>
     </el-dialog>
     <!-- 弹框 -->
@@ -360,7 +361,6 @@
       /**
        * 查询首页个人信息
        * @function adminInfo
-       * @param {String} adminId 医生id
        */
       adminInfo() {
         Homepage
@@ -391,8 +391,7 @@
       /**
        * 疾病分布情况
        * @function diagnoseInfo
-       * @param {String} adminId 医生id
-       * @param {String} dateType type
+       * @param {String} type dateType
        */
       diagnoseInfo(type) {
         Homepage
@@ -499,8 +498,7 @@
       /**
        * 用药依从性
        * @function getUseEatInfo
-       * @param {String} adminId 医生id
-       * @param {String} dateType type
+       * @param {String} type dateType
        */
       getUseEatInfo(type) {
         Homepage
@@ -626,9 +624,8 @@
       },
       /**
        * 随访数量统计
-       * @function visitCountInfo
-       * @param {String} adminId 医生id
-       * @param {String} dateType value
+       * @function visitCountInf
+       * @param {String} value dateType
        */
       visitCountInfo(value) {
         Homepage
@@ -954,4 +951,448 @@
     }
   };
 </script>
+<style lang="scss" scoped>
+  .app-container{
+    color: #5d5d5d;
+    background-color: white;
+    margin: 20px;
+    border-radius: 5px;
+    .left{
+      float: left;
+    }
+    .orange{
+      color: #ff6e40;
+    }
+    .homeinfo{
+      overflow: hidden;
+    }
+    .doctorinfo{
+      width: 460px;
+      font-size: 14px;
+      .sfanimalPic{
+        display: inline-block;
+      }
+      img{
+        width: 85px;
+        height: 85px;
+        margin: 3px 0 0 14px;
+      }
+      .sfWords{
+        float: right;
+        width: 355px;
+        height: 83px;
+        padding: 17px 0 0 30px;
+        box-sizing: border-box;
+        margin-top: 2px;
+        background: url(../../../assets/HN_DoctorClient/images/word.png) no-repeat center center;
+        p{
+          margin: 0;
+          line-height: 26px;
+        }
+        p:first-child{
+          color: #69acff;
+        }
+      }
+      .cwname{
+        line-height: 26px;
+        color: #919191;
+        margin-left: 43px;
+      }
+    }
+    .sfinfo {
+      width: calc(100% - 460px);
+      padding-left: 27px;
+      .visitedRowLeft{
+        width: 150px;
+        display: inline-block;
+        p{
+          line-height: 25px;
+          font-size: 13px;
+          text-align: left;
+          margin-bottom: 5px;
+          margin-top: 0;
+        }
+        p:nth-of-type(3){
+          color: #666;
+          line-height: 52px;
+          font-size: 14px;
+          margin-top: 9px;
+        }
+        em{
+          line-height: 21px;
+          font-size: 21px;
+          color: #ff6e40;
+          border-bottom: 2px solid #ff6e40;
+          margin-right: 10px;
+        }
+        .iconfont{
+          margin-right: 9px;
+          color: #17be43;
+        }
+      }
+      .visitedRowRight{
+        float: right;
+        width: calc(100% - 150px);
+      }
+      .echartTitle{
+        height: 26px;
+        .circle{
+          float: left;
+          width: 24px;
+          height: 26px;
+          .yuan{
+            margin: 9px 0 0 3px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #fd8567;
+          }
+        }
+        .circleTitle{
+          float: left;
+          width: 100px;
+          line-height: 26px;
+          color: #989898;
+          font-size: 14px;
+        }
+        .circleharts{
+          float: right;
+          margin-right: 50px;
+          margin-top: 5px;
+        }
+      }
+    }
+    .hzxq{
+      overflow: hidden;
+    }
+    .hzfx{
+      width: 59%;
+      float: left;
+      padding-right: 20px;
+      border-right: 1px solid #e7e7e7;
+      .tabs-wrapper{
+        overflow: hidden;
+        .tabs-title{
+          float: left;
+          font-size: 17px;
+          color: #333;
+          width: calc(100% - 407px);
+          border-bottom: 2px solid #e4e7ed;
+          margin-top: 10px;
+          padding-bottom: 9px;
+        }
+        .el-tabs{
+          width: 407px;
+          float: right;
+        }
+      }
+    }
+    .tbgx{
+      width: 41%;
+      padding-left: 20px;
+      float: right;
+      p{
+        line-height: 26px;
+        font-size: 17px;
+        color: #333;
+        text-align: left;
+        margin-bottom: 12px;
+      }
+      //引导图片
+      .nullData {
+        .nullImg {
+          width: 100%;
+          height: 200px;
+          margin-top: 38px;
+          .nullImg1 {
+            margin-left: 20px;
+            width: 200px;
+            height: 200px;
+            float: left;
+          }
+          .nullWords {
+            margin-left: 63px;
+            float: left;
+            .p1 {
+              width: 10px;
+              height: 4px;
+              background: #69acff;
+              margin: 112px 0 5px;
+            }
+            .p2 {
+              width: 111px;
+              line-height: 23px;
+              font-size: 13px;
+            }
+          }
+        }
+        //引导按钮去患者列表
+        .nullBtn {
+          margin-top: 67px;
+          width: 100%;
+          text-align: center;
+          .el-button {
+            padding: 9px 20px;
+          }
+        }
+      }
+    }
+    ul,
+    li,
+    p{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    /****患者分析*****/
+    .sft {
+      margin-top: 25px;
+      //疾病分布
+      .sft1 {
+        //标题
+        .sftitle {
+          height: 14px;
+          line-height: 14px;
+          .circle1 {
+            width: 18px;
+            height: 14px;
+            float: left;
+            .yuan1 {
+              width: 6px;
+              height: 6px;
+              background: #fd8567;
+              border-radius: 50%;
+              margin: 4px 0 0 4px;
+            }
+          }
+          .circleTitle1 {
+            float: left;
+            width: 141px;
+            text-align: left;
+            font-size: 14px;
+            line-height: 14px;
+            color: #666;
+          }
+        }
+        //饼图
+        .sftcontent {
+          /*width: 615px;*/
+          height: 155px;
+          .echart2 {
+            width: 168px;
+            height: 155px;
+            float: left;
+          }
+          .echartRight {
+            /*width: 447px;*/
+            width: calc(100% - 170px);
+            float: right;
+            height: 155px;
+            ul {
+              /*width: 447px;*/
+              width: 100%;
+              height: 22px;
+              li {
+                float: left;
+                text-align: left;
+                line-height: 22px;
+                font-size: 13px;
+                color: #333;
+              }
+              li{
+                width: 30%;
+              }
+              li:nth-of-type(1) {
+                 margin: 6px 14px 0 0;
+                 width: 9px;
+                 height: 9px;
+                 border-radius: 100%;
+               }
+            }
+          }
+        }
+      }
+      //用药依从性
+      .sft2 {
+        /*width: 615px;*/
+        height: 158px;
+        .sftitle {
+          height: 14px;
+          line-height: 14px;
+          .circle1 {
+            width: 18px;
+            height: 14px;
+            float: left;
+            .yuan1 {
+              width: 6px;
+              height: 6px;
+              background: #fd8567;
+              border-radius: 50%;
+              margin: 4px 0 0 4px;
+            }
+          }
+          .circleTitle1 {
+            float: left;
+            width: 141px;
+            text-align: left;
+            font-size: 14px;
+            line-height: 14px;
+            color: #666;
+          }
+        }
+        .diseEchart {
+          /*width: 100%;*/
+          height: 158px;
+          .echart2 {
+            width: 168px;
+            height: 158px;
+          }
+          .echartRight {
+            /*width: 131px;*/
+            height: 158px;
+            padding-top: 34px;
+            ul {
+              /*width: 118px;*/
+              height: 22px;
+              li {
+                float: left;
+                text-align: left;
+                line-height: 22px;
+                font-size: 13px;
+                color: #333;
+              }
+              li:nth-of-type(1) {
+                margin: 6px 14px 0 0;
+                width: 9px;
+                height: 9px;
+                border-radius: 100%;
+              }
+              li:nth-of-type(2) {
+                width: 54px;
+                height: 22px;
+              }
+            }
+          }
+          .echartRight2 {
+            /*width: 316px;*/
+            width: calc(100% - 300px);
+            height: 158px;
+            padding: 28px 0 50px 0;
+            margin-top: 13px;
+            margin-left: 30px;
+            li {
+              /*width: 100px;*/
+              width: 30%;
+              height: 79px;
+              float: left;
+              margin-left: 4px;
+              border-radius: 3px;
+              padding: 5px 0 0 3px;
+              text-align: center;
+              p:nth-of-type(1) {
+                line-height: 28px;
+                font-size: 13px;
+                color: #424242;
+              }
+              p:nth-of-type(2) {
+                line-height: 43px;
+                font-size: 17px;
+              }
+            }
+            li:nth-of-type(1) {
+              border: 1px solid #66b1ff;
+              background: #f3faff;
+              p:nth-of-type(2) {
+                color: #75b2ff;
+                border-top: 1px solid #cae7ff;
+              }
+            }
+            li:nth-of-type(2) {
+              border: 1px solid #ffe2b7;
+              background: #fffbf5;
+              p:nth-of-type(2) {
+                color: #ff8a00;
+                border-top: 1px solid #ffe0c9;
+              }
+            }
+            li:nth-of-type(3) {
+              border: 1px solid #ffe1e7;
+              background: #fffafb;
+              p:nth-of-type(2) {
+                color: #ff003d;
+                border-top: 1px solid #ffcdd5;
+              }
+            }
+          }
+        }
+      }
+    }
+    /**
+     * 12生肖model
+     */
+    .bdzoo {
+      padding: 0 37px 33px 37px;
+      /*.el-dialog__body {*/
+        /*padding: 0;*/
+        .stepTwo {
+          width: 449px;
+          height: 29px;
+          //font-size: 20px;
+          text-align: center;
+          line-height: 29px;
+        }
+        /*生肖div*/
+        .zooSelect {
+          margin-top: 20px;
+          width: 449px;
+          height: 186px;
+          overflow: hidden;
+          .zooIcon {
+            width: 468px;
+            height: 186px;
+            // background-color:#f7f7f7;
+            li {
+              float: left;
+              .imgzoo {
+                width: 55px;
+                height: 89px;
+                margin-right: 23px;
+
+                img {
+                  width: 55px;
+                  height: 55px;
+                  border-radius: 50%;
+                  border: 0;
+                  display: block;
+                }
+                i {
+                  color: transparent;
+                  right: 0;
+                  bottom: 38px;
+                  font-size: 18px;
+                }
+                p {
+                  line-height: 13px;
+                  margin: 6px 0 14px 0;
+                  text-align: center;
+                  font-size: 13px;
+                  color: #949494;
+                }
+              }
+            }
+          }
+        }
+        .stepfinish {
+          width: 449px;
+          height: 44px;
+          text-align: center;
+          background: url(../../../assets/HN_DoctorClient/images/aibg.png) center center no-repeat;
+          .nextBtn {
+            margin-top: 12px;
+          }
+        }
+      }
+    }
+
+</style>
 

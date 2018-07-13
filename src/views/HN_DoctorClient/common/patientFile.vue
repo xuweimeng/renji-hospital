@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="hzDialog">
     <!-- 就诊档案 -->
     <el-dialog width="900px" top="30px" title="就诊档案" :visible.sync="dialogVisible" append-to-body custom-class="daDialog">
       <div class="content" slot>
@@ -334,5 +334,7 @@ export default {
   }
 };
 </script>
-
+<style lang="scss">
+  @import '../../../assets/HN_DoctorClient/style/base';
+</style>
 

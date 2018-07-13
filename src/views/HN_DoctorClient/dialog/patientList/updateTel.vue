@@ -284,3 +284,12 @@
     }
   };
 </script>
+<style>
+  /*去掉谷歌，火狐下的type="number"中的右边箭头*/
+  input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+  }
+  .el-input.is-disabled .el-input__inner {
+    color: #606266;
+  }
+</style>
