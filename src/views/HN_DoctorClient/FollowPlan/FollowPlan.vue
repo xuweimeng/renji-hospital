@@ -40,10 +40,14 @@
         <el-table :data="param_wait.tableData" class="rsTable" v-loading="param_wait.loading" @selection-change="handleSelectionChange" ref="multipleTable">
           <el-table-column type="selection" align="center">
           </el-table-column>
-          <el-table-column label="姓名" align="center">
+          <el-table-column label="" align="center" width="25">
             <template slot-scope="scope">
-              <div class="tbCare fl-left"><i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i></div>
-              <div class="tbName fl-left" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
+              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
+            </template>
+          </el-table-column>
+          <el-table-column label="姓名" align="center" width="120">
+            <template slot-scope="scope">
+              <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
             </template>
           </el-table-column>
           <el-table-column prop="name" label="性别/年龄" align="center">
@@ -87,10 +91,14 @@
       <!-- 已通过 -->
       <el-tab-pane :label="`已通过`">
         <el-table :data="param_pass.tableData" class="rsTable" v-loading="param_pass.loading">
-          <el-table-column label="姓名" align="center">
+          <el-table-column label="" align="center" width="25">
             <template slot-scope="scope">
-              <div class="tbCare fl-left"><i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i></div>
-              <div class="tbName fl-left" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
+              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
+            </template>
+          </el-table-column>
+          <el-table-column label="姓名" align="center" width="120">
+            <template slot-scope="scope">
+              <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
             </template>
           </el-table-column>
           <el-table-column prop="name" label="性别/年龄" align="center">
@@ -128,10 +136,14 @@
       <!-- 未通过 -->
       <el-tab-pane :label="`未通过`">
         <el-table :data="param_nopass.tableData" class="rsTable" v-loading="param_nopass.loading">
-          <el-table-column label="姓名" align="center">
+          <el-table-column label="" align="center" width="25">
             <template slot-scope="scope">
-              <div class="tbCare fl-left"><i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i></div>
-              <div class="tbName fl-left" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
+              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
+            </template>
+          </el-table-column>
+          <el-table-column label="姓名" align="center" width="120">
+            <template slot-scope="scope">
+              <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
             </template>
           </el-table-column>
           <el-table-column prop="name" label="性别/年龄" align="center">
@@ -334,8 +346,10 @@
                 item.islike = true;
               }
               // 匹配审核不通过原因
+              console.log(item.notPassReason);
               const reasonMap = ['', '患者已死亡', '患者不接受随访', '随访方案重复', '方案不匹配'];
               item.notPassReason = reasonMap[item.notPassReason];
+              console.log(item.notPassReason);
               // 随访类型
               if (!item.activeType) {
                 item.activeType = 0;
@@ -570,4 +584,11 @@
     }
   };
 </script>
-
+<style scoped>
+  .td-hover{
+    cursor: pointer;
+  }
+  .td-hover:hover{
+    color: #409EFF;
+  }
+</style>

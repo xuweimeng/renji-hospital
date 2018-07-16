@@ -135,6 +135,7 @@ import patientFile from 'HNDC/common/patientFile';
 import updateTel from 'HNDC/dialog/patientList/updateTel';
 const typeMap = ['all', 'liked']; // 依次是 全部、已关注；用来匹配 不同的param_
 export default {
+  name: 'PatientList',
   data() {
     return {
       hideInput: false, // 隐藏了搜索栏的方案名称

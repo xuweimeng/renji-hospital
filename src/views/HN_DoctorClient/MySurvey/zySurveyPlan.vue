@@ -671,5 +671,6 @@ export default {
   }
 };
 </script>
-
-
+<style lang="scss" scoped>
+  @import '../../../styles/HN_DoctorClient/surveyPlan.scss';
+</style>

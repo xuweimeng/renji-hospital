@@ -161,7 +161,7 @@
       </span>
     </el-dialog>
     <!-- 详情 -->
-    <el-dialog top="5vh" class="plan_info" title="调查计划" :visible.sync="surveyPlan">
+    <el-dialog top="5vh" class="plan_info" title="调查计划" :visible.sync="surveyPlan" center>
         <h3>
 			{{infoData.brxm||""}}
           	<span>
@@ -672,5 +672,6 @@ export default {
   }
 };
 </script>
-
-
+<style lang="scss" scoped>
+  @import '../../../styles/HN_DoctorClient/surveyPlan.scss';
+</style>

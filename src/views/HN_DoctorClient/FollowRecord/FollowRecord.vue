@@ -79,7 +79,7 @@
           </el-table-column>
           <el-table-column label="姓名" align="center" width="120" prop="patientName">
             <template slot-scope="scope">
-              <div @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
+              <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
             </template>
           </el-table-column>
           <el-table-column prop="name" label="性别/年龄" align="center">
@@ -95,7 +95,7 @@
           </el-table-column>
           <el-table-column label="随访计划" align="center" show-overflow-tooltip>
             <template slot-scope="scope">
-              <span @click="sfjhModel(scope)">{{scope.row.schemeName}}</span>
+              <span class="td-hover" @click="sfjhModel(scope)">{{scope.row.schemeName}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="dateBegin" label="随访日期" align="center" show-overflow-tooltip>
@@ -143,7 +143,7 @@
           </el-table-column>
           <el-table-column label="姓名" align="center" width="120" prop="patientName">
             <template slot-scope="scope">
-              <div @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
+              <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
             </template>
           </el-table-column>
           <el-table-column prop="name" label="性别/年龄" align="center">
@@ -159,7 +159,7 @@
           </el-table-column>
           <el-table-column label="随访计划" align="center" show-overflow-tooltip>
             <template slot-scope="scope">
-              <span @click="sfjhModel(scope)">{{scope.row.schemeName}}</span>
+              <span class="td-hover" @click="sfjhModel(scope)">{{scope.row.schemeName}}</span>
             </template>
           </el-table-column>
           <el-table-column label="通话状态" align="center" show-overflow-tooltip>
@@ -434,5 +434,23 @@ export default {
   }
 };
 </script>
-
-
+<style scoped>
+  .td-hover{
+    cursor: pointer;
+  }
+  .td-hover:hover{
+    color: #409EFF;
+  }
+  .wyc {
+    color: #00ae00;
+  }
+  .yyc {
+    color: #ff2626;
+  }
+  .cjsb {
+    color: #ffb15d;
+  }
+  .originC {
+    color: #ff6800;
+  }
+</style>

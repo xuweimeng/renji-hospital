@@ -187,6 +187,6 @@ export default {
 };
 </script>
 <style lang="scss">
-  @import '../../../assets/HN_DoctorClient/style/base';
+  @import '../../../styles/HN_DoctorClient/base';
 </style>
 

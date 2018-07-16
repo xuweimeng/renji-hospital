@@ -118,16 +118,16 @@
                     <el-col :span="4" style="text-align:left;">
                       <div class="collapseTitle">记录详情&nbsp;:&nbsp;</div>
                     </el-col>
-                    <el-col :span="16" style="border-bottom:1px dotted #ebebeb;margin-top:24px;">
-                      <div tsyle="height:1px;background:#f00; " class="line"></div>
-                    </el-col>
+                    <!--<el-col :span="16" style="border-bottom:1px dotted #ebebeb;margin-top:24px;">-->
+                      <!--<div tsyle="height:1px;background:#f00; " class="line"></div>-->
+                    <!--</el-col>-->
                   </el-row>
                 </template>
                 <el-row v-if="!modelData.length" style="padding-top:20px;"><span>这个病人没有语音记录哦...</span></el-row>
                 <el-row class="voiceRow" v-for="item,index in modelData" :key="item.id" v-if="modelData.length">
                   <!--add by yugou 添加人工外呼标签-->
                   <!--isArtificialCall 是否人工外呼 0:不是（默认），1:是-->
-                  <el-tag type="info" v-if="patientRecord.isArtificialCall == 1 && index === 0">人工外呼</el-tag>
+                  <el-tag type="info" v-if="patientRecord.isArtificialCall == 1 && index === 0" style="float: left;margin-bottom: 10px;">人工外呼</el-tag>
                   <el-col :span="24" class="aiyuyin">
                     <div class="ai">AI</div>
                     <div class="aiWords">
@@ -138,7 +138,9 @@
                   <el-col :span="24" class="hzyuyin">
                     <div class="hzhead">患者</div>
                     <div class="hzWords">
-                      <audio :src="yyHrec +item.audio" controls="controls" style="margin-top: 7px;"></audio>
+                      <!--<audio :src="yyHrec +item.audio" controls="controls" style="margin-top: 7px;"></audio>-->
+                      <audio :src="yyHrec +item.audio" controls="controls" style="margin-top: 7px;" v-if="item.audio"></audio>
+                      <div v-if="!item.audio" class="audio_null_text">此记录为人工外呼，暂无录音</div>
                       <div class="arrows1"></div>
                     </div>
                   </el-col>
@@ -585,6 +587,21 @@
   };
 </script>
 <style lang="scss">
-  @import '../../../assets/HN_DoctorClient/style/base';
+  @import '../../../styles/HN_DoctorClient/base';
+  .audio_null_text{
+    padding: 5px 10px;
+    margin: 10px 0;
+    background-color: white;
+    color: #666666;
+    border: 1px solid #bbbbbb;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  .sfDialog{
+    .el-collapse-item__content{
+      max-height: 300px;
+      overflow: auto;
+    }
+  }
 </style>
 

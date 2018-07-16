@@ -98,7 +98,7 @@
       <table-pagination :total="total"  @currentPageFail="pageChange" v-if="total"></table-pagination>
     </div>
     <!-- 详情 -->
-    <el-dialog class="result_info" top="5vh"  title="调查计划" :visible.sync="surveyResultDialog">
+    <el-dialog class="result_info" top="5vh"  title="调查计划" :visible.sync="surveyResultDialog" center>
         <h3>
            {{infoData.brxm||""}}
           <span>
@@ -419,3 +419,11 @@
     }
   };
 </script>
+<style lang="scss" scoped>
+  @import '../../../styles/HN_DoctorClient/surveyResult.scss';
+  .pagination-container{
+    padding: 15px;
+    margin-top: 0;
+    background-color: white;
+  }
+</style>
