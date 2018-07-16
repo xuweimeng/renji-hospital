@@ -97,7 +97,7 @@
    * 异常数据
    * @module abnormalStatistic
    */
-  import { AbnormalStatistic } from '@/api/HN_DoctorClient/AbnormalStatistic';
+  import { AbnormalStatistic } from 'HNDC_API/AbnormalStatistic';
 
   // 随访时间，默认是当天
   const follow_default_time = [new Date(new Date().setHours(0, 0, 0, 0)), new Date(new Date().setHours(23, 59, 59, 59))];

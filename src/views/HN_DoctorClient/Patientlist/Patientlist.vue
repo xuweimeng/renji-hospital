@@ -130,7 +130,7 @@
  * 患者列表
  * @module patientList
  */
-import { CommonAPI } from '@/api/HN_DoctorClient/common';
+import { CommonAPI } from 'HNDC_API/common';
 import patientFile from 'HNDC/common/patientFile';
 import updateTel from 'HNDC/dialog/patientList/updateTel';
 const typeMap = ['all', 'liked']; // 依次是 全部、已关注；用来匹配 不同的param_

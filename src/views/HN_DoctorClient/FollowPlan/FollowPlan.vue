@@ -219,7 +219,7 @@
    * 随访计划
    * @module followParam
    */
-  import { FollowPlan } from '@/api/HN_DoctorClient/FollowPlan';
+  import { FollowPlan } from 'HNDC_API/FollowPlan';
   import patientFile from 'HNDC/common/patientFile';
   import followPlan from 'HNDC/common/FollowPlan';
   const typeMap = ['wait', 'pass', 'nopass']; // 依次是 待审核、已通过、未通过；用来匹配 不同的param_

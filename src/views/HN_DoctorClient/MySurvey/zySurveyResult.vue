@@ -155,7 +155,7 @@
   </div>
 </template>
 <script>
-  import { MySurvey } from '@/api/HN_DoctorClient/MySurvey';
+  import { MySurvey } from 'HNDC_API/MySurvey';
   import TablePagination from 'HNDC/common/pagination';
   export default {
     data() {

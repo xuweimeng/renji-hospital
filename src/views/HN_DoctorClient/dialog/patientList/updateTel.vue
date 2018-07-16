@@ -109,7 +109,7 @@
 </template>
 
 <script>
-  import { UpdateTel } from '@/api/HN_DoctorClient/PatientList_updateTel';
+  import { UpdateTel } from 'HNDC_API/PatientList_updateTel';
   import mixin from '@/assets/HN_DoctorClient/js/mixin';
   export default {
     name: 'updateTel',

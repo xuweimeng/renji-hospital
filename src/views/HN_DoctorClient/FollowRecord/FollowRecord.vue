@@ -229,7 +229,7 @@
  * 随访结果
  * @module followway
  */
-import { FollowRecord } from '@/api/HN_DoctorClient/FollowRecord';
+import { FollowRecord } from 'HNDC_API/FollowRecord';
 import patientFile from 'HNDC/common/patientFile';
 import followPlan from 'HNDC/common/FollowPlan';
 import followRecord from 'HNDC/common/followRecord';

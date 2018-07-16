@@ -76,7 +76,7 @@
  * 随访计划
  * @module followPlan
  */
-import { CommonAPI } from '@/api/HN_DoctorClient/common';
+import { CommonAPI } from 'HNDC_API/common';
 import mixin from '@/assets/HN_DoctorClient/js/mixin';
 export default {
   data() {

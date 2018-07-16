@@ -1,6 +1,6 @@
 // import {API} from '@/serve'
-import { mixinAPI } from '@/api/HN_DoctorClient/mixin_dialog'
-import { CommonAPI } from '@/api/HN_DoctorClient/common'
+import { mixinAPI } from 'HNDC_API/mixin_dialog'
+import { CommonAPI } from 'HNDC_API/common'
 const mixin = {
   mounted() {
     this.getUserId();

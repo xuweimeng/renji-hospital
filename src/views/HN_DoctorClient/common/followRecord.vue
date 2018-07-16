@@ -184,7 +184,7 @@
    * 随访记录
    * @module followRecord
    */
-  import { FollowRecord } from '@/api/HN_DoctorClient/common/followRecord';
+  import { FollowRecord } from 'HNDC_API/common/followRecord';
   import echarts from 'echarts';
   import { Point } from '@/assets/HN_DoctorClient/js/selectOptions';
   import mixin from '@/assets/HN_DoctorClient/js/mixin';

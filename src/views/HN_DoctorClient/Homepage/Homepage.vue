@@ -196,8 +196,8 @@
    * 首页
    * @module Homepage
    */
-  import { Homepage } from '@/api/HN_DoctorClient/Homepage';
-  import { CommonAPI } from '@/api/HN_DoctorClient/common';
+  import { Homepage } from 'HNDC_API/Homepage';
+  import { CommonAPI } from 'HNDC_API/common';
   import echart from 'echarts';
   import patientFile from 'HNDC/common/patientFile';
 

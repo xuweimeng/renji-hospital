@@ -193,7 +193,7 @@
  * 患者档案
  * @module patientFile
  */
-import { PatientFile } from '@/api/HN_DoctorClient/common/patientFile';
+import { PatientFile } from 'HNDC_API/common/patientFile';
 import 'swiper/dist/css/swiper.css';
 import { swiper, swiperSlide } from 'vue-awesome-swiper';
 import mixin from '@/assets/HN_DoctorClient/js/mixin';

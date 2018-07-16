@@ -191,8 +191,8 @@
  * 随访计划
  * @module followParam
  */
-import { MySurvey } from '@/api/HN_DoctorClient/MySurvey';
-import { CommonAPI } from '@/api/HN_DoctorClient/common';
+import { MySurvey } from 'HNDC_API/MySurvey';
+import { CommonAPI } from 'HNDC_API/common';
 const typeMap = ['wait', 'pass', 'nopass']; // 依次是 待审核、已通过、未通过；用来匹配 不同的param_
 export default {
   data() {

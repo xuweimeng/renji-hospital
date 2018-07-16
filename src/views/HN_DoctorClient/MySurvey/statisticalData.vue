@@ -78,7 +78,7 @@
   </div>
 </template>
 <script>
-  import { MySurvey } from '@/api/HN_DoctorClient/MySurvey';
+  import { MySurvey } from 'HNDC_API/MySurvey';
   export default {
     name: 'AddUp',
     data() {
