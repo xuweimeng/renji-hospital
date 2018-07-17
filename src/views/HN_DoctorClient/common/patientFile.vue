@@ -182,6 +182,7 @@
       :patient-id="patientId"
       :visit-order-id="visitOrderId"
       :task-id="taskIdRecord"
+      v-on:refreshData="refreshListFunc"
       sf-number="0"
       tab-active="0"
       ref="followRecord"></follow-record>
@@ -236,6 +237,14 @@ export default {
     followRecord
   },
   methods: {
+    /**
+     * @description 触发父组件刷新列表，供子组件-随访记录用
+     * @function  refreshListFunc
+     */
+    refreshListFunc() {
+      this.$emit('refreshData');
+      this.getPatientInfo();
+    },
     // 有 随访记录 按钮时调用
     sfDialog(taskId) {
       this.taskIdRecord = taskId;
