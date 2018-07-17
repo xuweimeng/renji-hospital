@@ -21,16 +21,16 @@
 </template>
 
 <script>
-  import { followUp } from 'RJZL_API/followPlan'
-  import { mapState } from 'vuex'
-  import HzInfo from 'components/Dialog/hzFile/hzInfo'
-  import PlanZb from './planzb'
+  import { followUp } from 'RJZL_API/followPlan';
+  import { mapState } from 'vuex';
+  import HzInfo from 'components/Dialog/hzFile/hzInfo';
+  import PlanZb from './planzb';
   export default {
-    data () {
+    data() {
       return {
         'GzTag': '', // 特别关注标签
-        'islike': '', // 是否特别关注
-      }
+        'islike': '' // 是否特别关注
+      };
     },
     props: [
 			'planDg'
@@ -50,11 +50,11 @@
 			 * @description 关闭弹框
 			 * @DateTime    2018-04-18
 			 */
-			closeFun () {
+			closeFun() {
 		  	this.$emit('closeChildrenPlan', false)
       },
       /** 请求特别关注 */
-      careFun () {
+      careFun() {
         followUp.detail({
           'id': this.patientInfo.id,
         }).then((res)=>{
@@ -83,7 +83,7 @@
     watch: {
       planDg(newV, oldV) {
         if (newV) {
-          this.careFun()
+          this.careFun();
         }
       }
     }

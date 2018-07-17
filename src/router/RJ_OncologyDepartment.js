@@ -114,22 +114,23 @@ export const RJ_OncologyDepartment = [
       noCache: true
     },
     children: [
-      {
-        path: 'notificationsOfAdmission',
-        component: () => import('RJZL/admissionNotice/notificationsOfAdmission.vue'),
-        name: '/notificationsOfAdmission',
-        meta: {
-          title: 'notificationsOfAdmission',
-          roles: ['上海市仁济医院肿瘤科'],
-          noCache: true
-        }
-      },
+
       {
         path: 'admissionNoticePlan',
         component: () => import('RJZL/admissionNotice/admissionNoticePlan.vue'),
         name: '/admissionNoticePlan',
         meta: {
           title: 'admissionNoticePlan',
+          roles: ['上海市仁济医院肿瘤科'],
+          noCache: true
+        }
+      },
+      {
+        path: 'notificationsOfAdmission',
+        component: () => import('RJZL/admissionNotice/notificationsOfAdmission.vue'),
+        name: '/notificationsOfAdmission',
+        meta: {
+          title: 'notificationsOfAdmission',
           roles: ['上海市仁济医院肿瘤科'],
           noCache: true
         }

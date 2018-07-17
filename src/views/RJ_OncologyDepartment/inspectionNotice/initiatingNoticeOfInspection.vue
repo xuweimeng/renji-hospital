@@ -1,5 +1,5 @@
 <template>
-  <div class="initiatingNoticePlan">
+  <div class="initiatingNoticeOfInspection">
     检查通知计划
   </div>
 </template>
