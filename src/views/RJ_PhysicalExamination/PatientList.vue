@@ -329,7 +329,7 @@
 </template>
 
 <script>
-  import { PatientList } from '../../api/RJ_PhysicalExamination/PatientList';     // 引入 api
+  import { PatientList } from '../../api/RJ_PhysicalExamination/PatientList'; // 引入 api
 
   /**
    * 活动通知function列表
@@ -342,43 +342,43 @@ import { mapGetters } from 'vuex';
   export default {
     data() {
       return {
-        queryModify:{
-          physicalTime :"" ,   //改约体检时间
-          physicalName:"",   //体检套餐选择
+        queryModify: {
+          physicalTime: '', // 改约体检时间
+          physicalName: '' // 体检套餐选择
         },
-        value5:"",
-        diseaseListModify: [],   //体检套餐
+        value5: '',
+        diseaseListModify: [], // 体检套餐
         queryLoading: false, // 体检套餐loading
-        iccvd:"",
-        isModify:false,   //是否改约弹窗
+        iccvd: '',
+        isModify: false, // 是否改约弹窗
         ruleForm: {
-          khxm:'',           //客户姓名
-          khxb:'',               //客户性别
-          lxsj:'',    //联系手机
-          sfzh:'',  //身份证号
-          tjtcbh:"",      //体检套餐编号
-          tjtcmc:'',  //体检套餐名称
-          vip:'',          //1表示是VIP   0表示不是
-          age:'',       //年龄
-          yytjrq:'',         //预约体检时间
-          iccvd:"",
-          csrq:"",        //出生年月
+          khxm: '', // 客户姓名
+          khxb: '', // 客户性别
+          lxsj: '', // 联系手机
+          sfzh: '', // 身份证号
+          tjtcbh: '', // 体检套餐编号
+          tjtcmc: '', // 体检套餐名称
+          vip: '', // 1表示是VIP   0表示不是
+          age: '', // 年龄
+          yytjrq: '', // 预约体检时间
+          iccvd: '',
+          csrq: '' // 出生年月
 
         },
-        patientsShow:false,    //添加客户弹框
-        isNull: false,//患者的住院门诊为都为视空
-        swiperDate: [],//患者就诊档案时间
-        PhysicalExSet:{},   //体检套餐信息
-        selectNumber: 0,//选中第几次
+        patientsShow: false, // 添加客户弹框
+        isNull: false, // 患者的住院门诊为都为视空
+        swiperDate: [], // 患者就诊档案时间
+        PhysicalExSet: {}, // 体检套餐信息
+        selectNumber: 0, // 选中第几次
         followwaySearch: {
-          pager:1, //当前页码
-          limit:10,//每页条数
-          brxb: '',   //男  女 （中文）
-          fromBirthday: '',//出生年月开始时间
-          endBirthday: '',//出生年月结束时间
-          jtdh:'',  //联系电话
-          brxm:'', //姓名
-          sfzh:'', //身份证号
+          pager: 1, // 当前页码
+          limit: 10, // 每页条数
+          brxb: '', // 男  女 （中文）
+          fromBirthday: '', // 出生年月开始时间
+          endBirthday: '', // 出生年月结束时间
+          jtdh: '', // 联系电话
+          brxm: '', // 姓名
+          sfzh: '' // 身份证号
         },
         rules: {
           khxm: [
@@ -386,32 +386,32 @@ import { mapGetters } from 'vuex';
             { min: 1, max: 8, message: '长度在 1 到 8 个字符', trigger: 'blur' }
           ],
           lxsj: [
-            { required: true, message: '请输入客户联系方式', trigger: 'blur' },
+            { required: true, message: '请输入客户联系方式', trigger: 'blur' }
           ],
           vip: [
-            {  required: true, message: '请选择客户类型', trigger: 'change' }
+            { required: true, message: '请选择客户类型', trigger: 'change' }
           ],
           yytjrq: [
             { required: true, message: '请选择预约时间', trigger: 'change' }
           ],
-          physicalTime:[
+          physicalTime: [
             { required: true, message: '请选择预约时间', trigger: 'change' }
           ],
           type: [
             { type: 'array', required: true, message: '请选择客户类型', trigger: 'change' }
           ],
           iccvd: [
-            {required: true,  message: '请选择体检套餐', trigger: 'change' }
+            { required: true, message: '请选择体检套餐', trigger: 'change' }
           ],
-          physicalName:[
-            {required: true,  message: '请选择体检套餐', trigger: 'change' }
+          physicalName: [
+            { required: true, message: '请选择体检套餐', trigger: 'change' }
           ],
           desc: [
             { required: true, message: '请填写活动形式', trigger: 'blur' }
           ]
         },
-        isinspectPlength:true,
-        swiperOption: {//swiper
+        isinspectPlength: true,
+        swiperOption: {// swiper
           slidesPerView: 4,
           spaceBetween: 30,
           slidesPerGroup: 4,
@@ -420,34 +420,34 @@ import { mapGetters } from 'vuex';
           navigation: {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev'
-          },
+          }
         },
-        diseaseList:[],  //科室列表
-        PhysicalProject:{},   //体检项目
-        patientInfo:{},//记录个人信息
-        isCare:false,
-        endBirthday:'',
-        initDate:"",
-        customDialog:false,
-        tableAll: [],//全部患者表格data
-        totalPage1: 0, //全部患者表格data总数量
-        loading1: true,//全部患者刷新
+        diseaseList: [], // 科室列表
+        PhysicalProject: {}, // 体检项目
+        patientInfo: {}, // 记录个人信息
+        isCare: false,
+        endBirthday: '',
+        initDate: '',
+        customDialog: false,
+        tableAll: [], // 全部患者表格data
+        totalPage1: 0, // 全部患者表格data总数量
+        loading1: true, // 全部患者刷新
         currentPage3: 1,
-        patientId: '',//病人id
-        dialogVisible: false,//model弹框
+        patientId: '', // 病人id
+        dialogVisible: false, // model弹框
         modelContent: {},
-        numberPercent: 0,//未通知人数百分比,
-        modifyId:'',    //确认改约id
-      }
+        numberPercent: 0, // 未通知人数百分比,
+        modifyId: '' // 确认改约id
+      };
     },
-     computed: {
-    ...mapGetters(['token'])
+    computed: {
+      ...mapGetters(['token'])
   },
-    mounted () {
+    mounted() {
       this.getUserId();
       this.list();
     },
-    components:{
+    components: {
       swiper,
       swiperSlide
     },
@@ -455,85 +455,84 @@ import { mapGetters } from 'vuex';
       /**
        * 改约详请接口
        **/
-      modificationAction (scope){
-        this.modifyId= scope.row.id;
+      modificationAction(scope) {
+        this.modifyId = scope.row.id;
         PatientList.getPhysicalInfo({
-          "hzxxId":scope.row.id,
-        }).then((res)=> {
+          'hzxxId': scope.row.id
+        }).then((res) => {
           if (res.code == 0) {
             this.isModify = true;
-            console.log(res)
+            console.log(res);
             this.queryModify.physicalTime = new Date(res.orderTime);
             this.initDate = res.orderTime;
             this.diseaseListModify = res.diseases;
-            this.queryModify.physicalName = res.oldIcd!='undefined'?res.oldIcd:"";
-          }else{
+            this.queryModify.physicalName = res.oldIcd != 'undefined' ? res.oldIcd : '';
+          } else {
             this.$message.error(res.message);
           }
-        })
+        });
       },
       /**
        * 确认改约
        */
-      modifySubmitForm (formName){
+      modifySubmitForm(formName) {
         let initDateTime = '';
-        if(this.queryModify.physicalTime.toString().indexOf("-")==-1){
-
-          initDateTime = this.initDate
-        }else{
+        if (this.queryModify.physicalTime.toString().indexOf('-') == -1) {
+          initDateTime = this.initDate;
+        } else {
           initDateTime = this.queryModify.physicalTime;
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            PatientList. updatePhysicalInfo({
-              "hzxxId":this.modifyId,
-              adminId:sessionStorage.getItem("userId"),
-              icd:this.queryModify.physicalName,//速成测试是
-              orderTime:initDateTime
-            }).then((res)=> {
+            PatientList.updatePhysicalInfo({
+              'hzxxId': this.modifyId,
+              adminId: sessionStorage.getItem('userId'),
+              icd: this.queryModify.physicalName, // 速成测试是
+              orderTime: initDateTime
+            }).then((res) => {
               if (res.code == 0) {
                 this.$message.success(res.message);
                 this.isModify = false;
                 this.list();
-              }else{
+              } else {
                 this.$message.error(res.message);
               }
-            })
+            });
           }
-        })
+        });
       },
 
       /**
        * 关闭弹窗
        **/
-      closeAction(formName){
+      closeAction(formName) {
         this.$refs[formName].resetFields();
-        this.ruleForm={
-          khxm:'',           //客户姓名
-          khxb:'',               //客户性别
-          lxsj:'',    //联系手机
-          sfzh:'',  //身份证号
-          tjtcbh:"",      //体检套餐编号
-          tjtcmc:'',  //体检套餐名称
-          vip:'',          //1表示是VIP   0表示不是
-          age:'',       //年龄
-          iccvd:"",
-          csrq:"",
-          yytjrq:''         //预约体检时间
-        }
+        this.ruleForm = {
+          khxm: '', // 客户姓名
+          khxb: '', // 客户性别
+          lxsj: '', // 联系手机
+          sfzh: '', // 身份证号
+          tjtcbh: '', // 体检套餐编号
+          tjtcmc: '', // 体检套餐名称
+          vip: '', // 1表示是VIP   0表示不是
+          age: '', // 年龄
+          iccvd: '',
+          csrq: '',
+          yytjrq: '' // 预约体检时间
+        };
       },
       /**
        * 体检套餐搜素
        **/
-      selectAction(val){
-        this.ruleForm.tjtcbh = val.split(",")[0];
-        this.ruleForm.tjtcmc = val.split(",")[1];
+      selectAction(val) {
+        this.ruleForm.tjtcbh = val.split(',')[0];
+        this.ruleForm.tjtcmc = val.split(',')[1];
       },
       /**
        * 添加患者
        **/
-      additionPatients(){
-        this.patientsShow= true;
+      additionPatients() {
+        this.patientsShow = true;
       },
       /**
        * 增加患者
@@ -541,42 +540,42 @@ import { mapGetters } from 'vuex';
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if(isNaN(this.ruleForm.age)){
-              this.$message.error("年龄请输入数字");
-              this.ruleForm.age ='';
+            if (isNaN(this.ruleForm.age)) {
+              this.$message.error('年龄请输入数字');
+              this.ruleForm.age = '';
               return false;
             }
-            if(this.ruleForm.sfzh){
+            if (this.ruleForm.sfzh) {
               var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-              if(!reg.test(this.ruleForm.sfzh)){
-                this.$message.error("请输入正确得身份证号");
-                //this.ruleForm.age ='';
+              if (!reg.test(this.ruleForm.sfzh)) {
+                this.$message.error('请输入正确得身份证号');
+                // this.ruleForm.age ='';
                 return false;
               }
             }
             PatientList.addCustomerList(this.ruleForm)
               .then(res => {
-                if(res.code==0){
-                  this.patientsShow= false;
+                if (res.code == 0) {
+                  this.patientsShow = false;
                   this.list();
-                  this.ruleForm={
-                    khxm:'',           //客户姓名
-                    khxb:'',               //客户性别
-                    lxsj:'',    //联系手机
-                    sfzh:'',  //身份证号
-                    tjtcbh:"",      //体检套餐编号
-                    tjtcmc:'',  //体检套餐名称
-                    vip:'',          //1表示是VIP   0表示不是
-                    age:'',       //年龄
-                    iccvd:"",
-                    csrq:"",
-                    yytjrq:''         //预约体检时间
-                  }
-                }else{
-                  this.$message.error(res.message)
+                  this.ruleForm = {
+                    khxm: '', // 客户姓名
+                    khxb: '', // 客户性别
+                    lxsj: '', // 联系手机
+                    sfzh: '', // 身份证号
+                    tjtcbh: '', // 体检套餐编号
+                    tjtcmc: '', // 体检套餐名称
+                    vip: '', // 1表示是VIP   0表示不是
+                    age: '', // 年龄
+                    iccvd: '',
+                    csrq: '',
+                    yytjrq: '' // 预约体检时间
+                  };
+                } else {
+                  this.$message.error(res.message);
                 }
-                console.log(res)
-                //this.diseaseList = res.data;
+                console.log(res);
+                // this.diseaseList = res.data;
               })
               .catch(error => {});
           } else {
@@ -588,11 +587,11 @@ import { mapGetters } from 'vuex';
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
-      /**@description
+      /** @description
        * 体检中心-体检套餐自动补全搜索
        */
       remoteMethod(query) {
-        if (query == "") {
+        if (query == '') {
           return false;
         }
         this.diseaseList = [];
@@ -612,81 +611,79 @@ import { mapGetters } from 'vuex';
       /**
        * 修改手机号
        **/
-      changeNumberAction(scope){
-        console.log(scope)
-        this.$prompt('  ','修改手机号', {
+      changeNumberAction(scope) {
+        console.log(scope);
+        this.$prompt('  ', '修改手机号', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           inputPlaceholder: '请输入手机号',
           customClass: 'careMsgBoxAdd',
           cancelButtonClass: 'cancelButtonStyle',
-          confirmButtonClass: 'confirmButtonStyle',
+          confirmButtonClass: 'confirmButtonStyle'
         }).then(({ value }) => {
-          if(!value) {
+          if (!value) {
             this.$message.error('手机号不能为空!');
-          }
-          else{
-            var myreg=/^1[3|4|5|7|8][0-9]{9}$/g;
-            if(!myreg.test(value)){
+          } else {
+            var myreg = /^1[3|4|5|7|8][0-9]{9}$/g;
+            if (!myreg.test(value)) {
               this.$message.error('请填写正确得手机号码!');
-            }else{
-
+            } else {
               PatientList.updateCustomer({
-                'adminId': sessionStorage.getItem('userId'), //医生ID
-                "id":scope.row.id,
-                'jtdh': value,//家庭电话
-              }).then((res)=>{
-                if(res.code == 0) {
+                'adminId': sessionStorage.getItem('userId'), // 医生ID
+                'id': scope.row.id,
+                'jtdh': value // 家庭电话
+              }).then((res) => {
+                if (res.code == 0) {
                   this.list();
                   this.$message({
                     type: 'success',
                     message: '修改成功!'
                   });
-                }else{
-                  this.$message.error(res.message)
+                } else {
+                  this.$message.error(res.message);
                 }
-              }).catch((error)=>{
-                console.log(error)
-              })
+              }).catch((error) => {
+                console.log(error);
+              });
             }
           }
-        })
+        });
       },
 
       /*
       *客户档案-体检项目信息
       */
       currentPartientInfo(item) {
-//         this.isNull = false;
+      //         this.isNull = false;
         PatientList.clientTotalInspect({
-          'patientId': this.patientId,   //
+          'patientId': this.patientId, //
           'date': item,
           'clientId': this.clientId
-        }).then((res)=>{
-          this.loading4 = false
-          if(res.code == 0) {
-            console.log(res)
+        }).then((res) => {
+          this.loading4 = false;
+          if (res.code == 0) {
+            console.log(res);
             this.isNull = false;
             this.PhysicalExSet = res.data;
-            if(res.data.inspectProjectsVoList.length){
+            if (res.data.inspectProjectsVoList.length) {
               this.PhysicalProject = res.data.inspectProjectsVoList[0];
               this.isinspectPlength = true;
-            }else{
-              this.isinspectPlength =  false;
-//              this.isNull = true;
+            } else {
+              this.isinspectPlength = false;
+            //              this.isNull = true;
             }
-          }else{
+          } else {
             this.isNull = true;
           }
-        }).catch((error)=>{
-          console.log(error)
-        })
+        }).catch((error) => {
+          console.log(error);
+        });
       },
       /**
        * 点击档案
        **/
-      archiveAction(scope){
-        this.scopeID = ''
+      archiveAction(scope) {
+        this.scopeID = '';
         this.getPatinetInfo(scope.row.id);
         this.patientId = scope.row.id;
       },
@@ -694,40 +691,40 @@ import { mapGetters } from 'vuex';
        * 客户档案-基本信息(刷新特别关注的标签)
        */
       getPatinetInfo(id) {
-        this.patientInfo = ''
+        this.patientInfo = '';
         PatientList.clientInformation({
-          'patientId': id , //
+          'patientId': id, //
           adminId: this.token
-        }).then((res)=>{
-          if(res.code==0){
+        }).then((res) => {
+          if (res.code == 0) {
             this.dialogVisible = true;
-            console.log(res.data)
+            console.log(res.data);
             this.patientInfo = res.data;
             this.jzTime();
-          }else{
+          } else {
             this.dialogVisible = false;
             this.$message.error(res.message);
           }
-          if(res.data.gzTag){
+          if (res.data.gzTag) {
             this.isCare = true;
-          }else{
+          } else {
             this.isCare = false;
           }
-        }).catch((error)=>{
-          console.log(error)
-        })
+        }).catch((error) => {
+          console.log(error);
+        });
       },
       /**
        * 选中时间
        **/
-      selectDate(val){
-        if(val){
-          let startDate = new Date(val[0]);
-          let endDate = new Date(val[1])
-          this.followwaySearch.fromBirthday = startDate.getFullYear()+"-"+(startDate.getMonth()+1)+"-"+startDate.getDate();
-          this.followwaySearch.endBirthday = endDate.getFullYear()+"-"+(endDate.getMonth()+1)+"-"+endDate.getDate();
-        }else{
-          this.followwaySearch.fromBirthday ='';
+      selectDate(val) {
+        if (val) {
+          const startDate = new Date(val[0]);
+          const endDate = new Date(val[1]);
+          this.followwaySearch.fromBirthday = startDate.getFullYear() + '-' + (startDate.getMonth() + 1) + '-' + startDate.getDate();
+          this.followwaySearch.endBirthday = endDate.getFullYear() + '-' + (endDate.getMonth() + 1) + '-' + endDate.getDate();
+        } else {
+          this.followwaySearch.fromBirthday = '';
           this.followwaySearch.endBirthday = '';
         }
       },
@@ -736,7 +733,7 @@ import { mapGetters } from 'vuex';
      */
       sliderClick(item, index) {
         this.clientId = item.clientId;
-        this.currentPartientInfo(item.clientDate);    //客户档案-体检项目信息
+        this.currentPartientInfo(item.clientDate); // 客户档案-体检项目信息
       },
       /**
        * 从sessionStorage获取医生id
@@ -744,7 +741,7 @@ import { mapGetters } from 'vuex';
        * @param {String} userId 获取医生id
        */
       getUserId() {
-        this.userId =this.token//用户名
+        this.userId = this.token;// 用户名
       },
       /**
        * 通知方案列表
@@ -757,18 +754,18 @@ import { mapGetters } from 'vuex';
       list() {
         PatientList.listDate(
           this.followwaySearch
-        ).then((res)=>{
+        ).then((res) => {
           if (res.code == 0) {
-            this.tableAll = res.data
-            if (this.followwaySearch.pager ==1) {
+            this.tableAll = res.data;
+            if (this.followwaySearch.pager == 1) {
               this.totalPage1 = res.count;
             }
             this.loading1 = false;
             return false;
           }
-        }).catch((error)=>{
+        }).catch((error) => {
           console.log(error);
-        })
+        });
       },
       /**
        * 分页
@@ -778,8 +775,8 @@ import { mapGetters } from 'vuex';
       handleCurrentChange(val) {
         this.loading1 = true;
         this.currentPage3 = val;
-        this.followwaySearch.pager =val ;
-        this.list()
+        this.followwaySearch.pager = val;
+        this.list();
       },
       /**
        * 查询
@@ -789,7 +786,7 @@ import { mapGetters } from 'vuex';
       waySearch() {
         this.loading1 = true;
         this.followwaySearch.pager = 1;
-        this.list()
+        this.list();
       },
       /**
        * 关闭弹框
@@ -805,11 +802,11 @@ import { mapGetters } from 'vuex';
        * @param {Object} scope 点击列表的scope的信息
        */
       wayButton(scope) {
-        this.dialogVisible = true
-        this.modelContent = scope.row
-        if(scope.row.ctListCount) {
-          this.numberPercent = (Number(scope.row.visitCount)-Number(scope.row.ctListCount))/Number(scope.row.visitCount) *100
-        }else {
+        this.dialogVisible = true;
+        this.modelContent = scope.row;
+        if (scope.row.ctListCount) {
+          this.numberPercent = (Number(scope.row.visitCount) - Number(scope.row.ctListCount)) / Number(scope.row.visitCount) * 100;
+        } else {
           this.numberPercent = 0;
         }
       },
@@ -818,43 +815,43 @@ import { mapGetters } from 'vuex';
        */
       jzTime() {
         PatientList.clientInspectDate({
-          'patientId': this.patientId,
-        }).then((res)=>{
-          if(res.code == 0) {
+          'patientId': this.patientId
+        }).then((res) => {
+          if (res.code == 0) {
             this.isNull = false;
             this.swiperDate = res.data;
-            if(res.data[0]){
+            if (res.data[0]) {
               this.zyData = [];
               this.clientId = res.data[0].clientId;
               this.selectNumber = 0;
-              this.currentPartientInfo(res.data[0].clientDate)
+              this.currentPartientInfo(res.data[0].clientDate);
             }
-          }else{
+          } else {
             this.swiperDate = [];
             this.isNull = true;
           }
-        }).catch((error)=>{
+        }).catch((error) => {
           this.isNull = true;
-          console.log(error)
-        })
+          console.log(error);
+        });
       },
       /*
      *已处理
      */
       handleislike() {
-        if(this.isCare) {
-          //取消关注
+        if (this.isCare) {
+          // 取消关注
           const h = this.$createElement;
           this.$msgbox({
             title: '消息',
             message: h('div', {
-              style:'text-align:center'
+              style: 'text-align:center'
             }, [
               h('img', {
                 attrs: { src: require('../../static/images/animal.png') },
                 style: 'width: 60px;height:52px;margin:0 auto;'
               }, null),
-              h('p', null, '确定取消关心吗?' ),
+              h('p', null, '确定取消关心吗?')
             ]),
             showCancelButton: true,
             confirmButtonText: '确定',
@@ -866,62 +863,61 @@ import { mapGetters } from 'vuex';
               done();
             }
           }).then(action => {
-            //取消关注
+            // 取消关注
             PatientList.updateGz({
-              diagnoseType:3,
-              'adminId': sessionStorage.getItem('userId'), //医生ID
-              'patientId': this.patientId,//患者的id （必填）
-              'operateType': 0,//(操作类型 1:关注 0：取消关注) （必填）
-              'operateTag':'' //关注的标签
-            }).then((res)=>{
-              if(res.code == 0) {
-//                this.isCare = false
-                this.getPatinetInfo(this.patientId)
-//                this.patientInfo.GzTag = ''
-              }else{
+              diagnoseType: 3,
+              'adminId': sessionStorage.getItem('userId'), // 医生ID
+              'patientId': this.patientId, // 患者的id （必填）
+              'operateType': 0, // (操作类型 1:关注 0：取消关注) （必填）
+              'operateTag': '' // 关注的标签
+            }).then((res) => {
+              if (res.code == 0) {
+              //                this.isCare = false
+                this.getPatinetInfo(this.patientId);
+              //                this.patientInfo.GzTag = ''
+              } else {
                 this.$message.error(res.message);
               }
-            }).catch((error)=>{
-              console.log(error)
-            })
-          }).catch(()=>{
+            }).catch((error) => {
+              console.log(error);
+            });
+          }).catch(() => {
 
           });
-        }else {
-          //增加关注
-          this.$prompt('  ','添加标签', {
+        } else {
+          // 增加关注
+          this.$prompt('  ', '添加标签', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             inputPlaceholder: '请输入标签',
             customClass: 'careMsgBoxAdd',
             cancelButtonClass: 'cancelButtonStyle',
-            confirmButtonClass: 'confirmButtonStyle',
+            confirmButtonClass: 'confirmButtonStyle'
           }).then(({ value }) => {
-            if(!value) {
+            if (!value) {
               this.$message.error('标签不能为空!');
-            }else if(value.toString().length<6){
+            } else if (value.toString().length < 6) {
               PatientList.updateGz({
-                diagnoseType:3,
+                diagnoseType: 3,
                 'adminId': this.token, // 医生ID
                 'patientId': this.patientId, // 患者的id （必填）
                 'operateType': 1, // (操作类型 1:关注 0：取消关注) （必填）
                 'operateTag': value // 关注的标签
-              }).then((res)=>{
-                if(res.code == 0) {
+              }).then((res) => {
+                if (res.code == 0) {
                   this.$message({
                     type: 'success',
                     message: '关注成功!'
                   });
-                  this.getPatinetInfo(this.patientId)
-//                  this.getPatinetInfo()
+                  this.getPatinetInfo(this.patientId);
+                //                  this.getPatinetInfo()
                 }
-              }).catch((error)=>{
-                console.log(error)
-              })
-            }else{
-              this.$message.error('标签长度不能大于5!')
+              }).catch((error) => {
+                console.log(error);
+              });
+            } else {
+              this.$message.error('标签长度不能大于5!');
             }
-
           }).catch(() => {
             this.$message({
               type: 'info',
@@ -929,10 +925,10 @@ import { mapGetters } from 'vuex';
             });
           });
         }
-      },
+      }
 
     }
-  }
+  };
 </script>
 
 <style lang="scss">

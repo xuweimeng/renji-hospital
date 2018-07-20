@@ -7,6 +7,20 @@ const roles = ['乐清六院'];
 
 export const LQ_PhysicalExamination = [
   {
+    path: '',
+    component: Layout,
+    redirect: 'Home',
+    meta: { title: '', roles: roles, icon: 'dashboard', noCache: true },
+    children: [
+      {
+        path: 'Home',
+        component: () => import('LQPE/Home.vue'),
+        name: 'Home',
+        meta: { title: 'Home', icon: 'dashboard', roles: roles, noCache: true }
+      }
+    ]
+  },
+  {
     path: '/PhysicalExaminationNotice',
     component: Layout,
     meta: { title: 'PhysicalExaminationNotice', roles: roles, icon: 'icon', noCache: true },

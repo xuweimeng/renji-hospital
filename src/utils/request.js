@@ -8,12 +8,14 @@ import qs from 'qs';
 const service = axios.create({
   // todo 海宁8084使用
   // baseURL: process.env.BASE_API, // api的base_url
-  baseURL: 'http://192.168.1.218:8082', // api的base_url
+  baseURL: 'http://192.168.1.218:8093', // api的base_url
+  // baseURL: 'http://60.190.86.50:6016', // api的base_url
   timeout: 50000 // request timeout
 });
 
 // 请求参数验证
-const JsonData = ['/visit/order/temp/visit', '/visit/ordertask/batchcancelall', 'visit/ordertask/vet', '/visit/ordertask/physicalTemporary', '/visit/ordertask/physicalNewTemporary'];
+const JsonData = ['/visit/order/temp/visit', '/visit/ordertask/batchcancelall', 'visit/ordertask/vet', '/visit/ordertask/physicalTemporary', '/visit/ordertask/physicalNewTemporary', '/statistic/examination/notice'];
+
 // request interceptor
 service.interceptors.request.use(config => {
   // 判断是否是需要使用json数据格式的接口

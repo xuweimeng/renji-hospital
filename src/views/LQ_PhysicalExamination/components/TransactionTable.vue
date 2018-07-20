@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="list" style="width: 100%;" height="255" border fit highlight-current-row>
+  <el-table :data="list" style="width: 100%;" height="255" border fit highlight-current-row empty-text="暂无数据">
     <el-table-column label="姓名" align="center" prop="patientName">
     </el-table-column>
     <el-table-column label="特别关心标签"  align="center">

@@ -10,7 +10,7 @@ export const Statistics = {
     return fetch('post', '/yqly/statistic/getHealthExamStatisticList', data);
   },
   /**
-     * @function 登录接口
+     * @function 导出接口
      * @param  {type} username {用户账号}
      * @param  {type} password {用户密码}
      * @return {type} {description}

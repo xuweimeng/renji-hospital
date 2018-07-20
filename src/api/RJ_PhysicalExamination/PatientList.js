@@ -3,32 +3,32 @@ export const PatientList = {
   /**
    * 患者改约接口：获取体检信息详情
    */
-  getPhysicalInfo(data){
+  getPhysicalInfo(data) {
     return fetch('get', '/doctors/getPhysicalInfo', data);
   },
   /**
    * 患者改约接口：确认改约
    */
-  updatePhysicalInfo(data){
+  updatePhysicalInfo(data) {
     return fetch('post', '/doctors/updatePhysicalInfo', data);
   },
   /**
    * 添加客户列表   activityTo
    */
-  addCustomerList(data){
+  addCustomerList(data) {
     return fetch('post', '/doctors/addcustomer', data);
   },
   /**
    * 体检中心-体检套餐自动补全搜索
    */
-  autoComplete(data){
+  autoComplete(data) {
     return fetch('post', '/visit/disease/autocomplete', data);
   },
   /**
    * 客户列表
    * 修改手机号
    */
-  updateCustomer (data) {
+  updateCustomer(data) {
     return fetch('post', '/doctors/updateCustomer', data);
   },
 
@@ -41,7 +41,7 @@ export const PatientList = {
    * identificationCard：13313123//身份证号 (该患者有身份证号就传)
    */
 
-  clientTotalInspect(data){
+  clientTotalInspect(data) {
     return fetch('get', '/inspect/index/clientTotalInspect', data);
   },
 
@@ -51,7 +51,7 @@ export const PatientList = {
    * limit：10//条数
    * patientId:288 //客户Id 必传
    */
-  clientInformation(data){
+  clientInformation(data) {
     return fetch('get', '/inspect/index/clientInformation', data);
   },
 
@@ -60,7 +60,7 @@ export const PatientList = {
  *userId:be9534bc-e4b7-11e7-a153-6cae8b369de4 //医生id
  *schemeName:模板 //活动通知名称
  */
-  listDate (data) {
+  listDate(data) {
     return fetch('post', '/doctors/customerList', data);
   },
 
@@ -69,7 +69,7 @@ export const PatientList = {
    * patientId:288 //客户Id 必传
    **/
 
-  clientInspectDate(data){
+  clientInspectDate(data) {
     return fetch('get', '/inspect/index/clientInspectDate', data);
   },
   /**
@@ -79,7 +79,7 @@ export const PatientList = {
    * operateTag:老板 //关注的标签
    */
 
-  updateGz(data){
+  updateGz(data) {
     return fetch('post', '/inspect/index/updateGz', data);
-  },
-}
+  }
+};

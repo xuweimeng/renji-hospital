@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { Home } from 'RJPE_API/Home'; // 引入 api
+import { Home } from 'LQPE_API/Home'; // 引入 api
 import { mapGetters } from 'vuex';
 
 // 顶部数据展示集合

@@ -20,7 +20,7 @@
       <li class="common_search_single">
         <label class="radio-label" >通话状态</label>
         <el-select clearable  class="filter-item" v-model="searchParams.backStatus" placeholder="通话状态">
-          <el-option v-for="item in statusList" :key="item" :label="statusList[item]" :value="item">
+          <el-option v-for="(item,index) in statusListData" :key="index" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
       </li>
@@ -53,6 +53,7 @@
 								@change="timeChange"
 								v-model="noticeTime"
 								type="datetimerange"
+                value-format="yyyy-MM-dd HH:mm:ss"
 								start-placeholder="开始日期"
 					      end-placeholder="结束日期">
             </el-date-picker>
@@ -105,7 +106,7 @@
       </el-table-column>
     </el-table>
 
-    <div class="pagination-container" style="text-align:right">
+    <div class="pagination-container" style="text-align:right;margin-top:15px;">
       <el-button style='margin-right:10px;float:left' type="primary" icon="el-icon-edit"  @click="notification" >发起通知</el-button>
       <el-pagination style="display:inline-block" background  @current-change="pageChange" :current-page="searchParams.pager"  :page-size="searchParams.limit" layout="total,  prev, pager, next, jumper" :total="total">
       </el-pagination>
@@ -115,7 +116,7 @@
 
 <script>
 import { deepClone } from '@/utils';
-import { Statistics } from 'LQPE_API/Statistics';
+import { Statistics } from 'LQPE_API/Statistics'; // 引入 api
 
 export default {
   name: 'Statistics',
@@ -127,16 +128,16 @@ export default {
       searchParams: {
         pager: 1, // 当前页码
         limit: 10, // 每页条数
-        brxm: null, // 姓名
-        mobile: null, // 手机号
-        sfzh: null, // 身份证号
-        vetRemark: null, // 通知结果
-        backStatus: null, // 通话状态
-        isCome: null, // 电话中是否过来（1是0不是）
-        actualIsCome: null, // 实际是否过来（1是0不是）
-        isExport: null, // 是否导出过  （1是0不是）
-        startDateEnd: null, // 通知时间
-        endDateEnd: null
+        brxm: '', // 姓名
+        mobile: '', // 手机号
+        sfzh: '', // 身份证号
+        vetRemark: '', // 通知结果
+        backStatus: '', // 通话状态
+        isCome: '', // 电话中是否过来（1是0不是）
+        actualIsCome: '', // 实际是否过来（1是0不是）
+        isExport: '', // 是否导出过  （1是0不是）
+        startDateEnd: '', // 通知时间
+        endDateEnd: ''
       },
       total: 0,
       statusList: {
@@ -148,6 +149,29 @@ export default {
         6: '空号',
         7: '号码有误'
       },
+      statusListData: [{
+        value: 1,
+        label: '呼叫失败'
+      }, {
+        value: 2,
+        label: '正常通话'
+      }, {
+        value: 3,
+        label: '通话中'
+      }, {
+        value: 4,
+        label: '关停机'
+      }, {
+        value: 5,
+        label: '无人接听'
+      }, {
+        value: 6,
+        label: '空号'
+      }, {
+        value: 7,
+        label: '号码有误'
+      }],
+
       callCount: 0,
       actualIsComeCount: 0,
       isComeCount: 0,
@@ -165,18 +189,24 @@ export default {
       ).then(res => {
         this.list = res.data.healthExamStatisticVoList;
         this.listLoading = false;
-        if (res.total) {
-          this.total = res.total;
+        if (this.searchParams.pager == 1) {
+          if (res.total) {
+            this.total = res.total;
+          }
+          this.callCount = res.data.callCount;
+          this.isComeCount = res.data.isComeCount;
+          this.actualIsComeCount = res.data.actualIsComeCount;
         }
-        this.callCount = res.data.callCount;
-        this.isComeCount = res.data.isComeCount;
-        this.actualIsComeCount = res.data.actualIsComeCount;
       }).catch(err => {
         console.log(err);
       });
     },
     searchData() {
       this.searchParams.pager = 1;
+      this.total = 0;
+      this.callCount = 0;
+      this.isComeCount = 0;
+      this.actualIsComeCount = 0;
       this.fetchData();
     },
     /**
@@ -199,26 +229,26 @@ export default {
      * @return {type} {description}
      */
     timeChange(date) {
-      if (!date) {
-        this.searchParams.startDateEnd = null;
-        this.searchParamsendDateEnd = null;
-        return false;
-      }
-      this.searchParams.startDateEnd = date[0];
-      this.searchParamsendDateEnd = date[1];
+      this.searchParams.startDateEnd = date ? date[0] : '';
+      this.searchParams.endDateEnd = date ? date[1] : '';
     },
+    /**
+     * @function 页码切换重置数据
+     * @param  {type} page {description}
+     * @return {type} {description}
+     */
     pageChange(page) {
-      console.log(page);
       this.searchParams.pager = page;
       this.fetchData();
     },
     handleSelectionChange(val) {
-      this.idList = [];
-      for (const item of val) {
-        this.idList.push(item.hzxxId);
-      }
+      this.idList = val;
     },
     notification() {
+      if (this.idList.length === 0) {
+        this.$message.error('请至少选择一条');
+        return false;
+      }
       localStorage.setItem('idList', JSON.stringify(this.idList));
       this.$router.push({
         path: '/AdNotice'
@@ -228,12 +258,7 @@ export default {
 };
 </script>
 
-<style>
-.radio-label {
-  font-size: 14px;
-  color: #606266;
-  line-height: 40px;
-  padding: 0 12px 0 30px;
-}
+<style lang="scss">
+
 </style>
 

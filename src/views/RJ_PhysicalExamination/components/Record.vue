@@ -79,7 +79,7 @@
                 <el-button class="record_header_cancel" size="mini" type="primary" @click="cancelSpecial(baseData)" >取消关注</el-button>
             </div>
             <el-tabs type="border-card" v-if="timeList[0]">
-                <el-tab-pane v-for="(item,index) in timeList" :key="index" :label="item.clientDate">
+                <el-tab-pane @tab-click="getInfoData(item.clientDate,item.clientId,index)" v-for="(item,index) in timeList" :key="index" :label="item.clientDate">
                      <ul class="record_content_list">
                        <li class="record_content_single">
                          体检套餐:{{item.examinationData.inspectMealName}}
@@ -112,8 +112,8 @@
 </template>
 
 <script>
-import { Home } from "RJPE_API/Home"; // 引入 api
-import { mapGetters } from "vuex";
+import { Home } from 'RJPE_API/Home'; // 引入 api
+import { mapGetters } from 'vuex';
 export default {
   props: {
     patientId: {
@@ -121,7 +121,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["token"])
+    ...mapGetters(['token'])
   },
   watch: {
     patientId: {
@@ -141,14 +141,14 @@ export default {
         }
       ],
       nameMap: {
-        projectName: "项目名称",
-        projectConclusion: "项目小结",
-        completeStatus: "完成状态",
-        inspectDepartment: "体检科室",
-        inspectDoctor: "体检医生",
-        finishValue: "结果值",
-        upValue: "上限值",
-        downValue: "下限值"
+        projectName: '项目名称',
+        projectConclusion: '项目小结',
+        completeStatus: '完成状态',
+        inspectDepartment: '体检科室',
+        inspectDoctor: '体检医生',
+        finishValue: '结果值',
+        upValue: '上限值',
+        downValue: '下限值'
       }
     };
   },
@@ -167,7 +167,7 @@ export default {
         .then(res => {
           //      基础数据赋值
           this.baseData = res.data;
-          this.baseData.isCare = this.baseData.gzTag ? true : false;
+          this.baseData.isCare = !!this.baseData.gzTag;
         })
         .then(() => {
           this.getTimeList();
@@ -224,11 +224,11 @@ export default {
      */
     cancelSpecial(id) {
       this.$msgbox({
-        title: "消息",
-        message: "确定取消关心吗",
+        title: '消息',
+        message: '确定取消关心吗',
         showCancelButton: true,
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
         beforeClose: (action, instance, done) => {
           done();
         }
@@ -247,7 +247,7 @@ export default {
           .catch(error => {
             console.log(error);
           });
-      }).catch(err=>{
+      }).catch(err => {
         console.log(err);
       });
     }
