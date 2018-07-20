@@ -229,7 +229,15 @@ code {
         // padding-right: 10px;
       }
       &_time{
-        width: 520px;
+        min-width: 510px;
+        width: 50%;
+      }
+      &_date{
+        min-width: 360px;
+        width: 50%;
+      }
+      &_longBtn{
+        min-width: 350px;
       }
       >div{
         flex-grow: 1;

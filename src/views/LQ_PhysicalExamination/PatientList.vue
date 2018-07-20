@@ -43,7 +43,7 @@
           <el-option label="死亡" value="0"></el-option>
         </el-select>
       </li>
-      <li class="common_search_single">
+      <li class="common_search_single common_search_single_longBtn">
         <el-button  @click="waySearch" type="primary" icon="el-icon-search" >查询</el-button>
         <el-upload
           style="margin:0 10px"

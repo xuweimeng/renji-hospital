@@ -2,7 +2,6 @@
   <div class="app-container">
       <!-- 搜索 -->
     <ul class="common_search">
-
         <li class="common_search_single">
           <label class="radio-label" >姓名</label>
           <el-input v-model.trim="searchParams.brxm" clearable placeholder="请输入姓名"></el-input>
@@ -38,7 +37,7 @@
           </el-select>
         </li>
         <li class="common_search_single">
-                <el-button type="primary" @click="getDataAction">查询</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="getDataAction">查询</el-button>
         </li>
     </ul>
       <!-- tab切换 -->

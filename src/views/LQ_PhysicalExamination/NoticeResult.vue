@@ -32,7 +32,7 @@
             </el-option>
           </el-select>
         </li>
-        <li class="common_search_single common_search_single_time">
+        <li class="common_search_single common_search_single_date">
             <label class="radio-label" >通知时间</label>
             <el-date-picker
                 @change="selectDate"
@@ -44,7 +44,7 @@
                 :default-time="['00:00:00', '23:59:59']">
             </el-date-picker>
         </li>
-        <li class="common_search_single common_search_single_time">
+        <li class="common_search_single common_search_single_date">
             <label class="radio-label" >体检时间</label>
             <el-date-picker
                 @change="orderTimeChange"
@@ -234,6 +234,8 @@
         </el-col>
       </el-row>
     </el-dialog>
+
+    <result-info ref="record" @refresh="getData" :patientId="patientId"></result-info>
   </div>
 </template>
 
@@ -244,9 +246,15 @@
  */
 import { NoticeResult } from 'LQPE_API/NoticeResult'; // 引入 api
 import { mapGetters } from 'vuex';
+import resultInfo from './components/resultInfo';
+
 export default {
+  components: {
+    resultInfo
+  },
   data() {
     return {
+      patientId: '',
       orderTime: '',
       y: 1,
       urlAddress: '',
@@ -474,8 +482,9 @@ export default {
     /** 详情 */
     detailBtn(scope) {
       this.dataTail = scope.row;
-      this.patientId = scope.row.hzxxId;
-      this.detailView(scope);
+      this.patientId = scope.row.id;
+      this.$refs.record.dialogTableVisible = true;
+      // this.detailView(scope);
     },
     detailView(scope) {
       NoticeResult.getPatientRecord({

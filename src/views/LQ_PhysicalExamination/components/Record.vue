@@ -112,7 +112,6 @@
                         </li>
                       </ul>
                      </div>
-                     
                 </el-tab-pane>
             </el-tabs>
         </el-dialog>
@@ -232,7 +231,7 @@ export default {
         });
     },
     /**
-     * @function {function name}
+     * @function 取消关心
      * @return {type} {description}
      */
     cancelSpecial() {
@@ -267,6 +266,10 @@ export default {
           console.log(err);
         });
     },
+    /**
+     * @function 添加关注
+     * @return {type} {description}
+     */
     addSpecial() {
       this.$prompt('请填写关注标签（不超过5个字符）', '添加关注', {
         confirmButtonText: '确定',
