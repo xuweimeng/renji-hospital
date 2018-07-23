@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { generateTitle } from '@/utils/i18n'
+import { generateTitle } from '@/utils/i18n';
 
 export default {
   name: 'SidebarItem',
@@ -49,15 +49,15 @@ export default {
   methods: {
     hasOneShowingChildren(children) {
       const showingChildren = children.filter(item => {
-        return !item.hidden
-      })
+        return !item.hidden;
+      });
       if (showingChildren.length === 1) {
-        return true
+        return true;
       }
-      return false
+      return false;
     },
     generateTitle
   }
-}
+};
 </script>
 

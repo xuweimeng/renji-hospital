@@ -58,25 +58,41 @@ export default {
     ThemePicker
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'name',
-      'avatar'
-    ])
+    ...mapGetters(['sidebar', 'name', 'avatar'])
   },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('toggleSideBar');
     },
-    changePassword() {
-
-    },
+    changePassword() {},
     Feedback() {
-
+      this.$prompt('请输入反馈意见', '意见反馈', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      })
+        .then(({ value }) => {
+          if (!value.trim()) {
+            this.$message({
+              type: 'error',
+              message: '内容不可为空'
+            });
+            return false;
+          }
+          this.$message({
+            type: 'success',
+            message: '感谢您的宝贵意见'
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          });
+        });
     },
     logout() {
       this.$store.dispatch('LogOut').then(() => {
-        location.reload();// In order to re-instantiate the vue-router object to avoid bugs
+        location.reload(); // In order to re-instantiate the vue-router object to avoid bugs
       });
     }
   }
@@ -94,7 +110,7 @@ export default {
     float: left;
     padding: 0 10px;
   }
-  .breadcrumb-container{
+  .breadcrumb-container {
     float: left;
   }
   .errLog-container {
@@ -104,8 +120,8 @@ export default {
   .right-menu {
     float: right;
     height: 100%;
-    &:focus{
-     outline: none;
+    &:focus {
+      outline: none;
     }
     .right-menu-item {
       display: inline-block;
@@ -114,7 +130,7 @@ export default {
     .screenfull {
       height: 20px;
     }
-    .international{
+    .international {
       vertical-align: top;
     }
     .theme-switch {

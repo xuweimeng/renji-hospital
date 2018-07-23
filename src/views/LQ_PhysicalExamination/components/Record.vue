@@ -84,7 +84,7 @@
                 <el-button v-else   icon="el-icon-star-off" class="record_header_cancel"  size="mini" type="primary" @click="addSpecial" >添加关注</el-button>
             </div>
             <el-tabs v-model="currentTable"  type="border-card" v-if="timeList[0]">
-                <el-tab-pane @tab-click="getInfoData(item.clientDate,item.clientId,index)" v-for="(item,index) in timeList" :key="index" :name="item.clientDate+index"  :label="item.clientDate">
+                <el-tab-pane @tab-click="getInfoData(item.clientDate,item.clientId,index)" v-for="(item,index) in timeList" :key="index" :name="item.clientDate+index+''"  :label="item.clientDate">
                      <ul class="record_content_list">
                        <li  class="record_content_single">
                          体检套餐:{{item.examinationData.inspectMealName}}
@@ -104,13 +104,13 @@
                      </ul>
                      <div class="record_content_box">
                         <ul class="record_content_content" v-if="item.examinationData.inspectProjectsVoList[0]" v-for="(ite,inde) in item.examinationData.inspectProjectsVoList" :key="inde">
-                        <li class="record_content_param" v-for="(it,ind) in Object.keys(ite)" :key="ind">
-                          <el-tag type="warning">
-                            {{nameMap[it]}}
-                          </el-tag>
-                          {{ite[it]}}
-                        </li>
-                      </ul>
+                          <li class="record_content_param" v-for="(it,ind) in Object.keys(ite)" :key="ind">
+                            <el-tag type="warning">
+                              {{nameMap[it]}}
+                            </el-tag>
+                            {{ite[it]}}
+                          </li>
+                        </ul>
                      </div>
                 </el-tab-pane>
             </el-tabs>
@@ -256,7 +256,6 @@ export default {
             .then(res => {
               this.$emit('refresh');
               this.baseData.gzTag = '';
-              // this.dialogTableVisible = false;
             })
             .catch(error => {
               console.log(error);

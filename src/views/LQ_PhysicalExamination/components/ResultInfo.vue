@@ -31,7 +31,7 @@
     }
   }
   &_content {
-    &_box{
+    &_box {
       max-height: 300px;
       overflow-y: auto;
       border-top: 2px solid #f1f1f1;
@@ -41,8 +41,9 @@
       margin: 0;
     }
     &_single {
-      color: #409eff;
+      color: #666;
       font-size: 12px;
+      margin-bottom: 10px;
     }
     &_content {
       display: flex;
@@ -50,11 +51,102 @@
       padding-top: 10px;
       margin-top: 10px;
     }
+    &_audio{
+      max-height: 600px; 
+      overflow-y: auto;
+    }
     &_param {
       width: 50%;
       color: #333;
       font-size: 12px;
       margin-top: 5px;
+    }
+    &_AI {
+      display: flex;
+      align-items: center;
+      > span {
+        display: block;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        line-height: 40px;
+        font-size: 15px;
+        color: #fff;
+        border-radius: 50%;
+        background-color: #f80;
+        max-width: 60%;
+      }
+      > p {
+        border-radius: 5px;
+        background-color: #f3f3f3;
+        margin-left: 15px;
+        box-sizing: border-box;
+        padding: 8px 15px;
+        color: #333;
+        position: relative;
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          left: -15px;
+          top: 50%;
+          transform: translateY(-50%);
+          height: 0;
+          width: 0;
+          border: 8px solid transparent;
+          border-right-color: #f3f3f3;
+        }
+      }
+    }
+    &_patient {
+      box-sizing: border-box;
+      width: 100%;
+      padding-left: 40%;
+      display: flex;
+      flex-direction: row-reverse;
+      flex-wrap: wrap;
+      align-items: center;
+      > span {
+        display: block;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        line-height: 40px;
+        font-size: 15px;
+        color: #fff;
+        border-radius: 50%;
+        background-color: #409eff;
+        max-width: 60%;
+        margin-left: 15px;
+      }
+      >div{
+        box-sizing: border-box;
+        margin-right: 55px;
+        margin-top: 10px;
+        background-color: #f1f1f1;
+        border-radius: 5px;
+        padding: 5px 10px;
+      }
+      > p {
+        border-radius: 5px;
+        background-color: #ffd6d6;
+        box-sizing: border-box;
+        padding: 8px 15px;
+        color: #333;
+        position: relative;
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          right: -15px;
+          top: 50%;
+          transform: translateY(-50%);
+          height: 0;
+          width: 0;
+          border: 8px solid transparent;
+          border-left-color: #ffd6d6;
+        }
+      }
     }
   }
 }
@@ -90,39 +182,43 @@
                 <el-tab-pane  name="one"  label="体检结果">
                      <ul class="record_content_list">
                        <li  class="record_content_single">
-                         体检套餐:{{item.examinationData.inspectMealName}}
+                         <el-tag>
+                         是否本人 ：{{resultData.isMySelfDge}}
+                         </el-tag>
                        </li>
                         <li  class="record_content_single">
-                         总检医生:{{item.examinationData.inspectDoctor?item.examinationData.inspectDoctor:"无"}}
+                         <el-tag>
+                         是否到场 ：{{resultData.isComeDge}}
+                         </el-tag>
                        </li>
                         <li class="record_content_single">
-                         是否是VIP:{{item.examinationData.clientType}}
+                         审核意见:{{baseData.vetRemark}}
                        </li>
                        <li class="record_content_single">
-                         体检总检结果:{{item.examinationData.inspectConclusion?item.examinationData.inspectConclusion:"无"}}
-                       </li>
-                       <li class="record_content_single">
-                         体检健康建议:{{item.examinationData.inspectSuggest?item.examinationData.inspectSuggest:"无"}}
+                         人工外呼:{{baseData.callRemark}}
                        </li>
                      </ul>
                 </el-tab-pane>
-                <el-tab-pane  name="two"  label="记录详情">
-                     <ul class="record_content_list">
-                       <li  class="record_content_single">
-                         体检套餐:{{item.examinationData.inspectMealName}}
-                       </li>
-                        <li  class="record_content_single">
-                         总检医生:{{item.examinationData.inspectDoctor?item.examinationData.inspectDoctor:"无"}}
-                       </li>
-                        <li class="record_content_single">
-                         是否是VIP:{{item.examinationData.clientType}}
-                       </li>
-                       <li class="record_content_single">
-                         体检总检结果:{{item.examinationData.inspectConclusion?item.examinationData.inspectConclusion:"无"}}
-                       </li>
-                       <li class="record_content_single">
-                         体检健康建议:{{item.examinationData.inspectSuggest?item.examinationData.inspectSuggest:"无"}}
-                       </li>
+                <el-tab-pane  name="two"  label="记录详情"  v-if="recordData.length">
+                    <el-tag  v-if="baseData.isArtificialCall">
+                        人工外呼
+                    </el-tag>
+                     <ul class="record_content_list record_content_audio">
+                       <template v-for="(item) in recordData" >
+                          <li :key="item.id+'0'" class="record_content_single record_content_AI">
+                            <span>AI</span>
+                            <p>{{item.question}}</p>
+                          </li>
+                          <li :key="item.id+'1'" class="record_content_single record_content_patient">
+                            <span>客户</span>
+                            <audio v-if="item.audio" :src="baseUrl+item.audio"  controls="controls" ></audio>
+                            <p v-else>此记录为人工呼叫，暂无录音</p>
+                            <div>
+                              指标：<el-tag v-if="item.isNormal" type="primary">正常</el-tag><el-tag v-else type="error">不正常</el-tag>
+                              / {{item.fieldName}} : {{item.fieldValue}}
+                            </div>
+                          </li>
+                       </template>
                      </ul>
                 </el-tab-pane>
             </el-tabs>
@@ -137,6 +233,12 @@ export default {
   props: {
     patientId: {
       type: String
+    },
+    resultData: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   computed: {
@@ -151,27 +253,11 @@ export default {
   },
   data() {
     return {
-      currentTable: null,
+      currentTable: 'one',
       dialogTableVisible: false,
       baseData: {},
       baseUrl: '',
-      timeList: [
-        {
-          // 体检数据
-          examinationData: {}
-        }
-      ],
-      nameMap: {
-        projectName: '项目名称',
-        inspectDate: '项目时间',
-        projectConclusion: '项目小结',
-        completeStatus: '完成状态',
-        inspectDepartment: '体检科室',
-        inspectDoctor: '体检医生',
-        finishValue: '结果值',
-        upValue: '上限值',
-        downValue: '下限值'
-      }
+      recordData: []
     };
   },
   mounted() {},
@@ -182,62 +268,20 @@ export default {
      * @return {type} {description}
      */
     getBaseData(id) {
+      this.currentTable = 'one';
       NoticeResult.getPatientRecord({
         adminId: this.token,
         id: id
       })
         .then(res => {
-          //      基础数据赋值
+          // 基础数据赋值
           this.baseData = res.data;
           this.baseData.isCare = !!this.baseData.gzTag;
-        })
-        .then(() => {
-        //   this.getTimeList();
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-    /**
-     * @function 获取就诊时间段
-     * @return {type} {description}
-     */
-    getTimeList() {
-      Home.clientInspectDate({
-        patientId: this.patientId,
-        adminId: this.token
-      })
-        .then(res => {
-          res.data.forEach(element => {
-            element.examinationData = {
-              inspectProjectsVoList: []
-            };
-          });
-          this.timeList = res.data;
-          this.currentTable = this.timeList[0].clientDate + '0';
-          this.timeList.forEach((item, index) => {
-            this.getInfoData(item.clientDate, item.clientId, index);
-          });
-        })
-        .catch(error => {
-          console.log(error);
-          this.timeList = [];
-        });
-    },
-    /**
-     * @function 获取具体数据
-     * @param  {type} time {description}
-     * @return {type} {description}
-     */
-    getInfoData(time, id, index) {
-      Home.clientTotalInspect({
-        patientId: this.patientId, //
-        date: time,
-        clientId: id,
-        adminId: this.token
-      })
-        .then(res => {
-          this.timeList[index].examinationData = res.data;
+          this.baseUrl = res.AIVOICURL;
+          this.recordData =
+            this.baseData.orderReplyQuestions.length > 0
+              ? this.baseData.orderReplyQuestions
+              : [];
         })
         .catch(error => {
           console.log(error);
@@ -260,7 +304,7 @@ export default {
       })
         .then(action => {
           // 取消关注
-          Home.updateGz({
+          NoticeResult.updateGz({
             diagnoseType: 3,
             adminId: this.token,
             patientId: this.patientId,
@@ -288,32 +332,34 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputErrorMessage: '不得超过5个字'
-      }).then(({ value }) => {
-        if (value.trim().length > 5 || value.trim().length === 0) {
-          this.$message({
-            type: 'error',
-            message: '格式不对，不能为空，不能超过5个字符'
-          });
-          return false;
-        }
-        Home.updateGz({
-          diagnoseType: 3,
-          adminId: this.token,
-          patientId: this.patientId,
-          operateTag: value,
-          operateType: 1 // (操作类型 1:关注 0：取消关注) （必填）
-        }).then(res => {
-          this.baseData.gzTag = value;
-          this.$message({
-            type: 'success',
-            message: '成功添加关注'
-          });
-        }).catch(error => {
-          console.log(error);
-        });
-      }).catch(() => {
-
-      });
+      })
+        .then(({ value }) => {
+          if (value.trim().length > 5 || value.trim().length === 0) {
+            this.$message({
+              type: 'error',
+              message: '格式不对，不能为空，不能超过5个字符'
+            });
+            return false;
+          }
+          NoticeResult.updateGz({
+            diagnoseType: 3,
+            adminId: this.token,
+            patientId: this.patientId,
+            operateTag: value,
+            operateType: 1 // (操作类型 1:关注 0：取消关注) （必填）
+          })
+            .then(res => {
+              this.$set(this.baseData, 'gzTag', value);
+              this.$message({
+                type: 'success',
+                message: '成功添加关注'
+              });
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        })
+        .catch(() => {});
     }
   }
 };
