@@ -542,9 +542,6 @@
 </script>
 <style lang='scss'>
 @import '~styles/search';
-  .upnum {
-    background: aliceblue;
-  }
   .addDg {
     .el-dialog__header {
       padding: 15px 15px 10px;

@@ -98,7 +98,7 @@
 			<el-col :span="24">
 				<el-tabs v-model="activeName" @tab-click="handleClick">
 			    <el-tab-pane label="待处理" name="first">
-						<el-table :data="tableData" style="width: 100%;" v-loading="loading">
+						<el-table :data="tableData" border style="width: 100%;" v-loading="loading">
 							<el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
 							<el-table-column prop="mobile" label="联系电话" align="center" show-overflow-tooltip></el-table-column>
 							<el-table-column label="性别/年龄" align="center" width="110">
@@ -140,7 +140,7 @@
 						</el-row>
 			    </el-tab-pane>
 			    <el-tab-pane label="已处理" name="second">
-						<el-table :data="tableData1" style="width: 100%;" v-loading="loading1">
+						<el-table :data="tableData1" border style="width: 100%;" v-loading="loading1">
 							<el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
 							<el-table-column prop="mobile" label="联系电话" align="center" show-overflow-tooltip></el-table-column>
 							<el-table-column label="性别/年龄" align="center" width="110">

@@ -14,7 +14,14 @@ const service = axios.create({
 });
 
 // 请求参数验证
-const JsonData = ['/statistic/order/temp/visit', '/visit/ordertask/batchcancelall', 'visit/ordertask/vet', '/visit/ordertask/physicalTemporary', '/visit/ordertask/physicalNewTemporary'];
+const JsonData = [
+  '/visit/order/temp/visit', // 仁济肿瘤科-入院通知添加临时随访任务接口
+  '/visit/ordertask/batchcancelall', // 仁济肿瘤科-入院通知批量终止通知接口
+  'visit/ordertask/vet', // 仁济肿瘤科-出院随访-审核接口
+  '/visit/ordertask/physicalTemporary',
+  '/visit/ordertask/physicalNewTemporary',
+  '/visit/check/temp/visit' // 仁济肿瘤科-发起检查通知-发起检查
+];
 // request interceptor
 service.interceptors.request.use(config => {
   // 判断是否是需要使用json数据格式的接口
