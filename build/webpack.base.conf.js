@@ -44,6 +44,10 @@ module.exports = {
       'RJCD_API':resolve('src/api/RJ_ClinicalDepartments'),
       'HNDC':resolve('src/views/HN_DoctorClient'),
       'HNDC_API':resolve('src/api/HN_DoctorClient'),
+      'EYDC':resolve('src/views/EY_DoctorClient'),
+      'EY_API':resolve('src/api/EY_DoctorClient'),
+      'SYDC':resolve('src/views/SY_DoctorClient'),
+      'SY_API':resolve('src/api/SY_DoctorClient'),
     }
   },
   module: {
