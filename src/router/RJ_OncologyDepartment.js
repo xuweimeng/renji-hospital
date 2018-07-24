@@ -15,7 +15,7 @@ export const RJ_OncologyDepartment = [
         name: 'Home',
         meta: {
           title: 'Home',
-          icon: 'dashboard',
+          icon: 'shouye',
           roles: ['上海市仁济医院肿瘤科', '上海市仁济医院日间手术中心'],
           noCache: true
         }
@@ -77,7 +77,7 @@ export const RJ_OncologyDepartment = [
     meta: {
       title: 'dischargeFollowUp',
       roles: ['上海市仁济医院肿瘤科', '上海市仁济医院日间手术中心'],
-      icon: 'icon',
+      icon: 'suifang',
       noCache: true
     },
     children: [
@@ -110,7 +110,7 @@ export const RJ_OncologyDepartment = [
     meta: {
       title: 'admissionNotice',
       roles: ['上海市仁济医院肿瘤科'],
-      icon: 'icon',
+      icon: 'tongzhi',
       noCache: true
     },
     children: [
@@ -154,7 +154,7 @@ export const RJ_OncologyDepartment = [
     meta: {
       title: 'inspectionNotice',
       roles: ['上海市仁济医院肿瘤科'],
-      icon: 'icon',
+      icon: 'jianchaxiang',
       noCache: true
     },
     children: [

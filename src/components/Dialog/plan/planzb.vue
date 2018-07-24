@@ -24,18 +24,14 @@
      </div>
     <div class='content3'>
       <el-row style='height:47px;margin-top:14px;'>
-        <el-col :span='12'  v-if='patientInfo.status === '0''>
+        <el-col :span='12'  v-if="patientInfo.status === 0">
           <el-button type='button' @click='modelOut'>不通过</el-button>
         </el-col>
-        <el-col :span='12'  v-if='patientInfo.status ==='0''>
+        <el-col :span='12'  v-if="patientInfo.status === 0">
           <el-button type='button' @click='modelPass'>通过</el-button>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col :span='24' style='text-align:center;' v-if='patientInfo.status=='0''>
-          <p style='font-size:12px;'>24小时之后自动审核通过</p>
-        </el-col>
-      </el-row>
+      <p class="tips" v-if="patientInfo.status === 0">24小时之后自动审核通过</p>
     </div>
     <!-- 审核不通过原因弹框 -->
 		<ex-select
@@ -101,22 +97,27 @@ export default {
     modelPass() {
       this.handleCheck2(2, this.patientInfo.id)
     },
-    sendReason(val) {
-      if (val === '1') {
-        this.$confirm('标记死亡后该患者的所有随访计划将终止, 确定标记该患者死亡?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.handleCheck2(1, this.patientInfo.id, val)
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
+    sendReason (val) {
+      this.notPassReason = val
+      if (val != '') {
+        if(val === '1') {
+          this.$confirm('标记死亡后该患者的所有随访计划将终止, 确定标记该患者死亡?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.handleCheck2(1, this.patientInfo.id, val)
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
           });
-        });
+        } else {
+          this.handleCheck2(1, this.patientInfo.id, val)
+        }
       } else {
-        this.handleCheck2(1, this.patientInfo.id, val)
+        // this.patientInfo.id = ''
       }
     },
     closeChildren() {
@@ -192,35 +193,40 @@ export default {
       }
     }
     .content3 {
-        .el-row {
-          .el-col {
-            line-height: 31px;
+      .el-row {
+        .el-col {
+          line-height: 31px;
+          font-size: 15px;
+          .el-button {
             font-size: 15px;
-            .el-button {
-              font-size: 15px;
-              margin-top: 8px;
-              border-radius: 15px;
-            }
+            margin-top: 8px;
+            border-radius: 15px;
           }
-          .el-col:nth-of-type(1) {
-            text-align: right;
-            .el-button {
-             color: #5e5e5e;
-             background: #fff;
-             margin-right: 10px;
-             padding: 7px 36px;
-            }
+        }
+        .el-col:nth-of-type(1) {
+          text-align: right;
+          .el-button {
+            color: #5e5e5e;
+            background: #fff;
+            margin-right: 10px;
+            padding: 7px 36px;
           }
-          .el-col:nth-of-type(2) {
-            text-align: left;
-            .el-button {
-              background: #ff6e40;
-              color: #fff;
-              margin-left: 10px;
-              padding: 7px 43px;
-            }
+        }
+        .el-col:nth-of-type(2) {
+          text-align: left;
+          .el-button {
+            background: #ff6e40;
+            color: #fff;
+            margin-left: 10px;
+            padding: 7px 43px;
           }
         }
       }
+    }
+    .tips {
+      font-size:12px;
+      text-align: center;
+      padding-bottom: 10px;
+    }
   }
 </style>

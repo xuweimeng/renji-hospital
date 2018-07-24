@@ -1,7 +1,8 @@
 <template>
 	<div class="sfPlan">
+    <!-- 姓名 -->
 		<el-row class="personInfo">
-      <el-col :span="12" class="elCol1">
+      <el-col :span="12" class="name">
       	<span class="personName careColor" v-if="patientInfo">
           {{patientInfo.brxm?patientInfo.brxm:patientInfo.patientName?patientInfo.patientName:''}}
         </span>
@@ -9,8 +10,9 @@
           {{patientInfo.brxb?patientInfo.brxb:patientInfo.patientSex?patientInfo.patientSex:''}} /
           {{patientInfo.age?patientInfo.age:patientInfo.patientAge?patientInfo.patientAge:''}}
         </span>
-      	<span class="personXg">{{GzTag?GzTag:patientInfo.gzTag}}</span></el-col>
-      <el-col :span="12" class="elCol2">
+      	<span class="personXg">{{GzTag?GzTag:patientInfo.gzTag}}</span>
+      </el-col>
+      <el-col :span="12" class="care">
         <el-button type="text"
         	@click="handleislike"
         	:class="{ careColor: isCare}">
@@ -21,39 +23,42 @@
         </el-button>
       </el-col>
     </el-row>
+    <!-- 疾病名称 -->
     <el-row class="personResult">
-      <el-col :span="12" class="elCol3"><span class="elCol3Span1">疾病名称&nbsp;:&nbsp;</span><span class="elCol3Span2">{{patientInfo.icdName}}</span></el-col>
-      <el-col :span="12" class="elCol3"></el-col>
+      <el-col :span="12">
+        <span>疾病名称&nbsp;:&nbsp;</span>
+        <span>{{patientInfo.icdName}}</span>
+      </el-col>
     </el-row>
+    <!-- 手机号码 -->
     <el-row class="personResult">
-      <el-col :span="12" class="elCol3"><span class="elCol3Span1">手机号码&nbsp;:&nbsp;</span><span class="elCol3Span2">{{patientInfo.mobile}}</span></el-col>
-      <el-col :span="12" class="elCol3"></el-col>
+      <el-col :span="12">
+        <span>手机号码&nbsp;:&nbsp;</span>
+        <span>{{patientInfo.mobile}}</span>
+      </el-col>
     </el-row>
 	</div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { commonUrl } from 'RJZL_API/commonUrl'
-	export default {
-		data () {
-			return {}
-    },
+import { mapState } from 'vuex';
+import { commonUrl } from 'RJZL_API/commonUrl';
+  export default {
     props: [
       'isCare',
       'GzTag'
     ],
-		computed: {
-			...mapState({
-				"patientInfo": state => state.user.scopeRowData.row
-			})
-		},
-		methods: {
-			/**
+    computed: {
+      ...mapState({
+        "patientInfo": state => state.user.scopeRowData.row
+      })
+    },
+    methods: {
+      /**
        * [handleislike description]
        * @description
        */
-			handleislike() {
+      handleislike() {
         if(this.isCare) {
           //取消关注
           const h = this.$createElement;
@@ -142,8 +147,8 @@ import { commonUrl } from 'RJZL_API/commonUrl'
           });
         }
       },
-		}
-	}
+    }
+  }
 </script>
 
 <style lang="scss">
@@ -152,7 +157,7 @@ import { commonUrl } from 'RJZL_API/commonUrl'
     line-height: 27px;
     height: 27px;
     margin-bottom: 8px;
-    .elCol1 {
+    .name {
       line-height: 27px;
       height: 27px;
       text-align: left;
@@ -169,7 +174,7 @@ import { commonUrl } from 'RJZL_API/commonUrl'
         margin-left: 12px;
       }
     }
-    .elCol2 {
+    .care {
       line-height: 27px;
       height: 27px;
       text-align: right;
@@ -181,21 +186,13 @@ import { commonUrl } from 'RJZL_API/commonUrl'
       }
     }
   }
+  // 姓名-手机号
   .personResult {
     padding: 0 20px;
-    .elCol3 {
-      font-size: 13px;
-      text-align: left;
-      .elCol3Span1 {
-        color: #777;
-      }
-      .elCol3Span2 {
-        color: #333;
-      }
-    }
-    .elCol4 {
-      text-align: right;
-    }
+    font-size: 13px;
+    text-align: left;
+    line-height: 20px;
+    color: #333;
   }
 	//特别关注
 	.careColor {

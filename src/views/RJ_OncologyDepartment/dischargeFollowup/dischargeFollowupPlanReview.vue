@@ -30,7 +30,7 @@
               :remote-method="remoteMethod"
               :loading="loadingSelect">
               <el-option
-                v-for="(item, index) in options4"
+                v-for="(item, index) in icdNameList"
                 :key="index"
                 :label="item.label"
                 :value="item.value">
@@ -57,7 +57,7 @@
 			  	</el-form-item>
 			  </el-col>
 			  <el-col :span="6">
-			  	<el-button type="primary" size="small" @click="onSearch">查询</el-button>
+			  	<el-button type="primary" size="small" @click="searchBtn">查询</el-button>
 			  </el-col>
 			</el-form>
 		</el-row>
@@ -68,10 +68,10 @@
 			    <el-tab-pane label="待审核" name="first">
 			    	<el-table
               border
-							:data="tableData"
+							:data="tableData_list.list"
 							style="width: 100%;"
 							ref="multipleTable"
-							v-loading="loading1"
+							v-loading="tableData_list.loading"
 							@select="selectSingal"
 							@select-all="selectAll">
 			    		<el-table-column type="selection" align="center"></el-table-column>
@@ -97,7 +97,7 @@
                 </template>
 			    		</el-table-column>
 			    	</el-table>
-			    	<el-row v-if="tableData.length" style="margin-top: 11px;">
+			    	<el-row v-if="tableData_list.list.length" style="margin-top: 11px;">
               <!-- 批量通过 -->
               <el-col :span="12">
                 <el-button type="primary" size="small" @click="numCheck">批量通过</el-button>
@@ -106,11 +106,10 @@
               <el-col :span="12">
                 <el-pagination
                   @current-change="handleCurrentChange"
-                  :current-page.sync="currentPage"
+                  :current-page.sync="tableData_list.pager"
                   :page-size="10"
                   layout="total,prev, pager, next, jumper"
-                  :total="totalPage"
-                  v-if="totalPage">
+                  :total="tableData_list.totalPage">
                 </el-pagination>
               </el-col>
             </el-row>
@@ -118,9 +117,9 @@
 			    <el-tab-pane label="已通过" name="second">
 						<el-table
               border
-							:data="tableData2"
+							:data="tableData_pass.list"
 							style="width: 100%;"
-							v-loading="loading2">
+							v-loading="tableData_pass.loading">
 			    		<el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
 			    		<el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
 			    		<el-table-column label="性别/年龄" align="center" width="110">
@@ -139,11 +138,15 @@
                 </template>
 			    		</el-table-column>
 			    	</el-table>
-						<el-row v-if="tableData2.length" style="margin-top: 11px;">
+						<el-row v-if="tableData_pass.list.length" style="margin-top: 11px;">
               <!-- 分页 -->
               <el-col :span="12" :offset="12">
-                <el-pagination  @current-change="handleCurrentChange2" :current-page.sync="currentPage2" :page-size="10" layout="total,prev, pager, next, jumper"
-                  :total="totalPage2" v-if="totalPage2">
+                <el-pagination
+								  @current-change="handleCurrentChange"
+								  :current-page.sync="tableData_pass.pager"
+								  :page-size="10"
+								  layout="total,prev, pager, next, jumper"
+                  :total="tableData_pass.totalPage">
                 </el-pagination>
               </el-col>
             </el-row>
@@ -151,9 +154,9 @@
 			    <el-tab-pane label="未通过" name="third">
 						<el-table
               border
-							:data="tableData3"
+							:data="tableData_nopass.list"
 							style="width: 100%;"
-							v-loading="loading3">
+							v-loading="tableData_nopass.loading">
 			    		<el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
 			    		<el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
 			    		<el-table-column label="性别/年龄" align="center" width="110">
@@ -172,11 +175,15 @@
                 </template>
 			    		</el-table-column>
 			    	</el-table>
-						<el-row v-if="tableData3.length" style="margin-top: 11px;">
+						<el-row v-if="tableData_nopass.list.length" style="margin-top: 11px;">
               <!-- 分页 -->
               <el-col :span="12" :offset="12">
-                <el-pagination  @current-change="handleCurrentChange3" :current-page.sync="currentPage3" :page-size="10" layout="total,prev, pager, next, jumper"
-                  :total="totalPage3">
+                <el-pagination
+									@current-change="handleCurrentChange"
+									:current-page.sync="tableData_nopass.pager"
+									:page-size="10"
+									layout="total,prev, pager, next, jumper"
+                  :total="tableData_nopass.totalPage">
                 </el-pagination>
               </el-col>
             </el-row>
@@ -184,9 +191,9 @@
 					<el-tab-pane label="已终止" name="fourth">
 						<el-table
               border
-							:data="tableData4"
+							:data="tableData_stop.list"
 							style="width: 100%;"
-							v-loading="loading4">
+							v-loading="tableData_stop.loading">
 			    		<el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
 			    		<el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
 			    		<el-table-column label="性别/年龄" align="center" width="110">
@@ -204,15 +211,15 @@
                 </template>
 			    		</el-table-column>
 			    	</el-table>
-						<el-row v-if="tableData4.length" style="margin-top: 11px;">
+						<el-row v-if="tableData_stop.list.length" style="margin-top: 11px;">
               <!-- 分页 -->
               <el-col :span="12" :offset="12">
                 <el-pagination
-                  @current-change="handleCurrentChange4"
-                  :current-page.sync="currentPage4"
+                  @current-change="handleCurrentChange"
+                  :current-page.sync="tableData_stop.pager"
                   :page-size="10"
                   layout="total,prev, pager, next, jumper"
-                  :total="totalPage4">
+                  :total="tableData_stop.totalPage">
                 </el-pagination>
               </el-col>
             </el-row>
@@ -233,207 +240,178 @@
   </div>
 </template>
 <script>
-import { followUp } from 'RJZL_API/followPlan'
-import { commonUrl } from 'RJZL_API/commonUrl'
-import ExSelect from 'components/dialog/exSelect'
-import Plan from 'components/dialog/plan/plan'
-import { mapState } from 'vuex'
-  export default {
-    name: 'dischargeFollowupPlanReview',
-    data () {
-      return {
-        formInline: {
-					adminId: sessionStorage.getItem('userId'),
-					brxm: '', // 病人姓名
-					mobile: '', // 手机号
-					schemeName: '', // 随访方案
-					icdName: '', // 疾病名称
-					brxb: '', // 病人性别
-					beginAge: '', // 开始年龄
-					endAge: '', // 技术年龄
-					activeType: '0',
-					status: '0', //审核状态: 0 未审核，1 未通过,2：已通过,4：已取消
-					pager: 1,
-					limit: 10
-				},
-				activeName: 'first', // tab
-			  tableData: [],
-        loading1: false, // loading...
-        currentPage: 1, // 当前页
+import { followUp } from 'RJZL_API/followPlan';
+import { commonUrl } from 'RJZL_API/commonUrl';
+import { hzList } from 'RJZL_API/patientList';
+import ExSelect from 'components/dialog/exSelect';
+import Plan from 'components/dialog/plan/plan';
+const tableName = ['list', 'pass', 'nopass', 'stop'];
+export default {
+	name: 'dischargeFollowupPlanReview',
+	data() {
+		return {
+			formInline: { // 查询form
+				adminId: sessionStorage.getItem('userId'),
+				brxm: '', // 病人姓名
+				mobile: '', // 手机号
+				schemeName: '', // 随访方案
+				icdName: '', // 疾病名称
+				brxb: '', // 病人性别
+				beginAge: '', // 开始年龄
+				endAge: '', // 技术年龄
+				activeType: '0',
+				limit: 10
+			},
+			tableData_list: { // 待审核
+				list: [], // 列表
+				pager: 1, // 当前页码
 				totalPage: null, // 总页数
-				tableData2: [], // 已通过
-        loading2: false, // 已通过loading...
-        currentPage2: 1, // 已通过当前页
-				totalPage2: null, // 已通过总页数
-				tableData3: [], // 未通过
-        loading3: false, // 未通过loading...
-        currentPage3: 1, // 未通过当前页
-				totalPage3: null, // 未通过总页数
-				tableData4: [],
-        loading4: false, // loading...
-        currentPage4: 1, // 当前页
-				totalPage4: null, // 总页数
-				checkId: [],//随访通过的id(多选时),
-				noCheck: false, //审核不通过弹框
-				loadingSelect: false,
-				options4: [],
-				ids: [], // 待审核
-				notPassReason: '', // 审核不通过原因
-				planDg: false, // 详情弹窗
-				tabIndex: '0', // tab 0待审核，1已通过，2未通过,3已终止
-				hzxxId: '' // 患者id
-      }
-    },
-    components: {
-			ExSelect,
-			Plan
+				loading: false, // loading
+				status: '0' // 状态
+			},
+			tableData_pass: { // 已通过
+				list: [],
+				pager: 1,
+				totalPage: null,
+				loading: false, // loading
+				status: '2'
+			},
+			tableData_nopass: { // 未通过
+				list: [],
+				pager: 1,
+				totalPage: null,
+				loading: false, // loading
+				status: 1
+			},
+			tableData_stop: { // 已终止
+				list: [],
+				pager: 1,
+				totalPage: null,
+				loading: false, // loading
+				status: '4'
+			},
+			activeName: 'first', // tab
+			tabIndex: '0', // tab 0待审核，1已通过，2未通过,3已终止
+			getTableName: '', // 获取tab对应的tableName, 获取列表数据
+			checkId: [], // 随访通过的id(多选时),
+			noCheck: false, // 审核不通过弹框
+			loadingSelect: false,
+			icdNameList: [],
+			ids: [], // 待审核
+			notPassReason: '', // 审核不通过原因
+			planDg: false, // 详情弹窗
+			hzxxId: '' // 患者id
+		};
+	},
+	components: {
+		ExSelect,
+		Plan
+	},
+	mounted() {
+		this.list(this.tableData_list)
+	},
+	methods: {
+		/** 获取列表 */
+		list(param) {
+			param.loading = true;
+			followUp.leaveResultPlanList({
+				...this.formInline,
+				'status': param.status,
+				'pager': param.pager
+			}).then(res => {
+				param.loading = false;
+				if (res.code === 0) {
+					param.list = res.data;
+					if (param.pager === 1) {
+						param.totalPage = res.total;
+					}
+				}
+			});
 		},
-		mounted () {
-			this.list()
+		/**
+		 *@description 切换tab
+		 */
+		handleClick(tab, event) {
+			// 获取tab的index
+			this.tabIndex = tab.index;
+			// 获取tab对应的tableName, 获取列表数据
+			this.getTableName = `tableData_${tableName[tab.index]}`;
+			this.list(this[this.getTableName]);
 		},
-		computed: {
-			// ...mapState({
-			// 	refresh: 'refresh'
-			// })
-    },
-    methods: {
-			/** 待审核 */
-			list () {
-				this.loading1 = true
-				this.formInline.status = '0'
-				this.formInline.pager = this.currentPage
-				followUp.leaveResultPlanList(this.formInline).then((res)=>{
-          this.loading1 = false
-          if(res.code == 0) {
-            this.tableData = res.data
-						this.totalPage = res.total
-          }
-        })
-			},
-			/** 已通过 */
-			list1 () {
-				this.loading2 = true
-				this.formInline.status = '2'
-				this.formInline.pager = this.currentPage2
-				followUp.leaveResultPlanList(this.formInline).then((res)=>{
-          this.loading2 = false
-          if(res.code == 0) {
-            this.tableData2 = res.data
-						this.totalPage2 = res.total
-						let idd = []
-						res.data.forEach((item) => {
-							idd.push(item.id)
-						})
-          }
-        })
-			},
-			/** 未通过 */
-			list2 () {
-				this.loading3 = true
-				this.formInline.status = '1'
-				this.formInline.pager = this.currentPage3
-				followUp.leaveResultPlanList(this.formInline).then((res)=>{
-          this.loading3 = false
-          if(res.code == 0) {
-            this.tableData3 = res.data
-						this.totalPage3 = res.total
-						res.data.forEach(item => {
-							if(item.notPassReason == 1) {
-                item.notPassReason = '患者已死亡'
-              }else if(item.notPassReason == 2) {
-                item.notPassReason = '患者不接受随访'
-              }else if(item.notPassReason == 3) {
-                item.notPassReason = '随访方案重复'
-              }else if(item.notPassReason == 4) {
-                item.notPassReason = '方案不匹配'
-              }
-						})
-          }
-        })
-			},
-			/** 已终止 */
-			list3 () {
-				this.loading4 = true
-				this.formInline.status = '4'
-				this.formInline.pager = this.currentPage4
-				followUp.leaveResultPlanList(this.formInline).then((res)=>{
-          this.loading4 = false
-          if(res.code == 0) {
-            this.tableData4 = res.data
-						this.totalPage4 = res.total
-						res.data.forEach(item => {
-							if(item.notPassReason == 1) {
-                item.notPassReason = '患者已死亡'
-              }else if(item.notPassReason == 2) {
-                item.notPassReason = '患者不接受随访'
-              }else if(item.notPassReason == 3) {
-                item.notPassReason = '随访方案重复'
-              }else if(item.notPassReason == 4) {
-                item.notPassReason = '方案不匹配'
-              }else if(item.notPassReason == 5) {
-                item.notPassReason = '其他'
-              }
-						})
-          }
-        })
-			},
-			/** 疾病检索 **/
-			remoteMethod(query) {
-        console.log(query)
-        if (query !== '') {
-          this.loadingSelect = true;
-          setTimeout(() => {
-            this.loadingSelect = false;
-             commonUrl.getdiseasefix({
-              'jbmc': query
-            }).then((res)=>{
-              console.log(res)
-              if(res.code == 0) {
-                this.options4=res.data.map(item => {
-                  return {label: item.jbmc,value: item.jbmc}
-                })
-              }
-            }).catch((error)=>{
-              console.log(error)
-            })
-          }, 200);
-        } else {
-          this.options4 = [];
-        }
-			},
-			/** 疾病检索获取label **/
-      handChange (value) {
-      //   let obj = this.options4.find((item)=> {
-      //     return item.value === value
-      //   })
-      //   this.ruleForm.icdName = obj.label
-      },
-			/**
-			 *审核不通过的原因
-			 *@function changeSelect
-			 *@param {String} value 审核不通过的原因
-			 */
-			 changeSelect(value) {
-				 this.selectCheck = value
-			 },
-			 /**
-			  * [closeChildren description]
-			  * @description 监听子组件的关闭动作
-			  * @DateTime    2018-04-17
-			  * @param       {{Sring}}
-			  * @param       {[type]}   val [description]
-			  * @return      {[type]}       [description]
-			  */
-			 closeChildren (val) {
-			 	this.noCheck = val
-			 },
-			 /**
-			  * [sendReason description]
-			  * @description 监听子组件确定按钮时选择不通过的原因
-			  * @DateTime    2018-04-17
-			  */
-			sendReason (val) {
-				this.notPassReason = val
+		/**
+		* 分页
+		*/
+		handleCurrentChange(val) {
+			// 获取tab对应的tableName, 获取列表数据
+			this.getTableName = `tableData_${tableName[this.tabIndex]}`;
+			this.list(this[this.getTableName]);
+		},
+		/**
+		 * [searchBtn description] 查询
+		 * @return {[type]} [description]
+		 */
+		searchBtn() {
+			// 获取tab对应的tableName, 获取列表数据
+			const getTableName = `tableData_${tableName[this.tabIndex]}`;
+			this[getTableName].pager = 1;
+			this.list(this[getTableName]);
+		},
+		/** 疾病检索 **/
+		remoteMethod(query) {
+			if (query !== '') {
+				this.loadingSelect = true;
+				setTimeout(() => {
+					this.loadingSelect = false;
+					commonUrl.getdiseasefix({
+						'jbmc': query
+					}).then(res => {
+						if (res.code === 0) {
+							this.icdNameList = res.data.map(item => {
+								return { label: item.jbmc, value: item.jbmc };
+							});
+						}
+					}).catch(error => {
+						this.$message.error(error.message);
+					});
+				}, 200);
+			} else {
+				this.icdNameList = [];
+			}
+		},
+		/** 疾病检索获取label **/
+		handChange(value) {
+		//   let obj = this.icdNameList.find((item)=> {
+		//     return item.value === value
+		//   })
+		//   this.ruleForm.icdName = obj.label
+		},
+		/**
+		 *审核不通过的原因
+			*@function changeSelect
+			*@param {String} value 审核不通过的原因
+			*/
+		changeSelect(value) {
+			this.selectCheck = value;
+		},
+		/**
+		* [closeChildren description]
+		* @description 监听子组件的关闭动作
+		* @DateTime    2018-04-17
+		* @param       {{Sring}}
+		* @param       {[type]}   val [description]
+		* @return      {[type]}       [description]
+		*/
+		closeChildren(val) {
+			this.noCheck = val;
+		},
+		/**
+		* [sendReason description]
+		* @description 监听子组件确定按钮时选择不通过的原因
+		* @DateTime    2018-04-17
+		*/
+		sendReason(val) {
+			this.notPassReason = val
+			if (val != '') {
 				if(val === '1') {
 					this.$confirm('标记死亡后该患者的所有随访计划将终止, 确定标记该患者死亡?', '提示', {
 						confirmButtonText: '确定',
@@ -450,173 +428,117 @@ import { mapState } from 'vuex'
 				} else {
 					this.handleCheck(1, this.ids, val)
 				}
-			},
-			 /** 待审核全选 */
-			 selectAll (val) {
-				 this.ids.length = 0
-				 val.forEach(item => {
-					 this.ids.push(item.id)
-				 })
-			 },
-			 /** 待审核单选 */
-			 selectSingal (selection, row) {
-				 this.ids.length = 0
-				 selection.forEach(item => {
-					 this.ids.push(item.id)
-				 })
-			 },
-			 /**
-			 *审核功能
-			 *@function handleCheck
-			 *@description 审核功能均调用这一个函数
-			 *@param {String} status 通过(1：不通过 2：通过)
-			 *@param {String} ids id集合,数组转字符串
-			 *@param {String} notPassReason 审核不通过原因
-			 */
-				handleCheck(status, ids, notPassReason) {
-					followUp.vet({
-						'status': status,
-						'ids': ids,
-						'notPassReason': notPassReason,
-					}).then((res)=>{
-						if(res.code === 0) {
-							this.$message.success(res.message)
-							this.list(this.currentPage)
-							if (this.noCheck) {
-								this.noCheck = false
-							}
-							// 执行标记死亡的操作
-							if(notPassReason === '1') {
-								this.updateIsLiveFun()
-							}
-						} else {
-							this.$message.error(res.message)
-						}
-					}).catch((error)=>{
-						this.$message.error(error.message)
-					})
-				},
-				// 审核原因未死亡时执行标签死亡操作
-			  updateIsLiveFun () {
-					hzList.updateIsLive({
-						'hzxxId': this.hzxxId,
-						'isDed': '1'
-					}).then((res)=>{
-					})
-				},
-			/**
-			 * [onSearch description] 查询
-			 * @return {[type]} [description]
-			 */
-			onSearch () {
-				if (this.tabIndex == '0') {
-					this.currentPage = 1
-					this.list()
-				} else if(this.tabIndex == '1') {
-					this.currentPage2 = 1
-					this.list1()
-				} else if(this.tabIndex == '2') {
-					this.currentPage3 = 1
-					this.list2()
-				} else if(this.tabIndex == '3') {
-					this.currentPage4 = 1
-					this.list3()
-				}
-			},
-			/**
-			 * [handleClick description] 切换tab
-			 * @param  {[type]} tab   [description]
-			 * @param  {[type]} event [description]
-			 * @return {[type]}       [description]
-			 */
-			handleClick(tab, event) {
-				if (tab.index === '0') {
-					this.tabIndex = 0
-					this.currentPage = 1
-					this.list()
-				} else if(tab.index === '1') {
-					this.tabIndex = 1
-					this.currentPage2 = 1
-					this.list1()
-				} else if(tab.index === '2') {
-					this.tabIndex = 2
-					this.currentPage3 = 1
-					this.list2()
-				}  else if(tab.index === '3') {
-					this.tabIndex = 3
-					this.currentPage4 = 1
-					this.list3()
-				}
-      },
-      /**
-      * 分页
-      * @function handleCurrentChange
-      * @param {String} val 当前页码
-      * @description this.tabActive = 0//全部患者=1特别关心
-      */
-      handleCurrentChange(val) {
-        this.list()
-			},
-			handleCurrentChange2(val) {
-        this.list1()
-			},
-			handleCurrentChange3(val) {
-        this.list2()
-			},
-			handleCurrentChange4(val) {
-        this.list3()
-      },
-      /** 批量通过 */
-      numCheck () {
-				if (this.ids.length > 0) {
-					this.handleCheck(2, this.ids)
-				} else {
-					this.$message.error('请选择患者！')
-				}
-      },
-			/**
-			 * [lang description]表格通过按钮
-			 * @type {String}
-			 */
-			passBtn (scope) {
-				this.$confirm('确定通过该计划?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.handleCheck(2, scope.row.id)
-        }).catch(() => {
-					this.$message.info('已取消！')
-        });
-			},
-			/** 审核不通过 */
-			passoutBtn (scope) {
+			} else {
 				this.ids.length = 0
-				this.noCheck = true
-				// id
-				this.ids.push(scope.row.id)
-				// hzxxId
-				this.hzxxId = scope.row.hzxxId
-			},
-			lookDetailes (scope) {
-				this.ids.length = 0
-				// id
-				this.ids.push(scope.row.id)
-				// hzxxId
-				this.hzxxId = scope.row.hzxxId
-				this.planDg = true
-				this.$store.dispatch('getScopeRowData', scope)
-			},
-			/** 监听详情的关闭操作 */
-			closeChildrenPlan (val) {
-				this.planDg = false
-				this.list(this.currentPage)
 			}
 		},
-  }
+		/** 待审核全选 */
+		selectAll(val) {
+			this.ids.length = 0
+			val.forEach(item => {
+				this.ids.push(item.id)
+			})
+		},
+		/** 待审核单选 */
+		selectSingal(selection, row) {
+			this.ids.length = 0
+			selection.forEach(item => {
+				this.ids.push(item.id)
+			})
+		},
+		/**
+	 *审核功能
+		*@function handleCheck
+		*@description 审核功能均调用这一个函数
+		*@param {String} status 通过(1：不通过 2：通过)
+		*@param {String} ids id集合,数组转字符串
+		*@param {String} notPassReason 审核不通过原因
+		*/
+		handleCheck(status, ids, notPassReason) {
+			followUp.vet({
+				'status': status,
+				'ids': ids,
+				'notPassReason': notPassReason,
+			}).then((res)=>{
+				if(res.code === 0) {
+					this.ids.length = 0
+					this.$message.success(res.message)
+					this.list()
+					if (this.noCheck) {
+						this.noCheck = false
+					}
+					// 执行标记死亡的操作
+					if(notPassReason === '1') {
+						this.updateIsLiveFun()
+					}
+				} else {
+					this.$message.error(res.message)
+				}
+			}).catch((error)=>{
+				this.ids.length = 0
+				this.$message.error(error.message)
+			})
+		},
+		// 审核原因未死亡时执行标签死亡操作
+		updateIsLiveFun() {
+			hzList.updateIsLive({
+				'hzxxId': this.hzxxId,
+				'isDed': '1'
+			}).then(res => {
+			});
+		},
+		/** 批量通过 */
+		numCheck() {
+			if (this.ids.length > 0) {
+				this.handleCheck(2, this.ids);
+			} else {
+				this.$message.error('请选择患者！');
+			}
+		},
+		/**
+		 * [lang description]表格通过按钮
+		 * @type {String}
+		 */
+		passBtn(scope) {
+			this.$confirm('确定通过该计划?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.handleCheck(2, scope.row.id);
+			}).catch(() => {
+				this.$message.info('已取消！');
+			});
+		},
+		/** 审核不通过 */
+		passoutBtn(scope) {
+			this.ids.length = 0;
+			this.noCheck = true;
+			// id
+			this.ids.push(scope.row.id);
+			// hzxxId
+			this.hzxxId = scope.row.hzxxId;
+		},
+		lookDetailes(scope) {
+			this.ids.length = 0;
+			// id
+			this.ids.push(scope.row.id);
+			// hzxxId
+			this.hzxxId = scope.row.hzxxId;
+			this.planDg = true;
+			this.$store.dispatch('getScopeRowData', scope);
+		},
+		/** 监听详情的关闭操作 */
+		closeChildrenPlan(val) {
+			this.planDg = false;
+			this.ids.length = 0;
+			// 获取tab对应的tableName, 获取列表数据
+			this.getTableName = `tableData_${tableName[this.tabIndex]}`;
+			this.list(this[this.getTableName]);
+		}
+	}
+};
 </script>
 <style lang="scss">
   @import '~styles/search';
-  .dischargeFollowupPlanReview {
-  }
 </style>

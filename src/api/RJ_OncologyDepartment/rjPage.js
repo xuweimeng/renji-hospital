@@ -1,4 +1,5 @@
 import fetch from '@/utils/request';
+import axios from 'axios';
 
 /**
  肿瘤科首页
@@ -28,4 +29,10 @@ export const rjPage = {
   showTopPage(data) {
     return fetch('get', '/statistic/order/showTopPage', data);
   }
+};
+/**
+ * 首页导出报表
+ */
+export const exportChart = {
+  chartUrl: (axios.defaults.baseURL || '') + '/export/statistics/chart'
 };

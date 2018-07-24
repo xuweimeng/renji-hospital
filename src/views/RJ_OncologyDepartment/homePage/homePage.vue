@@ -47,8 +47,8 @@
             <div class="circle"> <div class="yuan"></div></div>
             <div class="circleTitle" style="float:left;text-align: left;margin-left: 15px;line-height: 40px;height: 40px;">随访数量统计</div>
             <div class="circleharts" style="padding-top: 10px;border-bottom: 1px solid #ebeef5;">
-              <form action="http://192.168.1.218:8082/export/statistics/chart" method="POST" ref="form1" id="form1">
-              <!-- <form :action="chart.chartUrl" method="POST" ref="form1" id="form1"> -->
+              <!-- <form action="http://192.168.1.218:8082/export/statistics/chart" method="POST" ref="form1" id="form1"> -->
+              <form :action="exportChart.chartUrl" method="POST" ref="form1" id="form1">
                 <input name="departmentName" v-model="departmentName"  type="hidden" />
                 <input name="jsonData1" v-model="params"  type="hidden" />
                 <input name="jsonData2" v-model="params1"  type="hidden" />
@@ -279,7 +279,7 @@
 </template>
 <script>
   import { commonUrl } from 'RJZL_API/commonUrl';
-  import { rjPage } from 'RJZL_API/rjPage';
+  import { rjPage, exportChart } from 'RJZL_API/rjPage';
   import echart from 'echarts';
   import 'swiper/dist/css/swiper.css';
   import { swiper, swiperSlide } from 'vue-awesome-swiper';
@@ -296,6 +296,7 @@
     name: 'Homepage',
     data() {
       return {
+        exportChart: exportChart, // 导出图表
         userId: '',//医生id
         laterhours: '',//距上次登录
         isinspectPlength:true,

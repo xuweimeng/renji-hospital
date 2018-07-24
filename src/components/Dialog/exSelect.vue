@@ -11,10 +11,10 @@
 			custom-class="checknoPass">
 			<el-row slot>
 				 <el-col :span="24" >
-					<el-select 
-						v-model="selectCheck" 
-						placeholder="请选择" 
-						@change="changeSelect" 
+					<el-select
+						v-model="selectCheck"
+						placeholder="请选择"
+						@change="changeSelect"
 						popper-class="selectOut">
 						<el-option  v-for="item in checkoptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
 					</el-select>
@@ -74,7 +74,11 @@
 			  },
 			  /** 关闭弹框 **/
 			  closeFun () {
-			  	this.$emit('closeChildren', false)
+					if (this.selectCheck) {
+						this.selectCheck = ''
+					}
+					this.$emit('closeChildren', false)
+					this.$emit('sendReason', this.selectCheck)
 			  },
 			  /**
 			   * [sureFun description]
