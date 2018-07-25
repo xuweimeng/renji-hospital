@@ -14,9 +14,6 @@
 		<!-- 步骤一 -->
 		<transition name="el-zoom-in-top">
 		<div class="stepContent" v-if="step === 0">
-			<!-- <el-row class="upnum">
-				<el-col :span="24">请选择需要通知的客户</el-col>
-			</el-row> -->
 			<!-- 查询 -->
 			<ul class="common_search" style="margin-top:10px">
 				  <li class="common_search_single">
@@ -43,6 +40,18 @@
 					     <el-input-number v-model="searchParams.ageEnd"  :min="0" :max="99" label="请输入结束年龄"></el-input-number>
 					</li>
 
+          <li class="common_search_single common_search_single_time">
+            <label class="radio-label" >体检时间</label>
+							<el-date-picker
+								@change="timeChange"
+								v-model="startTime"
+								value-format="yyyy-MM-dd HH:mm:ss"
+								type="daterange"
+								start-placeholder="开始时间"
+					      end-placeholder="结束时间">
+					    </el-date-picker>
+					</li>
+
           <li class="common_search_single">
             <label class="radio-label" >地址</label>
               <el-input v-model="searchParams.xzzQtdz" placeholder="请输入地址" clearable></el-input>
@@ -67,19 +76,9 @@
                 </el-option>
               </el-select>
 					</li>
-					<li class="common_search_single common_search_single_time">
-            <label class="radio-label" >体检时间</label>
-							<el-date-picker
-								@change="timeChange"
-								v-model="startTime"
-								value-format="yyyy-MM-dd HH:mm:ss"
-								type="daterange"
-								start-placeholder="开始时间"
-					      end-placeholder="结束时间">
-					    </el-date-picker>
-					</li>
+					
 				  <li class="common_search_single">
-				  	<el-button type="primary" icon="el-icon-search" @click="getData" >查询</el-button>
+				  	<el-button type="primary" icon="el-icon-search" @click="searchParams.pager=1;getData()" >查询</el-button>
 				  </li>
 			</ul>
 			<!-- 通知患者 -->
@@ -116,8 +115,8 @@
 				</el-col>
 				<!-- 分页 -->
 				<el-col :span="12">
-					<div class="block" style="margin: 11px 0;text-align:right">
-						<el-pagination  @current-change="handleCurrentChange" :current-page.sync="searchParams.pager" :page-size="10" layout="total,prev, pager, next, jumper"
+					<div class="pagination-container" style="margin: 11px 0;text-align:right">
+						<el-pagination  @current-change="handleCurrentChange" background :current-page.sync="searchParams.pager" :page-size="10" layout="total,prev, pager, next, jumper"
 							:total="totalPage" v-if="totalPage">
 						</el-pagination>
 					</div>
@@ -321,20 +320,12 @@ export default {
           diseaseType: 1
         })
           .then(res => {
-            console.log(1111111111);
             this.queryLoading = false;
-            console.log(res);
-            if (res.code == 0) {
-              this.diseaseList = res.data;
-            } else {
-              this.options4 = [];
-            }
+            this.diseaseList = res.data;
           })
           .catch(error => {
             console.log(error);
           });
-      } else {
-        this.options4 = [];
       }
     },
     /** @description
@@ -348,15 +339,14 @@ export default {
         this.searchParams.orderTimeBegin = '';
         this.searchParams.orderTimeEnd = '';
       }
-      console.log(time);
     },
-    /** *@description
-     * 获取患者数据
+    /**
+     * @function 获取患者列表数据
+     * @return {type} {description}
      */
     getData() {
       this.hzLoading = true;
       InitiateNotification.queryCustomerList(this.searchParams).then(res => {
-        console.log(res);
         this.hzLoading = false;
         this.dataList = this.formData(res.data);
         this.totalPage = res.total;
@@ -377,7 +367,7 @@ export default {
     formData(data) {
       for (const item of data) {
         for (const ite of this.addList) {
-          if (item.hzxxId == ite.hzxxId) {
+          if (item.hzxxId === ite.hzxxId) {
             item.isAdd = 1;
           }
         }
@@ -395,25 +385,21 @@ export default {
       copyData.isAdd = 1;
       this.dataList.splice(index, 1, copyData);
       this.addList.push(copyData);
-
-      console.log(this.addList);
     },
     /**
      * 移除已选患者
      */
     removePat(index) {
       this.addList.splice(index, 1);
-      console.log(this.addList);
       for (const item of this.dataList) {
         let flag = 0;
         for (const ite of this.addList) {
-          if (item.hzxxId == ite.hzxxId) {
-            console.log(item.hzxxId + ':' + ite.hzxxId);
+          if (item.hzxxId === ite.hzxxId) {
             flag++;
             item.isAdd = 1;
           }
         }
-        if (flag == 0) {
+        if (flag === 0) {
           item.isAdd = 0;
         }
       }
@@ -559,7 +545,7 @@ export default {
       })
         .then(() => {
           this.fullscreenLoading = true;
-          if (this.isAll == 0) {
+          if (this.isAll === 0) {
             this.sendData.hzxxIds = [];
             for (const item of this.addList) {
               this.sendData.hzxxIds.push(item.hzxxId);
@@ -578,12 +564,8 @@ export default {
           }
           InitiateNotification.confirmationFollowUp(this.sendData)
             .then(res => {
-              if (res.code == 0) {
-                this.fullscreenLoading = false;
-                this.step = 3;
-              } else {
-                Message.warning(res.message);
-              }
+              this.fullscreenLoading = false;
+              this.step = 3;
             })
             .catch(err => {
               console.log(err);
