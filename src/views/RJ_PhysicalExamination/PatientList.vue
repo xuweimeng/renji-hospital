@@ -308,6 +308,7 @@ import { mapGetters } from 'vuex';
         isCare: false,
         endBirthday: '',
         initDate: '',
+        repeatFlag:true,
         customDialog: false,
         tableAll: [], // 全部患者表格data
         totalPage1: 0, // 全部患者表格data总数量
@@ -365,6 +366,10 @@ import { mapGetters } from 'vuex';
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            if(!this.repeatFlag){
+                return false;
+            }
+            this.repeatFlag = false;
             PatientList.updatePhysicalInfo({
               'hzxxId': this.modifyId,
               adminId: sessionStorage.getItem('userId'),
@@ -375,10 +380,10 @@ import { mapGetters } from 'vuex';
                 this.$message.success(res.message);
                 this.isModify = false;
                 this.list();
-              } else {
-                this.$message.error(res.message);
+                this.repeatFlag = true;
               }
             }).catch(res=>{
+              this.repeatFlag = true;
               this.$message.error(res)
             });
           }
