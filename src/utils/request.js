@@ -8,7 +8,8 @@ import qs from 'qs';
 const service = axios.create({
   // todo 海宁8084使用
   // baseURL: process.env.BASE_API, // api的base_url
-  baseURL: 'http://192.168.1.218:8093', // api的base_url
+  // baseURL: 'http://192.168.1.218:8093', // api的base_url
+  baseURL: 'http://192.168.1.218:8082', // api的base_url
   // baseURL: 'http://60.190.86.50:6016', // api的base_url
   timeout: 50000 // request timeout
 });
@@ -136,9 +137,12 @@ const fetch = (type, url, params) => {
         const resultData = JSON.parse(response.data);
         if (resultData.code === 0) {
           resolve(resultData);
-        } else if (resultData.code === 1) {
-          reject(new Error(resultData.message));
-        } else {
+        }
+        else if (resultData.code === 1) {
+            // reject(new Error(resultData.message));
+            reject(resultData.message);
+        }
+        else {
           Message({
             message: resultData.message,
             type: 'error',
