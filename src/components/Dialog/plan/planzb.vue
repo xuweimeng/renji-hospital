@@ -66,7 +66,7 @@ export default {
   },
   computed: {
     ...mapState({
-      'patientInfo': state => state.user.scopeRowData.row
+      'patientInfo': state => state.user.scopeRowData
     })
   },
   methods: {
@@ -190,6 +190,7 @@ export default {
       border-bottom: 1px solid #e4f4ff;
       .el-row .colLabel {
         text-align: left;
+        line-height: 24px;
       }
     }
     .content3 {

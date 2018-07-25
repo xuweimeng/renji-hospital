@@ -97,7 +97,7 @@
 				  </el-form-item>
 				</el-col>
 			  <el-col :span='3'>
-			  	<el-button type='primary' @click='getData'>查询</el-button>
+			  	<el-button type='primary' @click='searchBtn'>查询</el-button>
 			  </el-col>
 			</el-form>
 		</el-row>
@@ -129,7 +129,7 @@
 					</el-table-column>
           	<el-table-column label='详情' align='center'>
               <template slot-scope='scope'>
-                <el-button type='primary' size='mini' @click='detailBtn(scope)'>详情</el-button>
+                <el-button type='primary' size='mini' @click='detailBtn(scope.row)'>详情</el-button>
               </template>
             </el-table-column>
 	    	</el-table>
@@ -142,24 +142,6 @@
 
 			</el-col>
 		</el-row>
-		<!-- 审核不通过 -->
-		<el-dialog title='审核不通过原因' :visible.sync='noCheck' width='350px' :center = 'false' custom-class='checknoPass'>
-			<el-row slot>
-				 <el-col :span='24' >
-					<el-select v-model='selectCheck' placeholder='请选择' @change='changeSelect' popper-class='selectOut'>
-						<el-option  v-for='item in checkoptions' :key='item.value' :label='item.label' :value='item.value'></el-option>
-					</el-select>
-				</el-col>
-				<el-col
-					:span='24'
-					class='btnCheck'
-					style='margin-top:28px;'
-					@click.native='noothroughCkeck'>
-					<el-button type='primary'>确定</el-button>
-					<el-button type='info' @click='noCheck=false'>取消</el-button>
-				</el-col>
-			</el-row>
-		</el-dialog>
     <!-- 详情 -->
     <ad-result :resultDg='resultDg'
 		@closeChildren='closeChildren'></ad-result>
@@ -223,7 +205,6 @@
         ],
         selectCheck: '', // 选中的审核不通过
         checkId: [], // 随访通过的id(多选时),
-        noCheck: false, // 审核不通过弹框
         queryLoading: false, // 搜索loading...
         diseaseList: [], // 疾病list
         resultDg: false, // 详情弹窗
@@ -324,13 +305,10 @@
           this.totalPage = res.total;
         });
       },
-      /**
-       *审核不通过的原因
-      *@function changeSelect
-      *@param {String} value 审核不通过的原因
-      */
-      changeSelect(value) {
-        this.selectCheck = value;
+      /** 查询按钮 */
+      searchBtn() {
+        this.searchParams.pager = 1
+        this.getData()
       },
       /**
        * 分页

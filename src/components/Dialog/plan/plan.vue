@@ -41,7 +41,7 @@
 		},
     computed: {
       ...mapState({
-        "patientInfo": state => state.user.scopeRowData.row
+        "patientInfo": state => state.user.scopeRowData
       })
     },
     methods: {
@@ -83,7 +83,7 @@
     watch: {
       planDg(newV, oldV) {
         if (newV) {
-          this.careFun();
+          // this.careFun();
         }
       }
     }

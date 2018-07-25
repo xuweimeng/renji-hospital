@@ -34,7 +34,7 @@ export const AdmissionNotice = {
    * @returns
    */
   createNotice(data) {
-    return fetch('post', '/statistic/order/temp/visit', data);
+    return fetch('post', '/visit/order/temp/visit', data);
   },
   /**
  * 入院通知计划

@@ -4,13 +4,13 @@
 		<el-row class="personInfo">
       <el-col :span="12" class="name">
       	<span class="personName careColor" v-if="patientInfo">
-          {{patientInfo.brxm?patientInfo.brxm:patientInfo.patientName?patientInfo.patientName:''}}
+          {{patientInfo.brxm}}
         </span>
       	<span class="personSex careColor" v-if="patientInfo">
-          {{patientInfo.brxb?patientInfo.brxb:patientInfo.patientSex?patientInfo.patientSex:''}} /
-          {{patientInfo.age?patientInfo.age:patientInfo.patientAge?patientInfo.patientAge:''}}
+          {{patientInfo.brxb}} /
+          {{patientInfo.age}}
         </span>
-      	<span class="personXg">{{GzTag?GzTag:patientInfo.gzTag}}</span>
+      	<span class="personXg">{{GzTag}}</span>
       </el-col>
       <el-col :span="12" class="care">
         <el-button type="text"
@@ -50,7 +50,7 @@ import { commonUrl } from 'RJZL_API/commonUrl';
     ],
     computed: {
       ...mapState({
-        "patientInfo": state => state.user.scopeRowData.row
+        "patientInfo": state => state.user.scopeRowData
       })
     },
     methods: {

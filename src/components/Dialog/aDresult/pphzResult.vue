@@ -2,25 +2,22 @@
   <div class="hzResult">
     <!-- 指标详情 -->
     <el-row class="targetResult">
-      <el-row class="targetDetails">
-        <div class="fileName">
-          <span>是否本人&nbsp;:&nbsp;</span>
-          <el-tag style="height:20px;line-height: 18px;margin-top:10px;">
-            {{isData.isMySelf=='0'?'否':isData.isMySelf=='1'?'是':''}}
-          </el-tag>
-        </div>
-        <div class="fileName">
-          <span>是否过来入院&nbsp;:&nbsp;</span>
-          <el-tag style="height:20px;line-height: 18px;margin-top:10px;">
-            {{ isData.isCome==0?"不来":isData.isCome==1?"来":isData.isCome==2?'改约':'' }}
-          </el-tag>
-        </div>
-      </el-row>
+      <el-col :span="24" class="fileName">
+        <span>是否本人&nbsp;:&nbsp;</span>
+        <el-tag>
+          {{isData.isMySelf=='0'?'否':isData.isMySelf=='1'?'是':'暂未采集到结果'}}
+        </el-tag>
+        <span>是否过来入院&nbsp;:&nbsp;</span>
+        <el-tag>
+          {{ isData.isCome==0?"不来":isData.isCome==1?"来":isData.isCome==2?'改约':'暂未采集到结果' }}
+        </el-tag>
+      </el-col>
     </el-row>
     <!-- 外呼处理意见 -->
-    <el-row>
-      <el-col :span="4" style="padding-left: 20px;">人工审核意见：</el-col>
-      <el-col :span="20">{{isData.vetRemark}}</el-col>
+    <el-row class="suggestions">
+      <el-col :span="24">
+        人工审核意见： <el-tag>{{isData.vetRemark?isData.vetRemark: '暂无意见'}}</el-tag>
+        </el-col>
     </el-row>
     <!-- 随访问题语音 -->
     <el-row class="resultVoice">
@@ -92,8 +89,6 @@
 </template>
 
 <script>
-// import { mapState } from 'vuex'
-// import {Point} from '@/common/js/selectOptions'
   export default {
     data () {
       return {
@@ -119,21 +114,29 @@
 </script>
 
 <style lang="scss">
+  //  是否本人
   .targetResult {
+    margin-top: 10px;
     padding: 0 20px;
-    .targetDetails{
-      padding: 20px 0 30px;
-      margin-top: 20px;
-      border-top: 1px solid #eee;
-      .fileName{
-        display:inline-block;
-        height:20px;
-        line-height:20px;
-        margin-bottom:10px;
-        float:left;
-        padding-right: 20px;
+    border-top: 1px solid #eee;
+    .fileName{
+      padding: 20px 0;
+      margin-bottom:10px;
+      height:30px;
+      line-height:30px;
+      span {
+        float: left;
+      }
+      .el-tag {
+        float: left;
+        margin-right: 20px;
       }
     }
+  }
+  .suggestions {
+    padding-left: 20px;
+    line-height: 50px;
+    height: 50px;
   }
   //语音详情
   .resultVoice {
@@ -259,5 +262,10 @@
     audio{
       float: right;
     }
+  }
+  .tagCome {
+    height:20px;
+    line-height: 18px;
+    margin-top:10px;
   }
 </style>

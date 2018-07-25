@@ -46,7 +46,7 @@ export default {
   },
   computed: {
     ...mapState({
-      'patientInfo': state => state.user.scopeRowData.row
+      'patientInfo': state => state.user.scopeRowData
     })
   },
   methods: {

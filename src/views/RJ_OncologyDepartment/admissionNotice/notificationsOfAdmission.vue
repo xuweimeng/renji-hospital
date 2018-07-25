@@ -28,7 +28,7 @@
 							reserve-keyword
 							placeholder='请输入疾病类型'
 							:remote-method='remoteMethod'
-              :loading='loading5'
+              :loading='queryLoading'
 							>
 							<el-option
 								v-for='item in diseaseList'
@@ -70,13 +70,13 @@
 			    <el-tab-pane label='入院通知' name='first'>
 			    	<el-table
               border
-              :data='tableData'
+              :data='tableData_list.list'
               @selection-change='selectChange'
-              v-loading='loading1'
+              v-loading='tableData_list.loading'
               ref='multipleTable'>
 			    		<el-table-column type='selection' align='center'></el-table-column>
 			    		<el-table-column prop='brxm' label='姓名' align='center'></el-table-column>
-			    		<el-table-column prop='mobile' label='联系电话' align='center'></el-table-column>
+			    		<el-table-column prop='mobile' label='联系电话' align='center' show-overflow-tooltip ></el-table-column>
 			    		<el-table-column label='性别/年龄' align='center' width='100'>
                 <template slot-scope='scope'>
                   {{scope.row.brxb}} <span v-if='scope.row.brxb && scope.row.age'>/</span> {{scope.row.age}}
@@ -93,23 +93,28 @@
                 </template>
 			    		</el-table-column>
 			    	</el-table>
-			    	<el-row v-if='tableData.length'>
+			    	<el-row v-if='tableData_list.list.length' style='margin-top: 11px;'>
               <!-- 批量通过 -->
               <el-col :span='12'>
                 <el-button type='danger' size="mini" @click='numCheck'>批量终止</el-button>
               </el-col>
               <!-- 分页 -->
               <el-col :span='12'>
-                <el-pagination  @current-change='handleCurrentChange' :current-page.sync='nowpager' :page-size='10' layout='total,prev, pager, next, jumper'
-                  :total='totalPage' v-if='totalPage'>
+                <el-pagination
+                  @current-change='handleCurrentChange'
+                  :current-page.sync='tableData_list.pager'
+                  :page-size='10'
+                  layout='total,prev, pager, next, jumper'
+                  :total='tableData_list.totalPage'
+                  v-if='tableData_list.totalPage'>
                 </el-pagination>
               </el-col>
             </el-row>
 			    </el-tab-pane>
 			    <el-tab-pane label='已终止通知' name='second'>
-						<el-table border :data='noPassdata' style='width: 100%;' v-loading='loading2'>
+						<el-table border :data='tableData_stop.list' style='width: 100%;' v-loading='tableData_stop.loading'>
 			    		<el-table-column prop='brxm' label='姓名' align='center'></el-table-column>
-			    		<el-table-column prop='mobile' label='联系电话' align='center'></el-table-column>
+			    		<el-table-column prop='mobile' label='联系电话' align='center' show-overflow-tooltip ></el-table-column>
 			    		<el-table-column label='性别/年龄' align='center' width='100'>
                 <template slot-scope='scope'>
                   {{scope.row.brxb}} <span v-if='scope.row.brxb && scope.row.age'>/</span> {{scope.row.age}}
@@ -127,14 +132,16 @@
                 </template>
 			    		</el-table-column>
 			    	</el-table>
-			    	<el-row v-if='noPassdata.length'>
+			    	<el-row v-if='tableData_stop.totalPage'>
               <!-- 分页 -->
-              <el-col :span='18'>
-                <div class='block' style='margin-top: 11px; float:right;'>
-                  <el-pagination  @current-change='pageChange' :current-page.sync='nopager' :page-size='10' layout='total,prev, pager, next, jumper'
-                    :total='noTotalPage'>
-                  </el-pagination>
-                </div>
+              <el-col :span='12' style='margin-top: 11px; float:right;' :offset="12">
+                <el-pagination
+                  @current-change='handleCurrentChange'
+                  :current-page.sync='tableData_stop.pager'
+                  :page-size='10'
+                  layout='total,prev, pager, next, jumper'
+                  :total='tableData_stop.totalPage'>
+                </el-pagination>
               </el-col>
             </el-row>
 					</el-tab-pane>
@@ -210,6 +217,8 @@
 <script>
 import Plan from '@/components/dialog/plan/plan';
 import { AdmissionNotice } from 'RJZL_API/hospitalNotice';
+import auditOptions from 'utils/auditOptions'
+const tableName = [ 'list', 'stop'];
 export default {
   name: 'notificationsOfAdmission',
   data() {
@@ -226,37 +235,23 @@ export default {
         ageEnd: null, //结束年龄（可选）
         status:null //默认显示入院通知列表，赋值显示已终止通知列表
       },
-      noTotalPage: 0,
-      totalPage: 0, // 总页数
+      tableData_list: { // 入院通知
+        list: [],
+        pager: 1,
+        totalPage: null,
+        loading: false,
+        status: null
+      },
+      tableData_stop: { // 已终止通知
+        list: [],
+        pager: 1,
+        totalPage: null,
+        loading: false,
+        status: '2'
+      },
       activeName: 'first', // tab
-      tableData: [],
-      noPassdata: [],
-      nowpager: 1, // 当前页
-      nopager: 1, // 当前页
       diseaseList: [] /* 疾病列表 */,
-      checkoptions: [
-        {
-          value: '',
-          label: '请选择'
-        },
-        {
-          //审核不通过options
-          value: '1',
-          label: '患者已死亡'
-        },
-        {
-          value: '2',
-          label: '患者不接受随访'
-        },
-        {
-          value: '3',
-          label: '随访方案重复'
-        },
-        {
-          value: '4',
-          label: '方案不匹配'
-        }
-      ],
+      checkoptions: auditOptions, // 审核不通过原因
       infoShow: false /* 通知计划详情显示 */,
       infoParams: {
         znjqrHzxx: {
@@ -266,9 +261,7 @@ export default {
       selectCheck: '', // 选中的审核不通过
       checkId: [], // 随访通过的id(多选时),
       noCheck: false, // 审核不通过弹框
-      loading1: false,
-      loading2: false,
-      loading5: false,
+      queryLoading: false,
       planDg: false, // 详情弹窗
       tabIndex: '0' // tab 0:入院通知，1：已终止通知
     };
@@ -277,15 +270,14 @@ export default {
     Plan
   },
   mounted() {
-    this.getData();
+    this.getData(this.tableData_list);
   },
   methods: {
     /**
-     * @description
      * 疾病远程搜索
      */
     remoteMethod(query) {
-      this.loading5 = true;
+      this.queryLoading = true;
       if (query === '') {
         return false;
       }
@@ -294,55 +286,32 @@ export default {
         jbmc: query
       })
         .then(res => {
-          this.loading5 = false;
+          this.queryLoading = false;
           this.diseaseList = res.data;
         })
         .catch(error => {});
     },
     /* 获取数据 */
-    getData() {
-      if (this.tabIndex === '0') {
-        this.getData1()
-      } else {
-        this.getData2()
-      }
-    },
-    getData1() {
-      this.loading1 = true
-      const searchData = Object.assign({},this.searchParams,{
-        status: null,
-        pager: this.nowpager
+    getData(param) {
+      param.loading1 = true
+      AdmissionNotice.getPlan({
+        ...this.searchParams,
+        status: param.status,
+        pager: param.pager
       })
-      console.log(searchData)
-      AdmissionNotice.getPlan(searchData)
         .then(res => {
-          this.tableData = res.data
-          this.totalPage = res.total;
-          this.loading1 = false
+          param.list = res.data
+          param.totalPage = res.total;
+          param.loading = false;
+      }).catch( err => {
+        param.loading = false;
       });
     },
-    getData2() {
-      this.loading2 = true
-      const searchData = Object.assign({},this.searchParams,{
-        status: 2,
-        pager: this.nopager
-      })
-      AdmissionNotice.getPlan(searchData).then(res => {
-        this.noPassdata = res.data
-        this.loading2 = false
-        this.noTotalPage = res.total;
-      });
-    },
+
     /* 展示随访计划详情 */
     showInfo(scope) {
       this.planDg = true
-      this.$store.dispatch('hzFileRows', scope)
-      // AdmissionNotice.planInfo({
-      //   id: id
-      // }).then(res => {
-      //   this.infoParams = res.data;
-      //   this.infoShow = true;
-      // });
+       this.$store.dispatch('getScopeRowData', scope);
     },
     /**
      *审核不通过的原因
@@ -352,8 +321,12 @@ export default {
     changeSelect(value) {
       this.selectCheck = value;
     },
+    /** 批量审核选择患者 */
     selectChange(selection){
-      this.checkId=selection;
+      this.checkId.length = 0;
+      selection.forEach( item => {
+        this.checkId.push(item.id)
+      })
     },
     /**
      *弹框点击不通过确定
@@ -361,18 +334,15 @@ export default {
     *@description 点击表格操作弹框不通过
     */
     noothroughCkeck() {
-      let ids=[];
-      for (let iterator of this.checkId) {
-        ids.push(iterator.id);
-      }
       if(this.selectCheck){
-        this.handleCheck(ids, this.selectCheck);
+        this.handleCheck(this.checkId, this.selectCheck);
       }
     },
     /** 取消 */
     resetBtn () {
       this.noCheck = false
       this.selectCheck = ''
+      this.checkId.length = 0
     },
     /**
      *审核功能
@@ -396,38 +366,27 @@ export default {
             this.getData();
             this.noCheck = false;
             this.selectCheck = ''
+            this.checkId.length = 0
           }
         })
         .catch(error => {});
     },
     /**
      * [handleClick description] 切换tab
-     * @param  {[type]} tab   [description]
-     * @param  {[type]} event [description]
-     * @return {[type]}       [description]
      */
     handleClick(tab, event) {
       this.tabIndex = tab.index
-      if (this.tabIndex === '0') {
-        this.getData1()
-      } else {
-        this.getData2()
-      }
+      const getTableName = `tableData_${tableName[this.tabIndex]}`
+      this.getData(this[getTableName])
     },
     /**
      * 分页
-     * @function handleCurrentChange
-     * @param {String} val 当前页码
-     * @description this.tabActive = 0//全部患者=1特别关心
      */
     handleCurrentChange(page) {
-      this.nowpager = page;
-      this.getData1();
+      const getTableName = `tableData_${tableName[this.tabIndex]}`
+      this.getData(this[getTableName])
     },
-    pageChange(page) {
-      this.nopager = page;
-      this.getData2();
-    },
+
     /**
      *待审核表格全选
     *@function toggleSelection
@@ -455,9 +414,7 @@ export default {
      * @type {String}
      */
     passoutBtn(id) {
-      this.checkId = [{
-        id: id
-      }];
+      this.checkId.push(id)
       this.noCheck = true;
     },
     /** 监听详情的关闭操作 */

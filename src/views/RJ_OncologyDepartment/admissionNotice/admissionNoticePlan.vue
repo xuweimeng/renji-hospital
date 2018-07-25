@@ -135,7 +135,7 @@
 								<el-button
                   @click='selectAction(scope.row,scope.$index)'
                    size='mini'
-									:type='scope.row.isAdd?'success':'primary''>
+									:type="scope.row.isAdd?'success':'primary'">
                   {{scope.row.isAdd?'已选择':'选择'}}
                 </el-button>
 							</template>
@@ -218,6 +218,7 @@
 </template>
 <script>
   import { AdmissionNotice } from 'RJZL_API/hospitalNotice';
+  import { commonUrl } from 'RJZL_API/commonUrl';
   export default {
     name: 'admissionNoticePlan',
     data() {
