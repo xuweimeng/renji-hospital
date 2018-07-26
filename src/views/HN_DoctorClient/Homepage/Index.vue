@@ -24,12 +24,12 @@
           患者总体情况分析
         </h3>
         <el-radio-group v-model="overallSituation.type" @change="getOverallSituation">
+          <el-radio :label="0">全部</el-radio>
           <el-radio :label="1">近7天</el-radio>
           <el-radio :label="2">近30天</el-radio>
           <el-radio :label="3">3个月</el-radio>
           <el-radio :label="4">6个月</el-radio>
           <el-radio :label="5">一年</el-radio>
-          <el-radio :label="0">全部</el-radio>
         </el-radio-group>
       </div>
       <el-col :xs="24" :sm="24" :lg="12">
@@ -119,11 +119,11 @@
         // 随访/通知数量统计
         numberOfNotifications: {
           dataList: [],
-          type: 1 // 1:近7天  2:近30天
+          type: 2 // 1:近7天  2:近30天
         },
         // 总体情况
         overallSituation: {
-          type: 1, // 0全部 1近7天 2近30天 3:3个月 46个月 5一年
+          type: 0, // 0全部 1近7天 2近30天 3:3个月 46个月 5一年
           packageDistribution: [],
           arrivalSituation: []
         }

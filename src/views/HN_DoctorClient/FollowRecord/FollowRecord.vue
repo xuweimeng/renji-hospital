@@ -68,7 +68,7 @@
       </li>
     </ul>
     <!-- tab切换 -->
-    <el-tabs type="border-card" @tab-click="handleClick">
+    <el-tabs type="border-card"  @tab-click="handleClick">
       <!-- 未处理 -->
       <el-tab-pane :label="`未处理(${param_unhandled.total})`">
         <el-table :data="param_unhandled.tableData" class="rsTable" v-loading="param_unhandled.loading">
@@ -87,7 +87,7 @@
               <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="icdName" label="疾病诊断" align="left" header-align="center" show-overflow-tooltip>
+          <el-table-column prop="icdName" label="疾病诊断" align="center" header-align="center" show-overflow-tooltip>
             <template slot-scope="scope">
               <el-tag>{{scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>
               {{scope.row.icdName}}
@@ -128,7 +128,7 @@
           </el-table-column>
         </el-table>
         <div class="pagination-container">
-          <el-pagination  @current-change="handleCurrentUnhandled" :current-page.sync="param_unhandled.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
+          <el-pagination @current-change="handleCurrentUnhandled" :current-page.sync="param_unhandled.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
                           :total="param_unhandled.total" v-if="param_unhandled.total">
           </el-pagination>
         </div>
@@ -375,12 +375,8 @@ export default {
       * @function waySearchBtn
       */
     waySearchBtn() {
-      // 修改page会触发 分页方法的调用,无需在调用getList
       const param_name = `param_${typeMap[this.tabActive]}`;
-      if (this[param_name].page !== 1) {
-        this[param_name].page = 1;
-        return false;
-      }
+      this[param_name].page = 1;
       this.getList(this[param_name]);
     },
     /**
@@ -435,6 +431,10 @@ export default {
 };
 </script>
 <style scoped>
+  .input-separator{
+    line-height: 36px;
+    padding: 0 3px;
+  }
   .td-hover{
     cursor: pointer;
   }

@@ -501,12 +501,8 @@ export default {
      * @param {String} 1 返回第一页
      */
     searchData() {
-      // 修改page会触发 分页方法的调用,无需在调用getData
       const param_name = `param_${typeMap[this.tabActive]}`;
-      if (this[param_name].page !== 1) {
-        this[param_name].page = 1;
-        return false;
-      }
+      this[param_name].page = 1;
       this.getData(this[param_name]);
     },
     /**

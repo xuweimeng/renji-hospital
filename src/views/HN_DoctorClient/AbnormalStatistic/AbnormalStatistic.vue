@@ -222,3 +222,10 @@
     }
   };
 </script>
+<style scoped>
+  .pagination-container {
+    padding: 15px;
+    margin-top: 0;
+    background-color: white;
+  }
+</style>

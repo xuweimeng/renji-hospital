@@ -346,10 +346,8 @@
                 item.islike = true;
               }
               // 匹配审核不通过原因
-              console.log(item.notPassReason);
               const reasonMap = ['', '患者已死亡', '患者不接受随访', '随访方案重复', '方案不匹配'];
               item.notPassReason = reasonMap[item.notPassReason];
-              console.log(item.notPassReason);
               // 随访类型
               if (!item.activeType) {
                 item.activeType = 0;
@@ -408,12 +406,8 @@
        * @function waySearchBtn
        */
       waySearchBtn() {
-        // 修改page会触发 分页方法的调用,无需在调用getList
         const param_name = `param_${typeMap[this.tabActive]}`;
-        if (this[param_name].page !== 1) {
-          this[param_name].page = 1;
-          return false;
-        }
+        this[param_name].page = 1;
         this.getList(this[param_name]);
       },
       /**
@@ -585,6 +579,10 @@
   };
 </script>
 <style scoped>
+  .input-separator{
+    line-height: 36px;
+    padding: 0 3px;
+  }
   .td-hover{
     cursor: pointer;
   }
