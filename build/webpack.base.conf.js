@@ -36,11 +36,16 @@ module.exports = {
     // 配置目录
     alias: {
       '@': resolve('src'),
+      'components': resolve('src/components'), // 公用组件库
+      'styles': resolve('src/styles'),
+      'utils': resolve('src/utils'),
       'RJPE':resolve('src/views/RJ_PhysicalExamination'),
       'RJPE_API':resolve('src/api/RJ_PhysicalExamination'),
       'LQPE':resolve('src/views/LQ_PhysicalExamination'),
       'LQPE_API':resolve('src/api/LQ_PhysicalExamination'),
       'RJCD':resolve('src/views/RJ_ClinicalDepartments'),
+      'RJZL':resolve('src/views/RJ_OncologyDepartment'), // 仁济肿瘤科pages
+      'RJZL_API':resolve('src/api/RJ_OncologyDepartment'), // 仁济肿瘤科api
       'RJCD_API':resolve('src/api/RJ_ClinicalDepartments'),
       'HNDC':resolve('src/views/HN_DoctorClient'),
       'HNDC_API':resolve('src/api/HN_DoctorClient'),

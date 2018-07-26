@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Message, MessageBox } from 'element-ui';
+import { Message } from 'element-ui';
 import store from '@/store';
 import { getToken } from '@/utils/auth';
 import qs from 'qs';
@@ -14,7 +14,15 @@ const service = axios.create({
 });
 
 // 请求参数验证
-const JsonData = ['/visit/order/temp/visit', '/visit/ordertask/batchcancelall', 'visit/ordertask/vet', '/visit/ordertask/physicalTemporary', '/visit/ordertask/physicalNewTemporary', '/statistic/examination/notice'];
+const JsonData = [
+  '/visit/order/temp/visit', 
+  '/visit/ordertask/batchcancelall', 
+  'visit/ordertask/vet', 
+  '/visit/ordertask/physicalTemporary', 
+  '/visit/ordertask/physicalNewTemporary', 
+  '/statistic/examination/notice',
+  '/visit/check/temp/visit'
+];
 
 // request interceptor
 service.interceptors.request.use(config => {

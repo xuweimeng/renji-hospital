@@ -80,7 +80,25 @@ export default {
     mzSurveyPlan: '门诊满意度计划',
     zySurveyResult: '住院满意度结果',
     mzSurveyResult: '门诊满意度结果',
-    statisticalData: '数据统计'
+    statisticalData: '数据统计',
+    // 仁济--肿瘤科
+    homePage: '首页',
+    dischargeFollowupPlanReview: '出院随访计划审核',
+    dischargeFollowupResults: '出院随访结果',
+    notificationsOfAdmission: '入院通知计划',
+    admissionNoticePlan: '发起入院通知',
+    admissionNoticeResults: '入院通知结果',
+    initiatingNoticeOfInspection: '发起检查通知',
+    initiatingNoticePlan: '检查通知计划',
+    checkTheResultOfTheNotice: '检查通知结果',
+    hzList: '患者列表',
+    addPatient: '批量添加患者',
+    imperfectMessage: '未完善信息',
+    dischargeFollowUp: '出院随访',
+    admissionNotice: '入院通知',
+    inspectionNotice: '检查通知',
+    UploadHz: '批量添加',
+    HalfInfo: '未完善信息'
   },
   navbar: {
     logOut: '退出登录',
