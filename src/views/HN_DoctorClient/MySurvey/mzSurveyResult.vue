@@ -69,7 +69,7 @@
       <el-button type="primary" plain @click="outputExcel">导出报表</el-button>
     </div>
     <!-- table -->
-    <el-table :data="mzResultData" class="rsTable" v-loading="mzLoading">
+    <el-table :data="mzResultData" border highlight-current-row v-loading="mzLoading">
       <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
       <el-table-column prop="mobile" label="联系电话" align="center" show-overflow-tooltip></el-table-column>
       <el-table-column prop="medGpName" label="科室" align="center"></el-table-column>

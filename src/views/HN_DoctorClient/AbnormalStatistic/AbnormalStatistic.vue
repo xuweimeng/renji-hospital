@@ -68,7 +68,11 @@
               v-if="!sum_start"
               type="success">
     </el-alert>
-    <el-table :data="tableData" class="rsTable" v-loading="tableLoading">
+    <el-table
+      :data="tableData"
+      border highlight-current-row
+      v-loading="tableLoading"
+    >
       <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
       <el-table-column prop="sexAge" label="性别/年龄" align="center">
         <template slot-scope="scope">

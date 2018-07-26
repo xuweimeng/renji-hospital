@@ -32,7 +32,7 @@
       <!-- 住院满意度调查 -->
       <el-tab-pane label="住院满意度调查" name="6">
         <el-table :data="zyTableData"
-                  class="rsTable"
+                  border highlight-current-row
                   v-loading="Loading"
         >
           <el-table-column prop="name" label="医疗组" align="center"></el-table-column>
@@ -55,7 +55,7 @@
       <!-- 门诊满意度调查 -->
       <el-tab-pane label="门诊满意度调查" name="7">
         <el-table :data="mzTableData"
-                  class="rsTable"
+                  border highlight-current-row
                   v-loading="Loading"
         >
           <el-table-column prop="name" label="科室" align="center"></el-table-column>

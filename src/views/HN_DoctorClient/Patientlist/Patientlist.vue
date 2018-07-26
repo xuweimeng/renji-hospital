@@ -33,13 +33,16 @@
     <el-tabs type="border-card" @tab-click="handleClick">
       <!-- 全部患者 -->
       <el-tab-pane :label="`全部患者`">
-        <el-table :data="param_all.tableData" class="rsTable"  v-loading="param_all.loading">
-          <el-table-column label="" align="center" width="25">
+        <el-table
+          :data="param_all.tableData"
+          border highlight-current-row
+          v-loading="param_all.loading"
+        >
+          <el-table-column label="姓名" align="center" prop="patientName">
             <template slot-scope="scope">
-              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
+              <i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i>
+              {{scope.row.patientName}}
             </template>
-          </el-table-column>
-          <el-table-column label="姓名" align="center" width="120" prop="patientName">
           </el-table-column>
           <el-table-column prop="name" label="性别/年龄" align="center">
             <template slot-scope="scope">
@@ -71,13 +74,17 @@
       </el-tab-pane>
       <!-- 特别关心 -->
       <el-tab-pane :label="`特别关心`">
-        <el-table :data="param_liked.tableData" class="rsTable"  v-loading="param_liked.loading">
-          <el-table-column label="" align="center" width="25">
+        <el-table
+          :data="param_liked.tableData"
+          border highlight-current-row
+          v-loading="param_liked.loading"
+        >
+          <el-table-column label="姓名" align="center" prop="patientName">
             <template slot-scope="scope">
-              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
+              <i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i>
+              {{scope.row.patientName}}
             </template>
           </el-table-column>
-          <el-table-column label="姓名" align="center" width="120" prop="patientName">
           </el-table-column>
           <el-table-column prop="name" label="性别/年龄" align="center">
             <template slot-scope="scope">
@@ -319,5 +326,10 @@ export default {
   .input-separator{
     line-height: 36px;
     padding: 0 3px;
+  }
+  .app-container .iconfont{
+    color: #ff6e40;
+    position: absolute;
+    left: 15px;
   }
 </style>

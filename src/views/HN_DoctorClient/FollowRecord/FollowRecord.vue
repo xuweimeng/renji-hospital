@@ -71,14 +71,14 @@
     <el-tabs type="border-card"  @tab-click="handleClick">
       <!-- 未处理 -->
       <el-tab-pane :label="`未处理(${param_unhandled.total})`">
-        <el-table :data="param_unhandled.tableData" class="rsTable" v-loading="param_unhandled.loading">
-          <el-table-column label="" align="center" width="25">
+        <el-table
+          :data="param_unhandled.tableData"
+          border highlight-current-row
+          v-loading="param_unhandled.loading"
+        >
+          <el-table-column label="姓名" align="center" prop="patientName">
             <template slot-scope="scope">
-              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
-            </template>
-          </el-table-column>
-          <el-table-column label="姓名" align="center" width="120" prop="patientName">
-            <template slot-scope="scope">
+              <i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i>
               <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
             </template>
           </el-table-column>
@@ -87,7 +87,7 @@
               <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="icdName" label="疾病诊断" align="center" header-align="center" show-overflow-tooltip>
+          <el-table-column prop="icdName" label="疾病诊断" align="center" show-overflow-tooltip>
             <template slot-scope="scope">
               <el-tag>{{scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>
               {{scope.row.icdName}}
@@ -135,14 +135,14 @@
       </el-tab-pane>
       <!-- 已处理 -->
       <el-tab-pane :label="`已处理`">
-        <el-table :data="param_handled.tableData" class="rsTable" v-loading="param_handled.loading">
-          <el-table-column label="" align="center" width="25">
+        <el-table
+          :data="param_handled.tableData"
+          border highlight-current-row
+          v-loading="param_handled.loading"
+        >
+          <el-table-column label="姓名" align="center" prop="patientName">
             <template slot-scope="scope">
-              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
-            </template>
-          </el-table-column>
-          <el-table-column label="姓名" align="center" width="120" prop="patientName">
-            <template slot-scope="scope">
+              <i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i>
               <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
             </template>
           </el-table-column>
@@ -151,7 +151,7 @@
               <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="icdName" label="疾病诊断" align="left" header-align="center" show-overflow-tooltip>
+          <el-table-column prop="icdName" label="疾病诊断" align="center" show-overflow-tooltip>
             <template slot-scope="scope">
               <el-tag>{{scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>
               {{scope.row.icdName}}
@@ -452,5 +452,10 @@ export default {
   }
   .originC {
     color: #ff6800;
+  }
+  .app-container .iconfont{
+    color: #ff6e40;
+    position: absolute;
+    left: 15px;
   }
 </style>

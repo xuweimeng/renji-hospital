@@ -37,16 +37,18 @@
     <el-tabs type="border-card" @tab-click="handleClick">
       <!-- 待审核 -->
       <el-tab-pane :label="`待审核(${param_wait.total})`">
-        <el-table :data="param_wait.tableData" class="rsTable" v-loading="param_wait.loading" @selection-change="handleSelectionChange" ref="multipleTable">
+        <el-table
+          :data="param_wait.tableData"
+          border highlight-current-row
+          v-loading="param_wait.loading"
+          @selection-change="handleSelectionChange"
+          ref="multipleTable"
+        >
           <el-table-column type="selection" align="center">
           </el-table-column>
-          <el-table-column label="" align="center" width="25">
+          <el-table-column label="姓名" align="center">
             <template slot-scope="scope">
-              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
-            </template>
-          </el-table-column>
-          <el-table-column label="姓名" align="center" width="120">
-            <template slot-scope="scope">
+              <i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i>
               <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
             </template>
           </el-table-column>
@@ -55,7 +57,7 @@
               <span>{{scope.row.sex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="icdName" label="疾病诊断" header-align="center" align="left" show-overflow-tooltip>
+          <el-table-column prop="icdName" label="疾病诊断" align="center" show-overflow-tooltip>
             <template slot-scope="scope">
               <el-tag>{{scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>
               {{scope.row.icdName}}
@@ -90,14 +92,14 @@
       </el-tab-pane>
       <!-- 已通过 -->
       <el-tab-pane :label="`已通过`">
-        <el-table :data="param_pass.tableData" class="rsTable" v-loading="param_pass.loading">
-          <el-table-column label="" align="center" width="25">
+        <el-table
+          :data="param_pass.tableData"
+          border highlight-current-row
+          v-loading="param_pass.loading"
+        >
+          <el-table-column label="姓名" align="center">
             <template slot-scope="scope">
-              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
-            </template>
-          </el-table-column>
-          <el-table-column label="姓名" align="center" width="120">
-            <template slot-scope="scope">
+              <i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i>
               <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
             </template>
           </el-table-column>
@@ -106,7 +108,7 @@
               <span>{{scope.row.sex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="icdName" label="疾病诊断" header-align="center" align="left" show-overflow-tooltip>
+          <el-table-column prop="icdName" label="疾病诊断" align="center" show-overflow-tooltip>
             <template slot-scope="scope">
               <el-tag>{{scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>
               {{scope.row.icdName}}
@@ -135,14 +137,14 @@
       </el-tab-pane>
       <!-- 未通过 -->
       <el-tab-pane :label="`未通过`">
-        <el-table :data="param_nopass.tableData" class="rsTable" v-loading="param_nopass.loading">
-          <el-table-column label="" align="center" width="25">
+        <el-table
+          :data="param_nopass.tableData"
+          v-loading="param_nopass.loading"
+          border highlight-current-row
+        >
+          <el-table-column label="姓名" align="center">
             <template slot-scope="scope">
-              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
-            </template>
-          </el-table-column>
-          <el-table-column label="姓名" align="center" width="120">
-            <template slot-scope="scope">
+              <i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i>
               <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
             </template>
           </el-table-column>
@@ -151,7 +153,7 @@
               <span>{{scope.row.sex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="icdName" label="疾病诊断" header-align="center" align="left" show-overflow-tooltip>
+          <el-table-column prop="icdName" label="疾病诊断" align="center" show-overflow-tooltip>
             <template slot-scope="scope">
               <el-tag>{{scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>
               {{scope.row.icdName}}
@@ -588,5 +590,10 @@
   }
   .td-hover:hover{
     color: #409EFF;
+  }
+  .app-container .iconfont{
+    color: #ff6e40;
+    position: absolute;
+    left: 15px;
   }
 </style>

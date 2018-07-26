@@ -9,7 +9,10 @@
       </router-link>
     </div>
 
-    <el-table :data="list">
+    <el-table
+      :data="list"
+      border highlight-current-row
+    >
       <el-table-column label="姓名" prop="patientName" align="center">
       </el-table-column>
       <el-table-column label="特别关心标签" align="center">

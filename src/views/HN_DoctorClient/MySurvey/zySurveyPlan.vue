@@ -42,7 +42,7 @@
     <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
       <!-- 待审核 -->
       <el-tab-pane :label="`待审核(${param_wait.total})`" name="first">
-        <el-table :data="param_wait.tableData" class="rsTable" v-loading="param_wait.loading" @selection-change="handleSelectionChange" ref="multipleTable">
+        <el-table :data="param_wait.tableData" border highlight-current-row v-loading="param_wait.loading" @selection-change="handleSelectionChange" ref="multipleTable">
           <el-table-column type="selection" width="55" align="center">
           </el-table-column>
           <el-table-column prop="brxm" label="姓名" align="center">
@@ -83,7 +83,7 @@
       </el-tab-pane>
       <!-- 已通过 -->
       <el-tab-pane :label="`已通过`" name="second">
-        <el-table :data="param_pass.tableData" class="rsTable" v-loading="param_pass.loading">
+        <el-table :data="param_pass.tableData" border highlight-current-row v-loading="param_pass.loading">
           <el-table-column prop="brxm" label="姓名" align="center">
           </el-table-column>
           <el-table-column prop="mobile" label="联系电话" align="center" show-overflow-tooltip>
@@ -115,7 +115,7 @@
       </el-tab-pane>
       <!-- 未通过 -->
       <el-tab-pane :label="`未通过`" name="third">
-        <el-table :data="param_nopass.tableData" class="rsTable" v-loading="param_nopass.loading">
+        <el-table :data="param_nopass.tableData" border highlight-current-row v-loading="param_nopass.loading">
           <el-table-column prop="brxm" label="姓名" align="center">
           </el-table-column>
           <el-table-column prop="mobile" label="联系电话" align="center" show-overflow-tooltip>
