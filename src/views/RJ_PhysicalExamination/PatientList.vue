@@ -1,60 +1,56 @@
 <template>
   <div class="app-container">
+    <ul class="common_search">
+      <li class="common_search_single">
+        <label class="radio-label" >姓名</label>
+        <el-input v-model.trim="followwaySearch.brxm" clearable placeholder="请输入姓名"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >联系电话</label>
+        <el-input v-model.trim="followwaySearch.jtdh" clearable placeholder="请输入联系电话"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >证件号码</label>
+        <el-input v-model.trim="followwaySearch.sfzh" clearable placeholder="请输入证件号码"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >性别</label>
+        <el-select v-model="followwaySearch.brxb" placeholder="请选择" >
+          <el-option label="全部" value=""></el-option>
+          <el-option label="男" value="男"></el-option>
+          <el-option label="女" value="女"></el-option>
+        </el-select>
+      </li>
+      <li class="common_search_single common_search_single_time">
+        <label class="radio-label" >出生年月</label>
+        <el-date-picker
+          v-model="endBirthday"
+          type="daterange"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          popper-class="mdDate"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          @change ='selectDate'
+          :default-time="['00:00:00', '23:59:59']">
+        </el-date-picker>
+      </li>
+      <!--<li class="common_search_single">-->
+        <!--<label class="radio-label" >标签</label>-->
+        <!--<el-select v-model="followwaySearch.isLive" placeholder="请选择" >-->
+          <!--<el-option label="全部" value=""></el-option>-->
+          <!--<el-option label="正常" value="1"></el-option>-->
+          <!--<el-option label="死亡" value="0"></el-option>-->
+        <!--</el-select>-->
+      <!--</li>-->
+      <li class="common_search_single common_search_single_longBtn">
+        <el-button  @click="waySearch" type="primary" icon="el-icon-search" >查询</el-button>
+
+        <el-button type="success" @click="additionPatients">
+          添加客户
+        </el-button>
+      </li>
+    </ul>
   <div class="ctList">
-    <!-- 搜索 -->
-    <el-row class="ctListRow">
-      <el-col :span="24">
-        <el-form :inline="true" :model="followwaySearch" class="demo-form-inline">
-          <el-col :span="6" style="float:left">
-            <el-form-item label="姓名" class="inputLength" style="display: flex;">
-              <el-input v-model.trim="followwaySearch.brxm" clearable placeholder="请输入姓名"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6" style="float:left">
-            <el-form-item label="联系电话" class="inputLength">
-              <el-input v-model.trim="followwaySearch.jtdh" clearable placeholder="请输入联系电话"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6" style="float:left">
-            <el-form-item label="证件号码" class="inputLength">
-              <el-input v-model.trim="followwaySearch.sfzh" clearable placeholder="请输入证件号码"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6" style="float:left">
-            <el-form-item label="性别" class="seclectLength">
-              <el-select v-model="followwaySearch.brxb" placeholder="请选择" >
-                <el-option label="全部" value=""></el-option>
-                <el-option label="男" value="男"></el-option>
-                <el-option label="女" value="女"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12" style="float:left">
-            <el-form-item label="出生年月" class="seclectLength">
-              <el-date-picker
-                v-model="endBirthday"
-                type="daterange"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                popper-class="mdDate"
-                @change ='selectDate'
-                :default-time="['00:00:00', '23:59:59']">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="2" style="float:left">
-          <el-form-item>
-            <el-button type="button" @click="waySearch">查询</el-button>
-          </el-form-item>
-          </el-col>
-          <el-col :span="2" style="float:left">
-          <el-form-item style="float: left;">
-            <el-button type="button" @click="additionPatients" class="addPatients"> 添加客户</el-button>
-          </el-form-item>
-          </el-col>
-        </el-form>
-      </el-col>
-    </el-row>
     <!-- 活动通知 -->
     <el-row class="hztz" >
       <el-col :span="24">
@@ -73,10 +69,8 @@
           </el-table-column>
           <el-table-column label="操作" align="center" >
             <template slot-scope="scope">
-              <el-button plain style="height:23px;width:52px;padding:0;font-size
-              :13px;" @click="modificationAction(scope)">改约</el-button>
-              <el-button type="primary" style="height:23px;width:52px;padding:0;font-size
-              :13px;background:#1899ff;" @click="archiveAction(scope)">档案</el-button>
+              <el-button class="btn-public" plain style=" background: white" @click="modificationAction(scope)">改约</el-button>
+              <el-button type="primary" style="" class="btn-public" @click="archiveAction(scope)">档案</el-button>
               <!--<el-button type="primary" style="height:23px;padding:0 5px;font-size-->
               <!--:13px;background:#1899ff;" @click="changeNumberAction(scope)">修改手机号</el-button>-->
 
@@ -97,123 +91,9 @@
       </el-col>
     </el-row>
 
+    <record ref="record" @refresh="list" :patientId="patientId"></record>
 
-    <!-- 弹框 -->
-    <el-dialog title="就诊档案" :visible.sync="dialogVisible" width="525px" top="30px" :center = "false" custom-class="hzDialog">
-      <!-- 外层弹框 -->
-      <div class="content" slot>
-        <!-- 个人信息 -->
-        <el-row class="personInfo">
-          <el-col :span="12" class="elCol1">
-            <!--<span class="personName colororigen" v-if="patientInfo" >{{patientInfo.brxm}}</span>-->
-            <span class="personSex colororigen" v-if="patientInfo" style="font-size: 15px;">{{patientInfo.name}} </span>
-            <span class="personSex colororigen">{{patientInfo.sex}}/</span>
-            <span class="personXg" v-if="patientInfo" style="margin-left: 0;color: #ff602d">{{patientInfo.birthday}}</span><span style="margin-left: 20px">{{patientInfo.gzTag}}</span></el-col>
-          <el-col :span="12" class="elCol2">
-            <el-button type="text" @click="handleislike"  v-bind:class="{ careColor: isCare}">
-              <i class="iconfont" v-bind:class="{ careColor: isCare}" style="margin-right:5px; font-size:12px;">&#xe604;</i>
-              {{isCare?'取消关心':'特别关心'}}
-            </el-button>
-          </el-col>
-        </el-row>
-        <el-row class="personResult">
 
-        </el-row>
-        <el-row class="personResult">
-          <el-col :span="24" class="elCol3">
-            <span class="elCol3Span1">手机号码&nbsp;:&nbsp;</span>
-            <span class="elCol3Span2">{{patientInfo.phone?patientInfo.phone:"无"}}</span>
-          </el-col>
-        </el-row>
-        <el-row class="personResult">
-          <el-col :span="24" class="elCol3">
-            <span class="elCol3Span1">证件号码&nbsp;:&nbsp;</span>
-            <span class="elCol3Span2">{{patientInfo.identificationCard?patientInfo.identificationCard:"无"}}</span>
-          </el-col>
-        </el-row>
-
-        <!--  就诊时间 -->
-        <el-row class="resolveBtn"  v-if="swiperDate.length">
-          <el-col :span="24" style="text-align:left;color:#000;">
-            <!-- swiper -->
-            <swiper :options="swiperOption" class="swiperTime" ref="swiper">
-              <swiper-slide v-for="(item, index) in swiperDate" :key="index" @click.native="sliderClick(item,index)" :class="{'activeSlider': selectNumber === index}">体检<br>{{item.clientDate}}</swiper-slide>
-              <!-- 按钮 -->
-              <div class="swiper-button-prev" slot="button-prev">
-                <i class="el-icon-arrow-left" style="margin-top:12px;font-size:20px; color:#ff6800"></i>
-              </div>
-              <div class="swiper-button-next" slot="button-next">
-                <i class="el-icon-arrow-right" style="margin-top:12px;font-size:20px; color:#ff6800;margin-left:5px;"></i>
-              </div>
-            </swiper>
-          </el-col>
-        </el-row>
-        <!-- 患者就诊信息 -->
-        <el-row class="visitRecords" >
-          <!-- 住院 -->
-          <el-row  v-if="!isNull">
-            <el-row class="bed">
-              <el-col :span="12">
-                <span style="font-size:20px;color:#333;">体检</span>
-              </el-col>
-              <el-col :span="12"></el-col>
-            </el-row>
-            <el-row class="bedInfo" >
-              <el-col :span="18" style="width: 447px;">
-                <span class="colorLight">体检套餐 &nbsp;:&nbsp;</span>
-                <span class="colorLight1" >{{PhysicalExSet.inspectMealName}}</span>
-              </el-col>
-              <el-col :span="12">
-                <span class="colorLight">总检医生 &nbsp;:&nbsp;</span>
-                <span class="colorLight1" >{{PhysicalExSet.inspectDoctor?PhysicalExSet.inspectDoctor:"无"}}</span>
-              </el-col>
-              <el-col :span="24" class="elCol3">
-                <span class="elCol3Span1">是否是vip&nbsp;:&nbsp;</span>
-                <span class="elCol3Span2">{{PhysicalExSet.clientType?PhysicalExSet.clientType:"否"}}</span>
-              </el-col>
-            </el-row>
-            <el-row style="padding: 0 36px;text-align:left;">
-              <el-col :span="24" style="margin-left: -14px;border-bottom: 1px solid #d8f1ff;color:#333;text-indent:10px;font-size: 14px;margin-top:10px;">
-                体检结果
-              </el-col>
-            </el-row>
-            <el-row class="bedInfo" >
-              <el-col :span="22">
-                <span class="colorLight" style="font-weight: bold;">体检总检结果 &nbsp;:&nbsp;</span>
-                <span class="colorLight1" style="font-size: 12px;">{{PhysicalExSet.inspectConclusion?PhysicalExSet.inspectConclusion:"无"}}</span>
-              </el-col>
-            </el-row>
-            <el-row class="bedInfo" >
-              <el-col :span="22">
-                <span class="colorLight" style="font-weight: bold;">体检健康建议 &nbsp;:&nbsp;</span>
-                <span class="colorLight1" style="font-size: 12px;">{{PhysicalExSet.inspectSuggest?PhysicalExSet.inspectSuggest:"无"}}</span>
-              </el-col>
-            </el-row>
-            <el-row class="leaveHospital" v-if="PhysicalProject.length">
-              <el-collapse  accordion >
-                <el-collapse-item   title="体检项目" >
-                  <el-col :span="24" class="color666 text-left">项目名称&nbsp;:&nbsp;{{PhysicalProject.projectName}}</el-col>
-                  <el-col :span="24" class="color666 text-left">项目小结&nbsp;:&nbsp;{{PhysicalProject.projectConclusion?PhysicalProject.projectConclusion:"无"}}</el-col>
-                  <el-col :span="24" class="color666 text-left">完成状态&nbsp;:&nbsp;{{PhysicalProject.completeStatus}}</el-col>
-                  <el-col :span="24" class="color666 text-left">体检科室&nbsp;:&nbsp;{{PhysicalProject.inspectDepartment?PhysicalProject.inspectDepartment:"无"}}</el-col>
-                  <el-col :span="24" class="color666 text-left">体检医生&nbsp;:&nbsp;{{PhysicalProject.inspectDoctor}}</el-col>
-                  <el-col :span="24" class="color666 text-left">结果值&nbsp;:&nbsp;{{PhysicalProject.finishValue}} &nbsp;&nbsp;{{PhysicalProject.unit}}&nbsp;&nbsp;{{PhysicalProject.finishStatus}}</el-col>
-                  <el-col :span="24" class="color666 text-left">上限值&nbsp;:&nbsp;{{PhysicalProject.upValue}}</el-col>
-                  <el-col :span="24" class="color666 text-left">下限值&nbsp;:&nbsp;{{PhysicalProject.downValue}}</el-col>
-                </el-collapse-item>
-              </el-collapse>
-            </el-row>
-          </el-row>
-
-          <!-- 无信息的时候 -->
-          <el-row v-if="isNull" style="height: 250px;">
-            <el-col :span="12" style="height: 250px;line-height:386px;text-align:right;"><img src="../../assets/images/animal.png" style="margin-right:20px;" alt=""></el-col>
-            <el-col :span="12" style="height: 250px;line-height:350px;text-align:left;"><span>这个病人没有就诊信息哦...</span></el-col>
-          </el-row>
-        </el-row>
-      </div>
-      <!-- 内层弹框 -->
-    </el-dialog>
     <!-- 添加客户弹框-->
     <el-dialog title="添加客户" :visible.sync="patientsShow" width="525px" top="30px" :center = "false" custom-class="patientDialog" @close="closeAction('ruleForm')">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="113px" class="demo-ruleForm">
@@ -330,7 +210,7 @@
 
 <script>
   import { PatientList } from '../../api/RJ_PhysicalExamination/PatientList'; // 引入 api
-
+  import Record from './components/Record';
   /**
    * 活动通知function列表
    * @module ctListTo
@@ -428,6 +308,7 @@ import { mapGetters } from 'vuex';
         isCare: false,
         endBirthday: '',
         initDate: '',
+        repeatFlag:true,
         customDialog: false,
         tableAll: [], // 全部患者表格data
         totalPage1: 0, // 全部患者表格data总数量
@@ -449,7 +330,8 @@ import { mapGetters } from 'vuex';
     },
     components: {
       swiper,
-      swiperSlide
+      swiperSlide,
+      Record
     },
     methods: {
       /**
@@ -460,9 +342,9 @@ import { mapGetters } from 'vuex';
         PatientList.getPhysicalInfo({
           'hzxxId': scope.row.id
         }).then((res) => {
+          console.log(res)
           if (res.code == 0) {
             this.isModify = true;
-            console.log(res);
             this.queryModify.physicalTime = new Date(res.orderTime);
             this.initDate = res.orderTime;
             this.diseaseListModify = res.diseases;
@@ -470,7 +352,7 @@ import { mapGetters } from 'vuex';
           } else {
             this.$message.error(res.message);
           }
-        });
+        })
       },
       /**
        * 确认改约
@@ -484,6 +366,10 @@ import { mapGetters } from 'vuex';
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            if(!this.repeatFlag){
+                return false;
+            }
+            this.repeatFlag = false;
             PatientList.updatePhysicalInfo({
               'hzxxId': this.modifyId,
               adminId: sessionStorage.getItem('userId'),
@@ -494,12 +380,14 @@ import { mapGetters } from 'vuex';
                 this.$message.success(res.message);
                 this.isModify = false;
                 this.list();
-              } else {
-                this.$message.error(res.message);
+                this.repeatFlag = true;
               }
+            }).catch(res=>{
+              this.repeatFlag = true;
+              this.$message.error(res)
             });
           }
-        });
+        })
       },
 
       /**
@@ -686,6 +574,7 @@ import { mapGetters } from 'vuex';
         this.scopeID = '';
         this.getPatinetInfo(scope.row.id);
         this.patientId = scope.row.id;
+        this.$refs.record.dialogTableVisible = true;
       },
       /**
        * 客户档案-基本信息(刷新特别关注的标签)
@@ -938,5 +827,12 @@ import { mapGetters } from 'vuex';
     .el-form-item__label{
       width: 104px;
     }
+  }
+  .btn-public{
+    height:28px;
+    width:56px;
+    padding:0;
+    font-size:13px;
+    background:#1899ff;
   }
 </style>

@@ -13,6 +13,7 @@ const user = {
   // 操作全局基础用户数据
   mutations: {
     SET_TOKEN: (state, token) => {
+      sessionStorage.setItem('userId',token)
       state.token = token;
     },
     // 设置用户名
@@ -103,9 +104,11 @@ const user = {
       };
       return new Promise((resolve, reject) => {
         Login.hospatilName().then(res => {
+          document.title=res.data;    //2018/7/25 隔鸡新增
           getInfo(res, resolve);
         }).catch(error => {
           Login.newHospatilName().then(res => {
+            document.title=res.data;    //2018/7/25 隔鸡新增
             getInfo(res, resolve);
           }).catch(error => {
             reject(error);

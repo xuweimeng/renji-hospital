@@ -25,62 +25,55 @@
         </el-col>
 			</el-row>
 			<!-- 查询 -->
-			<el-row class="searchRow">
-				<el-form :inline="true" :model="searchParams" class="demo-form-inline" >
-				  <el-col :span="6" style="float:left">
-				  	<el-form-item label="姓名:">
-					    <el-input v-model="searchParams.brxm" placeholder="请输入姓名" clearable></el-input>
-					  </el-form-item>
-					</el-col>
-					<el-col :span="6" style="float:left">
-				  	<el-form-item label="联系电话:">
-					    <el-input v-model="searchParams.mobile" placeholder="请输入联系电话" clearable></el-input>
-					  </el-form-item>
-					</el-col>
-          <el-col :span="6"  style="float:left">
-            <el-form-item label="身份证号:" >
-              <el-input v-model="searchParams.idNunber" placeholder="请输入身份证号" clearable></el-input>
-            </el-form-item>
-          </el-col>
+      <ul class="common_search" style="margin-top:10px">
+        <li class="common_search_single">
+          <label class="radio-label" >姓名</label>
+          <el-input v-model="searchParams.brxm" placeholder="请输入姓名" clearable></el-input>
+        </li>
+        <li class="common_search_single">
+          <label class="radio-label" >联系电话</label>
+          <el-input v-model="searchParams.mobile" placeholder="请输入联系电话" clearable></el-input>
+        </li>
+        <li class="common_search_single">
+          <label class="radio-label" >身份证号</label>
+          <el-input v-model="searchParams.idNunber" placeholder="请输入身份证号" clearable></el-input>
+        </li>
+        <li class="common_search_single">
+          <label class="radio-label" >体检套餐</label>
+          <el-select
+            v-model="searchParams.physicalName"
+            filterable
+            clearable
+            remote
+            reserve-keyword
+            placeholder="请输入体检套餐"
+            :remote-method="remoteMethod"
+            :loading="queryLoading">
+            <el-option
+              v-for="item in diseaseList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.icd">
+            </el-option>
+          </el-select>
+        </li>
+        <li class="common_search_single common_search_single_time">
+          <label class="radio-label" >预约时间</label>
+            <el-date-picker
+              @change="timeChange"
+              v-model="startTime"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
 
-					<el-col :span="6"  style="float:left">
-				  	<el-form-item label="体检套餐">
-					    <el-select
-                v-model="searchParams.physicalName"
-                filterable
-                clearable
-                remote
-                reserve-keyword
-                placeholder="请输入体检套餐"
-                :remote-method="remoteMethod"
-                :loading="queryLoading">
-                <el-option
-                  v-for="item in diseaseList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.icd">
-                </el-option>
-              </el-select>
-					  </el-form-item>
-					</el-col>
-					<el-col :span="7" style="float:left">
-						<el-form-item label="预约时间" class="formTime">
-							<el-date-picker
-								@change="timeChange"
-								v-model="startTime"
-								value-format="yyyy-MM-dd HH:mm:ss"
-								type="daterange"
-								range-separator="至"
-								start-placeholder="开始日期"
-					      end-placeholder="结束日期">
-					    </el-date-picker>
-		        </el-form-item>
-					</el-col>
-				  <el-col :span="5" style="width: 3%;float:left" >
-				  	<el-button type="primary" @click="getData">查询</el-button>
-				  </el-col>
-				</el-form>
-			</el-row>
+        </li>
+        <li class="common_search_single">
+          <el-button type="primary" icon="el-icon-search" @click="getData" >查询</el-button>
+        </li>
+      </ul>
 			<!-- 通知患者 -->
 			<el-row>
 				<el-col :span="24">
@@ -153,7 +146,7 @@
 							<template slot-scope="scope">
 								<el-button
                   @click="selectAction(scope.row,scope.$index)"
-                   style="height:22px;width:52px;padding:0;margin:0;font-size :13px;"
+                   style="height:28px;width:56px;padding:0;margin:0;font-size :13px;"
 									:type="scope.row.isAdd?'success':'primary'">
                   {{scope.row.isAdd?"已选择":"选择"}}
                 </el-button>
@@ -583,7 +576,9 @@ export default {
                 Message.warning(res.message);
               }
             })
-            .catch(err => {});
+            .catch(err => {
+              this.$message.warning(err);
+            });
         })
         .catch(() => {
           Message({

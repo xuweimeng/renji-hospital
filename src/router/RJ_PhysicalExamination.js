@@ -18,12 +18,12 @@ export const RJ_PhysicalExamination = [
         name: 'Home',
         meta: { title: 'Home', icon: 'dashboard', roles: roles, noCache: true }
       },
-      {
-        path: 'Index',
-        component: () => import('RJPE/Index.vue'),
-        name: 'Index',
-        meta: { title: 'Index', icon: 'dashboard', roles: roles, noCache: true }
-      }
+      // {
+      //   path: 'Index',
+      //   component: () => import('RJPE/Index.vue'),
+      //   name: 'Index',
+      //   meta: { title: 'Index', icon: 'dashboard', roles: roles, noCache: true }
+      // }
     ]
   },
   {
