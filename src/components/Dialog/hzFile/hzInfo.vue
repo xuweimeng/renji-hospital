@@ -50,7 +50,7 @@ import { commonUrl } from 'RJZL_API/commonUrl';
     ],
     computed: {
       ...mapState({
-        "patientInfo": state => state.user.scopeRowData
+        "patientInfo": state => state.user.scopeRowData.row
       })
     },
     methods: {

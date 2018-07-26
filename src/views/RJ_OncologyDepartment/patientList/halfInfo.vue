@@ -242,7 +242,7 @@
         }).then((res)=>{
           if(res.code == 0) {
           	this.$message.success(res.message)
-          	this.$router.push({path: '/HzList'})
+          	this.$router.push({path: '/hzList'})
           } else {
           	this.$message.error(res.message)
           }

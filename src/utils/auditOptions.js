@@ -5,7 +5,6 @@ const auditOptions = [
     label: '请选择'
   },
   {
-    //审核不通过options
     value: '1',
     label: '患者已死亡'
   },

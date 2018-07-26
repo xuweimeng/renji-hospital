@@ -259,37 +259,33 @@
        * 新增患者
        */
       addOncology () {
-        if(new Date(this.ruleForm.intime) <= new Date(this.ruleForm.outtime) ) {
-          this.submitLoading = true
-          this.submitDisabled = true
-          hzList.addOncology(this.ruleForm).then((res)=>{
-            this.submitLoading = false
-            this.submitDisabled = false
-            if(res.code == 0) {
-              this.$message.success(res.message)
-              this.closeMessage.success = true
-              this.ruleForm.icdName = ''
-              this.ruleForm.sex = ''
-              this.ruleForm.csny = ''
-              this.ruleForm.mainDoctor = ''
-              this.ruleForm.intime = ''
-              this.ruleForm.outtime = ''
-              this.ruleForm.diagnose = ''
-              this.ruleForm.treatmentPlan = ''
-              this.options4 = []
-              this.$emit('closeDialogFun', this.closeMessage)
-              this.$refs.ruleForm.resetFields();
-            }else {
-              this.$message.error(res.message)
-            }
-          }).catch((error)=>{
-            this.submitLoading = false
-            this.submitDisabled = false
-            this.$message.error(error.message)
-          })
-        } else {
-          this.$message.error('出院时间不得早于入院时间！')
-        }
+        this.submitLoading = true
+        this.submitDisabled = true
+        hzList.addOncology(this.ruleForm).then((res)=>{
+          this.submitLoading = false
+          this.submitDisabled = false
+          if(res.code == 0) {
+            this.$message.success(res.message)
+            this.closeMessage.success = true
+            this.ruleForm.icdName = ''
+            this.ruleForm.sex = ''
+            this.ruleForm.csny = ''
+            this.ruleForm.mainDoctor = ''
+            this.ruleForm.intime = ''
+            this.ruleForm.outtime = ''
+            this.ruleForm.diagnose = ''
+            this.ruleForm.treatmentPlan = ''
+            this.options4 = []
+            this.$emit('closeDialogFun', this.closeMessage)
+            this.$refs.ruleForm.resetFields();
+          }else {
+            this.$message.error(res.message)
+          }
+        }).catch((error)=>{
+          this.submitLoading = false
+          this.submitDisabled = false
+          this.$message.error(error.message)
+        })
       }
 
     },

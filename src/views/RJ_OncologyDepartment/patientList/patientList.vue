@@ -34,7 +34,7 @@
 					    clearable
 					    placeholder="请输入关键词"
 					    :remote-method="remoteMethod"
-					    :loading="loading1"
+					    :loading="queryLoading"
               size="medium" >
 					    <el-option
 					      v-for="(item, index) in options4"
@@ -216,7 +216,8 @@
 </template>
 
 <script>
-  import { hzList } from 'RJZL_API/patientList'
+	import { hzList } from 'RJZL_API/patientList'
+	import { commonUrl } from 'RJZL_API/commonUrl'
 	import AddList from './addList'
 	import HzFile from 'components/Dialog/hzFile/hzFile'
 	import CancelAll from 'components/Dialog/cancelAll/cancelAll'
@@ -243,7 +244,7 @@
 				totalPage: null,
 				showDialog: false, // 单个添加患者弹框
 				hzDialog: false, // 患者就诊档案弹框
-				loading1: false, // 助记码loading
+				queryLoading: false, // 助记码loading
 				diseaseDg: false, // 疾病检索弹框
 				errorNumber: null, // 未完善的数量
 				updateIsLiveDg: false, // 病人死亡标签
@@ -275,10 +276,10 @@
       /** 疾病搜索 */
 			remoteMethod(query) {
         if (query !== '') {
-          this.loading1 = true;
+          this.queryLoading = true;
           setTimeout(() => {
-						this.loading1 = false;
-            hzList.commonUrl.getdiseasefix({
+						this.queryLoading = false;
+            commonUrl.getdiseasefix({
               'jbmc': query
             }).then((res)=>{
               if(res.code == 0) {
@@ -443,13 +444,11 @@
 			 * 终止随访计划按钮
 			 */
 			cancelAllBtn (scope) {
-
 				this.cancelDialog = true
 				this.rowData = scope.row
 				// row  index
 				this.rowIndex = ''
 				this.rowIndex = scope.$index
-				console.log(this.rowIndex);
 
 			},
 			/** 监听终止随访计划弹框关闭 */

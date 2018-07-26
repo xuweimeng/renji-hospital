@@ -10,6 +10,7 @@ const service = axios.create({
   // baseURL: process.env.BASE_API, // api的base_url
   // baseURL: 'http://192.168.1.218:8084', // 海宁api的base_url
   baseURL: 'http://192.168.1.218:8082', // 仁济api的base_url
+  // baseURL: 'http://192.168.3.26:8080', // 禅鸡的base_url
   timeout: 50000 // request timeout
 });
 
