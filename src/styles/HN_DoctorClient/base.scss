@@ -1,0 +1,627 @@
+.el-dialog__body {
+  padding: 30px 20px;
+  color: #606266;
+  line-height: 24px;
+  font-size: 14px;
+}
+/*********就诊记录  患者档案********/
+  .hzDialog, .daDialog{
+    .el-dialog__header {
+      text-align: left;
+      border-bottom: 1px solid #ececec;
+      .el-dialog__title {
+        font-size: 14px;
+        color: #666;
+      }
+    }
+    .el-dialog__body {
+      padding: 0;
+      .content{
+        padding-top: 20px;
+        // 姓名
+        .personInfo {
+          padding: 0 20px;
+          margin-bottom: 8px;
+          .elCol1 {
+            line-height: 27px;
+            height: 27px;
+            text-align: left;
+            .personName {
+              font-size: 19px;
+            }
+            .personSex {
+              font-size: 12px;
+              margin-left: 12px;
+            }
+            .personXg {
+              font-size: 12px;
+              color: #c0c0c0;
+              margin-left: 12px;
+            }
+          }
+          .elCol2 {
+            line-height: 27px;
+            height: 27px;
+            text-align: right;
+            .el-button {
+              padding: 5px 7px;
+              color: #777;
+              background: #fdfdfd;
+              border: 1px solid #ffe6de;
+            }
+          }
+        }
+        //手机号，疾病诊断
+        .personResult {
+          padding: 0 20px;
+          height: 24px;
+          line-height: 24px;
+          .elCol3 {
+            font-size: 13px;
+            text-align: left;
+            .elCol3Span1 {
+              color: #777;
+            }
+            .elCol3Span2 {
+              color: #333;
+            }
+          }
+          .elCol4 {
+            text-align: right;
+          }
+        }
+        //就诊时间
+        .resolveBtn {
+          border-top: 1px solid #e4f4ff;
+          border-bottom: 1px solid #e4f4ff;
+          padding: 2px 10px;
+          margin: 18px 0 0;
+          line-height: 24px;
+          .el-col {
+            .swiper-container {
+              color: #767978;
+              .swiper-wrapper {
+                width: 90%;
+                margin: 0 auto;
+                .swiper-slide {
+                  text-align: center;
+                  margin-right: 15px!important;
+                }
+              }
+              .swiper-button-next {
+                background-image:none!important;
+              }
+              .swiper-button-prev {
+                background-image:none!important;
+              }
+            }
+          }
+        }
+        //就诊信息
+        .visitRecords {
+          background: #f9fcfe;
+          height: 520px;
+          padding-bottom: 20px;
+          overflow-y: auto;
+          .bed {
+            margin: 30px 0 16px 0;
+            line-height: 20px;
+            .el-col {
+              text-align:left;
+              padding-left:45px;
+            }
+          }
+          .bedInfo {
+            .el-col {
+              line-height: 28px;
+              font-size: 12px;
+              padding-left:45px;
+              text-align:left;
+              .colorLight {
+                color: #666;
+              }
+              .colorLight1 {
+                color: #333;
+              }
+            }
+          }
+          //出院小结
+          .leaveHospital {
+            padding: 0 46px;
+            .el-collapse {
+              border-top: 0;
+              .el-collapse-item {
+                .el-collapse-item__header {
+                  height: 30px;
+                  line-height: 30px;
+                  text-align: left;
+
+                  background: #f9fcfe;
+                  .el-collapse-item__arrow {
+                    line-height: 30px;
+                  }
+                }
+              }
+            }
+          }
+
+        }
+
+      }
+    }
+  }
+  /*********随访方案  随访记录********/
+  .sffaDailog, .sfDialog{
+    .el-dialog__header {
+      text-align: left;
+      border-bottom: 1px solid #ececec;
+      .el-dialog__title {
+        font-size: 14px;
+        color: #666;
+      }
+    }
+    .el-dialog__body {
+      padding: 20px 20px 0;
+      .content{
+        // 姓名
+        .personInfo {
+          line-height: 27px;
+          height: 27px;
+          margin-bottom: 8px;
+          padding: 0;
+          .elCol1 {
+            line-height: 27px;
+            height: 27px;
+            text-align: left;
+            .personName {
+              font-size: 19px;
+            }
+            .personSex {
+              font-size: 12px;
+              margin-left: 12px;
+            }
+            .personXg {
+              font-size: 12px;
+              color: #c0c0c0;
+              margin-left: 12px;
+            }
+          }
+          .elCol2 {
+            line-height: 27px;
+            height: 27px;
+            text-align: right;
+            .el-button {
+              padding: 5px 7px;
+              color: #777;
+              background: #fdfdfd;
+              border: 1px solid #ffe6de;
+            }
+          }
+        }
+        //手机号，诊断名称
+        .personResult {
+          padding: 0;
+          .elCol3 {
+            font-size: 13px;
+            text-align: left;
+            .elCol3Span1 {
+              color: #777;
+            }
+            .elCol3Span2 {
+              color: #333;
+            }
+          }
+          .elCol4 {
+            text-align: right;
+          }
+        }
+        //处理意见
+        .resolveBtn {
+          margin-top: 18px;
+          padding: 0;
+          border: 0;
+          .el-col {
+            .is-round {
+              padding: 7px 31px;
+              color: #838383;
+            }
+          }
+        }
+        //随访结果
+        .resultNumber {
+          height: 43px;
+          line-height: 43px;
+          margin-bottom: 5px;
+          .elCol5 {
+            text-align:left;
+            color:#000;
+            font-size: 13px;
+          }
+          .elCol6 {
+            margin-top: 21px;
+            height: 0;
+            //border-bottom: 1px dotted #ebebeb;
+          }
+          .elCol7 {
+            .el-select {
+              .el-input {
+                .el-input__inner {
+                  border: 0;
+                  font-size: 12px;
+                  padding-right: 13px;
+                }
+                .el-input__suffix {
+                  .el-input__suffix-inner {
+                    .el-input__icon {
+                      width: 14px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        .targetResult {
+          min-height: 100px;
+          max-height: 250px;
+          overflow-y: auto;
+          //指标详情
+          .targetDetails {
+            .el-col {
+              height: 20px;
+              line-height: 20px;
+              text-align: left;
+              margin-bottom: 10px;
+              span {
+                font-size: 13px;
+              }
+              .el-tag {
+                height: 20px;
+                line-height: 20px;
+              }
+            }
+          }
+          .targetEcharts {
+            background: #f9f9f9;
+            margin-top: 5px;
+            .el-col .el-tabs .el-tabs__header .el-tabs__nav-wrap .el-tabs__nav-scroll {
+              padding-left: 20px;
+              .el-tabs__nav {
+                .el-tabs__item {
+                  color: #999;
+                }
+
+              }
+            }
+          }
+        }
+        //语音详情
+        .resultVoice {
+          .elCol18 {
+            .el-collapse {
+              .el-collapse-item {
+                .el-collapse-item__header {
+
+                }
+                .el-collapse-item__content .voiceRow  {
+                  .aiyuyin{
+                    .ai {
+                      float: left;
+                      width: 40px;
+                      height: 40px;
+                      border-radius: 40px;
+                      background: #ffb782;
+                      color: #fff;
+                      line-height: 40px;
+                      text-align: center;
+                    }
+                    .aiWords {
+                      margin-top: 10px;
+                      padding: 2px 0;
+                      float: left;
+                      width: 205px;
+                      text-align: left;
+                      color: #666;
+                      line-height: 20px;
+                      min-height: 40px;
+                      background: #f4f4f4;
+                      border-radius: 5px;
+                      padding-left: 10px;
+                      margin-left: 10px;
+                      background: #f4f4f4 ;
+                      position: relative;
+                      span{
+                        font-size: 12px;
+                      }
+                      .arrows {
+                        width: 5px;
+                        height: 8px;
+                        position: absolute;
+                        left: -4px;
+                        top: 10px;
+                        background: url(../../../assets/HN_DoctorClient/images/aizc.png) left center no-repeat;
+                      }
+                    }
+                  }
+                  .hzyuyin {
+                    .hzhead {
+                      float: right;
+                      width: 40px;
+                      height: 40px;
+                      border-radius: 40px;
+                      background: #8bc4ff;
+                      color: #fff;
+                      line-height: 40px;
+                      text-align: center;
+                    }
+                    .hzWords {
+                      margin-top: 10px;
+                      float: right;
+                      max-width: 320px;
+                      padding: 0 10px;
+                      background: #dfefff;
+                      border-radius: 5px;
+                      margin-right: 10px;
+                      position: relative;
+                      .arrows1 {
+                        width: 5px;
+                        height: 8px;
+                        position: absolute;
+                        right: -4px;
+                        top: 10px;
+                        background: url(../../../assets/HN_DoctorClient/images/hzzc.png) left center no-repeat;
+                      }
+                    }
+                  }
+                  .hzms {
+                    text-align: right;
+                    color: #8bc4ff;
+                    padding-right: 55px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  //随访计划弹框
+  .sfjhDialog{
+    .el-dialog__header {
+      text-align: left;
+      border-bottom: 1px solid #ececec;
+      .el-dialog__title {
+        font-size: 14px;
+        color: #666;
+
+      }
+    }
+    .el-dialog__body {
+      padding: 0;
+      .content{
+        padding: 20px 20px 0;
+        // 姓名
+        .personInfo {
+          line-height: 27px;
+          height: 27px;
+          margin-bottom: 8px;
+          .elCol1 {
+            line-height: 27px;
+            height: 27px;
+            text-align: left;
+            .personName {
+              font-size: 19px;
+            }
+            .personSex {
+              font-size: 12px;
+              margin-left: 12px;
+            }
+            .personXg {
+              font-size: 12px;
+              color: #c0c0c0;
+              margin-left: 12px;
+            }
+          }
+          .elCol2 {
+            line-height: 27px;
+            height: 27px;
+            text-align: right;
+            .el-button {
+              padding: 5px 7px;
+              color: #777;
+              background: #fdfdfd;
+              border: 1px solid #ffe6de;
+            }
+          }
+        }
+        //手机号，诊断名称
+        .personResult {
+          .elCol3 {
+            font-size: 13px;
+            text-align: left;
+            .elCol3Span1 {
+              color: #777;
+            }
+            .elCol3Span2 {
+              color: #333;
+            }
+          }
+          .elCol4 {
+            text-align: right;
+          }
+        }
+
+        //随访方案
+
+      }
+      .content2 {
+        height: 330px;
+        overflow-y: auto;
+        margin-top: 16px;
+        padding: 16px 20px;
+        background: #f8fbfe;
+        border-top: 1px solid #e4f4ff;
+        border-bottom: 1px solid #e4f4ff;
+        .el-row .colLabel {
+          text-align: left;
+        }
+      }
+      .content3 {
+        .el-row {
+          .el-col {
+            line-height: 31px;
+            font-size: 15px;
+            .el-button {
+
+              font-size: 15px;
+              margin-top: 8px;
+              border-radius: 15px;
+            }
+          }
+          .el-col:nth-of-type(1) {
+            text-align: right;
+            .el-button {
+              color: #5e5e5e;
+              background: #fff;
+              margin-right: 10px;
+              padding: 7px 36px;
+            }
+          }
+          .el-col:nth-of-type(2) {
+            text-align: left;
+            .el-button {
+              background: #ff6e40;
+              color: #fff;
+              margin-left: 10px;
+              padding: 7px 43px;
+            }
+          }
+        }
+      }
+    }
+  }
+  //就诊记录查看随访记录
+  .sfjlTag {
+    line-height:14px;
+    font-size:12px;
+    margin-left:5px;
+    color:#45aaff;
+    border-bottom:1px solid #45aaff;
+    cursor: pointer;
+  }
+  //语音提示指标不正常颜色
+  .errorYy {
+    color: #fee4e3;
+  }
+  //个人信息橙色
+  .colororigen {
+    color: #ff602d;
+  }
+  //特别关注
+  .careColor {
+    color: #ff7b58;
+  }
+  //model处理意见
+  .hello {
+    color: #ff6800 !important;
+    font-style: italic!important;
+  }
+  .active {
+    color: #fff;
+  }
+  //dialog随访日期颜色
+  .activeSlider {
+    color: #ff602d;
+    font-size: 15px;
+  }
+  .activeSlider1 {
+    color: #ff602d;
+    font-size: 15px;
+  }
+  //随访记录药品信息
+  .medchine, .leaveHospital{
+    padding: 5px 36px 0 !important;
+    .el-collapse {
+      border: none;
+      .el-collapse-item {
+        .el-collapse-item__header {
+          margin-top: 5px;
+          height: 30px;
+          line-height: 30px;
+          text-align: left;
+          border: 1px solid #cee9ff;
+          background: #eef7ff!important;
+          border-radius: 16px;
+          text-indent: 10px;
+          .el-collapse-item__arrow {
+            line-height: 30px;
+          }
+        }
+        .el-collapse-item__wrap {
+          border: none;
+          background: transparent;
+        }
+      }
+    }
+  }
+  //药品信息字体颜色
+  .color666 {
+    color: #666;
+  }
+  //药品信息tetx-indent
+  .indent30 {
+    text-indent: 30px;
+  }
+  /***********取消关心msgBox*********/
+  .careMsgBox, .careMsgBoxAdd{
+    .el-message-box__btns {
+      text-align: center;
+      .el-button {
+        padding: 5px 19px;
+        color: #fff;
+      }
+      .el-button:nth-of-type(1) {
+        background: #afafaf;
+      }
+      .el-button:nth-of-type(2) {
+        margin-left: 20px;
+        background: #ff602d;
+        border-color: #ff602d;
+      }
+    }
+  }
+  //table的姓名，特别关心
+  .tbCare {
+    min-width:24px;
+    min-height:18px;
+    color: #ff6e40;
+  }
+  .tbName {
+    width:70px;
+  }
+  .tbName:hover {
+    color: #409EFF;
+    cursor: pointer;
+  }
+  //处理意见
+  .adviceModel {
+    .el-dialog__header {
+      border-bottom: 1px solid #f1f1f1;
+      .el-dialog__title {
+        font-size: 16px;
+      }
+    }
+    .el-dialog__body {
+      text-align: left;
+    }
+    .el-dialog__footer {
+      text-align: center;
+      border-top: 1px solid #f1f1f1;
+      span .el-button {
+        padding: 9px 20px;
+      }
+    }
+
+  }
+

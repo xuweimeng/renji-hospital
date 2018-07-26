@@ -109,7 +109,7 @@
 </template>
 
 <script>
-  import { UpdateTel } from '@/api/HN_DoctorClient/PatientList_updateTel';
+  import { UpdateTel } from 'HNDC_API/PatientList_updateTel';
   import mixin from '@/assets/HN_DoctorClient/js/mixin';
   export default {
     name: 'updateTel',
@@ -284,3 +284,12 @@
     }
   };
 </script>
+<style>
+  /*去掉谷歌，火狐下的type="number"中的右边箭头*/
+  input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+  }
+  .el-input.is-disabled .el-input__inner {
+    color: #606266;
+  }
+</style>

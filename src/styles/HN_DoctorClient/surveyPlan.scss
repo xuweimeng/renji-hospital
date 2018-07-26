@@ -1,0 +1,65 @@
+ul,
+li {
+  list-style: none;
+  line-height: 24px;
+}
+
+.plan_info {
+  ul {
+    padding: 0;
+  }
+  h3 {
+    color: #f80;
+    text-align: left;
+    font-size: 20px;
+    margin: 0;
+    line-height: 27px;
+  }
+  h4 {
+    text-align: left;
+    margin: 3px 0;
+    font-weight: 400;
+    color: #209eff;
+    font-size: 13px;
+    line-height: 24px;
+  }
+  &_inner {
+    max-height: 500px;
+    overflow-y: auto;
+    h4 {
+      font-weight: 400;
+      color: #f80;
+      font-size: 14px;
+      span {
+        color: #999;
+        font-size: 12px;
+      }
+    }
+  }
+  &_message {
+    margin-bottom: 5px;
+    margin-top: 0;
+    text-align: left;
+    li {
+      display: inline-block;
+      margin-right: 8px;
+      text-align: left;
+      background-color: #209eff;
+      padding: 0 5px;
+      border-radius: 3px;
+      color: #fff;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+  }
+  &_base {
+    border-bottom: 5px solid #dadada;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    li {
+      text-align: left;
+      font-size: 12px;
+      text-indent: 5px;
+    }
+  }
+}

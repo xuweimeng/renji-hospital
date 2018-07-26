@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sfjhDialog">
     <!-- 随访计划 -->
     <el-dialog title="随访方案" :visible.sync="dialogVisible" width="600px" top="30px" :center = "false" custom-class="sfjhDialog">
       <div class="content" slot>
@@ -76,7 +76,7 @@
  * 随访计划
  * @module followPlan
  */
-import { CommonAPI } from '@/api/HN_DoctorClient/common';
+import { CommonAPI } from 'HNDC_API/common';
 import mixin from '@/assets/HN_DoctorClient/js/mixin';
 export default {
   data() {
@@ -186,5 +186,7 @@ export default {
   }
 };
 </script>
-
+<style lang="scss">
+  @import '../../../styles/HN_DoctorClient/base';
+</style>
 

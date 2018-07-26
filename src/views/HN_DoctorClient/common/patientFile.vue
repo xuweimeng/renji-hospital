@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="hzDialog">
     <!-- 就诊档案 -->
     <el-dialog width="900px" top="30px" title="就诊档案" :visible.sync="dialogVisible" append-to-body custom-class="daDialog">
       <div class="content" slot>
@@ -182,6 +182,7 @@
       :patient-id="patientId"
       :visit-order-id="visitOrderId"
       :task-id="taskIdRecord"
+      v-on:refreshData="refreshListFunc"
       sf-number="0"
       tab-active="0"
       ref="followRecord"></follow-record>
@@ -193,7 +194,7 @@
  * 患者档案
  * @module patientFile
  */
-import { PatientFile } from '@/api/HN_DoctorClient/common/patientFile';
+import { PatientFile } from 'HNDC_API/common/patientFile';
 import 'swiper/dist/css/swiper.css';
 import { swiper, swiperSlide } from 'vue-awesome-swiper';
 import mixin from '@/assets/HN_DoctorClient/js/mixin';
@@ -236,6 +237,14 @@ export default {
     followRecord
   },
   methods: {
+    /**
+     * @description 触发父组件刷新列表，供子组件-随访记录用
+     * @function  refreshListFunc
+     */
+    refreshListFunc() {
+      this.$emit('refreshData');
+      this.getPatientInfo();
+    },
     // 有 随访记录 按钮时调用
     sfDialog(taskId) {
       this.taskIdRecord = taskId;
@@ -334,5 +343,7 @@ export default {
   }
 };
 </script>
-
+<style lang="scss">
+  @import '../../../styles/HN_DoctorClient/base';
+</style>
 
