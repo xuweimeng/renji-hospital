@@ -8,6 +8,12 @@ export const RJ_OncologyDepartment = [
     path: '',
     component: Layout,
     redirect: 'Home',
+    meta: {
+      title: 'Home',
+      icon: 'shouye',
+      roles: ['上海市仁济医院肿瘤科', '上海市仁济医院日间手术中心'],
+      noCache: true
+    },
     children: [
       {
         path: 'Home',
