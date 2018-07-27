@@ -39,6 +39,7 @@
       <el-table
         v-show="tableData.length>0"
         :data="tableData"
+        border highlight-current-row
         max-height="500"
       >
         <el-table-column

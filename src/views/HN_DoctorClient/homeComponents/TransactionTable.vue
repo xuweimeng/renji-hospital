@@ -9,10 +9,13 @@
       </router-link>
     </div>
 
-    <el-table :data="list" style="width: 100%;padding-top: 15px;">
-      <el-table-column label="姓名" prop="patientName">
+    <el-table
+      :data="list"
+      border highlight-current-row
+    >
+      <el-table-column label="姓名" prop="patientName" align="center">
       </el-table-column>
-      <el-table-column label="特别关心标签"  align="center">
+      <el-table-column label="特别关心标签" align="center">
         <template slot-scope="scope">
           <el-tag> {{scope.row.gzTag}}</el-tag>
         </template>

@@ -59,7 +59,7 @@
         </el-date-picker>
       </li>
       <li class="common_search_single">
-        <el-button type="primary" icon="el-icon-search"  @click="searchData" :loading="mzLoading">查询</el-button>
+        <el-button type="primary" icon="el-icon-search"  @click="searchDataBtn" :loading="mzLoading">查询</el-button>
       </li>
     </ul>
     <!-- 满意度 -->
@@ -68,7 +68,7 @@
       <el-button type="primary" plain @click="outputExcel">导出报表</el-button>
     </div>
     <!-- table -->
-    <el-table :data="mzResultData" class="rsTable" v-loading="mzLoading">
+    <el-table :data="mzResultData" border highlight-current-row v-loading="mzLoading">
       <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
       <el-table-column prop="mobile" label="联系电话" align="center" show-overflow-tooltip></el-table-column>
       <el-table-column prop="medGpName" label="医疗组" align="center"></el-table-column>
@@ -95,7 +95,9 @@
     </el-table>
     <!-- 分页 -->
     <div class="pagination-container">
-      <table-pagination :total="total"  @currentPageFail="pageChange" v-if="total"></table-pagination>
+      <el-pagination  @current-change="pageChange" :current-page.sync="searchParam.pager" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
+                      :total="total" v-if="total">
+      </el-pagination>
     </div>
     <!-- 详情 -->
     <el-dialog class="result_info" top="5vh"  title="调查计划" :visible.sync="surveyResultDialog" center>
@@ -156,7 +158,6 @@
 </template>
 <script>
   import { MySurvey } from 'HNDC_API/MySurvey';
-  import TablePagination from 'HNDC/common/pagination';
   export default {
     data() {
       return {
@@ -207,9 +208,6 @@
         total: 0, // 总条数
         surveyResultDialog: false // 详情弹框
       };
-    },
-    components: {
-      TablePagination
     },
     mounted() {
       this.searchData();
@@ -379,6 +377,14 @@
             this.$message.error(error.message);
           });
       },
+      /**
+       * @function searchDataBtn
+       * @description 查询按钮方法
+       */
+      searchDataBtn() {
+        this.searchParam.pager = 1;
+        this.searchData();
+      },
       /** 分页 */
       pageChange(page) {
         this.searchParam.pager = page;
@@ -425,5 +431,8 @@
     padding: 15px;
     margin-top: 0;
     background-color: white;
+  }
+  .common_search{
+    padding-top: 15px;
   }
 </style>

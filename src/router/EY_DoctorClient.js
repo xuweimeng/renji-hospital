@@ -1,7 +1,7 @@
 
 import Layout from '@/views/layout/Layout';
 
-const roles = ['测试系统'];
+const roles = ['测试系统ey'];
 
 // todo roles的值待改，权限控制
 export const EY_DoctorClient = [
