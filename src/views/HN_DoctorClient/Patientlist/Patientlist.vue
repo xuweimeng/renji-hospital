@@ -26,17 +26,16 @@
       </li>
       <li class="common_search_single">
         <el-button type="primary" icon="el-icon-search"  @click="waySearchBtn"
-                   :loading="param_all.loading || param_liked.loading">查询</el-button>
+                   :loading="params[0].loading || params[1].loading">查询</el-button>
       </li>
     </ul>
     <!-- tab切换 -->
     <el-tabs type="border-card" @tab-click="handleClick">
-      <!-- 全部患者 -->
-      <el-tab-pane :label="`全部患者`">
+      <el-tab-pane v-for="item,index in params" :label="`${item.label}`" :key="index">
         <el-table
-          :data="param_all.tableData"
+          :data="item.tableData"
           border highlight-current-row
-          v-loading="param_all.loading"
+          v-loading="item.loading"
         >
           <el-table-column label="姓名" align="center" prop="patientName">
             <template slot-scope="scope">
@@ -55,7 +54,7 @@
           </el-table-column>
           <el-table-column prop="icdName" label="疾病名称/病种" align="center">
             <template slot-scope="scope">
-              <!--<el-tag>{{ scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>-->
+              <el-tag>{{ scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>
               {{scope.row.icdName}}
             </template>
           </el-table-column>
@@ -67,50 +66,8 @@
           </el-table-column>
         </el-table>
         <div class="pagination-container">
-          <el-pagination  @current-change="handleCurrentAll" :current-page.sync="param_all.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
-                          :total="param_all.total" v-if="param_all.tableData.length">
-          </el-pagination>
-        </div>
-      </el-tab-pane>
-      <!-- 特别关心 -->
-      <el-tab-pane :label="`特别关心`">
-        <el-table
-          :data="param_liked.tableData"
-          border highlight-current-row
-          v-loading="param_liked.loading"
-        >
-          <el-table-column label="姓名" align="center" prop="patientName">
-            <template slot-scope="scope">
-              <i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i>
-              {{scope.row.patientName}}
-            </template>
-          </el-table-column>
-          </el-table-column>
-          <el-table-column prop="name" label="性别/年龄" align="center">
-            <template slot-scope="scope">
-              <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="nation" label="民族" align="center">
-          </el-table-column>
-          <el-table-column prop="diagnoseTime" label="就诊日期" align="center">
-          </el-table-column>
-          <el-table-column prop="icdName" label="疾病名称/病种" align="center">
-            <template slot-scope="scope">
-              <!--<el-tag>{{ scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>-->
-              {{scope.row.icdName}}
-            </template>
-          </el-table-column>
-          <el-table-column prop="address" label="操作" align="center">
-            <template slot-scope="scope">
-              <el-button type="primary" @click="wayButton(scope)" class="tableBtn" size="mini">档案</el-button>
-              <el-button type="primary" @click="updateTelBtn(scope)" size="mini">修改手机号</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="pagination-container">
-          <el-pagination  @current-change="handleCurrentLiked" :current-page.sync="param_liked.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
-                          :total="param_liked.total" v-if="param_liked.tableData.length">
+          <el-pagination  @current-change="handlePage" :current-page.sync="item.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
+                          :total="item.total" v-if="item.total">
           </el-pagination>
         </div>
       </el-tab-pane>
@@ -140,7 +97,12 @@
 import { CommonAPI } from 'HNDC_API/common';
 import patientFile from 'HNDC/common/patientFile';
 import updateTel from 'HNDC/dialog/patientList/updateTel';
-const typeMap = ['all', 'liked']; // 依次是 全部、已关注；用来匹配 不同的param_
+const base_param = {
+  page: 1,
+  total: 0,
+  loading: false,
+  tableData: []
+};
 export default {
   name: 'PatientList',
   data() {
@@ -155,21 +117,17 @@ export default {
         schemeName: '', // 方案名称
         limit: 10 // 每页条数
       },
-      /* 全部的数据集合 */
-      param_all: {
-        page: 1,
-        total: 0,
-        loading: false,
-        tableData: [],
-        status: 0
-      },
-      /* 已关注的数据集合 */
-      param_liked: {
-        page: 1,
-        total: 0,
-        loading: false,
-        tableData: [],
-        status: 1
+      params: {
+        0: {
+          ...base_param,
+          label: '全部患者',
+          status: 0
+        },
+        1: {
+          ...base_param,
+          label: '特别关心',
+          status: 1
+        }
       },
       userId: '', // 医生id sessionStorage中
       patientId: '', // 病人id
@@ -187,7 +145,7 @@ export default {
     if (this.$route.query.paName) {
       this.searchParam.patientName = this.$route.query.paName;
     }
-    this.getList(this.param_all);
+    this.getList();
   },
   methods: {
     /**
@@ -195,8 +153,7 @@ export default {
        * @function refreshList
        */
     refreshList() {
-      const param_name = `param_${typeMap[this.tabActive]}`;
-      this.getList(this[param_name]);
+      this.getList();
     },
     /**
       * 从sessionStorage获取医生id
@@ -209,7 +166,6 @@ export default {
     /**
       * 获取列表数据
       * @function getList
-      * @param {Object} param search参数
       * @param {String} adminId 医生Id
       * @param {String} sex 病人性别
       * @param {String} patientName 病人名称
@@ -221,7 +177,8 @@ export default {
       * @param {String} pager 当前页码
       * @param {String} limit 每页显示条数
       */
-    getList(param) {
+    getList() {
+      const param = this.params[this.tabActive];
       param.loading = true;
       CommonAPI.patientList({
         ...this.searchParam,
@@ -231,14 +188,6 @@ export default {
       }).then((res) => {
         param.loading = false;
         if (res.code === 0) {
-          // 匹配当前病人是否被关注
-          res.data.forEach((item) => {
-            if (item.islike === 0 || item.islike === '0' || !item.islike) {
-              item.islike = false;
-            } else if (item.islike === 1 || item.islike === '1') {
-              item.islike = true;
-            }
-          });
           param.tableData = res.data;
           param.total = res.count;
         }
@@ -248,33 +197,22 @@ export default {
       });
     },
     /**
-       * 分页--全部
-       * @function handleCurrentAll
+       * 分页
+       * @function handlePage
        * @param {String} page 当前页码
        * @description
        */
-    handleCurrentAll(page) {
-      this.param_all.page = page;
-      this.getList(this.param_all);
-    },
-    /**
-       * 分页--已关注
-       * @function handleCurrentLiked
-       * @param {String} page 当前页码
-       * @description
-       */
-    handleCurrentLiked(page) {
-      this.param_liked.page = page;
-      this.getList(this.param_liked);
+    handlePage(page) {
+      this.params[this.tabActive].page = page;
+      this.getList();
     },
     /**
        * 查询
        * @function waySearchBtn
        */
     waySearchBtn() {
-      const param_name = `param_${typeMap[this.tabActive]}`;
-      this[param_name].page = 1;
-      this.getList(this[param_name]);
+      this.params[this.tabActive].page = 1;
+      this.getList();
     },
     /**
        * 获取表格选中行信息  查看患者档案
@@ -297,8 +235,7 @@ export default {
        */
     handleClick(tab, event) {
       this.tabActive = tab.index;
-      const param_name = `param_${typeMap[tab.index]}`;
-      this.getList(this[param_name]);
+      this.getList();
     },
     /**
        * 列表 修改手机号 按钮
@@ -316,7 +253,7 @@ export default {
     $route(to, from) {
       if (to.path === '/PatientList' && this.$route.query.paName) {
         this.searchParam.patientName = this.$route.query.paName;
-        this.getList(this.param_all);
+        this.getList();
       }
     }
   }

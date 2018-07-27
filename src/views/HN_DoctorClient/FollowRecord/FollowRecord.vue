@@ -175,6 +175,12 @@ import { FollowRecord } from 'HNDC_API/FollowRecord';
 import patientFile from 'HNDC/common/patientFile';
 import followPlan from 'HNDC/common/FollowPlan';
 import followRecord from 'HNDC/common/followRecord';
+const base_param = {
+  page: 1,
+  total: 0,
+  loading: false,
+  tableData: []
+};
 export default {
   data() {
     return {
@@ -193,19 +199,13 @@ export default {
       },
       params: {
         0: {
+          ...base_param,
           label: '未处理',
-          page: 1,
-          total: 0,
-          loading: false,
-          tableData: [],
           status: 1
         },
         1: {
+          ...base_param,
           label: '已处理',
-          page: 1,
-          total: 0,
-          loading: false,
-          tableData: [],
           status: 11
         }
       },

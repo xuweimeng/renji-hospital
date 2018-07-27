@@ -42,7 +42,7 @@
           border highlight-current-row
           v-loading="item.loading"
           @selection-change="handleSelectionChange"
-          ref="multipleTable"
+          :ref="`multipleTable${index}`"
         >
           <el-table-column type="selection" align="center" v-if="index==='0'"></el-table-column>
           <el-table-column label="姓名" align="center">
@@ -64,6 +64,7 @@
           </el-table-column>
           <el-table-column prop="schemeName" label="随访方案" align="center" show-overflow-tooltip></el-table-column>
           <el-table-column prop="visitStartTimeStr" label="计划开始日期" align="center"></el-table-column>
+          <el-table-column prop="notPassReason" label="未通过原因" align="center" v-if="index === '2'"></el-table-column>
           <template v-if="index!=='0'">
             <el-table-column prop="operator" label="审核人" align="center"></el-table-column>
             <el-table-column prop="dateUpdate" label="审核时间" align="center" show-overflow-tooltip></el-table-column>
@@ -135,32 +136,29 @@
   import { FollowPlan } from 'HNDC_API/FollowPlan';
   import patientFile from 'HNDC/common/patientFile';
   import followPlan from 'HNDC/common/FollowPlan';
+  const base_param = {
+    page: 1,
+    total: 0,
+    loading: false,
+    tableData: []
+  };
   export default {
     data() {
       return {
         params: {
           0: { // 待审核
+            ...base_param,
             label: '待审核',
-            page: 1,
-            total: 0,
-            loading: false,
-            tableData: [],
             status: 4
           },
           1: { // 已通过
+            ...base_param,
             label: '已通过',
-            page: 1,
-            total: 0,
-            loading: false,
-            tableData: [],
             status: 1
           },
           2: { // 未通过
+            ...base_param,
             label: '未通过',
-            page: 1,
-            total: 0,
-            loading: false,
-            tableData: [],
             status: 2
           }
         },
@@ -206,6 +204,7 @@
     mounted() {
       this.getUserId();
       this.getList();
+      console.log(this.params);
     },
     components: {
       patientFile,
@@ -322,12 +321,12 @@
        *@param {object} rows 选中的行（参见element-ui的table-rows）
        */
       toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
+        if (this.multipleSelection.length > 0) {
+          this.$refs.multipleTable0[0].clearSelection();
         } else {
-          this.$refs.multipleTable.clearSelection();
+          rows.forEach(row => {
+            this.$refs.multipleTable0[0].toggleRowSelection(row, true);
+          });
         }
       },
       /**
