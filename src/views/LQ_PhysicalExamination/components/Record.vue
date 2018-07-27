@@ -4,6 +4,9 @@
     .el-dialog__body {
       padding-top: 0;
     }
+    .el-dialog{
+      max-width: 800px;
+    }
   }
   &_header {
     position: relative;

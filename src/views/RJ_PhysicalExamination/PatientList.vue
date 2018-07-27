@@ -80,6 +80,7 @@
         <el-row class="block">
           <el-col :span="14" style="float: right;" >
             <el-pagination style="float: right;margin-right: 29px;"
+                           background
                            :current-page.sync="followwaySearch.pager"
                            @current-change="handleCurrentChange"
                            :page-size="10"
