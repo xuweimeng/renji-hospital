@@ -1,34 +1,92 @@
+<style lang="scss" scoped>
+/deep/.record {
+  &_box {
+    .el-dialog__body {
+      padding-top: 0;
+    }
+  }
+  &_header {
+    position: relative;
+    &_name {
+      margin: 5px 0;
+      color: #409eff;
+      font-size: 20px;
+      font-weight: 400;
+    }
+    &_sexAndage {
+      font-size: 12px;
+      color: #666;
+      margin: 0 20px;
+    }
+    &_param {
+      margin: 10px 0;
+      font-weight: 400;
+      color: #f80;
+      font-size: 14px;
+    }
+    &_cancel {
+      position: absolute;
+      top: 0;
+      right: 30px;
+    }
+  }
+  &_content {
+    &_box{
+      max-height: 300px;
+      overflow-y: auto;
+      border-top: 2px solid #f1f1f1;
+    }
+    &_list {
+      padding: 0;
+      margin: 0;
+    }
+    &_single {
+      color: #409eff;
+      font-size: 12px;
+    }
+    &_content {
+      display: flex;
+      flex-wrap: wrap;
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+    &_param {
+      width: 50%;
+      color: #333;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+  }
+}
+</style>
 <template>
-  <div>
+  <div class="record">
     <!-- 就诊档案 -->
-    <el-dialog width="900px" top="30px" title="就诊档案" :visible.sync="dialogVisible" append-to-body custom-class="daDialog">
+    <el-dialog width="900px" top="5vh" title="就诊档案" :visible.sync="dialogVisible" append-to-body custom-class="daDialog">
+      <div class="record_header">
+          <h3 class="record_header_name">
+              {{baseData.brxm}}
+              <span class="record_header_sexAndage">
+                  {{baseData.brxb}}/{{baseData.brage}}
+              </span>
+              <el-tag v-show="baseData.gzTag">
+                  {{baseData.GzTag}}
+              </el-tag>
+          </h3>
+          <h4 class="record_header_param">
+            出生年月: {{baseData.patientBithday}}
+          </h4>
+          <h4 class="record_header_param">
+            手机号码: {{baseData.mobile}}
+          </h4>
+          <h4 class="record_header_param">
+            联系地址: {{baseData.patientAddress}}
+          </h4>
+          <el-button v-if="baseData.gzTag" class="record_header_cancel" size="mini" type="primary" @click="cancelSpecial" >取消关注</el-button>
+          <el-button v-else   icon="el-icon-star-off" class="record_header_cancel"  size="mini" type="primary" @click="addSpecial" >添加关注</el-button>
+      </div>
       <div class="content" slot>
       <!-- 个人信息 -->
-        <el-row class="personInfo">
-          <el-col :span="12" class="elCol1">
-            <span class="personName colororigen">{{patientRecord.brxm}}</span>
-            <span class="personSex colororigen">{{patientRecord.brxb}} / {{patientRecord.brage}}</span>
-            <span class="personXg">{{patientRecord.GzTag}}</span>
-          </el-col>
-          <el-col :span="12" class="elCol2">
-            <el-button type="text" @click="handleislike" v-bind:class="{ careColor: isCare}">
-              <i class="iconfont" v-bind:class="{ careColor: isCare}" style="margin-right:5px; font-size:12px;">&#xe604;</i>
-              {{isCare?'取消关心':'特别关心'}}
-            </el-button>
-          </el-col>
-        </el-row>
-        <el-row class="personResult">
-          <el-col :span="12" class="elCol3"><span class="elCol3Span1">出生年月&nbsp;:&nbsp;</span><span class="elCol3Span2">{{patientRecord.patientBithday}}</span></el-col>
-          <el-col :span="12" class="elCol4 colororigen" style="font-size: 13px;"></el-col>
-        </el-row>
-        <el-row class="personResult">
-          <el-col :span="12" class="elCol3"><span class="elCol3Span1">手机号码&nbsp;:&nbsp;</span><span class="elCol3Span2">{{patientRecord.mobile}}</span></el-col>
-          <el-col :span="12" class="elCol3"></el-col>
-        </el-row>
-        <el-row class="personResult">
-          <el-col :span="12" class="elCol3"><span class="elCol3Span1">地址&nbsp;:&nbsp;</span><span class="elCol3Span2">{{patientRecord.patientAddress}}</span></el-col>
-          <el-col :span="12" class="elCol3"></el-col>
-        </el-row>
         <!--  就诊时间 -->
         <el-row class="resolveBtn">
           <el-col :span="24" style="text-align:left;color:#000;">
@@ -93,13 +151,14 @@
             <el-row class="leaveHospital">
               <el-collapse v-model="leaveHospital" accordion>
                 <el-collapse-item  v-for="(item1,index1) in item.znjqrCyxjList" :title="'出院小结'+index1+1" :name="index1+1+''" :key="index1">
-                  <el-col :span="5" class="color666">入院诊断&nbsp;:&nbsp;</el-col><el-col :span="19" class="text-left">{{item1.admissiondiagnose}}</el-col>
+                  <el-col v-if="dischargedMap[discharged]" v-for="(discharged,ind) in Object.keys(item1)" :key="ind" :span="24" class="color666">{{dischargedMap[discharged]}}&nbsp;:&nbsp;{{item1[discharged]}}</el-col>
+                  <!-- <el-col :span="5" class="color666">入院诊断&nbsp;:&nbsp;</el-col><el-col :span="19" class="text-left">{{item1.admissiondiagnose}}</el-col>
                   <el-col :span="5" class="color666">入院情况&nbsp;:&nbsp;</el-col><el-col :span="19" class="text-left"> {{item1.admissiondescription}}</el-col>
                   <el-col :span="5" class="color666">诊治经过&nbsp;:&nbsp;</el-col><el-col :span="19" class="text-left">{{item1.cureprocess}}</el-col>
                   <el-col :span="5" class="color666">转归情况&nbsp;:&nbsp;</el-col><el-col :span="19" class="text-left">{{item1.filedescription}}</el-col>
                   <el-col :span="5" class="color666">出院诊断&nbsp;:&nbsp;</el-col><el-col :span="19" class="text-left">{{item1.leavediagnose}}</el-col>
                   <el-col :span="5" class="color666">出院情况&nbsp;:&nbsp;</el-col><el-col :span="19" class="text-left">{{item1.leavedescription}}</el-col>
-                  <el-col :span="5" class="color666">出院医嘱&nbsp;:&nbsp;</el-col><el-col :span="19" class="text-left">{{item1.leavedoctorcharge}}</el-col>
+                  <el-col :span="5" class="color666">出院医嘱&nbsp;:&nbsp;</el-col><el-col :span="19" class="text-left">{{item1.leavedoctorcharge}}</el-col> -->
                 </el-collapse-item>
               </el-collapse>
             </el-row>
@@ -182,6 +241,7 @@
       :patient-id="patientId"
       :visit-order-id="visitOrderId"
       :task-id="taskIdRecord"
+      v-on:refreshData="refreshListFunc"
       sf-number="0"
       tab-active="0"
       ref="followRecord"></follow-record>
@@ -193,7 +253,7 @@
  * 患者档案
  * @module patientFile
  */
-import { PatientFile } from '@/api/HN_DoctorClient/common/patientFile';
+import { PatientFile } from 'HNDC_API/common/patientFile';
 import 'swiper/dist/css/swiper.css';
 import { swiper, swiperSlide } from 'vue-awesome-swiper';
 import mixin from '@/assets/HN_DoctorClient/js/mixin';
@@ -201,11 +261,34 @@ import followRecord from 'HNDC/common/followRecord';
 export default {
   data() {
     return {
+      // 药物字典
+      medicineMap:{
+        yfgg:'规格',
+        ypcd:'产地',
+        yspl:'数量',
+        yfdw:'单位',
+        ycjl:'剂量',
+        jldw:'剂量单位',
+        yyts:'使用天数',
+        mrcs:'每日次数',
+        cflx:'频次',
+        yf:'用法'
+      },
+      //出院小结字典
+      dischargedMap:{
+        admissiondiagnose:'入院诊断',
+        admissiondescription:'入院情况',
+        cureprocess:'诊治经过',
+        filedescription:'转归情况',
+        leavediagnose:'出院诊断',
+        leavedescription:'出院情况',
+        leavedoctorcharge:'出院医嘱'
+      },
       userId: '', // 从localStorage获取登录页的医生id
       leaveHospital: '', // 出院小结手风情默认展示索引
       isNull: false, // 病人的住院、门诊信息都为空时true
       ypxx: '1', // 患者档案--门诊处方信息
-      patientRecord: {}, // 患者基本信息
+      baseData: {}, // 患者基本信息
       isCare: '', // 点击记录后，查看病人是否被关注
       patientFileLoading: false, // 患者档案 加载动画
       zyData: [], // 患者档案-住院信息
@@ -236,6 +319,14 @@ export default {
     followRecord
   },
   methods: {
+    /**
+     * @description 触发父组件刷新列表，供子组件-随访记录用
+     * @function  refreshListFunc
+     */
+    refreshListFunc() {
+      this.$emit('refreshData');
+      this.baseData=this.getPatientInfo();
+    },
     // 有 随访记录 按钮时调用
     sfDialog(taskId) {
       this.taskIdRecord = taskId;

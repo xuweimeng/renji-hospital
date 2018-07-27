@@ -10,7 +10,7 @@
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入用户名" />
+        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="off" placeholder="请输入用户名" />
       </el-form-item>
 
       <el-form-item prop="password">
@@ -106,7 +106,6 @@ export default {
           this.$store
             .dispatch('LoginByUsername', this.loginForm)
             .then((res) => {
-              console.log(0);
               this.loading = false;
               this.$router.push({ path: '/Home' });
             })

@@ -1,0 +1,58 @@
+/** 搜索框 **/
+.common-search {
+  padding: 20px 10px 0 10px;
+  margin-bottom: 10px;
+  background: #fff;
+  border-bottom: 1px solid #ebeef5;
+  .el-form{
+    .el-form-item{
+      width: 90%;
+      .el-form-item__label {
+        padding-left: 5px;
+        background: #c0c4cc;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+      }
+      .el-form-item__content {
+        width: calc(100% - 80px);
+        .el-select {
+          width: 100%;
+        }
+        .el-date-editor {
+          width: 100%;
+          .el-range-separator {
+            width: 9%;
+          }
+          .el-range-input {
+            height: 28px;
+          }
+          .el-range__close-icon {
+            width: 14px;
+          }
+        }
+      }
+    }
+  }
+}
+/** 表格 **/
+.common-table {
+  padding: 10px;
+  background: #fff;
+  // 表格头部背景色
+  .el-table th {
+    background: rgb(248, 248, 249);
+  }
+}
+.wyc {
+  color: #00ae00;
+}
+.yyc {
+  color: #ff2626;
+}
+.cjsb {
+  color: #ffb15d;
+}
+.upnum {
+  background: aliceblue;
+  padding-left: 10px;
+}

@@ -1,202 +1,201 @@
 <template>
-  <div class="followway">
+  <div class="app-container">
     <!-- 搜索 -->
-    <el-row class="form-search">
-      <el-col :span="24">
-        <el-form :inline="true" :model="searchParam" class="demo-form-inline">
-          <el-form-item label="姓名" class="inputLength" style="height: 40px;">
-            <el-input v-model.trim="searchParam.patientName" clearable placeholder="请输入患者姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="随访方案" class="inputLength" style="height: 40px;">
-            <el-input v-model.trim="searchParam.schemeName" clearable placeholder="请输入随访方案"></el-input>
-          </el-form-item>
-          <el-form-item label="诊断名称" class="inputLength" style="height: 40px;">
-            <el-input v-model.trim="searchParam.icdName" clearable placeholder="请输入疾病类型"></el-input>
-          </el-form-item>
-          <el-form-item label="性别" class="seclectLength" style="height: 40px;">
-            <el-select v-model="searchParam.sex" placeholder="请选择" popper-class="searchSelect">
-              <el-option label="全部" value=""></el-option>
-              <el-option label="男" value="男"></el-option>
-              <el-option label="女" value="女"></el-option>
-            </el-select>
-          </el-form-item>
-
-
-          <el-form-item label="时间" class="seclectLength" style="height: 40px;">
-            <el-select v-model="searchParam.type" placeholder="请选择" popper-class="searchSelect">
-              <el-option label="全部" value="3"></el-option>
-              <el-option label="近七天" value="2"></el-option>
-              <el-option label="近30天" value="1"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="年龄" class="seclectLength" style="height: 40px;">
-            <el-input v-model="searchParam.fromAge" placeholder="0"></el-input>
-            <span>-</span>
-            <el-input v-model="searchParam.endAge" placeholder="99"></el-input>
-          </el-form-item>
-          <el-form-item label="通话状态" style="float: left;margin-top: 5px;">
-          <el-select v-model="searchParam.backStatus" placeholder="请选择" popper-class="searchSelectLarge">
-            <el-option label="全部" value=""></el-option>
-            <el-option label="呼叫失败" value="1"></el-option>
-            <el-option label="正常通话" value="2"></el-option>
-            <el-option label="通话中" value="3"></el-option>
-            <el-option label="关停机" value="4"></el-option>
-            <el-option label="无人接听" value="5"></el-option>
-            <el-option label="空号" value="6"></el-option>
-            <el-option label="号码有误" value="7"></el-option>
-          </el-select>
-          </el-form-item>
-          <!--add by yugou0625 添加采集情况筛选 todo-->
-          <el-form-item label="采集情况" style="float: left;margin-top: 5px;">
-            <el-select v-model="searchParam.scquisitionState" placeholder="请选择" popper-class="searchSelectLarge">
-              <el-option label="全部" value=""></el-option>
-              <el-option label="无异常" value="1"></el-option>
-              <el-option label="有异常" value="2"></el-option>
-              <el-option label="部分采集" value="3"></el-option>
-              <el-option label="接通未采集" value="4"></el-option>
-              <el-option label="接通无应答" value="5"></el-option>
-              <el-option label="未接通未采集" value="6"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="button" @click="waySearchBtn">查询</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
+    <ul class="common_search">
+      <li class="common_search_single">
+        <label class="radio-label" >姓名</label>
+        <el-input  placeholder="请输入患者姓名"  v-model.trim="searchParam.patientName"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >随访方案</label>
+        <el-input  placeholder="请输入随访方案"  v-model.trim="searchParam.schemeName"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >疾病诊断</label>
+        <el-input  placeholder="请输入疾病诊断"  v-model.trim="searchParam.icdName"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >性别</label>
+        <el-select class="filter-item" v-model="searchParam.sex" placeholder="请选择">
+          <el-option label="全部" value=""></el-option>
+          <el-option label="男" value="男"></el-option>
+          <el-option label="女" value="女"></el-option>
+        </el-select>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >时间</label>
+        <el-select class="filter-item" v-model="searchParam.type" placeholder="请选择">
+          <el-option label="全部" value="3"></el-option>
+          <el-option label="近七天" value="2"></el-option>
+          <el-option label="近30天" value="1"></el-option>
+        </el-select>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label">年龄</label>
+        <el-input placeholder="0" v-model.trim="searchParam.fromAge"></el-input>
+        <span class="input-separator">-</span>
+        <el-input placeholder="99" v-model.trim="searchParam.endAge"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >通话状态</label>
+        <el-select class="filter-item" v-model="searchParam.backStatus" placeholder="请选择">
+          <el-option label="全部" value=""></el-option>
+          <el-option label="呼叫失败" value="1"></el-option>
+          <el-option label="正常通话" value="2"></el-option>
+          <el-option label="通话中" value="3"></el-option>
+          <el-option label="关停机" value="4"></el-option>
+          <el-option label="无人接听" value="5"></el-option>
+          <el-option label="空号" value="6"></el-option>
+          <el-option label="号码有误" value="7"></el-option>
+        </el-select>
+      </li>
+      <!--add by yugou0625 添加采集情况筛选-->
+      <li class="common_search_single">
+        <label class="radio-label" >采集情况</label>
+        <el-select class="filter-item" v-model="searchParam.scquisitionState" placeholder="请选择">
+          <el-option label="全部" value=""></el-option>
+          <el-option label="无异常" value="1"></el-option>
+          <el-option label="有异常" value="2"></el-option>
+          <el-option label="部分采集" value="3"></el-option>
+          <el-option label="接通未采集" value="4"></el-option>
+          <el-option label="接通无应答" value="5"></el-option>
+          <el-option label="未接通未采集" value="6"></el-option>
+        </el-select>
+      </li>
+      <li class="common_search_single">
+        <el-button type="primary" icon="el-icon-search"  @click="waySearchBtn"
+                   :loading="param_unhandled.loading || param_handled.loading">查询</el-button>
+      </li>
+    </ul>
     <!-- tab切换 -->
-    <el-row class="rsTabs">
-      <el-col :span="24">
-        <el-tabs type="border-card" @tab-click="handleClick">
-          <!-- 未处理 -->
-          <el-tab-pane :label="`未处理(${param_unhandled.total})`">
-            <el-table :data="param_unhandled.tableData" style="width: 1110px" class="rsTable" v-loading="param_unhandled.loading">
-              <el-table-column label="姓名" width="120" align="center">
-                <template slot-scope="scope">
-                  <div class="tbCare fl-left"><i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i></div>
-                  <div class="tbName fl-left" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
-                </template>
-              </el-table-column>
-              <el-table-column prop="name" label="性别/年龄" align="center">
-                <template slot-scope="scope">
-                  <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="icdName" label="疾病诊断" align="center">
-                <template slot-scope="scope">
-                  <div style="text-align: left;margin-left: 18px;">
-                    <div class="tags">{{scope.row.diagnosetype ==1?'门诊':'住院'}}</div>
-                    {{scope.row.icdName}}
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column label="随访计划" align="center" show-overflow-tooltip>
-                <template slot-scope="scope">
-                  <span @click="sfjhModel(scope)">{{scope.row.schemeName}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="dateBegin" label="随访日期" align="center" show-overflow-tooltip>
-              </el-table-column>
-              <el-table-column label="随访进度" align="center">
-                <template slot-scope="scope">
-                  <span>{{scope.row.currentVisitTime}}/{{scope.row.visitCount}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="通话状态" align="center">
-                <template slot-scope="scope">
-                  <span>{{scope.row.backStatusStr}}</span>
-                </template>
-              </el-table-column>
-              <!--update by yugou 情况进一步细分-->
-              <el-table-column label="采集情况" align="center">
-                 <template slot-scope="scope">
-                  <!--<span v-if="scope.row.resultStatus==0" v-bind:class="[scope.row.resultStatus==0?cjsb:'']">采集失败</span>-->
-                  <!--<span v-if="scope.row.resultStatus!=0" v-bind:class="[scope.row.currentVisitError>0?yyc:wyc]">{{scope.row.currentVisitError>0?scope.row.currentVisitError+'项异常':'无异常'}}</span>-->
-                   <span v-if="scope.row.currentVisitError ===0 " :class="scope.row.stateClass">{{scope.row.scquisitionStateText}}</span>
-                   <span v-if="scope.row.currentVisitError !==0 " class="yyc">{{scope.row.currentVisitError}}项异常</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="address" label="随访记录" align="center">
-                <template slot-scope="scope">
-                  <el-button type="primary" @click="wayButton(scope)" class="operateBtn">
-                  详情
-                  </el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <el-row class="rsfy">
-              <el-col :span="14" :offset="10">
-                <el-pagination  @current-change="handleCurrentUnhandled" :current-page.sync="param_unhandled.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
-                  :total="param_unhandled.total" v-if="param_unhandled.total">
-                </el-pagination>
-              </el-col>
-            </el-row>
-          </el-tab-pane>
-          <!-- 已处理 -->
-          <el-tab-pane :label="`已处理`">
-            <el-table :data="param_handled.tableData" style="width: 1110px" class="rsTable" v-loading="param_handled.loading">
-              <el-table-column label="姓名" width="120" align="center">
-                <template slot-scope="scope">
-                  <div class="tbCare fl-left"><i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i></div>
-                  <div class="tbName fl-left" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
-                </template>
-              </el-table-column>
-              <el-table-column prop="name" label="性别/年龄" align="center">
-                <template slot-scope="scope">
-                  <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
-                </template>
-              </el-table-column>
-               <el-table-column prop="icdName" label="疾病诊断" align="center">
-                <template slot-scope="scope">
-                  <div style="text-align: left;margin-left: 18px;">
-                    <div class="tags">{{scope.row.diagnosetype ==1?'门诊':'住院'}}</div>
-                    {{scope.row.icdName}}
-                  </div>
-                </template>
-              </el-table-column>
-               <el-table-column label="随访计划" align="center" show-overflow-tooltip>
-                <template slot-scope="scope">
-                  <span @click="sfjhModel(scope)">{{scope.row.schemeName}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="通话状态" align="center" show-overflow-tooltip>
-                <template slot-scope="scope">
-                  {{scope.row.backStatusStr}}
-                </template>
-              </el-table-column>
-              <el-table-column prop="dateBegin" label="随访日期" align="center" show-overflow-tooltip>
-              </el-table-column>
-              <el-table-column label="随访进度" align="center">
-                <template slot-scope="scope">
-                  <span>{{scope.row.currentVisitTime}}/{{scope.row.visitCount}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="处理意见" align="center">
-                <template slot-scope="scope">
+    <el-tabs type="border-card" @tab-click="handleClick">
+      <!-- 未处理 -->
+      <el-tab-pane :label="`未处理(${param_unhandled.total})`">
+        <el-table :data="param_unhandled.tableData" class="rsTable" v-loading="param_unhandled.loading">
+          <el-table-column label="" align="center" width="25">
+            <template slot-scope="scope">
+              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
+            </template>
+          </el-table-column>
+          <el-table-column label="姓名" align="center" width="120" prop="patientName">
+            <template slot-scope="scope">
+              <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="name" label="性别/年龄" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="icdName" label="疾病诊断" align="left" header-align="center" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <el-tag>{{scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>
+              {{scope.row.icdName}}
+            </template>
+          </el-table-column>
+          <el-table-column label="随访计划" align="center" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <span class="td-hover" @click="sfjhModel(scope)">{{scope.row.schemeName}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="dateBegin" label="随访日期" align="center" show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column label="随访进度" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.currentVisitTime}}/{{scope.row.visitCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="通话状态" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.backStatusStr}}</span>
+            </template>
+          </el-table-column>
+          <!--update by yugou 情况进一步细分-->
+          <el-table-column label="采集情况" align="center">
+            <template slot-scope="scope">
+              <!--<span v-if="scope.row.resultStatus==0" v-bind:class="[scope.row.resultStatus==0?cjsb:'']">采集失败</span>-->
+              <!--<span v-if="scope.row.resultStatus!=0" v-bind:class="[scope.row.currentVisitError>0?yyc:wyc]">{{scope.row.currentVisitError>0?scope.row.currentVisitError+'项异常':'无异常'}}</span>-->
+              <span v-if="scope.row.currentVisitError ===0 " :class="scope.row.stateClass">{{scope.row.scquisitionStateText}}</span>
+              <span v-if="scope.row.currentVisitError !==0 " class="yyc">{{scope.row.currentVisitError}}项异常</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="address" label="随访记录" align="center">
+            <template slot-scope="scope">
+              <el-button type="primary" size="mini" @click="wayButton(scope)" class="operateBtn">
+                详情
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="pagination-container">
+          <el-pagination  @current-change="handleCurrentUnhandled" :current-page.sync="param_unhandled.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
+                          :total="param_unhandled.total" v-if="param_unhandled.total">
+          </el-pagination>
+        </div>
+      </el-tab-pane>
+      <!-- 已处理 -->
+      <el-tab-pane :label="`已处理`">
+        <el-table :data="param_handled.tableData" class="rsTable" v-loading="param_handled.loading">
+          <el-table-column label="" align="center" width="25">
+            <template slot-scope="scope">
+              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
+            </template>
+          </el-table-column>
+          <el-table-column label="姓名" align="center" width="120" prop="patientName">
+            <template slot-scope="scope">
+              <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="name" label="性别/年龄" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="icdName" label="疾病诊断" align="left" header-align="center" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <el-tag>{{scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>
+              {{scope.row.icdName}}
+            </template>
+          </el-table-column>
+          <el-table-column label="随访计划" align="center" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <span class="td-hover" @click="sfjhModel(scope)">{{scope.row.schemeName}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="通话状态" align="center" show-overflow-tooltip>
+            <template slot-scope="scope">
+              {{scope.row.backStatusStr}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="dateBegin" label="随访日期" align="center" show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column label="随访进度" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.currentVisitTime}}/{{scope.row.visitCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="处理意见" align="center">
+            <template slot-scope="scope">
                   <span v-bind:class="[scope.row.visitResult==1?yyc:scope.row.visitResult==2?originC:wyc]">
                     {{scope.row.visitResult==0?'病情稳定':scope.row.visitResult==1?'通知就诊':scope.row.visitResult==2?'暂不处理':''}}
                   </span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="address" label="随访记录" align="center">
-                <template slot-scope="scope">
-                  <el-button type="primary" @click="wayButton(scope)" class="operateBtn">
-                  详情
-                </el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <el-row class="rsfy">
-              <el-col :span="14" :offset="10">
-                <el-pagination  @current-change="handleCurrentHandled" :current-page.sync="param_handled.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
-                  :total="param_handled.total" v-if="param_handled.total">
-                </el-pagination>
-              </el-col>
-            </el-row>
-          </el-tab-pane>
-        </el-tabs>
-      </el-col>
-    </el-row>
+            </template>
+          </el-table-column>
+          <el-table-column prop="address" label="随访记录" align="center">
+            <template slot-scope="scope">
+              <el-button type="primary" size="mini" @click="wayButton(scope)" class="operateBtn">
+                详情
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="pagination-container">
+          <el-pagination  @current-change="handleCurrentHandled" :current-page.sync="param_handled.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
+                          :total="param_handled.total" v-if="param_handled.total">
+          </el-pagination>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
     <!-- 随访记录 -->
     <follow-record
       :patient-id="patientId"
@@ -230,7 +229,7 @@
  * 随访结果
  * @module followway
  */
-import { FollowRecord } from '@/api/HN_DoctorClient/FollowRecord';
+import { FollowRecord } from 'HNDC_API/FollowRecord';
 import patientFile from 'HNDC/common/patientFile';
 import followPlan from 'HNDC/common/FollowPlan';
 import followRecord from 'HNDC/common/followRecord';
@@ -435,5 +434,23 @@ export default {
   }
 };
 </script>
-
-
+<style scoped>
+  .td-hover{
+    cursor: pointer;
+  }
+  .td-hover:hover{
+    color: #409EFF;
+  }
+  .wyc {
+    color: #00ae00;
+  }
+  .yyc {
+    color: #ff2626;
+  }
+  .cjsb {
+    color: #ffb15d;
+  }
+  .originC {
+    color: #ff6800;
+  }
+</style>

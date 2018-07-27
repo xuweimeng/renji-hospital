@@ -1,6 +1,6 @@
 // import {API} from '@/serve'
-import { mixinAPI } from '@/api/HN_DoctorClient/mixin_dialog'
-import { CommonAPI } from '@/api/HN_DoctorClient/common'
+import { mixinAPI } from 'HNDC_API/mixin_dialog'
+import { CommonAPI } from 'HNDC_API/common'
 const mixin = {
   mounted() {
     this.getUserId();
@@ -21,12 +21,13 @@ const mixin = {
      * @param {String} visitOrderId visitOrderId
      * @param {String} patientId 患者id
      */
-    getPatientInfo() {
+    getPatientInfo(userId=this.userId,patientId=this.patientId,visitOrderId=this.visitOrderId) {
       this.patientRecord = '';
       // visitOrderId 和 patientId必须传一个
       let search_param={
         adminId: this.userId,
         patientId: this.patientId,
+        visitOrderId:visitOrderId
       }
       if (this.visitOrderId) {
         search_param.visitOrderId = this.visitOrderId; // 随访记录 弹框必须传
@@ -43,6 +44,7 @@ const mixin = {
           }
           //获取hz的随访次数
           this.patientRecord = res.data
+          return res.data;
         }
       }).catch((error)=>{
       })

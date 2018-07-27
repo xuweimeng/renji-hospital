@@ -16,6 +16,12 @@ export const HN_DoctorClient = [
         component: () => import('HNDC/Homepage/Homepage.vue'),
         name: 'Home',
         meta: { title: 'Home', icon: 'dashboard', roles: roles, noCache: true }
+      },
+      {
+        path: 'Index',
+        component: () => import('HNDC/Homepage/Index.vue'),
+        name: 'HomeNew',
+        meta: { title: 'HomeNew', icon: 'dashboard', roles: roles, noCache: true }
       }
     ]
   },
