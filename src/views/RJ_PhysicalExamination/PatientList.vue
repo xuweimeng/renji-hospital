@@ -227,6 +227,7 @@ import { mapGetters } from 'vuex';
           physicalName: '' // 体检套餐选择
         },
         value5: '',
+        isRepeat:false,     //防止重复点击
         diseaseListModify: [], // 体检套餐
         queryLoading: false, // 体检套餐loading
         iccvd: '',
@@ -441,31 +442,36 @@ import { mapGetters } from 'vuex';
                 return false;
               }
             }
-            PatientList.addCustomerList(this.ruleForm)
-              .then(res => {
-                if (res.code == 0) {
-                  this.patientsShow = false;
-                  this.list();
-                  this.ruleForm = {
-                    khxm: '', // 客户姓名
-                    khxb: '', // 客户性别
-                    lxsj: '', // 联系手机
-                    sfzh: '', // 身份证号
-                    tjtcbh: '', // 体检套餐编号
-                    tjtcmc: '', // 体检套餐名称
-                    vip: '', // 1表示是VIP   0表示不是
-                    age: '', // 年龄
-                    iccvd: '',
-                    csrq: '',
-                    yytjrq: '' // 预约体检时间
-                  };
-                } else {
-                  this.$message.error(res.message);
-                }
-                console.log(res);
-                // this.diseaseList = res.data;
-              })
-              .catch(error => {});
+            if(!this.isRepeat) {
+              this.isRepeat = true;
+              PatientList.addCustomerList(this.ruleForm)
+                .then(res => {
+                  if (res.code == 0) {
+                    this.patientsShow = false;
+                    this.list();
+                    this.ruleForm = {
+                      khxm: '', // 客户姓名
+                      khxb: '', // 客户性别
+                      lxsj: '', // 联系手机
+                      sfzh: '', // 身份证号
+                      tjtcbh: '', // 体检套餐编号
+                      tjtcmc: '', // 体检套餐名称
+                      vip: '', // 1表示是VIP   0表示不是
+                      age: '', // 年龄
+                      iccvd: '',
+                      csrq: '',
+                      yytjrq: '' // 预约体检时间
+                    };
+                  } else {
+                    this.isRepeat = false;
+                    this.$message.error(res.message);
+                  }
+                  console.log(res);
+                  // this.diseaseList = res.data;
+                })
+                .catch(error => {
+                });
+            }
           } else {
             console.log('error submit!!');
             return false;
