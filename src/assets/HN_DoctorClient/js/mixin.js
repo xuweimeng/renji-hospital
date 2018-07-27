@@ -21,33 +21,15 @@ const mixin = {
      * @param {String} visitOrderId visitOrderId
      * @param {String} patientId 患者id
      */
-    getPatientInfo(userId=this.userId,patientId=this.patientId,visitOrderId=this.visitOrderId) {
+    async getPatientInfo(userId=this.userId,patientId=this.patientId,visitOrderId=this.visitOrderId) {
       this.patientRecord = '';
       // visitOrderId 和 patientId必须传一个
       let search_param={
-        adminId: this.userId,
-        patientId: this.patientId,
-        visitOrderId:visitOrderId
+        adminId: userId,
+        patientId: patientId,
+        // visitOrderId:null
       }
-      if (this.visitOrderId) {
-        search_param.visitOrderId = this.visitOrderId; // 随访记录 弹框必须传
-      }
-      CommonAPI.getPatientRecord(search_param).then((res)=>{
-        // 判断当前患者是否被关注
-        if(res.code == 0) {
-          if(res.data.gz == 0 || !res.data.gz) {
-            res.data.gz = false
-            this.isCare = false
-          }else if(res.data.gz == 1) {
-            res.data.gz = true
-            this.isCare = true
-          }
-          //获取hz的随访次数
-          this.patientRecord = res.data
-          return res.data;
-        }
-      }).catch((error)=>{
-      })
+      return await CommonAPI.getPatientRecord(search_param);
     },
     /**
      *特别关心
@@ -143,6 +125,77 @@ const mixin = {
         });
       }
     },
+    /**
+     * @function 取消关心
+     * @return {type} {description}
+     */
+    cancelSpecial() {
+      this.$msgbox({
+        title: '消息',
+        message: '确定取消关心吗',
+        showCancelButton: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        beforeClose: (action, instance, done) => {
+          done();
+        }
+      })
+        .then(action => {
+          // 取消关注
+          mixinAPI.updateGz({
+            diagnoseType: 3,
+            adminId: this.token,
+            patientId: this.patientId,
+            operateType: 0 // (操作类型 1:关注 0：取消关注) （必填）
+          })
+            .then(res => {
+              this.$emit('refresh');
+              this.baseData.gzTag = '';
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    /**
+     * @function 添加关注
+     * @return {type} {description}
+     */
+    addSpecial() {
+      this.$prompt('请填写关注标签（不超过5个字符）', '添加关注', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputErrorMessage: '不得超过5个字'
+      }).then(({ value }) => {
+        if (value.trim().length > 5 || value.trim().length === 0) {
+          this.$message({
+            type: 'error',
+            message: '格式不对，不能为空，不能超过5个字符'
+          });
+          return false;
+        }
+        mixinAPI.updateGz({
+          diagnoseType: 3,
+          adminId: this.token,
+          patientId: this.patientId,
+          operateTag: value,
+          operateType: 1 // (操作类型 1:关注 0：取消关注) （必填）
+        }).then(res => {
+          this.baseData.gzTag = value;
+          this.$message({
+            type: 'success',
+            message: '成功添加关注'
+          });
+        }).catch(error => {
+          console.log(error);
+        });
+      }).catch(() => {
+
+      });
+    }
   }
 }
 export default mixin;
