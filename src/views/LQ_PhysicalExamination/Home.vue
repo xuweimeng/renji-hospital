@@ -141,8 +141,8 @@ export default {
           this.panelGroupData = {
             name: res.data.realname,
             total: res.data.noticedPersonSum,
-            yesterdayNotice: res.data.noticedPersonCount,
-            Informed: res.data.noticedCount,
+            yesterdayNotice: res.data.noticedCount,
+            Informed: res.data.noticedPersonCount,
             waiting: res.data.laterHours + '',
             logInTime: res.data.lastVisitDate
           };
