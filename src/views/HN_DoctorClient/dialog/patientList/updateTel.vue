@@ -94,7 +94,7 @@
       <el-form label-width="100px">
         <el-form-item label="选择终止原因">
           <el-select v-model="selectReason" size="small" style="width:200px">
-            <el-option v-for="item in finshReason" :value="item.value" :key="item.value">{{ item.value }}</el-option>
+            <el-option v-for="item in finshReason" :value="item.key" :key="item.key" :label="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="填写终止备注">
@@ -125,15 +125,15 @@
             value: '患者已死亡'
           },
           {
-            key: 1,
+            key: 2,
             value: '患者不接受随访'
           },
           {
-            key: 1,
+            key: 3,
             value: '随访方案重复'
           },
           {
-            key: 1,
+            key: 4,
             value: '方案不匹配'
           }
         ] /* 终止原因列表 */,
