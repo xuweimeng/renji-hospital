@@ -1,6 +1,6 @@
 <template>
   <div class="homePage">
-     <el-row class="header-wrap">
+    <el-row class="header-wrap">
       <el-col :span="7" class="public-style noticeNum">
         <div class="notice-picture">
           <img :src="getAdminInfo.aipicTureUrl">
@@ -239,7 +239,7 @@
                 </div>
               </div>
               <div class="nullBtn">
-                <el-button @click.native="routerToWay1" type="primary">立即前往</el-button>
+                <el-button @click.native="routerToHzList" type="primary">立即前往</el-button>
               </div>
             </div>
           </div>

@@ -3,17 +3,17 @@
     <!-- 查询 -->
     <el-row class='common-search'>
 			<el-form :inline='true' :model='searchParams' label-position='center' label-width='80px'>
-			  <el-col :span='4'>
+			  <el-col :span='5'>
 			  	<el-form-item label='姓名'>
 				    <el-input v-model='searchParams.name' placeholder='请输入患者姓名' clearable></el-input>
 				  </el-form-item>
 				</el-col>
-				<el-col :span='4'>
+				<el-col :span='5'>
 			  	<el-form-item label='联系电话'>
 				    <el-input v-model='searchParams.mobile' placeholder='请输入患者联系电话' clearable></el-input>
 				  </el-form-item>
 				</el-col>
-				<el-col :span='4'>
+				<el-col :span='5'>
 			  	<el-form-item label='检查项目'>
 				    <el-select v-model='searchParams.icdCheckItem' clearable filterable  placeholder='请选择'>
 				      <el-option
@@ -25,16 +25,17 @@
 				    </el-select>
 				  </el-form-item>
 				</el-col>
-			  <el-col :span='9'>
+			  <el-col :span='6'>
           <el-form-item label='检查时间' class='formTime'>
             <el-date-picker
               v-model='startTime'
               @change='timeChange'
-              type='daterange'
-              value-format='yyyy-MM-dd'
-              range-separator='至'
-              start-placeholder='开始日期'
-              end-placeholder='结束日期'>
+              type="daterange"
+							value-format="yyyy-MM-dd"
+							range-separator="至"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+              :picker-options="pickerTime">
             </el-date-picker>
           </el-form-item>
 			  </el-col>
@@ -174,6 +175,7 @@ import { InspectionNotice } from 'RJZL_API/InitiateNotification';
 import { commonUrl } from 'RJZL_API/commonUrl';
 import auditOptions from 'utils/auditOptions'
 import CheckedList from './checkedList/checkedList';
+import * as utilsIndex from 'utils'
 const tabPaneName = ['list', 'stop'];
 export default {
   name: 'initiatingNoticePlan',
@@ -215,7 +217,10 @@ export default {
       tabIndex: '0', // tab 0:入院通知，1：已终止通知
       gridData: [], // 检查详情
       ProjectList: [], // 检查项目
-      hzxxId: '' // 患者信息id
+      hzxxId: '', // 患者信息id
+      pickerTime: {
+        shortcuts: utilsIndex.pickerOptions
+      },
     };
   },
   components: {
@@ -260,8 +265,8 @@ export default {
     /** 创建时间更改 */
     timeChange(time) {
       if (time) {
-        this.searchParams.startOrderTime = time[0];
-        this.searchParams.endOrderTime = time[1];
+        this.searchParams.startOrderTime = time[0] + ' ' + '00:00:00';
+        this.searchParams.endOrderTime = time[1] + ' ' + '23:59:59';
       } else {
         this.searchParams.startOrderTime = '';
         this.searchParams.endOrderTime = '';

@@ -18,14 +18,15 @@
      <!-- 指标详情 -->
     <el-row class="targetResult">
       <!-- 审核意见 -->
-      <el-row v-show="vetRemark">
-        <el-col :span="4">人工审核意见:</el-col>
-        <el-col :span="20">{{vetRemark}}</el-col>
-      </el-row>
-        <!-- 审核意见 -->
-      <el-row v-show="callRemark">
-        <el-col :span="4">外呼审核意见:</el-col>
-        <el-col :span="20">{{callRemark}}</el-col>
+      <el-row class="checkAdviceRow">
+        <el-col :span="4" class="checkAdviceCol" style="padding-left: 20px;" v-show="vetRemark">AI审核意见：</el-col>
+        <el-col :span="20" class="checkAdviceCol" v-show="vetRemark">
+          <el-tag type="primary" v-show="vetRemark">{{vetRemark}} &nbsp;</el-tag>
+        </el-col>
+        <el-col :span="4" class="checkAdviceCol" style="padding-left: 20px;" v-show="callRemark">外呼审核意见：</el-col>
+        <el-col :span="20" class="checkAdviceCol" v-show="callRemark">
+          <el-tag type="primary" v-show="callRemark">{{callRemark}} &nbsp;</el-tag>
+        </el-col>
       </el-row>
       <!-- 指标详情 -->
       <el-row class="targetDetails" style="padding: 0 0 10px;">
@@ -89,11 +90,20 @@
               <el-col :span="24" class="hzyuyin">
                 <div class="hzhead">患者</div>
                 <div class="hzWords">
-                  <audio :src="yyHrec +item.audio" controls="controls" style="margin-top: 7px;"></audio>
+                  <audio
+                    :src="yyHrec +item.audio"
+                    v-show="item.isArtificialCall==0"
+                    controls="controls"
+                    style="margin-top: 7px;"></audio>
+                    <span
+                    v-show="item.isArtificialCall==1"
+                    style="line-height: 40px;">
+                    此记录未人工呼叫，暂无录音
+                  </span>
                   <div class="arrows1"></div>
                 </div>
               </el-col>
-              <el-col :span="24">
+              <el-col :span="24" v-show="item.asr">
                 <div class="answer-text-wrap">
                   <span class="answer-text">
                     {{item.asr}}
@@ -378,6 +388,13 @@ import { Point } from 'utils/selectOptions'
     }
     audio{
       float: right;
+    }
+  }
+  // 外呼审核意见
+  .checkAdviceRow {
+    padding: 10px 0;
+    .checkAdviceCol {
+      line-height: 40px;
     }
   }
 </style>
