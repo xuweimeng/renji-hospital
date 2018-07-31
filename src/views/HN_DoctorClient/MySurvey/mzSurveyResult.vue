@@ -44,6 +44,8 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']"
+          :picker-options="pickerOptionsShortcuts"
           @change="diseaseTime" >
         </el-date-picker>
       </li>
@@ -56,6 +58,8 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          :default-time="['00:00:00', '23:59:59']"
+          :picker-options="pickerOptionsShortcuts"
           @change="planTime">
         </el-date-picker>
       </li>
@@ -207,7 +211,35 @@
         time_plan: [], // 计划执行时间
         time_disease: [], // 就诊时间
         total: 0, // 总条数
-        surveyResultDialog: false // 详情弹框
+        surveyResultDialog: false, // 详情弹框
+        pickerOptionsShortcuts:  // 时间日期选择器的快捷方式数据
+          {
+            shortcuts: [{
+              text: '最近一周',
+              onClick(picker) {
+                const end = new Date(new Date().setHours(23, 59, 59, 59));
+                const start = new Date(new Date().setHours(0, 0, 0, 0));
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                picker.$emit('pick', [start, end]);
+              }
+            }, {
+              text: '最近一个月',
+              onClick(picker) {
+                const end = new Date(new Date().setHours(23, 59, 59, 59));
+                const start = new Date(new Date().setHours(0, 0, 0, 0));
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                picker.$emit('pick', [start, end]);
+              }
+            }, {
+              text: '最近三个月',
+              onClick(picker) {
+                const end = new Date(new Date().setHours(23, 59, 59, 59));
+                const start = new Date(new Date().setHours(0, 0, 0, 0));
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                picker.$emit('pick', [start, end]);
+              }
+            }]
+          },
       };
     },
     mounted() {

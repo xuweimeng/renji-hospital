@@ -30,6 +30,8 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']"
+          :picker-options="pickerOptionsShortcuts"
           @change="diseaseTime" >
         </el-date-picker>
       </li>
@@ -222,6 +224,34 @@ export default {
         }
       ],
       checkId: [], // 随访通过的id(多选时),
+      pickerOptionsShortcuts:  // 时间日期选择器的快捷方式数据
+        {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date(new Date().setHours(23, 59, 59, 59));
+              const start = new Date(new Date().setHours(0, 0, 0, 0));
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date(new Date().setHours(23, 59, 59, 59));
+              const start = new Date(new Date().setHours(0, 0, 0, 0));
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date(new Date().setHours(23, 59, 59, 59));
+              const start = new Date(new Date().setHours(0, 0, 0, 0));
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
     };
   },
   mounted() {

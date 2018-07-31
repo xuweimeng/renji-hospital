@@ -26,13 +26,13 @@
         <label class="radio-label">随访时间</label>
         <el-date-picker
           v-model="followTime"
-          popper-class="popper-timepicker"
           type="datetimerange"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          format="yyyy-MM-dd HH:mm"
-          value-format="yyyy-MM-dd HH:mm"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']"
+          :picker-options="pickerOptionsShortcuts"
           @change="followTimePick"
         >
         </el-date-picker>
@@ -42,11 +42,13 @@
         <el-date-picker
           @change="outTimePick"
           v-model="outTime"
-          type="daterange"
+          type="datetimerange"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          value-format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']"
+          :picker-options="pickerOptionsShortcuts"
         >
         </el-date-picker>
       </li>
@@ -73,7 +75,12 @@
       border highlight-current-row
       v-loading="tableLoading"
     >
-      <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
+      <el-table-column label="姓名" align="center" prop="patientName">
+        <template slot-scope="scope">
+          <i class="iconfont" v-if="scope.row.GzTag">&#xe604;</i>
+          <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.brxm }}</span></div>
+        </template>
+      </el-table-column>
       <el-table-column prop="sexAge" label="性别/年龄" align="center">
         <template slot-scope="scope">
           <span>{{scope.row.brxb}}</span>&nbsp;/&nbsp;<span>{{scope.row.brage}}</span>
@@ -84,7 +91,9 @@
       <el-table-column prop="schemeName" label="随访方案" align="center" show-overflow-tooltip></el-table-column>
       <el-table-column prop="dateEnd" label="随访时间" align="center"></el-table-column>
       <el-table-column prop="visitErrorInfo" label="随访异常结果" align="center" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="leavelDignose" label="出院诊断" align="center" show-overflow-tooltip></el-table-column>
+      <!--<el-table-column prop="leavelDignose" label="出院诊断" align="center" show-overflow-tooltip></el-table-column>-->
+      <!--todo to check-->
+      <el-table-column prop="icdName" label="出院诊断" align="center" show-overflow-tooltip></el-table-column>
       <el-table-column prop="diseaseInfoStr" label="医生审核意见" align="center" show-overflow-tooltip></el-table-column>
     </el-table>
     <!-- 分页 -->
@@ -93,6 +102,15 @@
                         :total="total" v-if="total">
         </el-pagination>
     </div>
+    <!-- 弹框 -->
+    <!-- 就诊档案 -->
+    <patient-file
+      :patient-id="patientId"
+      :visit-order-id="visitOrderId"
+      :show-record-link="true"
+      v-on:refreshData="refreshList"
+      ref="patientFile"
+    ></patient-file>
   </div>
 </template>
 
@@ -102,6 +120,7 @@
    * @module abnormalStatistic
    */
   import { AbnormalStatistic } from 'HNDC_API/AbnormalStatistic';
+  import patientFile from 'HNDC/common/patientFile';
 
   // 随访时间，默认是当天
   const follow_default_time = [new Date(new Date().setHours(0, 0, 0, 0)), new Date(new Date().setHours(23, 59, 59, 59))];
@@ -138,13 +157,53 @@
         followTime: follow_default_time, // 随访时间-搜索
         outTime: [], // 出院时间-搜索
         sum_start: follow_default_time_format[0], // 表格上方的一行数据的时间
-        sum_end: follow_default_time_format[1]
+        sum_end: follow_default_time_format[1],
+        pickerOptionsShortcuts:  // 时间日期选择器的快捷方式数据
+          {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date(new Date().setHours(23, 59, 59, 59));
+              const start = new Date(new Date().setHours(0, 0, 0, 0));
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date(new Date().setHours(23, 59, 59, 59));
+              const start = new Date(new Date().setHours(0, 0, 0, 0));
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date(new Date().setHours(23, 59, 59, 59));
+              const start = new Date(new Date().setHours(0, 0, 0, 0));
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
+        patientId: '',  // 患者id--子组件props
+        visitOrderId: '', // visitOrderId--子组件props
       };
+    },
+    components: {
+      patientFile,
     },
     mounted() {
       this.getData();
     },
     methods: {
+      /**
+       * @description 刷新列表--供子组件使用
+       * @function refreshList
+       */
+      refreshList() {
+        this.getData();
+      },
       /**
        * @description 获取表格数据
        * @function getData
@@ -163,6 +222,7 @@
               value.dateEnd = value.dateEnd ? value.dateEnd.substring(0, value.dateEnd.length - 3) : value.dateEnd;
             });
             this.tableData = res.data;
+            console.log(res.data);
             this.total = res.count;
           })
           .catch(error => {
@@ -222,7 +282,18 @@
        */
       exportBtn() {
         AbnormalStatistic.export(this.searchParam);
-      }
+      },
+      /**
+       *@function tdClick
+       *@description 点击表格中的患者姓名
+       */
+      tdClick(scope) {
+        this.patientId = scope.row.hzxxId;
+        this.visitOrderId = scope.row.visitOrderId || '';
+        setTimeout(() => {
+          this.$refs.patientFile.toggleShowModal();
+        }, 0);
+      },
     }
   };
 </script>
@@ -231,5 +302,16 @@
     padding: 15px;
     margin-top: 0;
     background-color: white;
+  }
+  .app-container .iconfont{
+    color: #ff6e40;
+    position: absolute;
+    left: 15px;
+  }
+  .td-hover{
+    cursor: pointer;
+  }
+  .td-hover:hover{
+    color: #409EFF;
   }
 </style>

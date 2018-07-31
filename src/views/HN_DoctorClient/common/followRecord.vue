@@ -81,7 +81,7 @@
             </el-row>
           </el-row>
           <el-row>
-            <el-col :span="4" class="elCol5" style="line-height:30px;text-align: left;">审核意见&nbsp;:&nbsp;</el-col>
+            <el-col :span="4" class="elCol5" style="line-height:30px;text-align: left;">AI审核意见&nbsp;:&nbsp;</el-col>
             <el-col :span="20" style="text-align: left;line-height:30px;">{{checkAdvice || '暂无意见'}}</el-col>
             <!--add by yugou 添加人工外呼意见callRemark 外呼审核意见-->
             <el-col :span="20" style="text-align: left;line-height:30px;margin-left: 93px;" v-if="patientRecord.isArtificialCall == 1">
