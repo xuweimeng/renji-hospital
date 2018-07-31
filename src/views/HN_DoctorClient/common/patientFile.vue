@@ -5,6 +5,9 @@
       padding-top: 10px;
       border-top: 1px solid #dadada;
     }
+    .el-tabs__item{
+      height: auto;
+    }
   }
   &_box {
     .el-dialog__body {
