@@ -4,6 +4,9 @@
     .el-dialog__body {
       padding-top: 0;
     }
+    .el-dialog{
+      max-width: 800px;
+    }
   }
   &_header {
     position: relative;
@@ -52,7 +55,7 @@
       margin-top: 10px;
     }
     &_audio{
-      max-height: 600px; 
+      max-height: 600px;
       overflow-y: auto;
     }
     &_param {
@@ -154,7 +157,7 @@
 
 <template>
     <div class="record">
-        <el-dialog top="5vh" :close-on-click-modal="false" class="record_box" title="通知详情" width="55%"  :visible.sync="dialogTableVisible">
+        <el-dialog top="5vh" :close-on-click-modal="false" class="record_box" title="通知详情" width="55%" :visible.sync="dialogTableVisible">
             <!-- header information -->
             <div class="record_header">
                 <h3 class="record_header_name">
@@ -162,7 +165,7 @@
                     <span class="record_header_sexAndage">
                         {{`${baseData.brxb}${baseData.brage?('/'+baseData.brage):''}`}}
                     </span>
-                    <el-tag v-show="baseData.gzTag">
+                    <el-tag v-if="baseData.gzTag">
                         {{baseData.gzTag}}
                     </el-tag>
                 </h3>
@@ -200,7 +203,7 @@
                      </ul>
                 </el-tab-pane>
                 <el-tab-pane  name="two"  label="记录详情"  v-if="recordData.length">
-                    <el-tag  v-if="baseData.isArtificialCall">
+                    <el-tag  v-if="baseData.isArtificialCall" style="margin-bottom:10px; ">
                         人工外呼
                     </el-tag>
                      <ul class="record_content_list record_content_audio">
@@ -212,7 +215,8 @@
                           <li :key="item.id+'1'" class="record_content_single record_content_patient">
                             <span>客户</span>
                             <audio v-if="item.audio" :src="baseUrl+item.audio"  controls="controls" ></audio>
-                            <p v-else>此记录为人工呼叫，暂无录音</p>
+                            <p v-else="!item.audio&&patientInfo.isArtificialCall==1">此记录为人工呼叫，暂无录音</p>
+                            <p v-else="!item.audio&&patientInfo.isArtificialCall!=1">此记录为暂无录音</p>
                             <div>
                               指标：<el-tag v-if="item.isNormal" type="primary">正常</el-tag><el-tag v-else type="error">不正常</el-tag>
                               / {{item.fieldName}} : {{item.fieldValue}}
@@ -234,6 +238,9 @@ export default {
     patientId: {
       type: String
     },
+    hzxxId:{
+      type: String
+    },
     resultData: {
       type: Object,
       default: () => {
@@ -253,9 +260,12 @@ export default {
   },
   data() {
     return {
+      gzTag:"",
       currentTable: 'one',
       dialogTableVisible: false,
-      baseData: {},
+      baseData: {
+
+      },
       baseUrl: '',
       recordData: []
     };
@@ -275,6 +285,7 @@ export default {
       })
         .then(res => {
           // 基础数据赋值
+          res.data.gzTag =  res.gztag;
           this.baseData = res.data;
           this.baseData.isCare = !!this.baseData.gzTag;
           this.baseUrl = res.AIVOICURL;
@@ -307,7 +318,7 @@ export default {
           NoticeResult.updateGz({
             diagnoseType: 3,
             adminId: this.token,
-            patientId: this.patientId,
+            patientId: this.hzxxId,
             operateType: 0 // (操作类型 1:关注 0：取消关注) （必填）
           })
             .then(res => {
@@ -344,7 +355,7 @@ export default {
           NoticeResult.updateGz({
             diagnoseType: 3,
             adminId: this.token,
-            patientId: this.patientId,
+            patientId: this.hzxxId,
             operateTag: value,
             operateType: 1 // (操作类型 1:关注 0：取消关注) （必填）
           })

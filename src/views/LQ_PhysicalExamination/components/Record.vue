@@ -4,6 +4,9 @@
     .el-dialog__body {
       padding-top: 0;
     }
+    .el-dialog{
+      max-width: 800px;
+    }
   }
   &_header {
     position: relative;
@@ -289,7 +292,7 @@ export default {
           operateTag: value,
           operateType: 1 // (操作类型 1:关注 0：取消关注) （必填）
         }).then(res => {
-          this.$set(this.baseData,'gzTag',value);
+          this.baseData.gzTag = value;
           this.$message({
             type: 'success',
             message: '成功添加关注'

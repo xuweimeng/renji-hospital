@@ -4,6 +4,9 @@
     .el-dialog__body {
       padding-top: 0;
     }
+    .el-dialog{
+      max-width: 800px;
+    }
   }
   &_header {
     position: relative;
@@ -52,7 +55,7 @@
       margin-top: 10px;
     }
     &_audio{
-      max-height: 600px; 
+      max-height: 600px;
       overflow-y: auto;
     }
     &_param {

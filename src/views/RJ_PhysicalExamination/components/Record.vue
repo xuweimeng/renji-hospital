@@ -4,6 +4,9 @@
     .el-dialog__body {
       padding-top: 0;
     }
+    .el-dialog{
+      max-width: 800px;
+    }
   }
   &_header {
     position: relative;
@@ -70,7 +73,7 @@
                     <span class="record_header_sexAndage">
                         {{baseData.sex}}/{{baseData.birthday}}
                     </span>
-                    <el-tag v-show="baseData.gzTag">
+                    <el-tag v-if="baseData.gzTag">
                         {{baseData.gzTag}}
                     </el-tag>
                 </h3>
@@ -176,6 +179,7 @@ export default {
         .then(res => {
           //      基础数据赋值
           this.baseData = res.data;
+          console.log( this.baseData)
           this.baseData.isCare = !!this.baseData.gzTag;
         })
         .then(() => {
@@ -275,7 +279,7 @@ export default {
         cancelButtonText: '取消',
         inputErrorMessage: '不得超过5个字'
       }).then(({ value }) => {
-        if (value.trim().length > 5 || value.trim().length === 0) {
+        if (!value|| value.trim().length > 5 || value.trim().length==0) {
           this.$message({
             type: 'error',
             message: '格式不对，不能为空，不能超过5个字符'
@@ -289,7 +293,8 @@ export default {
           operateTag: value,
           operateType: 1 // (操作类型 1:关注 0：取消关注) （必填）
         }).then(res => {
-          this.baseData.gzTag = value;
+//          this.baseData.gzTag = value;
+          this.$set(this.baseData,'gzTag',value)
           this.$message({
             type: 'success',
             message: '成功添加关注'

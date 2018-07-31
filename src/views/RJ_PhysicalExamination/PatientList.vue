@@ -56,12 +56,15 @@
       <el-col :span="24">
         <el-table :data="tableAll" border style="margin-bottom: 10px;" ref="patientlist" class="wayTable" v-loading="loading1" >
           <el-table-column prop="brxm" label="姓名" align="center">
+            <!--<template slot-scope="scope">-->
+              <!--<Icon class="el-icon-star-off"></Icon>-->
+            <!--</template>-->
+
           </el-table-column>
           <el-table-column prop="jtdh" label="联系电话" align="center">
           </el-table-column>
           <el-table-column prop="brxb" label="性别" align="center">
           </el-table-column>
-          <!--<el-table-column label="状态" align="center" prop="statusStr"></el-table-column>-->
           <el-table-column prop="csny" label="出生年月" align="center" >
           </el-table-column>
           <el-table-column prop="sfzh" label="证件号码" align="center">
@@ -73,13 +76,13 @@
               <el-button type="primary" style="" class="btn-public" @click="archiveAction(scope)">档案</el-button>
               <!--<el-button type="primary" style="height:23px;padding:0 5px;font-size-->
               <!--:13px;background:#1899ff;" @click="changeNumberAction(scope)">修改手机号</el-button>-->
-
             </template>
           </el-table-column>
         </el-table>
         <el-row class="block">
           <el-col :span="14" style="float: right;" >
             <el-pagination style="float: right;margin-right: 29px;"
+                           background
                            :current-page.sync="followwaySearch.pager"
                            @current-change="handleCurrentChange"
                            :page-size="10"
@@ -167,7 +170,7 @@
       </el-form>
     </el-dialog>
     <!--客户改约-->
-    <el-dialog title="添加客户" :visible.sync="isModify" width="525px" top="30px" :center = "false" custom-class="ModifyDialog" @close="closeAction('queryModify')">
+    <el-dialog title="修改预约时间" :visible.sync="isModify" width="525px" top="30px" :center = "false" custom-class="ModifyDialog" @close="closeAction('queryModify')">
       <el-form :model="queryModify" :rules="rules" ref="queryModify"  class="demo-ruleForm">
         <el-form-item label="预约体检时间" prop="physicalTime">
           <el-date-picker
@@ -227,6 +230,7 @@ import { mapGetters } from 'vuex';
           physicalName: '' // 体检套餐选择
         },
         value5: '',
+        isRepeat:false,     //防止重复点击
         diseaseListModify: [], // 体检套餐
         queryLoading: false, // 体检套餐loading
         iccvd: '',
@@ -441,31 +445,36 @@ import { mapGetters } from 'vuex';
                 return false;
               }
             }
-            PatientList.addCustomerList(this.ruleForm)
-              .then(res => {
-                if (res.code == 0) {
-                  this.patientsShow = false;
-                  this.list();
-                  this.ruleForm = {
-                    khxm: '', // 客户姓名
-                    khxb: '', // 客户性别
-                    lxsj: '', // 联系手机
-                    sfzh: '', // 身份证号
-                    tjtcbh: '', // 体检套餐编号
-                    tjtcmc: '', // 体检套餐名称
-                    vip: '', // 1表示是VIP   0表示不是
-                    age: '', // 年龄
-                    iccvd: '',
-                    csrq: '',
-                    yytjrq: '' // 预约体检时间
-                  };
-                } else {
-                  this.$message.error(res.message);
-                }
-                console.log(res);
-                // this.diseaseList = res.data;
-              })
-              .catch(error => {});
+            if(!this.isRepeat) {
+              this.isRepeat = true;
+              PatientList.addCustomerList(this.ruleForm)
+                .then(res => {
+                  if (res.code == 0) {
+                    this.patientsShow = false;
+                    this.list();
+                    this.ruleForm = {
+                      khxm: '', // 客户姓名
+                      khxb: '', // 客户性别
+                      lxsj: '', // 联系手机
+                      sfzh: '', // 身份证号
+                      tjtcbh: '', // 体检套餐编号
+                      tjtcmc: '', // 体检套餐名称
+                      vip: '', // 1表示是VIP   0表示不是
+                      age: '', // 年龄
+                      iccvd: '',
+                      csrq: '',
+                      yytjrq: '' // 预约体检时间
+                    };
+                  } else {
+                    this.isRepeat = false;
+                    this.$message.error(res.message);
+                  }
+                  console.log(res);
+                  // this.diseaseList = res.data;
+                })
+                .catch(error => {
+                });
+            }
           } else {
             console.log('error submit!!');
             return false;
