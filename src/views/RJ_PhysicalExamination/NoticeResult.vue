@@ -215,7 +215,7 @@
       detailBtn(scope) {
         this.dataTail = scope.row;
         this.patientId = scope.row.id;
-        this.hzxxId = scope.row.hzxxId;
+        this.hzxxId = scope.row.hzxxId; //患者id
         this.$refs.record.dialogTableVisible = true;
       },
       /**

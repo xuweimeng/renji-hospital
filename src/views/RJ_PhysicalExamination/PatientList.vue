@@ -56,12 +56,15 @@
       <el-col :span="24">
         <el-table :data="tableAll" border style="margin-bottom: 10px;" ref="patientlist" class="wayTable" v-loading="loading1" >
           <el-table-column prop="brxm" label="姓名" align="center">
+            <!--<template slot-scope="scope">-->
+              <!--<Icon class="el-icon-star-off"></Icon>-->
+            <!--</template>-->
+
           </el-table-column>
           <el-table-column prop="jtdh" label="联系电话" align="center">
           </el-table-column>
           <el-table-column prop="brxb" label="性别" align="center">
           </el-table-column>
-          <!--<el-table-column label="状态" align="center" prop="statusStr"></el-table-column>-->
           <el-table-column prop="csny" label="出生年月" align="center" >
           </el-table-column>
           <el-table-column prop="sfzh" label="证件号码" align="center">
@@ -73,7 +76,6 @@
               <el-button type="primary" style="" class="btn-public" @click="archiveAction(scope)">档案</el-button>
               <!--<el-button type="primary" style="height:23px;padding:0 5px;font-size-->
               <!--:13px;background:#1899ff;" @click="changeNumberAction(scope)">修改手机号</el-button>-->
-
             </template>
           </el-table-column>
         </el-table>
