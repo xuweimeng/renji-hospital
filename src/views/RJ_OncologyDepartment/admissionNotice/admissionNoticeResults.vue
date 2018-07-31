@@ -129,7 +129,7 @@
 					</el-table-column>
           	<el-table-column label='详情' align='center'>
               <template slot-scope='scope'>
-                <el-button type='primary' size='mini' @click='detailBtn(scope.row)'>详情</el-button>
+                <el-button type='primary' size='mini' @click='detailBtn(scope)'>详情</el-button>
               </template>
             </el-table-column>
 	    	</el-table>
@@ -151,6 +151,7 @@
   import { AdmissionNotice } from 'RJZL_API/hospitalNotice';
   import { commonUrl } from 'RJZL_API/commonUrl';
   import AdResult from '@/components/dialog/aDresult/ppResult';
+  import * as getTime from 'utils/getDate';
   export default {
     name: 'admissionNoticeResults',
     data() {
@@ -249,17 +250,11 @@
       this.getCurrent();
     },
     methods: {
+       /** 通知时间 */
       getCurrent() {
-        const current = new Date();
-        const currentYear = current.getUTCFullYear();
-        const currentMonth = current.getMonth() + 1;
-        const startDate = current.getDate();
-        const currentTime1 = currentYear + '-' + currentMonth + '-' + startDate + ' ' + '00:00:00';
-        const currentTime2 = currentYear + '-' + currentMonth + '-' + startDate + ' ' + '23:59:59';
-        this.searchParams.dateBeginBegin = currentTime1;
-        this.searchParams.dateBeginEnd = currentTime2;
-        this.createTime.push(currentTime1);
-        this.createTime.push(currentTime2);
+        this.searchParams.startOrderTime = getTime.currentTime + ' ' + '00:00:00';
+        this.searchParams.endOrderTime = getTime.currentTime + ' ' + '23:59:59';
+        this.createTime = [this.searchParams.startOrderTime, this.searchParams.endOrderTime]
       },
       /** 疾病远程搜索 */
       remoteMethod(query) {

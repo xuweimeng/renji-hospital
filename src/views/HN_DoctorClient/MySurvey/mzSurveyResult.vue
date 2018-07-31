@@ -105,65 +105,20 @@
       </el-pagination>
     </div>
     <!-- 详情 -->
-    <el-dialog top="5vh" class="result_info" title="调查计划" :visible.sync="surveyResultDialog" center>
-        <h3>
-           {{infoData.brxm}}
-          <span>
-           {{infoData.brxb}}  / {{infoData.brage}}
-          </span>
-        </h3>
-        <ul class="result_info_base">
-          <li>联系电话：{{infoData.mobile}}</li>
-          <li>医疗组/科室：{{infoData.medGpName||infoData.medGpName}}</li>
-          <li>出院时间/就诊时间：{{infoData.diagnoseTime}}</li>
-          <li>随访方案 : {{infoData.schemeName}} </li>
-        </ul>
-        <h4>结果详情</h4>
-          <ul class="result_info_result">
-            <li>您对医生的技术水平的评价是
-              <span>{{infoData.orderResult.technical}}</span>
-            </li>
-            <li>您对医生的服务态度的评价是
-              <span>{{infoData.orderResult.service}}</span>
-            </li>
-            <li>您对医院“廉洁行医，医德医风”的评价是
-              <span>{{infoData.orderResult.medicalEthics}}</span>
-            </li>
-             <li>您对医院提供的环境设施、后勤服务的评价是
-              <span>{{infoData.orderResult.environmental}}</span>
-            </li>
-            <li>您对医疗费用的总体评价是
-              <span>{{infoData.orderResult.medicalExpense}}</span>
-            </li>
-            <li>您此次就诊的总体评价为
-              <span>{{infoData.orderResult.evaluate}}</span>
-            </li>
-          </ul>
-        <h4>记录详情</h4>
-        <ul class="result_info_recode">
-            <template v-for="item,index in infoData.orderReplyQuestions"   >
-              <li  class="isAi">
-               <span>
-                  AI
-               </span>
-               <p>{{item.question}}</p>
-            </li>
-            <li >
-               <span>
-                 患者
-               </span>
-               <audio :src="voiceUrl+item.audio" controls>
-               </audio>
-            </li>
-            </template>
-        </ul>
-    </el-dialog>
-    <!-- <survey-result :surveyResultDialog="surveyResultDialog" @planClose="planClose"></survey-result> -->
+    <result-record
+    ref="record"
+    :base-data="infoData"
+    :base-url="voiceUrl"
+    ></result-record>
   </div>
 </template>
 <script>
   import { MySurvey } from 'HNDC_API/MySurvey';
+  import ResultRecord from "./Pop-ups/ResultRecord.vue";
   export default {
+    components:{
+      ResultRecord
+    },
     data() {
       return {
         infoData: {
@@ -444,8 +399,8 @@
             this.infoData.departmentName = scope.row.departmentName;
             this.voiceUrl = res.AIVOICURL;
           });
-        this.surveyResultDialog = true;
-        // this.$store.dispatch("rowData", scope.row);
+        this.$refs.record.recordVisible=true;
+        this.$refs.record.currentTable='one';
       },
       /** 详情关闭 */
       planClose(val) {

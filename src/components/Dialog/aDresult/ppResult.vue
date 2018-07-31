@@ -46,7 +46,7 @@ export default {
   },
   computed: {
     ...mapState({
-      'patientInfo': state => state.user.scopeRowData
+      'patientInfo': state => state.user.scopeRowData.row
     })
   },
   methods: {
@@ -108,6 +108,8 @@ export default {
   watch: {
     patientInfo(newV, oldV) {
       if (newV.id) {
+        console.log(newV.id);
+
         this.careFun(newV.id);
       }
     }

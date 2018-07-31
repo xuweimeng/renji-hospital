@@ -105,27 +105,12 @@
     <!-- 详情 -->
    <!--  <survey-plan :surveyPlan="surveyPlan" @planClose="planClose"></survey-plan> -->
 
-    <el-dialog top="5vh" class="plan_info" title="调查计划" :visible.sync="surveyPlan">
-        <h3>
-			{{infoData.brxm||""}}
-          	<span>
-			{{infoData.brxb||""}}/{{infoData.brage||""}}
-          	</span>
-        </h3>
-        <ul class="plan_info_base">
-			<li>联系电话：{{infoData.mobile}}</li>
-			<li>医疗组/科室：{{infoData.departmentName||infoData.medGpName}}</li>
-			<li>出院时间/就诊时间：{{infoData.diagnoseTime}}</li>
-        </ul>
-        <h4 v-show="infoMessage.orderList.length>0">随访方案 : {{infoMessage.questionTempleName}} </h4>
-        <h4 v-show="infoMessage.orderList.length>0">随访次数 : 共{{infoMessage.allCount}}次</h4>
-			<div class="plan_info_inner">
-				<ul class="plan_info_message" v-for="item,index in infoMessage.orderList" :key="index">
-					<h4>第{{index+1}}次随访: <span>开始时间 :{{item.dateBegin}}</span>   <span>{{item.statusStr}}</span> </h4>
-					<li v-for="ite,ins in item.CollectionIndex.split(',')" v-show="ite" :key="ins">{{ite}}</li>
-				</ul>
-			</div>
-    </el-dialog>
+    <plan-record
+      ref="record"
+      :baseData="infoData"
+      :planInfo="infoMessage"
+    >
+    </plan-record>
 
   </div>
 </template>
@@ -137,6 +122,8 @@
  */
 import { MySurvey } from 'HNDC_API/MySurvey';
 import { CommonAPI } from 'HNDC_API/common';
+import PlanRecord from "./Pop-ups/PlanRecord";
+
 const base_param = {
   page: 1,
   total: 0,
@@ -144,6 +131,9 @@ const base_param = {
   tableData: []
 };
 export default {
+  components:{
+    PlanRecord
+  },
   data() {
     return {
       /* 计划详情 */
@@ -443,10 +433,10 @@ export default {
      * @param {Object} scope 点击列表的scope的信息
      */
     async getInfo(scope) {
-      this.surveyPlan = true;
       this.infoData.medGpName = scope.row.medGpName;
       this.infoData.departmentName = scope.row.departmentName;
       const res = await this.getInfoData(scope.row);
+      this.$refs.record.recordVisible=true;
       /*  if(res.taskId){
         await this.getInfoMessage(res.taskId);
       } */

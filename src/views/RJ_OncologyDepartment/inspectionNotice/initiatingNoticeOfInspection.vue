@@ -74,8 +74,11 @@
             <el-table :data='dataList' border style='width: 100%' v-loading='hzLoading'>
               <el-table-column prop='brxm' label='姓名' align='center'></el-table-column>
               <el-table-column prop='jtdh' label='联系方式' align='center'></el-table-column>
-              <el-table-column prop='brxb' label='性别' align='center'></el-table-column>
-              <el-table-column prop='age' label='年龄' align='center'></el-table-column>
+              <el-table-column label='性别/年龄' align='center' width='100'>
+                <template slot-scope='scope'>
+                  {{scope.row.brxb}} <span v-if='scope.row.brxb && scope.row.age'>/</span> {{scope.row.age}}
+                </template>
+              </el-table-column>
               <el-table-column prop='sourcetime' label='创建时间' align='center'></el-table-column>
               <el-table-column prop='diseaseName' label='疾病名称' align='center' show-overflow-tooltip></el-table-column>
               <el-table-column label='检查安排' align='center'>
@@ -139,11 +142,11 @@
         <!-- 选择方案2 -->
         <div class='step2-select-list'
           v-for=' (item, index) in checkVos'
-          :key='index'
-          @click='liClick(index)'>
+          :key='index'>
             <div class='select-options'>
               <span>检查项目: </span>
               <el-select
+                @focus='liClick(index)'
                 v-model='checkVos[index].icd'
                 @change='selectProjectName'
                 :name='String(index)'
@@ -246,7 +249,7 @@
   import { setTimeout } from 'timers';
   import CheckedList from './checkedList/checkedList';
   export default {
-    name: 'initiatingNoticePlan',
+    name: 'initiatingNoticeOfInspection',
     data() {
       return {
         adminId: sessionStorage.getItem('userId'),
@@ -318,10 +321,7 @@
       // this.getPlanList();
     },
     methods: {
-      /**
-       * @description
-       * 疾病远程搜索
-       */
+      /** 疾病远程搜索 */
       remoteMethod(query) {
         if (query !== '') {
           this.queryLoading = true;
@@ -331,18 +331,17 @@
               'diseaseType': '0'
             }).then((res)=>{
               this.queryLoading = false;
-              console.log(res)
               if(res.code == 0) {
                 this.diseaseList = res.data
               } else {
-                this.options4 = [];
+                this.diseaseList = [];
               }
             }).catch((error)=>{
               console.log(error)
             })
           }, 200);
         } else {
-          this.options4 = [];
+          this.diseaseList = [];
         }
       },
       /**@description
@@ -458,7 +457,6 @@
           this.$message.warning('您尚未添加任何患者');
           return false;
         }
-
         this.step = 1;
         this.$nextTick(function() {
           this.getProjectList()
@@ -549,6 +547,8 @@
        * 选中的当前项目index
        */
       liClick (index) {
+        console.log(index);
+
         this.projectIndex = index
       },
       /** 选择发起地点 */
@@ -584,7 +584,7 @@
         this.checkVos[this.projectIndex].icdName = this.icdName
         this.getAdressList(selectProject)
       },
-      /** 步骤二获取项目列表 */
+      /** 步骤二获取检查项目列表 */
       getProjectList() {
         InspectionNotice.list({
           page: '1',
@@ -597,7 +597,7 @@
             this.checkVos[0].icd = res.data[0].disease.icd
             this.checkVos[0].icdName = res.data[0].disease.name
             this.$nextTick(function() {
-              this.getAdressList( res.data[0].disease.id)
+              this.getAdressList(res.data[0].disease.id)
             })
           }
         })

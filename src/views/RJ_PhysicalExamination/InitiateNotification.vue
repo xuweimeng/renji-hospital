@@ -108,7 +108,7 @@
 				<!-- 分页 -->
 				<el-col :span="12">
 					<div class="block" style="margin: 11px 0;">
-						<el-pagination  @current-change="handleCurrentChange" :current-page.sync="searchParams.pager" :page-size="10" layout="total,prev, pager, next, jumper"
+						<el-pagination  background @current-change="handleCurrentChange" :current-page.sync="searchParams.pager" :page-size="10" layout="total,prev, pager, next, jumper"
 							:total="totalPage" v-if="totalPage" >
 						</el-pagination>
 					</div>
@@ -172,7 +172,7 @@
 				 <!--分页-->
 				<el-col :span="12">
 					<div class="block" style="margin: 11px 0;">
-						<el-pagination  style="float: right;margin-right: 20px;" @current-change="PlanChangePage" :current-page.sync="planParams.pager" :page-size="10" layout="total,prev, pager, next, jumper"
+						<el-pagination  style="float: right;margin-right: 20px;" background @current-change="PlanChangePage" :current-page.sync="planParams.pager" :page-size="10" layout="total,prev, pager, next, jumper"
 							:total="patTotalPage" v-if="patTotalPage">
 						</el-pagination>
 					</div>

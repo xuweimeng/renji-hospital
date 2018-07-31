@@ -15,7 +15,7 @@
 				</el-col>
         <el-col :span="6">
 			  	<el-form-item label="检查项目">
-				    <el-select v-model="searchParams.icdCheckItem" clearable  placeholder="请选择">
+				    <el-select v-model="searchParams.icdCheckItem" filterable clearable  placeholder="请选择">
 				      <el-option
                 v-for="item in ProjectList"
                 :key="item.icd10"
@@ -49,7 +49,7 @@
 					</el-form-item>
 				</el-col>
 			  <el-col :span="4">
-			  	<el-button type="primary" size="medium" @click="getData">查询</el-button>
+			  	<el-button type="primary" size="medium" @click="searchParams.pager=1,getData()">查询</el-button>
 			  </el-col>
 			</el-form>
 		</el-row>
@@ -94,6 +94,7 @@ import { InspectionNotice } from 'RJZL_API/InitiateNotification';
 import { commonUrl } from 'RJZL_API/commonUrl';
 import AdResult from '@/components/dialog/aDresult/ppResult';
 import CheckedList from './checkedList/checkedList';
+import * as getTime from 'utils/getDate'
 export default {
   name: 'checkTheResultOfTheNotice',
  data() {
@@ -126,25 +127,14 @@ export default {
     this.getCurrent()
     this.getProjectList()
     this.getData();
-
   },
   methods: {
+    /** 随访日期 */
     getCurrent() {
-      let current = new Date()
-      let currentYear = current.getFullYear()
-      let currentMonth = current.getMonth() + 1
-      if(currentMonth<10) {
-        currentMonth = '0'+currentMonth
-      }
-      let startDate = current.getDate()
-      let endDate = current.getDate() + 1
-      let currentTime1 = currentYear + '-' + currentMonth + '-' + startDate
-      let currentTime2 = currentYear + '-' + currentMonth + '-' + endDate
-      this.searchParams.startOrderTime = currentTime1
-      this.searchParams.endOrderTime = currentTime2
-
-      this.startTime.push(currentTime1)
-      this.startTime.push(currentTime2)
+      let tomorrow = getTime.currentTime1 + (getTime.currentDate + 1)
+      this.searchParams.startOrderTime = getTime.currentTime
+      this.searchParams.endOrderTime = tomorrow
+      this.startTime = [getTime.currentTime, tomorrow]
     },
     /** 获取检查项目列表 */
     getProjectList () {

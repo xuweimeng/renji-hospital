@@ -18,7 +18,7 @@ export const RJ_OncologyDepartment = [
       {
         path: 'Home',
         component: () => import('RJZL/homePage/homePage.vue'),
-        name: 'Home',
+        // name: 'Home',
         meta: {
           title: 'Home',
           icon: 'shouye',

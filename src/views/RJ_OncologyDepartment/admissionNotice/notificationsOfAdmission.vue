@@ -89,7 +89,7 @@
 			    		<el-table-column prop='name' label='操作' width='200' align='center'>
 			    			<template slot-scope='scope'>
                   <el-button type='danger' @click='passoutBtn(scope.row.id)' size='mini'>终止</el-button>
-                  <el-button type='primary' @click='showInfo(scope.row)' size='mini'>详情</el-button>
+                  <el-button type='primary' @click='showInfo(scope)' size='mini'>详情</el-button>
                 </template>
 			    		</el-table-column>
 			    	</el-table>
@@ -127,7 +127,7 @@
 			    			<template slot-scope='scope'>
                   <el-button
                   type='primary'
-                  @click='showInfo(scope.row)'
+                  @click='showInfo(scope)'
                   size='mini'>详情</el-button>
                 </template>
 			    		</el-table-column>
@@ -311,7 +311,7 @@ export default {
     /* 展示随访计划详情 */
     showInfo(scope) {
       this.planDg = true
-       this.$store.dispatch('getScopeRowData', scope);
+      this.$store.dispatch('getScopeRowData', scope);
     },
     /**
      *审核不通过的原因
@@ -363,10 +363,11 @@ export default {
         })
         .then(res => {
           if (res.code == 0) {
-            this.getData();
             this.noCheck = false;
             this.selectCheck = ''
             this.checkId.length = 0
+            const getTableName = `tableData_${tableName[this.tabIndex]}`
+            this.getData(this[getTableName])
           }
         })
         .catch(error => {});

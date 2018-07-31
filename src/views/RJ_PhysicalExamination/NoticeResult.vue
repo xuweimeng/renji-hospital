@@ -44,17 +44,7 @@
           :default-time="['00:00:00', '23:59:59']">
         </el-date-picker>
       </li>
-      <!--<li class="common_search_single common_search_single_date">-->
-        <!--<label class="radio-label" >体检时间</label>-->
-        <!--<el-date-picker-->
-          <!--@change="orderTimeChange"-->
-          <!--v-model="orderTime"-->
-          <!--type="datetimerange"-->
-          <!--value-format="yyyy-MM-dd HH:mm:ss"-->
-          <!--start-placeholder="开始日期"-->
-          <!--end-placeholder="结束日期">-->
-        <!--</el-date-picker>-->
-      <!--</li>-->
+
       <li class="common_search_single">
         <label class="radio-label" >是否本人</label>
         <el-select v-model="searchParams.isMySelf" placeholder="请选择" popper-class="mdRtSelect">
@@ -125,7 +115,7 @@
       </el-pagination>
     </div>
 
-    <result-info ref="record" @refresh="getData" :resultData="dataTail" :patientId="patientId"></result-info>
+    <result-info ref="record" @refresh="getData" :resultData="dataTail" :patientId="patientId" :hzxxId="hzxxId"></result-info>
   </div>
 </template>
 
@@ -168,6 +158,7 @@
           orderTimeEnd: null
         },
         tableData: [],
+        hzxxId:"",   //患者id
         totalPage: 0, // 总页数
         dataLoading: false // 表格数据请求等待;
       };
@@ -224,6 +215,7 @@
       detailBtn(scope) {
         this.dataTail = scope.row;
         this.patientId = scope.row.id;
+        this.hzxxId = scope.row.hzxxId; //患者id
         this.$refs.record.dialogTableVisible = true;
       },
       /**

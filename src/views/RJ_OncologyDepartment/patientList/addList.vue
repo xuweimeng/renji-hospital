@@ -107,6 +107,16 @@
   export default {
     name: 'AddList',
     data () {
+      var checkMobile = (rule, value, callback) => {
+        var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
+        if (value === '') {
+          callback(new Error('手机号不能为空'));
+        } else if (myreg.test(value)) {
+          callback();
+        } else {
+          callback(new Error('手机号码格式错误!'));
+        }
+      };
       return {
         dialogFormVisible: false,
         ruleForm: {
@@ -130,7 +140,7 @@
             { required: true, message: '请输入患者姓名', trigger: 'blur' }
           ],
           mobile: [
-            { required: true, message: '请输入联系电话', trigger: 'blur' },
+            { required: true, validator: checkMobile, trigger: 'blur' },
           ],
           icd: [
             { required: true, message: '请输入疾病名称', trigger: 'blur' }
@@ -259,37 +269,33 @@
        * 新增患者
        */
       addOncology () {
-        if(new Date(this.ruleForm.intime) <= new Date(this.ruleForm.outtime) ) {
-          this.submitLoading = true
-          this.submitDisabled = true
-          hzList.addOncology(this.ruleForm).then((res)=>{
-            this.submitLoading = false
-            this.submitDisabled = false
-            if(res.code == 0) {
-              this.$message.success(res.message)
-              this.closeMessage.success = true
-              this.ruleForm.icdName = ''
-              this.ruleForm.sex = ''
-              this.ruleForm.csny = ''
-              this.ruleForm.mainDoctor = ''
-              this.ruleForm.intime = ''
-              this.ruleForm.outtime = ''
-              this.ruleForm.diagnose = ''
-              this.ruleForm.treatmentPlan = ''
-              this.options4 = []
-              this.$emit('closeDialogFun', this.closeMessage)
-              this.$refs.ruleForm.resetFields();
-            }else {
-              this.$message.error(res.message)
-            }
-          }).catch((error)=>{
-            this.submitLoading = false
-            this.submitDisabled = false
-            this.$message.error(error.message)
-          })
-        } else {
-          this.$message.error('出院时间不得早于入院时间！')
-        }
+        this.submitLoading = true
+        this.submitDisabled = true
+        hzList.addOncology(this.ruleForm).then((res)=>{
+          this.submitLoading = false
+          this.submitDisabled = false
+          if(res.code == 0) {
+            this.$message.success(res.message)
+            this.closeMessage.success = true
+            this.ruleForm.icdName = ''
+            this.ruleForm.sex = ''
+            this.ruleForm.csny = ''
+            this.ruleForm.mainDoctor = ''
+            this.ruleForm.intime = ''
+            this.ruleForm.outtime = ''
+            this.ruleForm.diagnose = ''
+            this.ruleForm.treatmentPlan = ''
+            this.options4 = []
+            this.$emit('closeDialogFun', this.closeMessage)
+            this.$refs.ruleForm.resetFields();
+          }else {
+            this.$message.error(res.message)
+          }
+        }).catch((error)=>{
+          this.submitLoading = false
+          this.submitDisabled = false
+          this.$message.error(error.message)
+        })
       }
 
     },

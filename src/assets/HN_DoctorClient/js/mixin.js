@@ -27,7 +27,7 @@ const mixin = {
       let search_param={
         adminId: userId,
         patientId: patientId,
-        // visitOrderId:null
+        visitOrderId:visitOrderId?visitOrderId:undefined
       }
       return await CommonAPI.getPatientRecord(search_param);
     },
