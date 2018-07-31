@@ -165,7 +165,7 @@
                     <span class="record_header_sexAndage">
                         {{`${baseData.brxb}${baseData.brage?('/'+baseData.brage):''}`}}
                     </span>
-                    <el-tag v-show="baseData.gzTag">
+                    <el-tag v-if="baseData.gzTag">
                         {{baseData.gzTag}}
                     </el-tag>
                 </h3>
@@ -238,6 +238,9 @@ export default {
     patientId: {
       type: String
     },
+    hzxxId:{
+      type: String
+    },
     resultData: {
       type: Object,
       default: () => {
@@ -257,9 +260,12 @@ export default {
   },
   data() {
     return {
+      gzTag:"",
       currentTable: 'one',
       dialogTableVisible: false,
-      baseData: {},
+      baseData: {
+
+      },
       baseUrl: '',
       recordData: []
     };
@@ -279,6 +285,7 @@ export default {
       })
         .then(res => {
           // 基础数据赋值
+          res.data.gzTag =  res.gztag;
           this.baseData = res.data;
           this.baseData.isCare = !!this.baseData.gzTag;
           this.baseUrl = res.AIVOICURL;
@@ -311,7 +318,7 @@ export default {
           NoticeResult.updateGz({
             diagnoseType: 3,
             adminId: this.token,
-            patientId: this.patientId,
+            patientId: this.hzxxId,
             operateType: 0 // (操作类型 1:关注 0：取消关注) （必填）
           })
             .then(res => {
@@ -348,7 +355,7 @@ export default {
           NoticeResult.updateGz({
             diagnoseType: 3,
             adminId: this.token,
-            patientId: this.patientId,
+            patientId: this.hzxxId,
             operateTag: value,
             operateType: 1 // (操作类型 1:关注 0：取消关注) （必填）
           })

@@ -168,7 +168,7 @@
       </el-form>
     </el-dialog>
     <!--客户改约-->
-    <el-dialog title="添加客户" :visible.sync="isModify" width="525px" top="30px" :center = "false" custom-class="ModifyDialog" @close="closeAction('queryModify')">
+    <el-dialog title="修改预约时间" :visible.sync="isModify" width="525px" top="30px" :center = "false" custom-class="ModifyDialog" @close="closeAction('queryModify')">
       <el-form :model="queryModify" :rules="rules" ref="queryModify"  class="demo-ruleForm">
         <el-form-item label="预约体检时间" prop="physicalTime">
           <el-date-picker

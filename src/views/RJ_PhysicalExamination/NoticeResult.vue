@@ -115,7 +115,7 @@
       </el-pagination>
     </div>
 
-    <result-info ref="record" @refresh="getData" :resultData="dataTail" :patientId="patientId"></result-info>
+    <result-info ref="record" @refresh="getData" :resultData="dataTail" :patientId="patientId" :hzxxId="hzxxId"></result-info>
   </div>
 </template>
 
@@ -158,6 +158,7 @@
           orderTimeEnd: null
         },
         tableData: [],
+        hzxxId:"",   //患者id
         totalPage: 0, // 总页数
         dataLoading: false // 表格数据请求等待;
       };
@@ -214,6 +215,7 @@
       detailBtn(scope) {
         this.dataTail = scope.row;
         this.patientId = scope.row.id;
+        this.hzxxId = scope.row.hzxxId;
         this.$refs.record.dialogTableVisible = true;
       },
       /**

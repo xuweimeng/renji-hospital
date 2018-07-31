@@ -73,7 +73,7 @@
                     <span class="record_header_sexAndage">
                         {{baseData.sex}}/{{baseData.birthday}}
                     </span>
-                    <el-tag v-show="baseData.gzTag">
+                    <el-tag v-if="baseData.gzTag">
                         {{baseData.gzTag}}
                     </el-tag>
                 </h3>
@@ -179,6 +179,7 @@ export default {
         .then(res => {
           //      基础数据赋值
           this.baseData = res.data;
+          console.log( this.baseData)
           this.baseData.isCare = !!this.baseData.gzTag;
         })
         .then(() => {
