@@ -149,4 +149,9 @@ export default {
       }
     }
   }
+  .selectOut {
+    .el-select-dropdown__wrap {
+      margin-bottom: 0!important;
+    }
+  }
 </style>

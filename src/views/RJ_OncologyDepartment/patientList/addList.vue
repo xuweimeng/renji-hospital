@@ -107,6 +107,16 @@
   export default {
     name: 'AddList',
     data () {
+      var checkMobile = (rule, value, callback) => {
+        var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
+        if (value === '') {
+          callback(new Error('手机号不能为空'));
+        } else if (myreg.test(value)) {
+          callback();
+        } else {
+          callback(new Error('手机号码格式错误!'));
+        }
+      };
       return {
         dialogFormVisible: false,
         ruleForm: {
@@ -130,7 +140,7 @@
             { required: true, message: '请输入患者姓名', trigger: 'blur' }
           ],
           mobile: [
-            { required: true, message: '请输入联系电话', trigger: 'blur' },
+            { required: true, validator: checkMobile, trigger: 'blur' },
           ],
           icd: [
             { required: true, message: '请输入疾病名称', trigger: 'blur' }
