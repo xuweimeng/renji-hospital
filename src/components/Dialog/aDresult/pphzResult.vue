@@ -198,14 +198,14 @@
               .hzWords {
                 margin: 10px 10px 0 10px;
                 float: right;
-                width: 270px;
+                width: 290px;
                 min-height: 40px;
                 background: #dfefff;
                 border-radius: 5px;
-                padding-left: 18px;
+                padding-left: 10px;
                 position: relative;
                 audio {
-                  width: 90%;
+                  width: 96%;
                 }
                 .arrows1 {
                   width: 5px;
@@ -228,7 +228,7 @@
     }
   }
   .answer-text-wrap{
-    width:320px;
+    width:340px;
     float:right;
     text-align: left;
     background-color: #dfefff;

@@ -1,5 +1,5 @@
 <template>
-  <div class='dischargeFollowupResults'>
+  <div class='initiatingNoticePlan'>
     <!-- 查询 -->
     <el-row class='common-search'>
 			<el-form :inline='true' :model='searchParams' label-position='center' label-width='80px'>
@@ -15,7 +15,7 @@
 				</el-col>
 				<el-col :span='4'>
 			  	<el-form-item label='检查项目'>
-				    <el-select v-model='searchParams.icdCheckItem' clearable  placeholder='请选择'>
+				    <el-select v-model='searchParams.icdCheckItem' clearable filterable  placeholder='请选择'>
 				      <el-option
                 v-for='item in ProjectList'
                 :key='item.icd10'
@@ -39,7 +39,7 @@
           </el-form-item>
 			  </el-col>
 			  <el-col :span='3'>
-			  	<el-button type='primary' @click='getData'>查询</el-button>
+			  	<el-button type='primary' @click='searchBtn'>查询</el-button>
 			  </el-col>
 			</el-form>
 		</el-row>
@@ -81,7 +81,7 @@
               <el-col :span='12'>
                 <el-pagination
                   @current-change='handleCurrentChange'
-                  :current-page.sync='tableData_list.nowpager'
+                  :current-page.sync='tableData_list.pager'
                   :page-size='10'
                   layout='total,prev, pager, next, jumper'
                   :total='tableData_list.totalPage' v-if='tableData_list.totalPage'>
@@ -118,8 +118,8 @@
 			    	<el-row v-if='tableData_stop.totalPage' style="padding-top: 20px;">
               <el-col :span='12' :offset="12">
                 <el-pagination
-                  @current-change='pageChange'
-                  :current-page.sync='tableData_stop.nopager'
+                  @current-change='handleCurrentChange'
+                  :current-page.sync='tableData_stop.pager'
                   :page-size='10'
                   layout='total,prev, pager, next, jumper'
                   :total='tableData_stop.totalPage'>
@@ -172,10 +172,11 @@
 <script>
 import { InspectionNotice } from 'RJZL_API/InitiateNotification';
 import { commonUrl } from 'RJZL_API/commonUrl';
+import auditOptions from 'utils/auditOptions'
 import CheckedList from './checkedList/checkedList';
 const tabPaneName = ['list', 'stop'];
 export default {
-  name: 'dischargeFollowupResults',
+  name: 'initiatingNoticePlan',
   data() {
     return {
       searchParams: {
@@ -203,28 +204,7 @@ export default {
         totalPage: null,
         status: '4'
       },
-      checkoptions: [ // 审核不通过options
-        {
-          value: '',
-          label: '请选择'
-        },
-        {
-          value: '1',
-          label: '患者已死亡'
-        },
-        {
-          value: '2',
-          label: '患者不接受随访'
-        },
-        {
-          value: '3',
-          label: '随访方案重复'
-        },
-        {
-          value: '4',
-          label: '方案不匹配'
-        }
-      ],
+      checkoptions: auditOptions, // 审核不通过options
       infoShow: false /* 通知计划详情显示 */,
       selectCheck: '', // 选中的审核不通过
       notPassRemark: '', // 不通过详情
@@ -234,7 +214,8 @@ export default {
       planDg: false, // 详情弹窗
       tabIndex: '0', // tab 0:入院通知，1：已终止通知
       gridData: [], // 检查详情
-      ProjectList: [] // 检查项目
+      ProjectList: [], // 检查项目
+      hzxxId: '' // 患者信息id
     };
   },
   components: {
@@ -251,13 +232,22 @@ export default {
       this.searchParams.pager = param.nowpager;
       InspectionNotice.queryCheckTask({
         ...this.searchParams,
-        status: param.status
+        status: param.status,
+        pager: param.pager
       })
-        .then(res => {
-          param.list = res.data;
+      .then(res => {
+        param.list = res.data;
+        param.loading = false;
+        if (param.pager === 1) {
           param.totalPage = res.count;
-          param.loading = false;
-        });
+        }
+      });
+    },
+    /** 查询列表 */
+    searchBtn() {
+      const param_name = `tableData_${tabPaneName[this.tabIndex]}`;
+      this[param_name].pager = 1;
+      this.getData(this[param_name]);
     },
     /** 获取检查项目列表 */
     getProjectList() {
@@ -326,6 +316,7 @@ export default {
     },
     /** 终止原因--取消 */
     dgFailBtn() {
+      this.checkId.length = 0
       this.noCheck = false;
       this.selectCheck = '';
       this.notPassRemark = '';
@@ -349,6 +340,7 @@ export default {
           if (res.code === 0) {
             const param_name = `tableData_${tabPaneName[this.tabIndex]}`;
             this.getData(this[param_name]);
+            this.checkId.length = 0;
             this.noCheck = false;
             this.selectCheck = '';
             this.notPassRemark = '';
@@ -366,26 +358,13 @@ export default {
       const param_name = `tableData_${tabPaneName[tab.index]}`;
       this.getData(this[param_name]);
     },
-
     /**
      * 分页
      * @function handleCurrentChange
-     * @param {String} val 当前页码
-     * @description this.tabActive = 0//全部患者=1特别关心
-     */
-    pageChange(page) {
-      this.searchParams.pager = page;
-      this.getData(this.tableData_stop);
-    },
-    /**
-     * 分页
-     * @function handleCurrentChange
-     * @param {String} val 当前页码
-     * @description this.tabActive = 0//全部患者=1特别关心
      */
     handleCurrentChange(page) {
-      this.searchParams.pager = page;
-      this.getData(this.tableData_list);
+      const param_name = `tableData_${tabPaneName[this.tabIndex]}`;
+      this.getData(this[param_name]);
     },
     /** 批量终止 */
     numCheck() {

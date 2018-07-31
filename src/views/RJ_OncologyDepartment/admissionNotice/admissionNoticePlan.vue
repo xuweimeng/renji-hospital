@@ -74,8 +74,11 @@
 					<el-table border :data='dataList' style='width: 100%' ref='multipleTable' v-loading='hzLoading'>
 						<el-table-column prop='brxm' label='姓名' align='center'></el-table-column>
 						<el-table-column prop='jtdh' label='联系方式' align='center'></el-table-column>
-						<el-table-column prop='brxb' label='性别' align='center'></el-table-column>
-						<el-table-column prop='age' label='年龄' align='center'></el-table-column>
+						<el-table-column label='性别/年龄' align='center' width='100'>
+              <template slot-scope='scope'>
+                {{scope.row.brxb}} <span v-if='scope.row.brxb && scope.row.age'>/</span> {{scope.row.age}}
+              </template>
+            </el-table-column>
 						<el-table-column prop='sourcetime' label='创建时间' align='center'></el-table-column>
 						<el-table-column prop='diseaseName' label='疾病名称' align='center' show-overflow-tooltip></el-table-column>
 						<el-table-column label='操作' width='180' align='center'>

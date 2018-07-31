@@ -10,7 +10,7 @@
           <p class="text-center">上次登录时间:{{getAdminInfo.lastVisitDate?getAdminInfo.lastVisitDate:"无"}}</p>
         </div>
       </el-col>
-      <el-col :span="5" style="margin-left: 2.56%" class="public-style noticeNum-two" @click.native="toHz">
+      <el-col :span="5" style="margin-left: 2.56%" class="public-style noticeNum-two" @click.native="routerToFollowupPlanReview">
         <div class="notice-picture notice-font blue-color">
           <i class="el-icon-message"></i>
         </div>
@@ -19,7 +19,7 @@
           <p class="text-center blue-font">{{getAdminInfo.needShCount}}</p>
         </div>
       </el-col>
-      <el-col :span="5" style="margin-left: 2.56%" class="public-style noticeNum-two" @click.native="toHz">
+      <el-col :span="5" style="margin-left: 2.56%" class="public-style noticeNum-two" @click.native="routerToFollowupResults">
         <div class="notice-picture notice-font green-color">
           <i class="el-icon-edit"></i>
         </div>
@@ -28,7 +28,7 @@
           <p class="text-center green-font">{{getAdminInfo.hadVisitPeopleCount}}</p>
         </div>
       </el-col>
-      <el-col :span="5" style="margin-left: 2.56%" class="public-style noticeNum-two plpl" @click.native="toHz">
+      <el-col :span="5" style="margin-left: 2.56%" class="public-style noticeNum-two plpl" @click.native="routerToHzList">
         <div class="notice-picture notice-font origin-color">
           <i class="el-icon-bell"></i>
         </div>
@@ -824,33 +824,20 @@
           console.log(error)
         })
       },
-      /*
-      *跳转随访结果
-      */
-      routerToWay() {
-        if(this.getAdminInfo.needClCount){
-          this.$router.push({path: '/MdNoticeRt'})
-          // Bus.$emit('activeIndex','/MdNoticeRt')
-        }
+      /** 路由跳转-出院随访结果 */
+      routerToFollowupResults() {
+        this.$router.push({path: '/dischargeFollowupPlanReview/dischargeFollowupResults'})
       },
-      /*
-      *跳转随访计划
-      */
-      routerToWay1() {
-        this.$router.push({path: '/HzList'})
-        // Bus.$emit('activeIndex1','/HzList')
+      /** 路由跳转-患者列表 */
+      routerToHzList() {
+        this.$router.push({path: '/hzList'})
       },
-      /*
-      *跳转随访计划
-      */
-      toHz() {
-        this.$router.push({path: '/Examine'})
-        // Bus.$emit('activeIndex2','/Examine')
+      /** 路由跳转-出院随访计划审核 */
+      routerToFollowupPlanReview() {
+        this.$router.push({path: '/dischargeFollowupPlanReview/dischargeFollowupPlanReview'})
       },
 
-      /*
-      *特别关心
-      */
+     /** 特别关心 */
       SpecialCare(val) {
         rjPage.getMyPatient({
           'limit': 5,
@@ -881,7 +868,7 @@
       */
       wayButton(scope) {
         this.hzDialog = true
-        this.$store.dispatch('hzFileRows', scope.row)
+       this.$store.dispatch('getScopeRowData', scope)
       },
       /*
       *已处理
