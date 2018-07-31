@@ -8,7 +8,7 @@ import qs from 'qs';
 const service = axios.create({
   // todo 海宁8084使用
   // baseURL: process.env.BASE_API, // api的base_url
-  baseURL: 'http://192.168.1.218:8084',
+  // baseURL: 'http://192.168.1.218:8084',
   // baseURL: 'http://192.168.1.218:8082',
   // baseURL: '/api', // api的base_url
   // baseURL: 'http://60.190.86.50:6016', // api的base_url
