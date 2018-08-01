@@ -15,11 +15,11 @@ const service = axios.create({
 
 // 请求参数验证
 const JsonData = [
-  '/visit/order/temp/visit', 
-  '/visit/ordertask/batchcancelall', 
-  'visit/ordertask/vet', 
-  '/visit/ordertask/physicalTemporary', 
-  '/visit/ordertask/physicalNewTemporary', 
+  '/visit/order/temp/visit',
+  '/visit/ordertask/batchcancelall',
+  'visit/ordertask/vet',
+  '/visit/ordertask/physicalTemporary',
+  '/visit/ordertask/physicalNewTemporary',
   '/statistic/examination/notice',
   '/visit/check/temp/visit'
 ];
