@@ -10,7 +10,7 @@
     >
       <el-form label-position="right" label-width="90px">
         <el-form-item label="原手机号">
-          <el-input v-model="patientRecord.mobile" disabled></el-input>
+          <el-input v-model="baseData.mobile" disabled></el-input>
         </el-form-item>
         <el-form-item label="修改手机号">
           <el-input v-model="phone" type="number" clearable></el-input>
@@ -48,7 +48,7 @@
           label="姓名">
           <template slot-scope="scope">
             <span>{{scope.row.brxm}}</span>
-            <el-tag v-show="scope.row.brxm == patientRecord.brxm">本人</el-tag>
+            <el-tag v-show="scope.row.brxm == baseData.brxm">本人</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -142,8 +142,7 @@
         notPassRemark: '' /* 终止随访的备注 */,
         tableData: [], // 随访计划列表
         phone: '', // 新手机号
-        patientRecord: {}, // 患者信息，含原手机号
-        userId: ''
+        baseData: {} // 患者信息，含原手机号
       };
     },
     props: {
@@ -158,6 +157,16 @@
       }
     },
     mixins: [mixin],
+    // 检测patientId是否正常
+    // watch: {
+    //   patientId: {
+    //     handler(val) {
+    //       this.getPatientInfo(undefined, val, null).then(res => {
+    //         this.baseData = res.data;
+    //       });
+    //     }
+    //   }
+    // },
     methods: {
       /**
        * @function 切换显示弹框
@@ -165,16 +174,12 @@
        */
       toggleShowModal() {
         this.modalShow = !this.modalShow;
-        if (this.modalShow === true) {
-          this.phone = '';
-          // 解决偶现的patientId为空的情况
-          if (this.patientId) {
-            this.getPatientInfo();
-          } else {
-            setTimeout(() => {
-              this.getPatientInfo();
-            }, 0);
-          }
+        if (this.modalShow) {
+          this.$nextTick(() => { // 会偶现patientId 为空的情况
+            this.getPatientInfo().then(res => {
+              this.baseData = res.data;
+            });
+          });
         }
       },
       /**
@@ -216,7 +221,7 @@
         UpdateTel
           .changeMobile({
             patientId: this.patientId,
-            oldPhone: this.patientRecord.mobile, // 修改前的手机号
+            oldPhone: this.baseData.mobile, // 修改前的手机号
             newPhone: this.phone // 要修改成的号码
           })
           .then(res => {
@@ -244,7 +249,7 @@
           });
           return false;
         }
-        if (this.phone === this.patientRecord.mobile) {
+        if (this.phone === this.baseData.mobile) {
           this.$message({
             message: '手机号码和原号码相同',
             type: 'warning'
@@ -254,7 +259,7 @@
         UpdateTel
           .getProject({
             patientId: this.patientId,
-            oldPhone: this.patientRecord.mobile, // 修改前的手机号
+            oldPhone: this.baseData.mobile, // 修改前的手机号
             newPhone: this.phone // 要修改成的号码
           })
           .then(res => {

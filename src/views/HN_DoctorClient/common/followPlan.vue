@@ -5,30 +5,32 @@
       <div class="content" slot>
         <!-- 个人信息 -->
         <el-row class="personInfo">
-          <el-col :span="12" class="elCol1"><span class="personName colororigen">{{patientRecord.brxm}}</span><span class="personSex colororigen">{{patientRecord.brxb}} / {{patientRecord.brage}}</span> <span class="personXg">{{patientRecord.GzTag}}</span></el-col>
+          <el-col :span="12" class="elCol1">
+            <span class="personName colororigen">{{baseData.brxm}}</span>
+            <span class="personSex colororigen">{{baseData.brxb}} / {{baseData.brage}}</span>
+            <span class="personXg">{{baseData.GzTag}}</span>
+          </el-col>
           <el-col :span="12" class="elCol2">
-            <el-button type="text" @click="handleislike" v-bind:class="{ careColor: isCare}">
-              <i class="iconfont" v-bind:class="{ careColor: isCare}" style="margin-right:5px; font-size:12px;">&#xe604;</i>
-              {{isCare?'取消关心':'特别关心'}}
-            </el-button>
+            <el-button v-if="baseData.GzTag" size="mini" type="primary" @click="cancelSpecial" >取消关注</el-button>
+            <el-button v-else   icon="el-icon-star-off" size="mini" type="primary" @click="addSpecial" >添加关注</el-button>
           </el-col>
         </el-row>
         <el-row class="personResult">
           <el-col :span="24" class="elCol3">
             <span class="elCol3Span1">诊断名称&nbsp;:&nbsp;</span>
-            <span class="elCol3Span2">{{patientRecord.icdName}}</span>
+            <span class="elCol3Span2">{{baseData.icdName}}</span>
           </el-col>
         </el-row>
         <el-row class="personResult">
           <el-col :span="24" class="elCol3">
             <span class="elCol3Span1">手机号码&nbsp;:&nbsp;</span>
-            <span class="elCol3Span2">{{patientRecord.mobile}}</span>
+            <span class="elCol3Span2">{{baseData.mobile}}</span>
           </el-col>
         </el-row>
         <el-row class="personResult">
           <el-col :span="24" class="elCol3">
             <span class="elCol3Span1">就诊时间&nbsp;:&nbsp;</span>
-            <span class="elCol3Span2">{{patientRecord.diagnoseTime}}</span>
+            <span class="elCol3Span2">{{baseData.diagnoseTime}}</span>
           </el-col>
         </el-row>
       </div>
@@ -81,14 +83,12 @@ import mixin from '@/assets/HN_DoctorClient/js/mixin';
 export default {
   data() {
     return {
-      userId: '', // 从localStorage获取登录页的医生id
       modelFollplanData: [], // 随访计划data
       loading: false, // 加载动画
       dialogVisible: false, // 弹框是否显示
       timeTip: '', // 倒计时提示
       interObj: {}, // 倒计时对象，全局清除倒计时
-      patientRecord: {}, // 患者基本信息
-      isCare: ''// 点击记录后，查看病人是否被关注
+      baseData: {}, // 患者基本信息
     };
   },
   props: ['patientId', 'visitOrderId', 'taskId', 'tabActive'],
@@ -102,16 +102,12 @@ export default {
     toggleShowModal() {
       this.dialogVisible = !this.dialogVisible;
       if (this.dialogVisible) {
-        // 解决偶现的patientId为空的情况
-        if (this.patientId) {
+        this.$nextTick(() => {
           this.getPtWay(this.taskId);
-          this.getPatientInfo();
-        } else {
-          setTimeout(() => {
-            this.getPtWay(this.taskId);
-            this.getPatientInfo();
-          }, 0);
-        }
+          this.getPatientInfo().then(res => {
+            this.baseData = res.data;
+          });
+        });
       }
     },
     /**

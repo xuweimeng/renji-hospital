@@ -39,7 +39,7 @@
   }
   &_opinion{
     border-top: 3px solid #eee;
-    padding-top: 15px;
+    padding: 15px 0;
     >span{
       font-size: 14px;
       color: #409eff;
@@ -47,6 +47,10 @@
     }
     button{
       margin-left: 20px;
+    }
+    button.active{
+      background-color: #b3e19d;
+      border-color: #b3e19d;
     }
   }
   &_table {
@@ -159,31 +163,33 @@
                 <span class="record_header_sexAndage">
                     {{baseData.brxb}}/{{baseData.brage}}
                 </span>
-                <el-tag v-show="baseData.gzTag">
+                <el-tag v-show="baseData.GzTag">
                     {{baseData.GzTag}}
                 </el-tag>
             </h3>
             <h4 class="record_header_param">
-              出生年月: {{baseData.patientBithday}}
+              <!--出生年月: {{baseData.patientBithday}}-->
+              疾病诊断: {{baseData.icdName}}
             </h4>
             <h4 class="record_header_param">
               手机号码: {{baseData.mobile}}
             </h4>
             <h4 class="record_header_param">
-              联系地址: {{baseData.patientAddress}}
+              <!--联系地址: {{baseData.patientAddress}}-->
+              随访方案: {{baseData.schemeName}}
             </h4>
-            <el-button v-if="baseData.gzTag" class="record_header_cancel" size="mini" type="primary" @click="cancelSpecial" >取消关注</el-button>
+            <el-button v-if="baseData.GzTag" class="record_header_cancel" size="mini" type="primary" @click="cancelSpecial" >取消关注</el-button>
             <el-button v-else   icon="el-icon-star-off" class="record_header_cancel"  size="mini" type="primary" @click="addSpecial" >添加关注</el-button>
         </div>
         <!--  处理意见 -->
         <div class="record_opinion">
           <span>处理意见:</span>
-          <el-button size="small" type="primary" round  :disabled="isResolved === true || tabActive==1"  @click="resolveBTN">暂不处理</el-button>
-          <el-button size="small" type="primary" round  :disabled="isResolved === true || tabActive==1"  @click="resolveBTN">病情稳定</el-button>
-          <el-button size="small" type="primary" round  :disabled="isResolved === true || tabActive==1"  @click="resolveBTN">通知就诊</el-button>
+          <el-button size="small" type="primary" round  :disabled="isResolved === true || tabActive==1" :class="[{active: resolvedState === 2}]" @click="resolveBTN">暂不处理</el-button>
+          <el-button size="small" type="primary" round  :disabled="isResolved === true || tabActive==1" :class="[{active: resolvedState === 0}]" @click="resolveBTN">病情稳定</el-button>
+          <el-button size="small" type="primary" round  :disabled="isResolved === true || tabActive==1" :class="[{active: resolvedState === 1}]"  @click="resolveBTN">通知就诊</el-button>
         </div>
 
-        <el-tabs v-model="currentTable"  type="border-card" >
+        <el-tabs v-model="currentTable"  type="border-card" @tab-click="numberChange" v-show="selectOptions.length > 0">
             <el-tab-pane v-for="(item,index) in selectOptions" :key="index" :name="item.value+''"  :label="`第${index+1}次随访`">
                  <ul class="record_content_list">
                        <li v-for="(ite, index) in modelData" :key="index+2" class="record_content_single">
@@ -201,7 +207,7 @@
             </el-tab-pane>
         </el-tabs>
         <!-- 随访结果 -->
-        <el-row class="resultNumber">
+        <el-row class="resultNumber" v-if="false">
           <el-col :span="4" class="elCol5">随访结果&nbsp;:&nbsp;</el-col>
           <el-col :span="16" class="elCol6"><div></div></el-col>
           <el-col :span="4" class="elCol7">
@@ -210,7 +216,7 @@
             </el-select>
           </el-col>
         </el-row>
-        <el-row class="targetResult">
+        <el-row class="targetResult" v-if="false">
           <!-- 指标详情 -->
           <el-row class="targetDetails">
             <div
@@ -322,38 +328,36 @@
  * 随访记录
  * @module followRecord
  */
-import { FollowRecord } from "HNDC_API/common/followRecord";
-import echarts from "echarts";
-import { Point } from "@/assets/HN_DoctorClient/js/selectOptions";
-import mixin from "@/assets/HN_DoctorClient/js/mixin";
+import { FollowRecord } from 'HNDC_API/common/followRecord';
+import echarts from 'echarts';
+import { Point } from '@/assets/HN_DoctorClient/js/selectOptions';
+import mixin from '@/assets/HN_DoctorClient/js/mixin';
 export default {
   data() {
     return {
-      currentTable:"",
+      currentTable: '',
       dialogVisible: false,
-      userId: "", // 医生adminId sessionStorage中
       fullscreenLoading: false, // 加载随访记录弹框时的全屏加载动画
       baseData: {}, // 患者基本信息
       selectOptions: [], // 随访记录弹框 随访结果的第几次选择信息
-      sfNumberSelected: "", // 选中第几次
-      disabledBtn: "disabledBtn", // 处理意见 按钮的类名？
-      isCare: "", // 点击记录后，查看病人是否被关注
-      activeName1: "a0", // 指标折线图选中下标
+      sfNumberSelected: '', // 选中第几次
+      disabledBtn: 'disabledBtn', // 处理意见 按钮的类名？
+      activeName1: 'a0', // 指标折线图选中下标
       modelData: [], // 随访记录 的语音详情信息
       targetTab: [], // 指标tab
-      tabLabel: "", // 指标选中label
+      tabLabel: '', // 指标选中label
       xChart: [], // 指标折线图 参数
       yChart: [],
-      yyHrec: "", // 语音地址前缀
+      yyHrec: '', // 语音地址前缀
       showAnimal: false, // 是否显示指标的图表
       adviceCheckDialog: false, // 选择处理意见后的确认弹框是否显示
-      btnState: "", // 当前处理意见类型
-      checkAdvice: "", // 审核意见
-      isResolved: "", // 是否可以点击 处理意见 的三个选项按钮
-      resolvedState: "" // 处理意见 的三个选项按钮的选中num依次2,0,1
+      btnState: '', // 当前处理意见类型
+      checkAdvice: '', // 审核意见
+      isResolved: '', // 是否可以点击 处理意见 的三个选项按钮
+      resolvedState: '' // 处理意见 的三个选项按钮的选中num依次2,0,1
     };
   },
-  props: ["visitOrderId", "patientId", "taskId", "sfNumber", "tabActive"],
+  props: ['visitOrderId', 'patientId', 'taskId', 'sfNumber', 'tabActive'],
   // 含getPatientInfo,handleislike两个方法
   mixins: [mixin],
   methods: {
@@ -364,22 +368,14 @@ export default {
     toggleShowModal() {
       this.dialogVisible = !this.dialogVisible;
       if (this.dialogVisible) {
-        // 解决偶现的patientId为空的情况
-        if (this.patientId) {
+        this.$nextTick(() => {
           this.getWayResult(this.sfNumber);
           this.sfNumberSelected = this.sfNumber;
+          this.currentTable = this.sfNumber + '';
           this.getPatientInfo().then(res => {
             this.baseData = res.data;
           });
-        } else {
-          setTimeout(() => {
-            this.getWayResult(this.sfNumber);
-            this.sfNumberSelected = this.sfNumber;
-            this.getPatientInfo().then(res => {
-              this.baseData = res.data;
-            });
-          }, 0);
-        }
+        });
       }
     },
     /**
@@ -387,9 +383,12 @@ export default {
      *@function numberChange
      * @param {String} value val
      */
-    numberChange(value) {
-      this.targetTab = []; // 清空数据
-      this.getWayResult(value);
+    // numberChange(value) {
+    //   this.targetTab = []; // 清空数据
+    //   this.getWayResult(value);
+    // },
+    numberChange(tab, event) {
+      this.getWayResult(tab.name);
     },
     /**
      * 获取model随访结果
@@ -416,12 +415,12 @@ export default {
               }
               if (item.isNormal) {
                 if (item.isNum) {
-                  item.isNum = "";
+                  item.isNum = '';
                 } else {
-                  item.isNum = "success";
+                  item.isNum = 'success';
                 }
               } else if (!item.isNormal) {
-                item.isNum = "danger";
+                item.isNum = 'danger';
               }
             });
             // 模态框数据
@@ -436,7 +435,7 @@ export default {
               this.getDiseaseInfo(res.visitOrderId);
             }
             this.showAnimal = false; // 生肖隐藏
-            this.activeName1 = "a0";
+            this.activeName1 = 'a0';
             if (this.targetTab.length) {
               // 如果有长度，就请求
               this.drawChart(this.targetTab[0], 0);
@@ -474,7 +473,7 @@ export default {
                 this.isResolved = false;
               }
             } else {
-              this.resolvedState = "";
+              this.resolvedState = '';
               this.isResolved = false;
             }
           }
@@ -490,13 +489,13 @@ export default {
      */
     resolveBTN(ev) {
       this.adviceCheckDialog = true;
-      if (ev.target.innerText === "暂不处理") {
+      if (ev.target.innerText === '暂不处理') {
         this.btnState = 2;
       }
-      if (ev.target.innerText === "病情稳定") {
+      if (ev.target.innerText === '病情稳定') {
         this.btnState = 0;
       }
-      if (ev.target.innerText === "通知就诊") {
+      if (ev.target.innerText === '通知就诊') {
         this.btnState = 1;
       }
     },
@@ -527,7 +526,7 @@ export default {
             this.dialogVisible = false;
             this.resolvedState = btnState;
             // 刷新列表数据
-            this.$emit("refreshData");
+            this.$emit('refreshData');
           }
         })
         .catch(error => {
@@ -573,9 +572,9 @@ export default {
           const data4 = [];
           const arrYchart = [];
           // 判断点击的是否是血压
-          if (label.includes("血压")) {
+          if (label.includes('血压')) {
             this.yChart.forEach(item => {
-              arrYchart.push(item.split("/"));
+              arrYchart.push(item.split('/'));
             });
 
             arrYchart.forEach(item => {
@@ -592,40 +591,40 @@ export default {
 
           // 指定图表的配置项和数据
           const option1 = {
-            backgroundColor: "#f9f9f9",
+            backgroundColor: '#f9f9f9',
             tooltip: {
-              trigger: "axis"
+              trigger: 'axis'
             },
             grid: {
-              top: "12%",
-              left: "10%",
-              right: "8%",
-              bottom: "12%"
+              top: '12%',
+              left: '10%',
+              right: '8%',
+              bottom: '12%'
             },
             xAxis: {
-              type: "category",
+              type: 'category',
               boundaryGap: false,
               data: data1
             },
             yAxis: {
-              type: "value",
+              type: 'value',
               axisLabel: {
-                formatter: "{value}"
+                formatter: '{value}'
               }
             },
             series: [
               {
                 name: label,
-                type: "line",
+                type: 'line',
                 data: data2,
                 smooth: true,
-                symbol: "circle",
+                symbol: 'circle',
                 symbolSize: 4,
                 itemStyle: {
                   normal: {
-                    color: "rgba(255, 98, 66, .7)",
+                    color: 'rgba(255, 98, 66, .7)',
                     lineStyle: {
-                      color: "rgba(255, 98, 66, .5)",
+                      color: 'rgba(255, 98, 66, .5)',
                       width: 1
                     }
                   }
@@ -635,11 +634,11 @@ export default {
                     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                       {
                         offset: 0,
-                        color: "rgba(255, 98, 66, .6)"
+                        color: 'rgba(255, 98, 66, .6)'
                       },
                       {
                         offset: 1,
-                        color: "rgba(255, 98, 66, .2)"
+                        color: 'rgba(255, 98, 66, .2)'
                       }
                     ])
                   }
@@ -648,40 +647,40 @@ export default {
             ]
           };
           const option2 = {
-            backgroundColor: "#f9f9f9",
+            backgroundColor: '#f9f9f9',
             tooltip: {
-              trigger: "axis"
+              trigger: 'axis'
             },
             grid: {
-              top: "12%",
-              left: "10%",
-              right: "8%",
-              bottom: "12%"
+              top: '12%',
+              left: '10%',
+              right: '8%',
+              bottom: '12%'
             },
             xAxis: {
-              type: "category",
+              type: 'category',
               boundaryGap: false,
               data: data1
             },
             yAxis: {
-              type: "value",
+              type: 'value',
               axisLabel: {
-                formatter: "{value}"
+                formatter: '{value}'
               }
             },
             series: [
               {
                 name: label,
-                type: "line",
+                type: 'line',
                 data: data3,
                 smooth: true,
-                symbol: "circle",
+                symbol: 'circle',
                 symbolSize: 4,
                 itemStyle: {
                   normal: {
-                    color: "rgba(255, 98, 66, .7)",
+                    color: 'rgba(255, 98, 66, .7)',
                     lineStyle: {
-                      color: "rgba(255, 98, 66, .5)",
+                      color: 'rgba(255, 98, 66, .5)',
                       width: 1
                     }
                   }
@@ -698,16 +697,16 @@ export default {
               },
               {
                 name: label,
-                type: "line",
+                type: 'line',
                 data: data4,
                 smooth: true,
-                symbol: "circle",
+                symbol: 'circle',
                 symbolSize: 4,
                 itemStyle: {
                   normal: {
-                    color: "rgba(255, 98, 66, .7)",
+                    color: 'rgba(255, 98, 66, .7)',
                     lineStyle: {
-                      color: "rgba(255, 98, 66, .5)",
+                      color: 'rgba(255, 98, 66, .5)',
                       width: 1
                     }
                   }
@@ -724,9 +723,9 @@ export default {
               }
             ]
           };
-          let idCon = "a" + number;
+          let idCon = 'a' + number;
 
-          if (label.includes("血压")) {
+          if (label.includes('血压')) {
             if (data3.length) {
               idCon = echarts.init(document.getElementById(idCon));
               idCon.setOption(option2);

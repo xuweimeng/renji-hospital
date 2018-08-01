@@ -204,7 +204,6 @@
     mounted() {
       this.getUserId();
       this.getList();
-      console.log(this.params);
     },
     components: {
       patientFile,

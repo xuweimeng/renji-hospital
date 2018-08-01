@@ -119,7 +119,7 @@
           <el-table-column label="处理意见" align="center" v-if="index !== '0'">
             <template slot-scope="scope">
                   <span v-bind:class="[scope.row.visitResult==1?yyc:scope.row.visitResult==2?originC:wyc]">
-                    {{scope.row.visitResult==0?'病情稳定':scope.row.visitResult==1?'通知就诊':scope.row.visitResult==2?'暂不处理':''}}
+                    {{scope.row.visitResult==0?'病情稳定':scope.row.visitResult==1?'通知就诊':scope.row.visitResult==2?'暂不处理':'未知'}}
                   </span>
             </template>
           </el-table-column>

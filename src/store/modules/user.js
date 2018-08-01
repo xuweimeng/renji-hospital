@@ -73,7 +73,7 @@ const user = {
         commit('SET_DEPARTMENTNAME', data.departmentName);
         setParameter('departmentName', data.departmentName);
         // yugou 设置海宁医生端的type，用来判断满意度模块是否显示
-        sessionStorage.setItem('hn_type', `海宁市中心医院type${response.data.type}`);
+        localStorage.setItem('hn_type', `海宁市中心医院type${response.data.type}`);
       };
       return new Promise((resolve, reject) => {
         Login.login({
@@ -113,7 +113,7 @@ const user = {
             // commit('SET_ROLES', roles);
             // callBack(roles);
             // yugou改 海宁医生端 满意度模块权限
-            const roles_arr = [...roles, sessionStorage.getItem('hn_type')];
+            const roles_arr = [...roles, localStorage.getItem('hn_type')];
             commit('SET_ROLES', roles_arr);
             callBack(roles_arr);
           } else {
