@@ -47,8 +47,7 @@
 							range-separator="至"
 							start-placeholder="开始日期"
 							end-placeholder="结束日期"
-              :picker-options="pickerTime"
-							:default-time="['00:00:00', '23:59:59']">
+              :picker-options="pickerTime">
 						</el-date-picker>
 					</el-form-item>
 				</el-col>
@@ -367,8 +366,8 @@
      */
 			timeChange(time) {
 				if(time) {
-					this.formInline.dateEndBegin = time[0] ;
-					this.formInline.dateEndEnd = time[1] ;
+					this.formInline.dateEndBegin = time[0] + ' ' + '00:00:00';
+					this.formInline.dateEndEnd = time[1] + ' ' + '23:59:59';
 				} else {
 					this.formInline.dateEndBegin = '';
 					this.formInline.dateEndEnd = '';
@@ -380,7 +379,7 @@
           this.loadingSelect = true;
           setTimeout(() => {
             this.loadingSelect = false;
-             API.commonUrl.getdiseasefix({
+             commonUrl.getdiseasefix({
               'jbmc': query
             }).then((res)=>{
               console.log(res)

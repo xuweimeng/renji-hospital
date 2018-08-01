@@ -505,7 +505,7 @@
 					paramNotPassReason = param.notPassReason
 					paramNotPassRemark = param.notPassRemark
 				}
-				API.hzList.updateIsLive({
+				hzList.updateIsLive({
           'hzxxId': this.hzxxId,
 					'isDed': this.updateIsLiveRadio,
 					'notPassReason': paramNotPassReason,
