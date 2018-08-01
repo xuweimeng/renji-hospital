@@ -39,83 +39,87 @@
       </el-col>
     </el-row>
     <!-- section -->
-    <el-row style="margin-bottom: 25px; ">
+    <el-row style="margin-bottom: 25px; background: #fff;font-family: 'Arial'">
+      <!-- 出院简报 -->
+      <div class="showTopPage">
+        <el-card shadow="hover" class="boxCard">
+          <div class="showTopPage-title">
+            <span>出院随访简报</span>
+            <!-- <el-button
+              type="primary"
+              class="outputExcel"
+              @click="goDetailPage"
+            >查看详情</el-button> -->
+          </div>
+          <div class="showTopPage-day">
+            {{showTopPageData.today}} | 应随访人数
+            <span class="show-number" v-if="showTopPageData.suifang">
+              {{showTopPageData.suifang[0].statisticsValue}}
+            </span>人
+          </div>
+          <div class="showTopPage-content">
+            <el-row>
+              <el-col :span="14" class="showTopPage-bg">
+                成功通知<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[1].statisticsValue}}</span> 人
+              </el-col>
+              <el-col :span="9" :offset="1" class="showTopPage-bg">
+                未接通<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[5].statisticsValue}}</span> 人
+                </el-col>
+              <el-col :span="14">
+                完整采集<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[2].statisticsValue}}</span> 人 |
+                部分采集<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[3].statisticsValue}}</span> 人 |
+                未采集  <span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[4].statisticsValue}}</span>人
+              </el-col>
+              <el-col :span="9" :offset="1">
+                等待再次随访<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[7].statisticsValue}}</span>人
+              </el-col>
+              <el-col :span="24"  class="showTopPage-bg">
+                满意度-已评价<span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[0].statisticsValue}}</span>人 |
+                满意度-未评价  <span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[1].statisticsValue}}</span>人
+              </el-col>
+              <el-col :span="24">
+                满意度-十分满意<span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[2].statisticsValue}}</span> 人 |
+                满意度-满意    <span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[3].statisticsValue}}</span> 人 |
+                满意度-一般    <span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[4].statisticsValue}}</span>人 |
+                满意度-不满意  <span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[5].statisticsValue}}</span>人
+              </el-col>
+              <el-col :span="24"  class="showTopPage-bg">
+                今日重拨人数<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[6].statisticsValue}}</span> 人                         |
+                异常指标   <span class="show-number" v-if="showTopPageData.abnormal>=0">{{showTopPageData.abnormal}}</span>人
+              </el-col>
+            </el-row>
+
+          </div>
+        </el-card>
+      </div>
       <!-- 随访数量统计 -->
-      <el-col :span="13" class="QuantitTatistics" style="min-width: 415px;">
-        <div class="visitedRowRight" ref="homeEchart1">
-          <div class="echartTitle">
-            <div class="circle"> <div class="yuan"></div></div>
-            <div class="circleTitle" style="float:left;text-align: left;margin-left: 15px;line-height: 40px;height: 40px;">随访数量统计</div>
-            <div class="circleharts" style="padding-top: 10px;border-bottom: 1px solid #ebeef5;">
-              <!-- <form action="http://192.168.1.218:8082/export/statistics/chart" method="POST" ref="form1" id="form1"> -->
-              <form :action="exportChart.chartUrl" method="POST" ref="form1" id="form1">
-                <input name="departmentName" v-model="departmentName"  type="hidden" />
-                <input name="jsonData1" v-model="params"  type="hidden" />
-                <input name="jsonData2" v-model="params1"  type="hidden" />
-                <el-button type="primary" class="outputExcel" @click="outputBase" v-loading.fullscreen.lock="fullscreenLoading">导出数据</el-button>
-              </form>
-              <el-radio-group v-model="selectRadio" @change="radioChange" style="float: right;margin-right: 50px;">
-                <el-radio :label="1">近7天</el-radio>
-                <el-radio :label="2">近30天</el-radio>
-              </el-radio-group>
+      <div class="QuantitTatistics">
+        <el-card shadow="hover" class="boxCard">
+          <div class="visitedRowRight" ref="homeEchart1">
+            <div class="echartTitle">
+              <div class="circle"> <div class="yuan"></div></div>
+              <div class="circleTitle" style="float:left;text-align: left;margin-left: 15px;line-height: 40px;height: 40px;">随访数量统计</div>
+              <div class="circleharts" style="padding-top: 10px;border-bottom: 1px solid #ebeef5;">
+                <!-- <form action="http://192.168.1.218:8082/export/statistics/chart" method="POST" ref="form1" id="form1"> -->
+                <form :action="exportChart.chartUrl" method="POST" ref="form1" id="form1">
+                  <input name="departmentName" v-model="departmentName"  type="hidden" />
+                  <input name="jsonData1" v-model="params"  type="hidden" />
+                  <input name="jsonData2" v-model="params1"  type="hidden" />
+                  <el-button type="primary" class="outputExcel" @click="outputBase" v-loading.fullscreen.lock="fullscreenLoading">导出数据</el-button>
+                </form>
+                <el-radio-group v-model="selectRadio" @change="radioChange" style="float: right;margin-right: 50px;">
+                  <el-radio :label="1">近7天</el-radio>
+                  <el-radio :label="2">近30天</el-radio>
+                </el-radio-group>
+              </div>
+            </div>
+            <div class="followTj">
+              <!-- 随访数量统计条形图 -->
+              <follow-count :dataX="switchX" :dataY="switchY"></follow-count>
             </div>
           </div>
-          <div class="followTj">
-            <!-- 随访数量统计条形图 -->
-            <follow-count :dataX="switchX" :dataY="switchY"></follow-count>
-          </div>
-        </div>
-      </el-col>
-      <!-- 出院简报 -->
-      <el-col :span="11" class="showTopPage" style="min-width: 415px;">
-        <div class="showTopPage-title">
-          <span>出院随访简报</span>
-          <!-- <el-button
-            type="primary"
-            class="outputExcel"
-            @click="goDetailPage"
-          >查看详情</el-button> -->
-        </div>
-        <div class="showTopPage-day">
-          {{showTopPageData.today}} | 应随访人数
-          <span class="show-number" v-if="showTopPageData.suifang">
-            {{showTopPageData.suifang[0].statisticsValue}}
-          </span>人
-        </div>
-        <div class="showTopPage-content">
-          <el-row>
-            <el-col :span="14" class="showTopPage-bg">
-              成功通知<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[1].statisticsValue}}</span> 人
-            </el-col>
-            <el-col :span="9" :offset="1" class="showTopPage-bg">
-              未接通<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[5].statisticsValue}}</span> 人
-              </el-col>
-            <el-col :span="14">
-              完整采集<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[2].statisticsValue}}</span> 人 |
-              部分采集<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[3].statisticsValue}}</span> 人 |
-              未采集  <span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[4].statisticsValue}}</span>人
-            </el-col>
-            <el-col :span="9" :offset="1">
-              等待再次随访<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[7].statisticsValue}}</span>人
-            </el-col>
-            <el-col :span="24"  class="showTopPage-bg">
-              满意度-已评价<span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[0].statisticsValue}}</span>人 |
-              满意度-未评价  <span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[1].statisticsValue}}</span>人
-            </el-col>
-            <el-col :span="24">
-              满意度-十分满意<span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[2].statisticsValue}}</span> 人 |
-              满意度-满意    <span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[3].statisticsValue}}</span> 人 |
-              满意度-一般    <span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[4].statisticsValue}}</span>人 |
-              满意度-不满意  <span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[5].statisticsValue}}</span>人
-            </el-col>
-            <el-col :span="24"  class="showTopPage-bg">
-              今日重拨人数<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[6].statisticsValue}}</span> 人                         |
-              异常指标   <span class="show-number" v-if="showTopPageData.abnormal>=0">{{showTopPageData.abnormal}}</span>人
-            </el-col>
-          </el-row>
-
-        </div>
-      </el-col>
+        </el-card>
+      </div>
     </el-row>
     <!-- footer -->
     <el-row class="homePage-fotter">
@@ -1117,19 +1121,17 @@
   background: white;
   border-radius: 4px;
   height: 372px;
-  border: 1px solid #e9eaec;
-  -webkit-box-shadow: 0 0 5px #e1e1e1;
-  box-shadow:0 0 5px #e1e1e1;
+  min-width: 415px;
+  width: 49%
 }
 /** 出院简报 **/
 .showTopPage {
+  margin-bottom: 10px;
   float: left;
   background: #fff;
-  width: 44%;
+  width: 49%;
   height: 372px;
-  border: 1px solid #e9eaec;
-  -webkit-box-shadow: 0 0 5px #e1e1e1;
-  box-shadow:0 0 4px #e1e1e1;
+  min-width: 415px;
   .showTopPage-title {
     width: 100%;
     text-indent: 15px;
@@ -1191,8 +1193,14 @@
   border-radius: 4px;
   box-shadow:0 0 8px e1e1e1;
 }
+.boxCard {
+  height: 372px;
+  .el-card__body {
+    padding: 0;
+  }
+}
 
- @media screen and (min-width:800px) and (max-width:1275px) {
+@media screen and (min-width:800px) and (max-width:1290px) {
   .noticeNum{
     width: 49%;
     float: left;
@@ -1208,8 +1216,26 @@
   .plpl{
     margin: 10px 0 0 10px!important;
   }
- }
+  .showTopPage {
+    width: 98%;
+    float: left;
+  }
+  .QuantitTatistics {
+    width: 98%;
+    float: left;
+  }
 
+}
+// @media screen and (min-width:800px) and (max-width:1400px) {
+//   .showTopPage {
+//     width: 98%;
+//     float: left;
+//   }
+//   .QuantitTatistics {
+//     width: 98%;
+//     float: left;
+//   }
+// }
   .notice-picture{
     width:30% ;
     height: 100px;
