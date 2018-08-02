@@ -81,7 +81,7 @@ export const MySurvey = {
     for (const key in data) {
       resultUrl += key + '=' + (data[key] ? data[key] : '') + '&';
     }
-    window.open((process.env.BASE_API ? process.env.BASE_API : '') + '/wechat/myd/reusltExport?' + resultUrl);
+    window.open('/wechat/myd/reusltExport?' + resultUrl);
   },
   /**
    * @description 满意度审核接口
@@ -122,7 +122,7 @@ export const MySurvey = {
     for (const key in data) {
       resultUrl += key + '=' + (data[key] ? data[key] : '') + '&';
     }
-    window.open((process.env.BASE_API ? process.env.BASE_API : '') + '/wechat/myd/calculationResultExport?' + resultUrl);
+    window.open('/wechat/myd/calculationResultExport?' + resultUrl);
   },
   /**
    * @description 满意度调查-统计数据的select数据

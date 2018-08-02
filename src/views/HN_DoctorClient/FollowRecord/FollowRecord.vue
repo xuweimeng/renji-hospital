@@ -317,7 +317,8 @@ export default {
       this.taskId = scope.row.taskId;
       this.sfNumber = scope.row.currentVisitTime;
       setTimeout(() => {
-        this.$refs.followRecord.dialogVisible=true;
+        // this.$refs.followRecord.dialogVisible=true;
+        this.$refs.followRecord.toggleShowModal();
       }, 0);
     },
     /**
