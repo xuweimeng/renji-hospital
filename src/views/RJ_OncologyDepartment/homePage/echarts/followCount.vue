@@ -18,12 +18,9 @@ import echarts from 'echarts'
       let _this = this
       this.$nextTick( function () {
         window.addEventListener('resize', function() {
-          console.log('test55555555555555');
-
           _this.chart.resize()
         })
       })
-
     },
     methods: {
       initChart () {
@@ -48,9 +45,9 @@ import echarts from 'echarts'
           },
           grid: {
             top: '10%',
-            left: '1%',
-            right: '10%',
-            bottom: '10%',
+            left: '5%',
+            right: '5%',
+            bottom: '5%',
             containLabel: true
           },
           xAxis: {

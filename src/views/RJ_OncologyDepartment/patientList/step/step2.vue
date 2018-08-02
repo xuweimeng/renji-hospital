@@ -135,13 +135,14 @@
 		],
 		mounted () {
 			this.successList()
+			console.log(this.uploadNum);
 		},
 		components: {
 			Disease
 		},
 		computed: {
 			...mapState({
-				uploadNum: 'uploadNum',
+				"uploadNum": state => state.user.uploadNum
 			})
     },
 		methods: {

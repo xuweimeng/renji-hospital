@@ -46,10 +46,6 @@ import { mapState } from 'vuex'
         "patientInfo": state => state.user.scopeRowData.row
       })
     },
-    mounted () {
-      // console.log(this.patientInfo)
-      // this.careFun()
-    },
 		methods: {
 			/**
 			 * [closeFun description]
@@ -81,6 +77,9 @@ import { mapState } from 'vuex'
       childCare (val) {
         this.islike = val.isCare
         this.GzTag = val.GzTag
+        if(!val.islike) {
+          this.$emit('closeChildren', false)
+        }
       }
     },
     watch: {

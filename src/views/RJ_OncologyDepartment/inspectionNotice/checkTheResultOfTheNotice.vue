@@ -35,16 +35,17 @@
 						</el-select>
 					</el-form-item>
 				</el-col>
-        <el-col :span="9">
+        <el-col :span="6">
 					<el-form-item label="检查时间" class="formTime">
 						<el-date-picker
               v-model="startTime"
               @change="timeChange"
               type="daterange"
-              value-format="yyyy-MM-dd"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期">
+							value-format="yyyy-MM-dd"
+							range-separator="至"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+              :picker-options="pickerTime">
             </el-date-picker>
 					</el-form-item>
 				</el-col>
@@ -95,6 +96,7 @@ import { commonUrl } from 'RJZL_API/commonUrl';
 import AdResult from '@/components/dialog/aDresult/ppResult';
 import CheckedList from './checkedList/checkedList';
 import * as getTime from 'utils/getDate'
+import * as utilsIndex from 'utils'
 export default {
   name: 'checkTheResultOfTheNotice',
  data() {
@@ -116,7 +118,10 @@ export default {
       dataLoading: false, // 表格数据请求等待
       infoShow: false, // 详情弹窗
       ProjectList: [], // 检查项目
-      gridData: []
+      gridData: [],
+      pickerTime: {
+        shortcuts: utilsIndex.pickerOptions
+      },
     };
   },
   components: {
@@ -131,10 +136,9 @@ export default {
   methods: {
     /** 随访日期 */
     getCurrent() {
-      let tomorrow = getTime.currentTime1 + (getTime.currentDate + 1)
-      this.searchParams.startOrderTime = getTime.currentTime
-      this.searchParams.endOrderTime = tomorrow
-      this.startTime = [getTime.currentTime, tomorrow]
+      this.searchParams.startOrderTime = getTime.currentTime + ' ' + '00:00:00';
+      this.searchParams.endOrderTime = getTime.currentTime + ' ' + '23:59:59';
+      this.startTime = [this.searchParams.startOrderTime, this.searchParams.endOrderTime]
     },
     /** 获取检查项目列表 */
     getProjectList () {
@@ -149,8 +153,8 @@ export default {
      */
     timeChange(time) {
       if (time) {
-        this.searchParams.startOrderTime = time[0];
-      this.searchParams.endOrderTime = time[1];
+        this.searchParams.startOrderTime = time[0] + ' ' + '00:00:00';
+      this.searchParams.endOrderTime = time[1] + ' ' + '23:59:59';
       } else {
         this.searchParams.startOrderTime = '';
         this.searchParams.endOrderTime = '';

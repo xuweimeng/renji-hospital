@@ -64,6 +64,10 @@ import echarts from 'echarts'
         this.defaultTotal = this.total2
          this.initMedicine()
       })
+      let _this = this
+      window.addEventListener('resize', function() {
+        _this.medicinePieChart.resize()
+      })
     },
 
     methods: {
@@ -72,54 +76,57 @@ import echarts from 'echarts'
         this.medicinePieChart = echarts.init(document.getElementById('medicinePie'))
         this.medicinePieChart.setOption({
           tooltip: {
-            show: false,
+            show: true,
             align:'left',
             trigger: 'item',
             formatter: "{a} <br/>{b}: {c} ({d}%)"
+          },
+          title: {
+            text: '用药依从性',
+            x: 'left',
+            textStyle: {
+              color: '#666',
+              fontSize: '14',
+              fontWeight: 'normal'
+            }
+          },
+          legend: {
+            orient: 'vertical',
+            left: '70%',
+            y: 'middle',
+            data:['不服用','规律','间断'],
+            textStyle: {
+              color: '#666',
+              marginTop: '10'
+            }
           },
           series: [
             {
               name:'用药依从性',
               type:'pie',
-              radius: ['50%', '70%'],
-              avoidLabelOverlap: false,
-              hoverAnimation: false,
-              silent: true,
+              center: ['40%', '50%'],
+              radius: ['40%', '60%'],
               label: {
                 normal: {
                   show: true,
-                  position: 'center',
-                  formatter:function() {
-                    return _this.defaultTotal
-                  },
+                  position: 'top',
                   textStyle: {
                     fontSize: '14',
                     color: 'gray'
                   },
                 },
-                emphasis: {
-                  show: true,
-                  textStyle: {
-                    fontSize: '12',
-                    fontWeight: 'bold'
-                  }
-                }
+
               },
               labelLine: {
                 normal: {
-                  show: false
-                }
-              },
-              labelLine: {
-                normal: {
-                  show: false
+                  show: true
                 }
               },
               data:this.defaultArr
             }
           ]
         })
-    }
+      }
     },
     watch: {
       dataMedicine(newV, oldV) {
@@ -140,8 +147,8 @@ import echarts from 'echarts'
 </script>
 <style lang="scss">
   .medicinePie {
-    width: 168px;
-    height: 158px;
-    float: left;
+    margin: 0 auto;
+    width: 100%;
+    height: 300px;
   }
 </style>

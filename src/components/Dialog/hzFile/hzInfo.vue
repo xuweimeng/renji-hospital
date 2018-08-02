@@ -10,7 +10,7 @@
           {{patientInfo.brxb?patientInfo.brxb:patientInfo.patientSex?patientInfo.patientSex:''}} /
           {{patientInfo.age?patientInfo.age:patientInfo.patientAge?patientInfo.patientAge:''}}
         </span>
-      	<span class="personXg">{{GzTag?GzTag:patientInfo.gzTag}}</span>
+      	<span class="personXg">{{GzTag}}</span>
       </el-col>
       <el-col :span="12" class="care">
         <el-button type="text"
@@ -44,6 +44,7 @@
 import { mapState } from 'vuex';
 import { commonUrl } from 'RJZL_API/commonUrl';
   export default {
+    name: 'hzInfo',
     props: [
       'isCare',
       'GzTag'

@@ -6,7 +6,7 @@
 	  drag
 	  name="upfile"
 		:action="upload.patientUrl"
-	  :data="{adminId:data1.adminId}"
+	  :data="{adminId:sendData.adminId}"
 	  :before-upload="beforeUpload"
 	  :on-success="onSuccess"
 	  :on-error="onError">
@@ -23,7 +23,7 @@
 		data () {
 			return {
 				upload: upload,
-				data1: {
+				sendData: {
 					adminId: sessionStorage.getItem('userId'), // userid
 				},
 			}
@@ -49,6 +49,8 @@
 					this.$message.error(response.message)
 				} else {
 					this.$message.success(response.message)
+					console.log('response', response);
+
 					this.$store.dispatch('uploadNum', response)
 					this.$emit('stepFun', 1)
 				}

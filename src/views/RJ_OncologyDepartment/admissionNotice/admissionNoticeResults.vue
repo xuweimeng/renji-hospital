@@ -51,12 +51,12 @@
 				  	</el-row>
 			  	</el-form-item>
 			  </el-col>
-				<el-col :span='9'>
+				<el-col :span='6'>
 					<el-form-item label='通知时间'>
 						<el-date-picker  @change='timeChange'
 						 v-model='createTime'
-							type='datetimerange'
-							value-format='yyyy-MM-dd HH:mm:ss'
+							type='daterange'
+							value-format='yyyy-MM-dd'
 							range-separator='至'
 							start-placeholder='开始日期'
 							end-placeholder='结束日期'
@@ -152,6 +152,8 @@
   import { commonUrl } from 'RJZL_API/commonUrl';
   import AdResult from '@/components/dialog/aDresult/ppResult';
   import * as getTime from 'utils/getDate';
+  import * as utilsIndex from 'utils'
+  import auditOptions from 'utils/auditOptions'
   export default {
     name: 'admissionNoticeResults',
     data() {
@@ -181,64 +183,14 @@
         activeName: 'first', // tab
         tableData: [],
         dataLoading: false, // 表格数据请求等待
-        checkoptions: [
-          {
-            value: '',
-            label: '请选择'
-          },
-          {
-            //审核不通过options
-            value: '1',
-            label: '患者已死亡'
-          },
-          {
-            value: '2',
-            label: '患者不接受随访'
-          },
-          {
-            value: '3',
-            label: '随访方案重复'
-          },
-          {
-            value: '4',
-            label: '方案不匹配'
-          }
-        ],
+        checkoptions: auditOptions,  // 审核不通过原因
         selectCheck: '', // 选中的审核不通过
         checkId: [], // 随访通过的id(多选时),
         queryLoading: false, // 搜索loading...
         diseaseList: [], // 疾病list
         resultDg: false, // 详情弹窗
         pickerTime: {
-          shortcuts: [
-            {
-              text: '最近七天',
-              onClick(picker) {
-                const end = new Date()
-                const start = new Date()
-                start.setTime(start.getTime() - 3600*1000*24*7)
-                picker.$emit('pick', [start, end])
-              }
-            },
-            {
-              text: '最近一个月',
-              onClick(picker) {
-                const end = new Date()
-                const start = new Date()
-                start.setTime(start.getTime() - 3600*1000*24*30)
-                picker.$emit('pick', [start, end])
-              }
-            },
-            {
-              text: '最近三个月',
-              onClick(picker) {
-                const end = new Date()
-                const start = new Date()
-                start.setTime(start.getTime() - 3600*1000*24*90)
-                picker.$emit('pick', [start, end])
-              }
-            }
-          ]
+          shortcuts: utilsIndex.pickerOptions
         }
       };
     },
@@ -252,9 +204,9 @@
     methods: {
        /** 通知时间 */
       getCurrent() {
-        this.searchParams.startOrderTime = getTime.currentTime + ' ' + '00:00:00';
-        this.searchParams.endOrderTime = getTime.currentTime + ' ' + '23:59:59';
-        this.createTime = [this.searchParams.startOrderTime, this.searchParams.endOrderTime]
+        this.searchParams.dateBeginBegin = getTime.currentTime + ' ' + '00:00:00';
+        this.searchParams.dateBeginEnd = getTime.currentTime + ' ' + '23:59:59';
+        this.createTime = [this.searchParams.dateBeginBegin, this.searchParams.dateBeginEnd]
       },
       /** 疾病远程搜索 */
       remoteMethod(query) {
