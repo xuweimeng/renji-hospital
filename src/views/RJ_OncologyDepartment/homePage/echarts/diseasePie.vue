@@ -10,13 +10,27 @@ import echarts from 'echarts'
       'dataDisease',
       'total'
     ],
+    mounted () {
+      let _this = this
+      window.addEventListener('resize', function() {
+        _this.diseaseChart.resize()
+      })
+    },
     methods: {
       initDiseasePie() {
         let _this = this
         this.diseaseChart = echarts.init(document.getElementById('diseasePie'))
+        const data_name = [];
+        for (var n in _this.dataDisease) {
+            _this.dataDisease[n]['name'] =
+            _this.dataDisease[n]['name'] + '  ' +
+            _this.dataDisease[n]['percent'] + '%'+ '  '+
+            _this.dataDisease[n]['value'];
+            data_name.push(_this.dataDisease[n]['name'])
+        }
         this.diseaseChart.setOption({
           tooltip: {
-            show: false,
+            show: true,
             position: 'center',
             trigger: 'item',
             formatter: "{a} <br/>{b}: {c} ({d}%)"
@@ -28,37 +42,44 @@ import echarts from 'echarts'
             bottom: '5%',
             containLabel: true
           },
+          title: {
+            text: '疾病分布情况',
+            x: 'left',
+            textStyle: {
+              color: '#666',
+              fontSize: '14',
+              fontWeight: 'normal'
+            }
+          },
+          legend: {
+            orient: 'vertical',
+            left: '70%',
+            y: 'middle',
+            data: data_name,
+            textStyle: {
+              color: "#666",
+              fontWeight: 'normal'
+            }
+          },
           series: [
             {
               name:'疾病分布情况',
               type:'pie',
-              radius: ['50%', '70%'],
-              avoidLabelOverlap: false,
-              hoverAnimation: false,
-              silent: true,
+              center: ['40%', '50%'],
+              radius: ['40%', '60%'],
               label: {
                 normal: {
                   show: true,
-                  position: 'center',
-                  formatter:function() {
-                    return _this.total
-                  },
+                  position: 'top',
                   textStyle: {
                     fontSize: '14',
                     color: 'gray'
                   },
-                },
-                emphasis: {
-                  show: true,
-                  textStyle: {
-                    fontSize: '12',
-                    fontWeight: 'bold'
-                  }
                 }
               },
               labelLine: {
                 normal: {
-                  show: false
+                  show: true
                 }
               },
               data:this.dataDisease
@@ -78,8 +99,8 @@ import echarts from 'echarts'
 </script>
 <style lang="scss">
   .diseasePie {
-    width: 168px;
-    height: 155px;
-    float: left;
+    margin: 0 auto;
+    width: 100%;
+    height: 300px;
   }
 </style>

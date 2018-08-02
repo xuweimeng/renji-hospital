@@ -39,17 +39,12 @@
       </el-col>
     </el-row>
     <!-- section -->
-    <el-row style="margin-bottom: 25px; background: #fff;font-family: 'Arial'">
+    <el-row style="margin-bottom: 20px; background: #fff;font-family: 'Arial'">
       <!-- 出院简报 -->
       <div class="showTopPage">
         <el-card shadow="hover" class="boxCard">
           <div class="showTopPage-title">
             <span>出院随访简报</span>
-            <!-- <el-button
-              type="primary"
-              class="outputExcel"
-              @click="goDetailPage"
-            >查看详情</el-button> -->
           </div>
           <div class="showTopPage-day">
             {{showTopPageData.today}} | 应随访人数
@@ -98,7 +93,7 @@
           <div class="visitedRowRight" ref="homeEchart1">
             <div class="echartTitle">
               <div class="circle"> <div class="yuan"></div></div>
-              <div class="circleTitle" style="float:left;text-align: left;margin-left: 15px;line-height: 40px;height: 40px;">随访数量统计</div>
+              <div class="circleTitle" style="float:left; font-weight: bold;color: rgba(0,0,0,.5);text-align: left;margin-left: 15px;line-height: 40px;height: 40px;">随访数量统计</div>
               <div class="circleharts" style="padding-top: 10px;border-bottom: 1px solid #ebeef5;">
                 <!-- <form action="http://192.168.1.218:8082/export/statistics/chart" method="POST" ref="form1" id="form1"> -->
                 <form :action="exportChart.chartUrl" method="POST" ref="form1" id="form1">
@@ -121,134 +116,91 @@
         </el-card>
       </div>
     </el-row>
-    <!-- footer -->
+     <!-- 客户总体情况分析 -->
     <el-row class="homePage-fotter">
-      <!-- 客户总体情况分析 -->
-      <el-col :span="12">
+      <el-col :span="24">
         <el-row class="bottomContent">
-          <div class="hzxq">
-              <div class="hzfx fl-left">
-                <el-tabs v-model="hzfxTabActive" @tab-click="tabTimeSelect">
-                  <el-tab-pane label="客户总体情况分析" name="first" disabled>患者总体情况分析：</el-tab-pane>
-                  <el-tab-pane label="近7天" name="1"></el-tab-pane>
-                  <el-tab-pane label="近30天" name="2" ></el-tab-pane>
-                  <el-tab-pane label="3个月" name="3"></el-tab-pane>
-                  <el-tab-pane label="6个月" name="4"></el-tab-pane>
-                  <el-tab-pane label="一年" name="5"></el-tab-pane>
-                  <el-tab-pane label="全部" name="0"></el-tab-pane>
-                </el-tabs>
-                <div class="sft">
-                  <!-- 疾病分布情况 -->
-                  <div class="sft1" ref="sft1">
-                    <div class="sftitle">
-                      <div class="circle1"> <div class="yuan1"></div></div>
-                      <div class="circleTitle1">疾病分布情况</div>
-                    </div>
-                    <div class="sftcontent">
-                      <disease-pie :dataDisease="diagnoseInfoData" :total="totalbt1"></disease-pie>
-                      <div class="echartRight fl-left" style="padding-top: 25px;">
-                        <ul v-for="(item,index) in diagnoseInfoData" :key="index" v-if="item.percent">
-                          <li :style="'background:'+item.itemStyle.normal.color"></li>
-                          <li>{{item.name}}</li><li>{{item.percent}}%</li>
-                          <li>{{item.value?item.value:'0'}}人</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- 用药依从性 -->
-                  <div class="sft2" ref="sft2">
-                    <div class="sftitle">
-                      <div class="circle1"> <div class="yuan1"></div></div>
-                      <div class="circleTitle1">用药依从性</div>
-                    </div>
-                    <div class="diseEchart">
-                      <medicine-pie :dataMedicine="yyycData" :total2="totalbt2"></medicine-pie>
-                      <div class="echartRight fl-left" style="padding-top: 10px;">
-                        <div style="overflow: hidden;">
-                          <ul v-for="(item,index) in yyycData" :key="index">
-                            <li :style="'background:'+item.itemStyle.normal.color"></li><li>{{item.name}}</li><li>{{item.value?item.value:'0'}}人</li>
-                          </ul>
-                        </div>
-                      </div>
-                      <ul class="echartRight2 fl-left">
-                        <li>
-                          <p>规律</p>
-                          <p>{{percent1?percent1:'0'}}</p>
-                        </li>
-                        <li>
-                          <p>间断</p>
-                          <p>{{percent2?percent2:'0'}}</p>
-                        </li>
-                        <li>
-                          <p>不服用</p>
-                          <p>{{percent3?percent3:'0'}}</p>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <el-row class="home-title">
+            <el-col :span="10" class="home-title-col">患者总体情况分析</el-col>
+            <el-col :span="14" class="home-title-time">
+              <el-radio-group v-model="hzfxTabActive" @change="tabTimeSelect">
+                <el-radio :label="0">全部</el-radio>
+                <el-radio :label="1">近7天</el-radio>
+                <el-radio :label="2">近30天</el-radio>
+                <el-radio :label="3">3个月</el-radio>
+                <el-radio :label="4">6个月</el-radio>
+                <el-radio :label="5">一年</el-radio>
+              </el-radio-group>
+            </el-col>
+          </el-row>
+          <div class="sft">
+            <!-- 用药依从性 -->
+            <div class="sft2" ref="sft2">
+              <medicine-pie :dataMedicine="yyycData" :total2="totalbt2"></medicine-pie>
             </div>
-        </el-row>
-      </el-col>
-      <!-- 特别关心 -->
-      <el-col :span="12" class="SpecialConcern" style="min-width: 415px;">
-        <div class="tbgx flRight" style="overflow: hidden;">
-          <p class="tagConcern">特别关心</p>
-          <div class="resultsProgress" style="height: 329px;">
-            <el-table
-              :data="SpecialtableData"
-              style="width: 100%"
-              class="homepageTable1"
-              :show-header="true"
-              v-loading="syhz"
-              v-if="SpecialtableData.length">
-              <el-table-column label="姓名" prop="patientName" align="left" ></el-table-column>
-              <el-table-column label="特别关注" align="center" width="110px">
-                <template slot-scope="scope">
-                  <el-tag style="background:#fff;font-size:12px;height:20px;line-height:18px;border-radius:10px;">{{scope.row.gzTag}}</el-tag>
-                </template>
-              </el-table-column>
-              <el-table-column prop="patientSex" label="性别" align="center" ></el-table-column>
-              <el-table-column prop="patientAge" label="年龄" align="center" ></el-table-column>
-              <el-table-column prop="icdName" label="疾病名称" align="center"  show-overflow-tooltip></el-table-column>
-              <el-table-column prop="address" label="档案" align="center"  >
-                <template slot-scope="scope">
-                  <el-button type="primary" @click="wayButton(scope)" style="height:23px;line-height:22px;width:45px;padding:0;font-size
-                :13px;">档案</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <!-- 分页 -->
-            <el-row class="homepagefy" v-if="SpecialtableData.length">
-              <el-col :span="24" class="text-right" style="margin-top:24px;">
-                <el-pagination
-                  @current-change="homeCurrentPage"
-                  :current-page.sync="currentPagehome"
-                  :page-size="5"
-                  layout="total,prev, pager, next"
-                  :total="totalPagehome">
-                </el-pagination>
-              </el-col>
-            </el-row>
-            <!-- 无数据的时候 -->
-            <div class="nullData" v-show="sfyd">
-              <div class="nullImg">
-                <div class="nullImg1">
-                  <img src="../../../assets/images/syyd.jpg" alt="">
-                </div>
-                <div class="nullWords">
-                  <p class="p1"></p>
-                  <p class="p2">添加重要患者关注<br>实时跟踪病情康复</p>
-                </div>
-              </div>
-              <div class="nullBtn">
-                <el-button @click.native="routerToHzList" type="primary">立即前往</el-button>
-              </div>
+            <!-- 疾病分布情况 -->
+            <div class="sft1" ref="sft1">
+              <disease-pie :dataDisease="diagnoseInfoData" :total="totalbt1"></disease-pie>
             </div>
           </div>
-        </div>
+        </el-row>
       </el-col>
+    </el-row>
+    <!-- 特别关心 -->
+    <el-row class="careTable">
+      <el-row class="home-title">
+        <el-col :span="10" class="home-title-col">特别关注</el-col>
+        <el-col :span="14" class="home-title-time"></el-col>
+      </el-row>
+      <el-col :span="24" class="common-table" style="min-width: 415px;">
+        <el-table
+          border
+          :data="SpecialtableData"
+          v-loading="syhz"
+          v-if="SpecialtableData.length">
+          <el-table-column label="姓名" prop="patientName" align="center" ></el-table-column>
+          <el-table-column label="特别关注" align="center">
+            <template slot-scope="scope">
+              <el-tag size="mini">{{scope.row.gzTag}}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="patientSex" label="性别" align="center" ></el-table-column>
+          <el-table-column prop="patientAge" label="年龄" align="center" ></el-table-column>
+          <el-table-column prop="icdName" label="疾病名称" align="center"  show-overflow-tooltip></el-table-column>
+          <el-table-column prop="address" label="档案" align="center"  >
+            <template slot-scope="scope">
+              <el-button type="primary" size="mini" @click="wayButton(scope)">档案</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- 分页 -->
+        <el-row class="homepagefy" v-if="SpecialtableData.length">
+          <el-col :span="24" class="text-right" style="margin-top:24px;">
+            <el-pagination
+              @current-change="homeCurrentPage"
+              :current-page.sync="currentPagehome"
+              :page-size="10"
+              layout="total,prev, pager, next"
+              :total="totalPagehome">
+            </el-pagination>
+          </el-col>
+        </el-row>
+
+      </el-col>
+      <!-- 无数据的时候 -->
+      <el-row v-show="sfyd">
+        <el-col :span="16" :offset="8">
+          <img src="../../../assets/images/syyd.jpg" class="fl-left" alt="特别关注">
+          <div class="nullWords fl-left">
+            <p class="p1"></p>
+            <p class="p2">添加重要患者关注<br>实时跟踪病情康复</p>
+          </div>
+        </el-col>
+        <el-col :span="12" :offset="12">
+          <el-button @click.native="routerToHzList" type="primary">立即前往</el-button>
+        </el-col>
+      </el-row>
+
     </el-row>
     <!-- 生肖头像弹框 -->
     <el-dialog width="522px" :show-close="false" :visible.sync="innerVisible" custom-class="bdzoo">
@@ -289,13 +241,12 @@
   import { swiper, swiperSlide } from 'vue-awesome-swiper';
   import HzFile from '@/components/Dialog/hzFile/hzFile';
   import { Point } from '@/utils/selectOptions';
-  // import Bus from '@/assets/js/bus';
-  import { mapGetters } from 'vuex';
   import html2canvas from 'html2canvas';
   import { setTimeout } from 'timers';
   import FollowCount from './echarts/followCount';
   import DiseasePie from './echarts/diseasePie';
   import MedicinePie from './echarts/medicinePie';
+  import Cookies from 'js-cookie'
   export default {
     name: 'Homepage',
     data() {
@@ -326,7 +277,7 @@
         cwtx: null,//选中的宠物index
         imgList: [],//12生肖头像列表
         //患者总体情况分析
-        hzfxTabActive: '1',//患者分析(近7天/30天/半年)
+        hzfxTabActive: 0,//患者分析(近7天/30天/半年)
         diagnoseInfoData: [],//疾病分布情况
 
         bqyz: {},//随访记过处理(病情严重)
@@ -440,7 +391,7 @@
        */
       getUserId() {
         this.userId = sessionStorage.getItem('userId')//用户名
-        this.laterhours = sessionStorage.getItem('laterhours')//用户名
+        this.laterhours = Cookies.get('laterhours')//用户名
       },
       /** 监听子组件关闭 */
         closeChildren (val) {
@@ -794,12 +745,12 @@
       * @function tabTimeSelect
       * @param {object} tab tab切换
       */
-      tabTimeSelect(tab) {
+      tabTimeSelect(value) {
         this.totalbt1 = 0
         this.totalbt2 = 0
-        this.tabName = tab.name
-        this.diagnoseInfo(tab.paneName)
-        this.getUseEatInfo(tab.paneName)
+        this.tabName = value
+        this.diagnoseInfo(value)
+        this.getUseEatInfo(value)
       },
     /**
       * 随访数量统计
@@ -844,7 +795,7 @@
      /** 特别关心 */
       SpecialCare(val) {
         rjPage.getMyPatient({
-          'limit': 5,
+          'limit': 10,
           'pager': val,
           'adminId': sessionStorage.getItem('userId'),
           'gz': '1'
@@ -1057,6 +1008,7 @@
   @import '~styles/reset.scss';
   @import '~styles/base.scss';
   @import './homePage.scss';
+  @import '~styles/search';
  /** 顶部 **/
 .header-wrap {
   padding-bottom: 25px;
@@ -1093,26 +1045,35 @@
 
 }
 /** 特别关心 **/
-.SpecialConcern{
-  position: relative;
-  padding: 0 0 0 20px;
-  width: 49%;
-  height: 372px;
-  background: white;
-  border-radius: 4px;
-  .resultsProgress{
-    margin: 5px;
+.careTable {
+  margin-top: 20px;
+  padding: 16px;
+  background-color: #fff;
+  .home-title {
+    border-bottom: 1px solid #f1f1f1;
+    padding-bottom: 10px;
+    color: #555;
+    .home-title-col {
+      font-weight: bold;
+      color: #666;
+      line-height: 24px;
+    }
   }
-  .tagConcern{
-    height: 40px;
-    line-height: 40px;
+  //引导图片
+  .nullWords {
+    margin-left: 63px;
     float: left;
-    width: 100%;
-    text-align: left;
-    font-size: 17px;
-    color: #333;
-    padding-left: 10px;
-    border-bottom: 2px solid #e4e7ed;
+    .p1 {
+      width: 10px;
+      height: 4px;
+      background: #69acff;
+      margin:112px 0 5px;
+    }
+    .p2 {
+      width: 111px;
+      line-height: 23px;
+      font-size: 13px;
+    }
   }
 }
 /** 随访数量统计 **/
@@ -1137,6 +1098,8 @@
     text-indent: 15px;
     line-height: 40px;
     height: 40px;
+    font-weight: bold;
+    color: rgba(0,0,0,.5);
     border-bottom: 1px solid rgb(235, 238, 245);
     span {
       float: left;
@@ -1148,12 +1111,15 @@
   }
   .showTopPage-day {
     background: #f5f7fa;
+    color: rgba(0,0,0,.65);
     height: 40px;
     line-height: 40px;
     padding: 0 15px;
   }
   .showTopPage-content {
     padding: 15px;
+    color: rgba(0,0,0,.65);
+    font-size: 15px;
     .el-row {
       margin: 0 auto;
       .el-col {
@@ -1188,10 +1154,45 @@
   height: 41px;
   padding-top: 10px;
 }
+/** 客户总体情况title*/
 .bottomContent{
+  padding: 16px;
   background: #fff;
   border-radius: 4px;
   box-shadow:0 0 8px e1e1e1;
+  .home-title {
+    border-bottom: 1px solid #f1f1f1;
+    padding-bottom: 10px;
+    color: #555;
+    .home-title-col {
+      font-weight: bold;
+      color: #666;
+      line-height: 24px;
+    }
+    .home-title-time {
+      text-align: right;
+    }
+  }
+  /****患者总体情况分析--饼图*****/
+  .sft {
+    width: 100%;
+    min-height: 280px;
+    margin-top: 25px;
+    //疾病分布
+    .sft1 {
+      float: left;
+      padding-left: 25px;
+      width: 50%;
+      min-height: 250px;
+    }
+    //用药依从性
+    .sft2 {
+      float: left;
+      padding-left: 25px;
+      width: 50%;
+      min-height: 250px;
+    }
+  }
 }
 .boxCard {
   height: 372px;
@@ -1199,6 +1200,8 @@
     padding: 0;
   }
 }
+
+
 
 @media screen and (min-width:800px) and (max-width:1290px) {
   .noticeNum{
@@ -1216,6 +1219,7 @@
   .plpl{
     margin: 10px 0 0 10px!important;
   }
+  // 出院简报---随访数量分析
   .showTopPage {
     width: 98%;
     float: left;
@@ -1224,18 +1228,19 @@
     width: 98%;
     float: left;
   }
+  .bottomContent .sft {
+    // 出院简报---随访数量分析
+    .sft1 {
+      width: 98%;
+      float: left;
+    }
+    .sft2 {
+      width: 98%;
+      float: left;
+    }
+  }
 
 }
-// @media screen and (min-width:800px) and (max-width:1400px) {
-//   .showTopPage {
-//     width: 98%;
-//     float: left;
-//   }
-//   .QuantitTatistics {
-//     width: 98%;
-//     float: left;
-//   }
-// }
   .notice-picture{
     width:30% ;
     height: 100px;
@@ -1372,11 +1377,6 @@
   }
   .origin-font {
     color: #ffd572;
-  }
-  .hzfx {
-    .is-disabled {
-      color: #333;
-    }
   }
   ::-webkit-scrollbar {
     display: none;

@@ -21,7 +21,6 @@ import echarts from 'echarts'
           _this.chart.resize()
         })
       })
-
     },
     methods: {
       initChart () {
