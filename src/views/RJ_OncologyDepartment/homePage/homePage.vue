@@ -93,7 +93,7 @@
           <div class="visitedRowRight" ref="homeEchart1">
             <div class="echartTitle">
               <div class="circle"> <div class="yuan"></div></div>
-              <div class="circleTitle" style="float:left; font-weight: bold;color: rgba(0,0,0,.5);text-align: left;margin-left: 15px;line-height: 40px;height: 40px;">随访数量统计</div>
+              <div class="circleTitle" style="float:left; font-weight: bold;color: #666;text-align: left;margin-left: 15px;line-height: 40px;height: 40px;">随访数量统计</div>
               <div class="circleharts" style="padding-top: 10px;border-bottom: 1px solid #ebeef5;">
                 <!-- <form action="http://192.168.1.218:8082/export/statistics/chart" method="POST" ref="form1" id="form1"> -->
                 <form :action="exportChart.chartUrl" method="POST" ref="form1" id="form1">
@@ -394,9 +394,10 @@
         this.laterhours = Cookies.get('laterhours')//用户名
       },
       /** 监听子组件关闭 */
-        closeChildren (val) {
-          this.hzDialog = false
-        },
+      closeChildren (val) {
+        this.hzDialog = false
+        this.SpecialCare(this.currentPagehome)
+      },
     /**
       * 获取十二生肖
       * @function findAiPictureList
@@ -1099,10 +1100,10 @@
     line-height: 40px;
     height: 40px;
     font-weight: bold;
-    color: rgba(0,0,0,.5);
     border-bottom: 1px solid rgb(235, 238, 245);
     span {
       float: left;
+      color: #666;
     }
     .el-button {
       float: right;

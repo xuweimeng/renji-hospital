@@ -204,9 +204,9 @@
     methods: {
        /** 通知时间 */
       getCurrent() {
-        this.searchParams.startOrderTime = getTime.currentTime + ' ' + '00:00:00';
-        this.searchParams.endOrderTime = getTime.currentTime + ' ' + '23:59:59';
-        this.createTime = [this.searchParams.startOrderTime, this.searchParams.endOrderTime]
+        this.searchParams.dateBeginBegin = getTime.currentTime + ' ' + '00:00:00';
+        this.searchParams.dateBeginEnd = getTime.currentTime + ' ' + '23:59:59';
+        this.createTime = [this.searchParams.dateBeginBegin, this.searchParams.dateBeginEnd]
       },
       /** 疾病远程搜索 */
       remoteMethod(query) {

@@ -26,4 +26,10 @@
     -webkit-text-stroke-width: 0.2px;
     -moz-osx-font-smoothing: grayscale;
   }
+  // 仁济项目下拉框全局取消margin-bottom
+  .el-popper {
+    .el-scrollbar__wrap {
+      margin-bottom: 0!important;
+    }
+  }
 </style>
