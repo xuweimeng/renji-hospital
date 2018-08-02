@@ -41,6 +41,7 @@
           value-format="yyyy-MM-dd HH:mm:ss"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          :picker-options="pickerOptions"
           :default-time="['00:00:00', '23:59:59']">
         </el-date-picker>
       </li>
@@ -126,6 +127,7 @@
    */
   import { NoticeResult } from 'LQPE_API/NoticeResult'; // 引入 api
   import { mapGetters } from 'vuex';
+  import * as utilsIndex from 'utils';
   import ResultInfo from './components/ResultInfo';
 
   export default {
@@ -160,7 +162,10 @@
         tableData: [],
         hzxxId:"",   //患者id
         totalPage: 0, // 总页数
-        dataLoading: false // 表格数据请求等待;
+        dataLoading: false, // 表格数据请求等待;
+        pickerOptions: {
+          shortcuts: utilsIndex.pickerOptions
+        }
       };
     },
     computed: {
