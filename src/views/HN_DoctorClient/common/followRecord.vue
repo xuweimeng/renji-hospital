@@ -260,28 +260,30 @@
                 <span class="record_header_sexAndage">
                     {{baseData.brxb}}/{{baseData.brage}}
                 </span>
-                <el-tag v-show="baseData.gzTag">
+                <el-tag v-show="baseData.GzTag">
                     {{baseData.GzTag}}
                 </el-tag>
             </h3>
             <h4 class="record_header_param">
-              出生年月: {{baseData.patientBithday}}
+              <!--出生年月: {{baseData.patientBithday}}-->
+              疾病诊断: {{baseData.icdName}}
             </h4>
             <h4 class="record_header_param">
               手机号码: {{baseData.mobile}}
             </h4>
             <h4 class="record_header_param">
-              联系地址: {{baseData.patientAddress}}
+              <!--联系地址: {{baseData.patientAddress}}-->
+              随访方案: {{baseData.schemeName}}
             </h4>
-            <el-button v-if="baseData.gzTag" class="record_header_cancel" size="mini" type="primary" @click="cancelSpecial" >取消关注</el-button>
+            <el-button v-if="baseData.GzTag" class="record_header_cancel" size="mini" type="primary" @click="cancelSpecial" >取消关注</el-button>
             <el-button v-else   icon="el-icon-star-off" class="record_header_cancel"  size="mini" type="primary" @click="addSpecial" >添加关注</el-button>
         </div>
         <!--  处理意见 -->
         <div class="record_opinion">
           <span>处理意见:</span>
-          <el-button size="small" type="primary" round  :disabled="isResolved === true || tabActive==1"  @click="submission">暂不处理</el-button>
-          <el-button size="small" type="primary" round  :disabled="isResolved === true || tabActive==1"  @click="submission">病情稳定</el-button>
-          <el-button size="small" type="primary" round  :disabled="isResolved === true || tabActive==1"  @click="submission">通知就诊</el-button>
+          <el-button size="small" type="primary" round  :disabled="isResolved === true || tabActive==1" :icon="resolvedState === 2?'el-icon-check':''" @click="submission">暂不处理</el-button>
+          <el-button size="small" type="primary" round  :disabled="isResolved === true || tabActive==1" :icon="resolvedState === 0?'el-icon-check':''" @click="submission">病情稳定</el-button>
+          <el-button size="small" type="primary" round  :disabled="isResolved === true || tabActive==1" :icon="resolvedState === 1?'el-icon-check':''" @click="submission">通知就诊</el-button>
         </div>
 
         <el-tabs @tab-click="currentPartientInfo" v-model="currentTable" v-if="selectOptions.length" type="border-card" class="record_content_table">
@@ -384,8 +386,6 @@
  * @module followRecord
  */
 import { FollowRecord } from "HNDC_API/common/followRecord";
-import echarts from "echarts";
-import { Point } from "@/assets/HN_DoctorClient/js/selectOptions";
 import mixin from "@/assets/HN_DoctorClient/js/mixin";
 import LineChart from './Chart';
 export default {
@@ -397,7 +397,6 @@ export default {
       currentTable: "", //当前选中的次数
       baseData: {}, // 患者基本信息
       dialogVisible: false,
-      // userId: "", // 医生adminId sessionStorage中
       fullscreenLoading: false, // 加载随访记录弹框时的全屏加载动画
       selectOptions: [
         {
@@ -410,14 +409,7 @@ export default {
           ],
         }
       ], // 随访记录弹框 随访结果的第几次选择信息
-      activeName1: "a0", // 指标折线图选中下标
-      modelData: [], // 随访记录 的语音详情信息
-      targetTab: [], // 指标tab
-      tabLabel: "", // 指标选中label
-      xChart: [], // 指标折线图 参数
-      yChart: [],
       baseUrl: "", // 语音地址前缀
-      showAnimal: false, // 是否显示指标的图表
       adviceCheckDialog: false, // 选择处理意见后的确认弹框是否显示
       btnState: "", // 当前处理意见类型
       checkAdvice: "", // 审核意见
@@ -449,28 +441,33 @@ export default {
   },
   // 含getPatientInfo,handleislike两个方法
   mixins: [mixin],
-  watch: {
-    patientId: {
-      handler(val) {
-        this.getPatientInfo(undefined, val, null).then(res => {
-          this.baseData = res.data;
-          // 重新请求情况下清空选项数据集合
-          this.selectOptions = [];
-          this.getResultInfo(this.sfNumber);
-          this.currentTable = this.sfNumber + "";
+  methods: {
+    /**
+     * 切换弹框的显示
+     * @function toggleShowModal
+     */
+    toggleShowModal() {
+      this.dialogVisible = !this.dialogVisible;
+      if (this.dialogVisible) {
+        this.$nextTick(() => {
+          this.getPatientInfo().then(res => {
+            this.baseData = res.data;
+            // 重新请求情况下清空选项数据集合
+            this.selectOptions = [];
+            this.getResultInfo(this.sfNumber);
+            this.currentTable = this.sfNumber + "";
+          });
         });
       }
-    }
-  },
-  methods: {
+    },
     /**
      *@function 点击table标签查看第几次随访
      * @param {String} value
      */
     currentPartientInfo(value) {
       this.targetTab = [];
-      let num=value.name;
-      if (!this.selectOptions[num-1] || !this.selectOptions[num-1].modelData) {
+      const num = value.name;
+      if (!this.selectOptions[num - 1] || !this.selectOptions[num - 1].alreadyHave) {
         this.getResultInfo(num);
       }
     },
@@ -506,6 +503,7 @@ export default {
           }
           // 详情数据赋值
           this.selectOptions[num-1].modelData = this.dataFormTarget(res.data);
+          this.selectOptions[num-1].alreadyHave = true;
           // target图表赋值
           if(this.targetTab.length){
             this.selectOptions[num-1].targetTab = this.targetTab;
@@ -523,6 +521,7 @@ export default {
           }
         })
         .catch(error => {
+          this.fullscreenLoading = false;
           console.log(error);
         });
     },

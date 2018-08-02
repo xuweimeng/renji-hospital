@@ -153,7 +153,7 @@
           <h4 class="record_header_param">
             联系地址: {{baseData.patientAddress}}
           </h4>
-          <el-button v-if="baseData.gzTag" class="record_header_cancel" size="mini" type="primary" @click="cancelSpecial" >取消关注</el-button>
+          <el-button v-if="baseData.GzTag" class="record_header_cancel" size="mini" type="primary" @click="cancelSpecial" >取消关注</el-button>
           <el-button v-else   icon="el-icon-star-off" class="record_header_cancel"  size="mini" type="primary" @click="addSpecial" >添加关注</el-button>
       </div>
       <el-tabs @tab-click="currentPartientInfo" v-model="currentTable"  type="border-card" v-if="timeList[0]">
@@ -161,7 +161,7 @@
                 <h6 class="record_table_name" slot="label"><span>{{item.mzOrzy=='1'?'门诊':'住院'}}</span> {{item.diagnosetime}}</h6>
                 <template v-if="item.mzOrZy!='mz' && item.adminPatientDiagnose">
                 <h5 class="record_content_name">就诊信息
-                  <h6 class="record_content_link" v-if="item.isHasVisit=='1'">查看随访记录</h6>
+                  <h6 class="record_content_link" v-if="item.isHasVisit=='1'" @click="sfDialog(item.adminPatientDiagnose.taskId)">查看随访记录</h6>
                 </h5>
                 <!-- 有随访记录展示随访记录 -->
                 <ul class="record_content_list">
@@ -202,10 +202,10 @@
                 </template>
                 <template v-if="item.mzOrZy!='zy' && item.adminPatientDiagnose">
                   <h5 class="record_content_name">就诊信息
-                    <h6 class="record_content_link" v-if="item.isHasVisit=='1'">查看随访记录</h6>
+                    <h6 class="record_content_link" v-if="item.isHasVisit=='1'" @click="sfDialog(item.adminPatientDiagnose.taskId)">查看随访记录</h6>
                   </h5>
                   <!-- 有随访记录展示随访记录 -->
-                  
+
                   <ul class="record_content_list">
                     <li  class="record_content_single">
                       就诊卡号:{{item.mzOrZyNum}}
@@ -245,12 +245,11 @@
 
     <!-- 随访记录 -->
     <follow-record
-      v-if="showRecordLink"
       :patient-id="patientId"
       :visit-order-id="visitOrderId"
       :task-id="taskIdRecord"
       v-on:refreshData="refreshListFunc"
-      sf-number="0"
+      sf-number="1"
       tab-active="0"
       ref="followRecord"></follow-record>
   </div>
@@ -334,17 +333,6 @@ export default {
   components: {
     followRecord
   },
-  // 检测patientId是否正常
-  watch: {
-    patientId: {
-      handler(val) {
-        this.getPatientInfo(undefined, val, null).then(res => {
-          this.baseData = res.data;
-        });
-      }
-    }
-  },
-  mounted() {},
   methods: {
     /**
      * @description 触发父组件刷新列表，供子组件-随访记录用
@@ -367,17 +355,12 @@ export default {
     toggleShowModal() {
       this.dialogVisible = !this.dialogVisible;
       if (this.dialogVisible) {
-        // 解决偶现的patientId为空的情况
-        if (this.patientId) {
+        this.$nextTick(() => {
           this.getPtTime();
-          this.getPatientInfo();
-        } else {
-          console.log("再次获取--patientId为空时");
-          setTimeout(() => {
-            this.getPtTime();
-            this.getPatientInfo();
-          }, 0);
-        }
+          this.getPatientInfo().then(res => {
+            this.baseData = res.data;
+          });
+        });
       }
     },
     /*
