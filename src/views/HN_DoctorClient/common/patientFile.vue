@@ -177,8 +177,8 @@
                   <li class="record_content_single">
                     出院时间:{{item.znjqrCyxjList[0].leavetime}}
                   </li>
-                  <li class="record_content_single">
-                    科室:{{item.adminDepartment}}
+                  <li class="record_content_single" v-if="item.adminPatientDiagnose">
+                    科室:{{item.adminPatientDiagnose.areaName}}
                   </li>
                   <li class="record_content_single">
                     主治医生:{{item.adminName}}
@@ -216,8 +216,8 @@
                       <li class="record_content_single">
                       医生姓名:{{item.adminName}}
                     </li>
-                    <li class="record_content_single">
-                      科室:{{item.adminDepartment}}
+                    <li class="record_content_single" v-if="item.adminPatientDiagnose">
+                      科室:{{item.adminPatientDiagnose.areaName}}
                     </li>
                     <li class="record_content_single">
                       疾病诊断:{{item.adminPatientDiagnose.icdName}}
@@ -260,47 +260,47 @@
  * 患者档案
  * @module patientFile
  */
-import { PatientFile } from "HNDC_API/common/patientFile";
-import mixin from "@/assets/HN_DoctorClient/js/mixin";
-import { mapGetters } from "vuex";
-import followRecord from "HNDC/common/followRecord";
+import { PatientFile } from 'HNDC_API/common/patientFile';
+import mixin from '@/assets/HN_DoctorClient/js/mixin';
+import { mapGetters } from 'vuex';
+import followRecord from 'HNDC/common/followRecord';
 export default {
   data() {
     return {
-      currentTable: "",
+      currentTable: '',
       // 药物字典
       medicineMap: {
-        yfgg: "规格",
-        ypcd: "产地",
-        yspl: "数量",
-        yfdw: "单位",
-        ycjl: "剂量",
-        jldw: "剂量单位",
-        yyts: "使用天数",
-        mrcs: "每日次数",
-        cflx: "频次",
-        yf: "用法"
+        yfgg: '规格',
+        ypcd: '产地',
+        yspl: '数量',
+        yfdw: '单位',
+        ycjl: '剂量',
+        jldw: '剂量单位',
+        yyts: '使用天数',
+        mrcs: '每日次数',
+        cflx: '频次',
+        yf: '用法'
       },
-      //出院小结字典
+      // 出院小结字典
       dischargedMap: {
-        admissiondiagnose: "入院诊断",
-        admissiondescription: "入院情况",
-        cureprocess: "诊治经过",
-        filedescription: "转归情况",
-        leavediagnose: "出院诊断",
-        leavedescription: "出院情况",
-        leavedoctorcharge: "出院医嘱"
+        admissiondiagnose: '入院诊断',
+        admissiondescription: '入院情况',
+        cureprocess: '诊治经过',
+        filedescription: '转归情况',
+        leavediagnose: '出院诊断',
+        leavedescription: '出院情况',
+        leavedoctorcharge: '出院医嘱'
       },
       timeList: [{
-        znjqrCyxjList:[{
+        znjqrCyxjList: [{
 
         }],
-        znjqrCfxx:{},
-        adminPatientDiagnose:{},
+        znjqrCfxx: {},
+        adminPatientDiagnose: {}
       }],
       baseData: {}, // 患者基本信息
       dialogVisible: false, // 患者档案弹框是否显示
-      taskIdRecord: "", // 传给随访记录的taskid
+      taskIdRecord: '' // 传给随访记录的taskid
     };
   },
   props: {
@@ -326,7 +326,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["token"])
+    ...mapGetters(['token'])
   },
   // 含getPatientInfo,handleislike两个方法
   mixins: [mixin],
@@ -339,7 +339,7 @@ export default {
      * @function  refreshListFunc
      */
     refreshListFunc() {
-      this.$emit("refreshData");
+      this.$emit('refreshData');
     },
     // 有 随访记录 按钮时调用
     sfDialog(taskId) {
@@ -367,9 +367,9 @@ export default {
       *请求当前时间的患者信息
       */
     currentPartientInfo(obj) {
-      this.timeList.forEach(item=>{
-        if(item.diagnosetime==obj.name){
-          if(item.znjqrCyxjList){
+      this.timeList.forEach(item => {
+        if (item.diagnosetime == obj.name) {
+          if (item.znjqrCyxjList) {
             return false;
           }
         }
@@ -380,15 +380,15 @@ export default {
         date: obj.name
       })
         .then(res => {
-            this.timeList.forEach((item,index)=>{
-              if(item.diagnosetime==obj.name){
-                if(item.znjqrCyxjList){
-                  return false;
-                }
-                item=Object.assign(item,res.data[0]);
-                this.timeList.splice(index,1,item);
+          this.timeList.forEach((item, index) => {
+            if (item.diagnosetime == obj.name) {
+              if (item.znjqrCyxjList) {
+                return false;
               }
-            });
+              item = Object.assign(item, res.data[0]);
+              this.timeList.splice(index, 1, item);
+            }
+          });
         })
         .catch(error => {
           console.log(error);
@@ -404,13 +404,13 @@ export default {
         patientId: this.patientId
       })
         .then(res => {
-            this.timeList = res.data;
-            if (this.timeList.length) {
-              this.currentTable=this.timeList[0].diagnosetime;
-              this.currentPartientInfo({
-                name:this.timeList[0].diagnosetime
-              });
-            }
+          this.timeList = res.data;
+          if (this.timeList.length) {
+            this.currentTable = this.timeList[0].diagnosetime;
+            this.currentPartientInfo({
+              name: this.timeList[0].diagnosetime
+            });
+          }
         })
         .catch(error => {
           console.log(error);
