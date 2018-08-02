@@ -59,7 +59,7 @@
         <transaction-table @getInfo="getRecord" :list="specialCare.dataList"></transaction-table>
       </el-col>
     </el-row>
-    <record ref="record" @refresh="getSpecialCare" :patientId="specialCareId"></record>
+    <record ref="record" @refresh="getSpecialCare" :patientId="specialCareId" :isHome=true></record>
   </div>
 </template>
 

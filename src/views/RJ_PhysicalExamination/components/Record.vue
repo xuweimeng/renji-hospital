@@ -126,6 +126,13 @@ import { Home } from 'LQPE_API/Home'; // 引入 api
 import { mapGetters } from 'vuex';
 export default {
   props: {
+    /**
+     * 判断是否从主页进来
+     **/
+    isHome:{
+      type: Boolean,
+      default:false
+    },
     patientId: {
       type: String
     }
@@ -260,6 +267,9 @@ export default {
             .then(res => {
               this.$emit('refresh');
               this.baseData.gzTag = '';
+              if(this.isHome){
+                this.dialogTableVisible=false
+              }
             })
             .catch(error => {
               console.log(error);
