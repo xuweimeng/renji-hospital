@@ -383,46 +383,46 @@
  * 随访记录
  * @module followRecord
  */
-import { FollowRecord } from "HNDC_API/common/followRecord";
-import echarts from "echarts";
-import { Point } from "@/assets/HN_DoctorClient/js/selectOptions";
-import mixin from "@/assets/HN_DoctorClient/js/mixin";
+import { FollowRecord } from 'HNDC_API/common/followRecord';
+import echarts from 'echarts';
+import { Point } from '@/assets/HN_DoctorClient/js/selectOptions';
+import mixin from '@/assets/HN_DoctorClient/js/mixin';
 import LineChart from './Chart';
 export default {
   components: {
-    LineChart,
+    LineChart
   },
   data() {
     return {
-      currentTable: "", //当前选中的次数
+      currentTable: '', // 当前选中的次数
       baseData: {}, // 患者基本信息
       dialogVisible: false,
       // userId: "", // 医生adminId sessionStorage中
       fullscreenLoading: false, // 加载随访记录弹框时的全屏加载动画
       selectOptions: [
         {
-          modelData:[],
-          targetTab:[
+          modelData: [],
+          targetTab: [
             {
-              name:null,
-              dataList:[],
+              name: null,
+              dataList: []
             }
-          ],
+          ]
         }
       ], // 随访记录弹框 随访结果的第几次选择信息
-      activeName1: "a0", // 指标折线图选中下标
+      activeName1: 'a0', // 指标折线图选中下标
       modelData: [], // 随访记录 的语音详情信息
       targetTab: [], // 指标tab
-      tabLabel: "", // 指标选中label
+      tabLabel: '', // 指标选中label
       xChart: [], // 指标折线图 参数
       yChart: [],
-      baseUrl: "", // 语音地址前缀
+      baseUrl: '', // 语音地址前缀
       showAnimal: false, // 是否显示指标的图表
       adviceCheckDialog: false, // 选择处理意见后的确认弹框是否显示
-      btnState: "", // 当前处理意见类型
-      checkAdvice: "", // 审核意见
-      isResolved: "", // 是否可以点击 处理意见 的三个选项按钮
-      resolvedState: "" // 处理意见 的三个选项按钮的选中num依次2,0,1
+      btnState: '', // 当前处理意见类型
+      checkAdvice: '', // 审核意见
+      isResolved: '', // 是否可以点击 处理意见 的三个选项按钮
+      resolvedState: '' // 处理意见 的三个选项按钮的选中num依次2,0,1
     };
   },
   props: {
@@ -436,7 +436,7 @@ export default {
     },
     tabActive: {
       type: String,
-      default: "1"
+      default: '1'
     },
     taskId: {
       type: String,
@@ -457,7 +457,7 @@ export default {
           // 重新请求情况下清空选项数据集合
           this.selectOptions = [];
           this.getResultInfo(this.sfNumber);
-          this.currentTable = this.sfNumber + "";
+          this.currentTable = this.sfNumber + '';
         });
       }
     }
@@ -469,8 +469,8 @@ export default {
      */
     currentPartientInfo(value) {
       this.targetTab = [];
-      let num=value.name;
-      if (!this.selectOptions[num-1] || !this.selectOptions[num-1].modelData) {
+      const num = value.name;
+      if (!this.selectOptions[num - 1] || !this.selectOptions[num - 1].modelData) {
         this.getResultInfo(num);
       }
     },
@@ -488,31 +488,31 @@ export default {
         taskId: this.taskId
       })
         .then(res => {
-          if(!res.count){
+          if (!res.count) {
             this.fullscreenLoading = false;
             return false;
           }
           // 随访次数拼接
-          if(!this.selectOptions.length){
+          if (!this.selectOptions.length) {
             for (let i = 1; i <= res.count; i++) {
               this.selectOptions.push({
                 value: i,
-                label: "第" + i + "次",
-                targetTab:[],
-                targetClick:null,
-                modelData:[],
+                label: '第' + i + '次',
+                targetTab: [],
+                targetClick: null,
+                modelData: []
               });
             }
           }
           // 详情数据赋值
-          this.selectOptions[num-1].modelData = this.dataFormTarget(res.data);
+          this.selectOptions[num - 1].modelData = this.dataFormTarget(res.data);
           // target图表赋值
-          if(this.targetTab.length){
-            this.selectOptions[num-1].targetTab = this.targetTab;
-            this.selectOptions[num-1].targetClick = this.targetTab[0].name;
+          if (this.targetTab.length) {
+            this.selectOptions[num - 1].targetTab = this.targetTab;
+            this.selectOptions[num - 1].targetClick = this.targetTab[0].name;
             this.targetClick({
-              label:this.targetTab[0].name,
-            })
+              label: this.targetTab[0].name
+            });
           }
           this.baseUrl = res.AIVOICURL;
           this.fullscreenLoading = false;
@@ -530,47 +530,47 @@ export default {
      * @function 图表table点击
      * @return {type} {description}
      */
-    targetClick(val){
+    targetClick(val) {
       FollowRecord.getChartData({
         hzxxId: this.patientId,
         fieldName: val.label
-      }).then(res=>{
-        for (let item of this.selectOptions) {
-            for (let ite of item.targetTab) {
-              if(ite.name=val.label){
-                ite.dataList=res.data;
-                return false;
-              }
+      }).then(res => {
+        for (const item of this.selectOptions) {
+          for (const ite of item.targetTab) {
+            if (ite.name = val.label) {
+              ite.dataList = res.data;
+              return false;
             }
+          }
         }
-      }).catch(err=>{
+      }).catch(err => {
         console.log(err);
-      })
+      });
     },
     /**
      * @function 对指标类型进行格式化处理
      * @param  {type} data {description}
      * @return {type} {description}
      */
-    dataFormTarget(data){
+    dataFormTarget(data) {
       data.forEach(item => {
         // 查看当前指标是否为数值类型
         if (item.isNum) {
           this.targetTab.push(
-              {
-                name:item.fieldName,
-                dataList:[],
-              }
-            );
+            {
+              name: item.fieldName,
+              dataList: []
+            }
+          );
         }
         if (item.isNormal) {
           if (item.resultType) {
-            item.resultType = "";
+            item.resultType = '';
           } else {
-            item.resultType = "success";
+            item.resultType = 'success';
           }
         } else if (!item.isNormal) {
-          item.resultType = "danger";
+          item.resultType = 'danger';
         }
       });
       return data;
@@ -601,7 +601,7 @@ export default {
                 this.isResolved = false;
               }
             } else {
-              this.resolvedState = "";
+              this.resolvedState = '';
               this.isResolved = false;
             }
           }
@@ -618,7 +618,7 @@ export default {
       this.adviceCheckDialog = true;
       const innerText = ev.target.innerText;
       this.btnState =
-        innerText === "暂不处理" ? 2 : innerText === "病情稳定" ? 0 : 1;
+        innerText === '暂不处理' ? 2 : innerText === '病情稳定' ? 0 : 1;
     },
     /**
      *处理意见询问
@@ -643,12 +643,12 @@ export default {
           this.dialogVisible = false;
           this.resolvedState = btnState;
           // 刷新列表数据
-          this.$emit("refreshData");
+          this.$emit('refreshData');
         })
         .catch(error => {
           console.log(error);
         });
-    },
+    }
 
   }
 };
