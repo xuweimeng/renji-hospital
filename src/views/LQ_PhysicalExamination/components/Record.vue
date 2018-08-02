@@ -4,7 +4,7 @@
     .el-dialog__body {
       padding-top: 0;
     }
-    .el-dialog{
+    .el-dialog {
       max-width: 800px;
     }
   }
@@ -34,7 +34,7 @@
     }
   }
   &_content {
-    &_box{
+    &_box {
       max-height: 300px;
       overflow-y: auto;
       border-top: 2px solid #f1f1f1;
@@ -122,8 +122,8 @@
 </template>
 
 <script>
-import { Home } from 'LQPE_API/Home'; // 引入 api
-import { mapGetters } from 'vuex';
+import { Home } from "LQPE_API/Home"; // 引入 api
+import { mapGetters } from "vuex";
 export default {
   props: {
     patientId: {
@@ -131,7 +131,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['token'])
+    ...mapGetters(["token"])
   },
   watch: {
     patientId: {
@@ -152,15 +152,15 @@ export default {
         }
       ],
       nameMap: {
-        projectName: '项目名称',
-        inspectDate: '项目时间',
-        projectConclusion: '项目小结',
-        completeStatus: '完成状态',
-        inspectDepartment: '体检科室',
-        inspectDoctor: '体检医生',
-        finishValue: '结果值',
-        upValue: '上限值',
-        downValue: '下限值'
+        projectName: "项目名称",
+        inspectDate: "项目时间",
+        projectConclusion: "项目小结",
+        completeStatus: "完成状态",
+        inspectDepartment: "体检科室",
+        inspectDoctor: "体检医生",
+        finishValue: "结果值",
+        upValue: "上限值",
+        downValue: "下限值"
       }
     };
   },
@@ -204,7 +204,7 @@ export default {
             };
           });
           this.timeList = res.data;
-          this.currentTable = this.timeList[0].clientDate + '0';
+          this.currentTable = this.timeList[0].clientDate + "0";
           this.timeList.forEach((item, index) => {
             this.getInfoData(item.clientDate, item.clientId, index);
           });
@@ -239,11 +239,11 @@ export default {
      */
     cancelSpecial() {
       this.$msgbox({
-        title: '消息',
-        message: '确定取消关心吗',
+        title: "消息",
+        message: "确定取消关心吗",
         showCancelButton: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
         beforeClose: (action, instance, done) => {
           done();
         }
@@ -257,8 +257,8 @@ export default {
             operateType: 0 // (操作类型 1:关注 0：取消关注) （必填）
           })
             .then(res => {
-              this.$emit('refresh');
-              this.baseData.gzTag = '';
+              this.$emit("refresh");
+              this.baseData.gzTag = "";
             })
             .catch(error => {
               console.log(error);
@@ -273,36 +273,38 @@ export default {
      * @return {type} {description}
      */
     addSpecial() {
-      this.$prompt('请填写关注标签（不超过5个字符）', '添加关注', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        inputErrorMessage: '不得超过5个字'
-      }).then(({ value }) => {
-        if (value.trim().length > 5 || value.trim().length === 0) {
-          this.$message({
-            type: 'error',
-            message: '格式不对，不能为空，不能超过5个字符'
-          });
-          return false;
-        }
-        Home.updateGz({
-          diagnoseType: 3,
-          adminId: this.token,
-          patientId: this.patientId,
-          operateTag: value,
-          operateType: 1 // (操作类型 1:关注 0：取消关注) （必填）
-        }).then(res => {
-          this.baseData.gzTag = value;
-          this.$message({
-            type: 'success',
-            message: '成功添加关注'
-          });
-        }).catch(error => {
-          console.log(error);
-        });
-      }).catch(() => {
-
-      });
+      this.$prompt("请填写关注标签（不超过5个字符）", "添加关注", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputErrorMessage: "不得超过5个字"
+      })
+        .then(({ value }) => {
+          if (value.trim().length > 5 || value.trim().length === 0) {
+            this.$message({
+              type: "error",
+              message: "格式不对，不能为空，不能超过5个字符"
+            });
+            return false;
+          }
+          Home.updateGz({
+            diagnoseType: 3,
+            adminId: this.token,
+            patientId: this.patientId,
+            operateTag: value,
+            operateType: 1 // (操作类型 1:关注 0：取消关注) （必填）
+          })
+            .then(res => {
+              this.baseData.gzTag = value;
+              this.$message({
+                type: "success",
+                message: "成功添加关注"
+              });
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        })
+        .catch(() => {});
     }
   }
 };

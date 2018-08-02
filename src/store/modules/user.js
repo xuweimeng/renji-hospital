@@ -17,7 +17,7 @@ const user = {
   // 操作全局基础用户数据
   mutations: {
     SET_TOKEN: (state, token) => {
-      sessionStorage.setItem('userId',token)
+      sessionStorage.setItem('userId',token);
       state.token = token;
     },
     // 设置用户名
@@ -73,7 +73,7 @@ const user = {
         commit('SET_DEPARTMENTNAME', data.departmentName);
         setParameter('departmentName', data.departmentName);
         // yugou 设置海宁医生端的type，用来判断满意度模块是否显示
-        sessionStorage.setItem('hn_type', `海宁市中心医院type${response.data.type}`);
+        setParameter('hn_type', `海宁市中心医院type${response.data.type}`);
       };
       return new Promise((resolve, reject) => {
         Login.login({
@@ -110,12 +110,12 @@ const user = {
             if ((res.data).indexOf('仁济') > -1) {
               roles = [res.data + getParameter('departmentName')];
             }
-            // commit('SET_ROLES', roles);
-            // callBack(roles);
-            // yugou改 海宁医生端 满意度模块权限
-            const roles_arr = [...roles, sessionStorage.getItem('hn_type')];
-            commit('SET_ROLES', roles_arr);
-            callBack(roles_arr);
+            // 海宁的特殊权限处理
+            if((res.data).indexOf('海宁') > -1){
+              roles = [...roles, getParameter('hn_type')];
+            }
+            commit('SET_ROLES', roles);
+            callBack(roles);
           } else {
             getInfo();
           }

@@ -69,7 +69,7 @@
     </ul>
     <!-- tab切换 -->
     <el-tabs type="border-card"  @tab-click="handleClick">
-      <el-tab-pane v-for="item,index in params" :label="index==='0' ? `${item.label}(${item.total})` : `${item.label}`" :key="index">
+      <el-tab-pane v-for="(item,index) in params" :label="index==='0' ? `${item.label}(${item.total})` : `${item.label}`" :key="index">
         <el-table
           :data="item.tableData"
           border highlight-current-row
@@ -143,8 +143,8 @@
       :patient-id="patientId"
       :visit-order-id="visitOrderId"
       :task-id="taskId"
-      :sf-number="sfNumber"
-      :tab-active="tabActive"
+      :sf-number="sfNumber+''"
+      :tab-active="tabActive+''"
       v-on:refreshData="refreshList"
       ref="followRecord"></follow-record>
     <!-- 就诊档案 不显示 随访记录 链接 -->
@@ -317,7 +317,7 @@ export default {
       this.taskId = scope.row.taskId;
       this.sfNumber = scope.row.currentVisitTime;
       setTimeout(() => {
-        this.$refs.followRecord.toggleShowModal();
+        this.$refs.followRecord.dialogVisible=true;
       }, 0);
     },
     /**

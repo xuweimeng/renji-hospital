@@ -36,7 +36,7 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <el-dialog title="修改密码" :visible.sync="dialogFormVisible">
+    <el-dialog width="500px" title="修改密码" :visible.sync="dialogFormVisible" center>
       <el-form :model="changeForm" status-icon :rules="changeRule" ref="changeForm" label-width="70px" >
         <el-form-item label="原密码" prop="oldPassword">
           <el-input type="password" v-model="changeForm.oldPassword" auto-complete="off" placeholder="请输入原密码"></el-input>
