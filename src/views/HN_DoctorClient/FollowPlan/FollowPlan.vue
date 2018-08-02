@@ -136,6 +136,7 @@
   import { FollowPlan } from 'HNDC_API/FollowPlan';
   import patientFile from 'HNDC/common/patientFile';
   import followPlan from 'HNDC/common/FollowPlan';
+  import { mapGetters } from 'vuex';
   const base_param = {
     page: 1,
     total: 0,
@@ -162,7 +163,6 @@
             status: 2
           }
         },
-        userId: '', // 从localStorage获取登录页的医生id
         searchParam: {
           limit: 10, // 每页数量
           patientName: '', // 病人名称
@@ -174,7 +174,7 @@
         },
         // (1:已通过 2:未通过 3:已审核 4:未审核)
         patientId: '', // 病人id
-        tabActive: 0, // 当前选中的tab 0：待审核，1：已通过，2：未通过
+        tabActive: '0', // 当前选中的tab 0：待审核，1：已通过，2：未通过
         multipleSelection: [], // 待审核表格中的选中结果
         noCheck: false, // 审核不通过弹框
         selectCheck: '', // 选中的审核不通过
@@ -201,8 +201,12 @@
         visitOrderId: '' // 选中的行的visitOrderId
       };
     },
+    computed: {
+      ...mapGetters({
+        userId: 'token'
+      })
+    },
     mounted() {
-      this.getUserId();
       this.getList();
     },
     components: {
@@ -216,14 +220,6 @@
        */
       refreshList() {
         this.getList();
-      },
-      /**
-       * 从sessionStorage获取医生id
-       * @function getUserId
-       * @param {String} userId 获取医生id
-       */
-      getUserId() {
-        this.userId = this.$store.state.user.token; // 用户名
       },
       /**
        * 列表数据获取
