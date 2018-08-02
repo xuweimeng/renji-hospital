@@ -11,8 +11,15 @@ const user = {
     laterhours: getParameter('laterhours'),
     departmentName: getParameter('departmentName'),
     roles: [],
-    scopeRowData: {},
-    visitTime: ''
+    scopeRowData: {}, // 表格点击操作按钮传递scope.row的数据
+    visitTime: '', // 随访结果的时间
+    uploadNum: { // 患者列表批量上传上传成功失败个数
+      downLoadName: '',
+      data: {
+        failNum: null,
+        successNum: null
+      }
+    }
   },
   // 操作全局基础用户数据
   mutations: {
@@ -47,6 +54,10 @@ const user = {
     // 个人档案的随访日期
     VISIT_TIME: (state, visitTime) => {
       state.visitTime = visitTime;
+    },
+    // 患者列表批量上传上传成功失败个数
+    UPLOADNUM: (state, uploadNum) => {
+      state.uploadNum = uploadNum;
     }
   },
 
@@ -201,7 +212,13 @@ const user = {
     // 获取个人档案的随访日期(默认获取第一个)
     getVisitTime({ commit }, visitTime) {
       commit('VISIT_TIME', visitTime);
-    }
+    },
+
+    // 获取个人档案的随访日期(默认获取第一个)
+    getUploadNum({ commit }, uploadNum) {
+      commit('UPLOADNUM', uploadNum);
+    },
+
 
   }
 };
