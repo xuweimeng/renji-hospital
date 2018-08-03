@@ -140,7 +140,7 @@
               <span class="record_header_sexAndage">
                   {{baseData.brxb}}/{{baseData.brage}}
               </span>
-              <el-tag v-show="baseData.gzTag">
+              <el-tag v-show="baseData.GzTag">
                   {{baseData.GzTag}}
               </el-tag>
           </h3>
@@ -339,6 +339,9 @@ export default {
      * @function  refreshListFunc
      */
     refreshListFunc() {
+      this.getPatientInfo().then(res => {
+        this.baseData = res.data;
+      });
       this.$emit("refreshData");
     },
     // 有 随访记录 按钮时调用

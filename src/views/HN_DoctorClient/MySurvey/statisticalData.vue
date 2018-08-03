@@ -120,9 +120,12 @@
       getTableData() {
         const param = this.params[this.tabActive];
         param.loading = true;
+        param.tableData = [];
+        param.total = 0;
         const yearQuarters = param.selectVal;
         if (!yearQuarters) {
           this.$message.error('请选择季度!');
+          param.loading = false;
           return false;
         }
         const year = yearQuarters.split('_')[0];
@@ -145,6 +148,10 @@
        */
       exportBtn() {
         const yearQuarters = this.params[this.tabActive].selectVal;
+        if (!yearQuarters) {
+          this.$message.error('请选择季度!');
+          return false;
+        }
         const year = yearQuarters.split('_')[0];
         const quarter = yearQuarters.split('_')[1];
         MySurvey.calculationResultExport({

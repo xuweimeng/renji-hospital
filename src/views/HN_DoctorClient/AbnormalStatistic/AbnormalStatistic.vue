@@ -91,7 +91,8 @@
       <el-table-column prop="schemeName" label="随访方案" align="center" show-overflow-tooltip></el-table-column>
       <el-table-column prop="dateEnd" label="随访时间" align="center"></el-table-column>
       <el-table-column prop="visitErrorInfo" label="随访异常结果" align="center" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="leavelDignose" label="出院诊断" align="center" show-overflow-tooltip></el-table-column>
+      <!--<el-table-column prop="leavelDignose" label="出院诊断" align="center" show-overflow-tooltip></el-table-column>-->
+      <el-table-column prop="icdName" label="出院诊断" align="center" show-overflow-tooltip></el-table-column>
       <el-table-column prop="diseaseInfoStr" label="医生审核意见" align="center" show-overflow-tooltip></el-table-column>
     </el-table>
     <!-- 分页 -->
