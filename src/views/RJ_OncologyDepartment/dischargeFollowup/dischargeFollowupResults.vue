@@ -243,7 +243,8 @@
   </div>
 </template>
 <script>
-  import { followUp } from 'RJZL_API/followPlan'
+	import { followUp } from 'RJZL_API/followPlan'
+	import { commonUrl } from 'RJZL_API/commonUrl'
 	import Result from 'components/dialog/result/result'
 	import * as getTime from 'utils/getDate'
 	import * as utilsIndex from 'utils'
