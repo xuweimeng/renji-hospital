@@ -30,23 +30,24 @@
       </li>
       <li class="common_search_single">
         <el-button type="primary" icon="el-icon-search"  @click="waySearchBtn"
-                   :loading="param_wait.loading || param_pass.loading || param_nopass.loading">查询</el-button>
+                   :loading="params[0].loading || params[1].loading || params[2].loading">查询</el-button>
       </li>
     </ul>
     <!-- tab切换 -->
     <el-tabs type="border-card" @tab-click="handleClick">
-      <!-- 待审核 -->
-      <el-tab-pane :label="`待审核(${param_wait.total})`">
-        <el-table :data="param_wait.tableData" class="rsTable" v-loading="param_wait.loading" @selection-change="handleSelectionChange" ref="multipleTable">
-          <el-table-column type="selection" align="center">
-          </el-table-column>
-          <el-table-column label="" align="center" width="25">
+
+      <el-tab-pane v-for="item,index in params" :label="index==='0' ? `${item.label}(${item.total})` : `${item.label}`" :key="index">
+        <el-table
+          :data="item.tableData"
+          border highlight-current-row
+          v-loading="item.loading"
+          @selection-change="handleSelectionChange"
+          :ref="`multipleTable${index}`"
+        >
+          <el-table-column type="selection" align="center" v-if="index==='0'"></el-table-column>
+          <el-table-column label="姓名" align="center">
             <template slot-scope="scope">
-              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
-            </template>
-          </el-table-column>
-          <el-table-column label="姓名" align="center" width="120">
-            <template slot-scope="scope">
+              <i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i>
               <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
             </template>
           </el-table-column>
@@ -55,17 +56,20 @@
               <span>{{scope.row.sex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="icdName" label="疾病诊断" header-align="center" align="left" show-overflow-tooltip>
+          <el-table-column prop="icdName" label="疾病诊断" align="center" show-overflow-tooltip>
             <template slot-scope="scope">
               <el-tag>{{scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>
               {{scope.row.icdName}}
             </template>
           </el-table-column>
-          <el-table-column prop="schemeName" label="随访方案" align="center" show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column prop="visitStartTimeStr" label="计划开始日期" align="center">
-          </el-table-column>
-          <el-table-column label="审核" align="center" width="160">
+          <el-table-column prop="schemeName" label="随访方案" align="center" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="visitStartTimeStr" label="计划开始日期" align="center"></el-table-column>
+          <el-table-column prop="notPassReason" label="未通过原因" align="center" v-if="index === '2'"></el-table-column>
+          <template v-if="index!=='0'">
+            <el-table-column prop="operator" label="审核人" align="center"></el-table-column>
+            <el-table-column prop="dateUpdate" label="审核时间" align="center" show-overflow-tooltip></el-table-column>
+          </template>
+          <el-table-column label="审核" align="center" width="160" v-if="index==='0'">
             <template slot-scope="scope">
               <el-button size="mini" @click="throughCheck(scope)">通过</el-button>
               <el-button size="mini" @click="noThroughCheck(scope)">不通过</el-button>
@@ -79,102 +83,12 @@
         </el-table>
         <!-- 分页 -->
         <div class="pagination-container">
-          <div style='margin-right:10px;float:left' v-if="param_wait.tableData.length">
-            <el-button type="primary" @click="toggleSelection(param_wait.tableData)">全选</el-button>
+          <div style='margin-right:10px;float:left' v-if="item.tableData.length && index==='0'">
+            <el-button type="primary" @click="toggleSelection(item.tableData)">全选</el-button>
             <el-button type="primary" @click="numCheck">批量通过</el-button>
           </div>
-          <el-pagination  @current-change="pageChange_wait" :current-page.sync="param_wait.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
-                          :total="param_wait.total" v-if="param_wait.total">
-          </el-pagination>
-        </div>
-      </el-tab-pane>
-      <!-- 已通过 -->
-      <el-tab-pane :label="`已通过`">
-        <el-table :data="param_pass.tableData" class="rsTable" v-loading="param_pass.loading">
-          <el-table-column label="" align="center" width="25">
-            <template slot-scope="scope">
-              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
-            </template>
-          </el-table-column>
-          <el-table-column label="姓名" align="center" width="120">
-            <template slot-scope="scope">
-              <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="name" label="性别/年龄" align="center">
-            <template slot-scope="scope">
-              <span>{{scope.row.sex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="icdName" label="疾病诊断" header-align="center" align="left" show-overflow-tooltip>
-            <template slot-scope="scope">
-              <el-tag>{{scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>
-              {{scope.row.icdName}}
-            </template>
-          </el-table-column>
-          <el-table-column prop="schemeName" label="随访方案" align="center" show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column prop="visitStartTimeStr" label="计划开始日期" align="center" show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column prop="operator" label="审核人" align="center">
-          </el-table-column>
-          <el-table-column prop="dateUpdate" label="审核时间" align="center" show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column label="随访计划" align="center" width="140">
-            <template slot-scope="scope">
-              <el-button type="primary" @click.stop="wayButton(scope)" size="mini">详情</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <div class="pagination-container">
-          <el-pagination  @current-change="pageChange_pass" :current-page.sync="param_pass.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
-                          :total="param_pass.total" v-if="param_pass.total">
-          </el-pagination>
-        </div>
-      </el-tab-pane>
-      <!-- 未通过 -->
-      <el-tab-pane :label="`未通过`">
-        <el-table :data="param_nopass.tableData" class="rsTable" v-loading="param_nopass.loading">
-          <el-table-column label="" align="center" width="25">
-            <template slot-scope="scope">
-              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
-            </template>
-          </el-table-column>
-          <el-table-column label="姓名" align="center" width="120">
-            <template slot-scope="scope">
-              <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="name" label="性别/年龄" align="center">
-            <template slot-scope="scope">
-              <span>{{scope.row.sex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="icdName" label="疾病诊断" header-align="center" align="left" show-overflow-tooltip>
-            <template slot-scope="scope">
-              <el-tag>{{scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>
-              {{scope.row.icdName}}
-            </template>
-          </el-table-column>
-          <el-table-column prop="schemeName" label="随访方案" align="center" show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column prop="notPassReason" label="未通过原因" align="center">
-          </el-table-column>
-          <el-table-column prop="operator" label="审核人" align="center">
-          </el-table-column>
-          <el-table-column prop="dateUpdate" label="审核时间" align="center" show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column label="随访计划" align="center" width="140">
-            <template slot-scope="scope">
-              <el-button type="primary" @click.stop="wayButton(scope)" size="mini">详情</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <div class="pagination-container">
-          <el-pagination  @current-change="pageChange_nopass" :current-page.sync="param_nopass.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
-                          :total="param_nopass.total" v-if="param_nopass.total">
+          <el-pagination  @current-change="pageChange" :current-page.sync="item.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
+                          :total="item.total" v-if="item.total">
           </el-pagination>
         </div>
       </el-tab-pane>
@@ -222,11 +136,33 @@
   import { FollowPlan } from 'HNDC_API/FollowPlan';
   import patientFile from 'HNDC/common/patientFile';
   import followPlan from 'HNDC/common/FollowPlan';
-  const typeMap = ['wait', 'pass', 'nopass']; // 依次是 待审核、已通过、未通过；用来匹配 不同的param_
+  import { mapGetters } from 'vuex';
+  const base_param = {
+    page: 1,
+    total: 0,
+    loading: false,
+    tableData: []
+  };
   export default {
     data() {
       return {
-        userId: '', // 从localStorage获取登录页的医生id
+        params: {
+          0: { // 待审核
+            ...base_param,
+            label: '待审核',
+            status: 4
+          },
+          1: { // 已通过
+            ...base_param,
+            label: '已通过',
+            status: 1
+          },
+          2: { // 未通过
+            ...base_param,
+            label: '未通过',
+            status: 2
+          }
+        },
         searchParam: {
           limit: 10, // 每页数量
           patientName: '', // 病人名称
@@ -237,32 +173,8 @@
           schemeName: '' // 方案名称
         },
         // (1:已通过 2:未通过 3:已审核 4:未审核)
-        /* 待审核的数据集合 */
-        param_wait: {
-          page: 1,
-          total: 0,
-          loading: false,
-          tableData: [],
-          status: 4
-        },
-        /* 已通过的数据集合 */
-        param_pass: {
-          page: 1,
-          total: 0,
-          loading: false,
-          tableData: [],
-          status: 1
-        },
-        /* 未通过的数据集合 */
-        param_nopass: {
-          page: 1,
-          total: 0,
-          loading: false,
-          tableData: [],
-          status: 2
-        },
         patientId: '', // 病人id
-        tabActive: 0, // 当前选中的tab 0：待审核，1：已通过，2：未通过
+        tabActive: '0', // 当前选中的tab 0：待审核，1：已通过，2：未通过
         multipleSelection: [], // 待审核表格中的选中结果
         noCheck: false, // 审核不通过弹框
         selectCheck: '', // 选中的审核不通过
@@ -289,9 +201,13 @@
         visitOrderId: '' // 选中的行的visitOrderId
       };
     },
+    computed: {
+      ...mapGetters({
+        userId: 'token'
+      })
+    },
     mounted() {
-      this.getUserId();
-      this.getList(this.param_wait);
+      this.getList();
     },
     components: {
       patientFile,
@@ -303,16 +219,7 @@
        * @function refreshList
        */
       refreshList() {
-        const param_name = `param_${typeMap[this.tabActive]}`;
-        this.getList(this[param_name]);
-      },
-      /**
-       * 从sessionStorage获取医生id
-       * @function getUserId
-       * @param {String} userId 获取医生id
-       */
-      getUserId() {
-        this.userId = this.$store.state.user.token; // 用户名
+        this.getList();
       },
       /**
        * 列表数据获取
@@ -329,7 +236,8 @@
        * @param {String} pager 当前页码
        * @param {String} limit 每页显示条数
        */
-      getList(param) {
+      getList() {
+        const param = this.params[this.tabActive];
         param.loading = true;
         FollowPlan.list({
           ...this.searchParam,
@@ -340,16 +248,9 @@
           param.loading = false;
           if (res.code === 0) {
             res.data.forEach((item) => {
-              if (item.islike === 0 || item.islike === '0' || !item.islike) {
-                item.islike = false;
-              } else if (item.islike === 1 || item.islike === '1') {
-                item.islike = true;
-              }
               // 匹配审核不通过原因
-              console.log(item.notPassReason);
               const reasonMap = ['', '患者已死亡', '患者不接受随访', '随访方案重复', '方案不匹配'];
               item.notPassReason = reasonMap[item.notPassReason];
-              console.log(item.notPassReason);
               // 随访类型
               if (!item.activeType) {
                 item.activeType = 0;
@@ -359,14 +260,6 @@
             });
             param.tableData = res.data;
             param.total = res.count;
-
-            // "hadExamineCount" : 1760 , //已审核
-            // "count" : 1865 , // 待审核
-            //  passCount通过
-            // "noPassCount" : 5 , //未通过总数
-            // "unExamineCount" : 104 , //未审核
-            // const countMap = ['count', 'passCount', 'noPassCount'];
-            // param.total = res[countMap[this.tabActive]];
           }
         }).catch((error) => {
           console.log(error);
@@ -374,47 +267,22 @@
         });
       },
       /**
-       * 待审核分页
-       * @function pageChange_wait
+       * 分页
+       * @function pageChange
        * @param {String} page 当前页码
        * @description
        */
-      pageChange_wait(page) {
-        this.param_wait.page = page;
-        this.getList(this.param_wait);
-      },
-      /**
-       * 已通过分页
-       * @function pageChange_wait
-       * @param {String} page 当前页码
-       * @description
-       */
-      pageChange_pass(page) {
-        this.param_pass.page = page;
-        this.getList(this.param_pass);
-      },
-      /**
-       * 不通过分页
-       * @function pageChange_wait
-       * @param {String} page 当前页码
-       * @description
-       */
-      pageChange_nopass(page) {
-        this.param_nopass.page = page;
-        this.getList(this.param_nopass);
+      pageChange(page) {
+        this.params[this.tabActive].page = page;
+        this.getList();
       },
       /**
        * 查询
        * @function waySearchBtn
        */
       waySearchBtn() {
-        // 修改page会触发 分页方法的调用,无需在调用getList
-        const param_name = `param_${typeMap[this.tabActive]}`;
-        if (this[param_name].page !== 1) {
-          this[param_name].page = 1;
-          return false;
-        }
-        this.getList(this[param_name]);
+        this.params[this.tabActive].page = 1;
+        this.getList();
       },
       /**
        * 获取表格选中行信息-点击 详情
@@ -440,8 +308,7 @@
        */
       handleClick(tab, event) {
         this.tabActive = tab.index;
-        const param_name = `param_${typeMap[tab.index]}`;
-        this.getList(this[param_name]);
+        this.getList();
       },
       /**
        *待审核表格全选
@@ -449,12 +316,12 @@
        *@param {object} rows 选中的行（参见element-ui的table-rows）
        */
       toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
+        if (this.multipleSelection.length > 0) {
+          this.$refs.multipleTable0[0].clearSelection();
         } else {
-          this.$refs.multipleTable.clearSelection();
+          rows.forEach(row => {
+            this.$refs.multipleTable0[0].toggleRowSelection(row, true);
+          });
         }
       },
       /**
@@ -516,7 +383,7 @@
           const id = this.checkId.join(',');
           this.handleCheck(1, 2, id, this.selectCheck);
           this.$refs.followPlan.closeDialog();
-          this.getList(this.param_wait);
+          this.getList();
         } else {
           this.$message.error('请选择不通过原因!');
         }
@@ -529,7 +396,7 @@
         const id = this.checkId.join(',');
         this.handleCheck(2, 2, id);
         this.$refs.followPlan.toggleShowModal();
-        this.getList(this.param_wait);
+        this.getList();
       },
       /**
        *随访计划详情弹框中 点击不通过
@@ -562,7 +429,7 @@
               message: '操作已完成',
               type: 'success'
             });
-            this.getList(this.param_wait);
+            this.getList();
             this.noCheck = false;
           }
         }).catch((error) => {
@@ -585,10 +452,19 @@
   };
 </script>
 <style scoped>
+  .input-separator{
+    line-height: 36px;
+    padding: 0 3px;
+  }
   .td-hover{
     cursor: pointer;
   }
   .td-hover:hover{
     color: #409EFF;
+  }
+  .app-container .iconfont{
+    color: #ff6e40;
+    position: absolute;
+    left: 15px;
   }
 </style>

@@ -125,7 +125,7 @@
             </el-pagination>
         </div>
       
-    <result-info ref="record" @refresh="getData" :resultData="dataTail" :patientId="patientId"></result-info>
+    <result-info ref="record" @refresh="getData" :resultData="dataTail" :patientId="patientId" :hzxxId="hzxxId"></result-info>
   </div>
 </template>
 
@@ -145,6 +145,7 @@ export default {
   data() {
     return {
       patientId: '',
+      hzxxId:'',
       orderTime: '',
       dataTail: {},
       diseaseList: [] /* 疾病列表 */,
@@ -224,6 +225,7 @@ export default {
     detailBtn(scope) {
       this.dataTail = scope.row;
       this.patientId = scope.row.id;
+      this.hzxxId=scope.row.hzxxId;
       this.$refs.record.dialogTableVisible = true;
     },
     /**

@@ -15,7 +15,7 @@
 				</el-col>
         <el-col :span="6">
 			  	<el-form-item label="检查项目">
-				    <el-select v-model="searchParams.icdCheckItem" clearable  placeholder="请选择">
+				    <el-select v-model="searchParams.icdCheckItem" filterable clearable  placeholder="请选择">
 				      <el-option
                 v-for="item in ProjectList"
                 :key="item.icd10"
@@ -35,21 +35,22 @@
 						</el-select>
 					</el-form-item>
 				</el-col>
-        <el-col :span="9">
+        <el-col :span="6">
 					<el-form-item label="检查时间" class="formTime">
 						<el-date-picker
               v-model="startTime"
               @change="timeChange"
               type="daterange"
-              value-format="yyyy-MM-dd"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期">
+							value-format="yyyy-MM-dd"
+							range-separator="至"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+              :picker-options="pickerTime">
             </el-date-picker>
 					</el-form-item>
 				</el-col>
 			  <el-col :span="4">
-			  	<el-button type="primary" size="medium" @click="getData">查询</el-button>
+			  	<el-button type="primary" size="medium" @click="searchParams.pager=1,getData()">查询</el-button>
 			  </el-col>
 			</el-form>
 		</el-row>
@@ -94,6 +95,8 @@ import { InspectionNotice } from 'RJZL_API/InitiateNotification';
 import { commonUrl } from 'RJZL_API/commonUrl';
 import AdResult from '@/components/dialog/aDresult/ppResult';
 import CheckedList from './checkedList/checkedList';
+import * as getTime from 'utils/getDate'
+import * as utilsIndex from 'utils'
 export default {
   name: 'checkTheResultOfTheNotice',
  data() {
@@ -115,7 +118,10 @@ export default {
       dataLoading: false, // 表格数据请求等待
       infoShow: false, // 详情弹窗
       ProjectList: [], // 检查项目
-      gridData: []
+      gridData: [],
+      pickerTime: {
+        shortcuts: utilsIndex.pickerOptions
+      },
     };
   },
   components: {
@@ -126,25 +132,13 @@ export default {
     this.getCurrent()
     this.getProjectList()
     this.getData();
-
   },
   methods: {
+    /** 随访日期 */
     getCurrent() {
-      let current = new Date()
-      let currentYear = current.getFullYear()
-      let currentMonth = current.getMonth() + 1
-      if(currentMonth<10) {
-        currentMonth = '0'+currentMonth
-      }
-      let startDate = current.getDate()
-      let endDate = current.getDate() + 1
-      let currentTime1 = currentYear + '-' + currentMonth + '-' + startDate
-      let currentTime2 = currentYear + '-' + currentMonth + '-' + endDate
-      this.searchParams.startOrderTime = currentTime1
-      this.searchParams.endOrderTime = currentTime2
-
-      this.startTime.push(currentTime1)
-      this.startTime.push(currentTime2)
+      this.searchParams.startOrderTime = getTime.currentTime + ' ' + '00:00:00';
+      this.searchParams.endOrderTime = getTime.currentTime + ' ' + '23:59:59';
+      this.startTime = [this.searchParams.startOrderTime, this.searchParams.endOrderTime]
     },
     /** 获取检查项目列表 */
     getProjectList () {
@@ -159,8 +153,8 @@ export default {
      */
     timeChange(time) {
       if (time) {
-        this.searchParams.startOrderTime = time[0];
-      this.searchParams.endOrderTime = time[1];
+        this.searchParams.startOrderTime = time[0] + ' ' + '00:00:00';
+      this.searchParams.endOrderTime = time[1] + ' ' + '23:59:59';
       } else {
         this.searchParams.startOrderTime = '';
         this.searchParams.endOrderTime = '';

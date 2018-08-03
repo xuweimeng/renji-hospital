@@ -14,10 +14,15 @@
       </el-col>
     </el-row>
     <!-- 外呼处理意见 -->
-    <el-row class="suggestions">
-      <el-col :span="24">
-        人工审核意见： <el-tag>{{isData.vetRemark?isData.vetRemark: '暂无意见'}}</el-tag>
-        </el-col>
+    <el-row class="checkAdviceRow">
+      <el-col :span="4" class="checkAdviceCol" style="padding-left: 20px;" v-show="isData.vetRemark">AI审核意见：</el-col>
+      <el-col :span="20" class="checkAdviceCol" v-show="isData.vetRemark">
+        <el-tag type="primary" v-show="isData.vetRemark">{{isData.vetRemark}} &nbsp;</el-tag>
+      </el-col>
+      <el-col :span="4" class="checkAdviceCol" style="padding-left: 20px;" v-show="isData.callRemark">外呼审核意见：</el-col>
+      <el-col :span="20" class="checkAdviceCol" v-show="isData.callRemark">
+        <el-tag type="primary" v-show="isData.callRemark">{{isData.callRemark}} &nbsp;</el-tag>
+      </el-col>
     </el-row>
     <!-- 随访问题语音 -->
     <el-row class="resultVoice">
@@ -45,7 +50,7 @@
             <!-- 是否人工外呼 -->
             <el-row>
               <el-col :span="24" v-show="isData.isArtificialCall==1">
-                <el-tag type="primary" style="margin-bottom: 10px;">人工外呼</el-tag>
+                <el-tag type="primary" size="small" style="margin-bottom: 10px;">人工外呼</el-tag>
               </el-col>
             </el-row>
             <!-- 语音列表 -->
@@ -63,17 +68,28 @@
               <el-col :span="24" class="hzyuyin">
                 <div class="hzhead">患者</div>
                 <div class="hzWords">
-                  <audio :src="AIVOICURL +item.audio" controls="controls" style="margin-top: 7px;"></audio>
+                  <audio
+                    :src="AIVOICURL + item.audio"
+                    v-show="item.isArtificialCall==0"
+                    controls="controls"
+                    style="margin-top: 7px;">
+                  </audio>
+                  <span
+                    v-show="item.isArtificialCall==1"
+                    style="line-height: 40px;">
+                    此记录未人工呼叫，暂无录音
+                  </span>
                   <div class="arrows1"></div>
                 </div>
               </el-col>
-              <el-col :span="24">
+              <el-col :span="24" v-show="item.asr">
                 <div class="answer-text-wrap">
                   <span class="answer-text">
                     {{item.asr}}
                   </span>
                 </div>
               </el-col>
+              <el-col :span="24" class="hzms" >( 指标：{{item.isNormal?'正常':'不正常'}} /  {{item.fieldName}} : {{item.fieldValue}} )</el-col>
             </el-row>
             <!-- 没数据的时候 -->
             <el-row
@@ -198,14 +214,14 @@
               .hzWords {
                 margin: 10px 10px 0 10px;
                 float: right;
-                width: 270px;
+                width: 290px;
                 min-height: 40px;
                 background: #dfefff;
                 border-radius: 5px;
-                padding-left: 18px;
+                padding-left: 10px;
                 position: relative;
                 audio {
-                  width: 90%;
+                  width: 96%;
                 }
                 .arrows1 {
                   width: 5px;
@@ -228,7 +244,7 @@
     }
   }
   .answer-text-wrap{
-    width:320px;
+    width:340px;
     float:right;
     text-align: left;
     background-color: #dfefff;
@@ -267,5 +283,12 @@
     height:20px;
     line-height: 18px;
     margin-top:10px;
+  }
+  // 外呼审核意见
+  .checkAdviceRow {
+    padding: 10px 0;
+    .checkAdviceCol {
+      line-height: 40px;
+    }
   }
 </style>

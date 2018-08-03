@@ -34,7 +34,7 @@
 					    clearable
 					    placeholder="请输入关键词"
 					    :remote-method="remoteMethod"
-					    :loading="loading1"
+					    :loading="queryLoading"
               size="medium" >
 					    <el-option
 					      v-for="(item, index) in options4"
@@ -173,7 +173,7 @@
 					<img src="../../../assets/images/animal.png" alt="认识医生">
 				</el-col>
 				<el-col :span="19">
-					您修改的手机号<span class="red"> {{oldMobile}}</span>  有其他计划正在执行<br/>
+					您修改的手机号<span class="red"> {{newMobile}}</span>  有其他计划正在执行<br/>
 					请问您是否需要终止其他计划，或者放弃修改号码
 				</el-col>
 			</el-row>
@@ -216,7 +216,8 @@
 </template>
 
 <script>
-  import { hzList } from 'RJZL_API/patientList'
+	import { hzList } from 'RJZL_API/patientList'
+	import { commonUrl } from 'RJZL_API/commonUrl'
 	import AddList from './addList'
 	import HzFile from 'components/Dialog/hzFile/hzFile'
 	import CancelAll from 'components/Dialog/cancelAll/cancelAll'
@@ -243,7 +244,7 @@
 				totalPage: null,
 				showDialog: false, // 单个添加患者弹框
 				hzDialog: false, // 患者就诊档案弹框
-				loading1: false, // 助记码loading
+				queryLoading: false, // 助记码loading
 				diseaseDg: false, // 疾病检索弹框
 				errorNumber: null, // 未完善的数量
 				updateIsLiveDg: false, // 病人死亡标签
@@ -275,10 +276,10 @@
       /** 疾病搜索 */
 			remoteMethod(query) {
         if (query !== '') {
-          this.loading1 = true;
+          this.queryLoading = true;
           setTimeout(() => {
-						this.loading1 = false;
-            hzList.commonUrl.getdiseasefix({
+						this.queryLoading = false;
+            commonUrl.getdiseasefix({
               'jbmc': query
             }).then((res)=>{
               if(res.code == 0) {
@@ -391,6 +392,11 @@
 									buttonType: 'primary',
 									buttonDisabled: false
 								})
+								if(item.status === 4) {
+									item.buttonText = '已终止'
+									item.buttonType = 'danger'
+									item.buttonDisabled = true
+								}
 							})
 							this.mobileDate = res.data
 						} else {
@@ -443,22 +449,27 @@
 			 * 终止随访计划按钮
 			 */
 			cancelAllBtn (scope) {
-
 				this.cancelDialog = true
 				this.rowData = scope.row
 				// row  index
 				this.rowIndex = ''
 				this.rowIndex = scope.$index
-				console.log(this.rowIndex);
 
 			},
 			/** 监听终止随访计划弹框关闭 */
 			closeCancelDialog (val) {
 				this.cancelDialog = val.close
+				// response = true表示终止成功
 				if(val.response) {
 					this.mobileDate[this.rowIndex].buttonText = '已终止'
 					this.mobileDate[this.rowIndex].buttonType = 'danger'
 					this.mobileDate[this.rowIndex].buttonDisabled = true
+					// isDeath = true表示终止原因为患者已死亡，此时需妖调用接口传值该患者已死亡
+					if(val.isDeath) {
+						this.hzxxId = this.rowData.hzxxId
+						this.updateIsLiveRadio = 1
+						this.updateIsLiveFun(val)
+					}
 				}
 			},
 			/**
@@ -475,27 +486,39 @@
 			updateIsLiveBtn () {
 				if (this.updateIsLiveRadio === 1) {
 					this.$confirm('标记死亡后该患者的所有随访计划将终止, 确定标记该患者死亡?', '提示', {
-							confirmButtonText: '确定',
-							cancelButtonText: '取消',
-							confirmButtonClass: 'operationBtn',
-							cancelButtonClass: 'operationBtn',
-							type: 'warning'
-						}).then(() => {
-							this.updateIsLiveFun()
-						})
-					} else {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						confirmButtonClass: 'operationBtn',
+						cancelButtonClass: 'operationBtn',
+						type: 'warning'
+					}).then(() => {
 						this.updateIsLiveFun()
-					}
-				},
-			updateIsLiveFun () {
+					})
+				} else {
+					this.updateIsLiveFun()
+				}
+			},
+			updateIsLiveFun (param) {
+				let paramNotPassReason
+				let paramNotPassRemark
+				if(param) {
+					paramNotPassReason = param.notPassReason
+					paramNotPassRemark = param.notPassRemark
+				}
 				hzList.updateIsLive({
           'hzxxId': this.hzxxId,
-          'isDed': this.updateIsLiveRadio
+					'isDed': this.updateIsLiveRadio,
+					'notPassReason': paramNotPassReason,
+					'notPassRemark': paramNotPassRemark
         }).then((res)=>{
           if(res.code == 0) {
 						this.updateIsLiveDg = false
 						this.list(this.currentPage)
 						this.$message.success(res.message)
+						if(param) {
+							console.log('test,  刷新列表');
+							this.isfollowPlan()
+						}
           }
         }).catch((error)=>{
         	console.log(error)

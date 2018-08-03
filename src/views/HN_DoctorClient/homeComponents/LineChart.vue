@@ -141,7 +141,7 @@ export default {
 
         series: [
           {
-            name: 'female',
+            name: '随访人数',
             type: 'bar',
             stack: 'total',
             barMaxWidth: 35,
@@ -161,7 +161,8 @@ export default {
             data: expectedData.length === 1 ? expectedData : []
           },
           {
-            name: '随访人数', itemStyle: {
+            name: '随访人数',
+            itemStyle: {
               normal: {
                 color: 'rgba(0,191,183,1)',
                 lineStyle: {
@@ -172,7 +173,7 @@ export default {
             },
             smooth: true,
             type: 'line',
-            data: expectedData,
+            data: expectedData.length === 1 ? [] : expectedData,
             animationDuration: 2000,
             animationEasing: 'cubicInOut'
           }

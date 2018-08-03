@@ -66,6 +66,7 @@
               type="daterange"
               range-separator="至"
               start-placeholder="开始日期"
+              :picker-options="pickerOptions"
               end-placeholder="结束日期">
             </el-date-picker>
 
@@ -247,6 +248,7 @@
 <script>
 import { Message } from 'element-ui';
 import { MessageBox } from 'element-ui';
+import * as utilsIndex from 'utils';
 import { initiateNotification } from '../../api/RJ_PhysicalExamination/InitiateNotification';     // 引入 api
 export default {
   name: 'InitiateNotification',
@@ -305,7 +307,10 @@ export default {
         brxm: '' // 病人姓名（可选）
       },
       startTime: '',
-      queryLoading: true // 疾病loading
+      queryLoading: true, // 疾病loading
+      pickerOptions: { // 日期选择器
+        shortcuts: utilsIndex.pickerOptions
+      }
     };
   },
   mounted() {

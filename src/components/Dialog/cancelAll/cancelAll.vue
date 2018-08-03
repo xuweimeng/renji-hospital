@@ -35,38 +35,20 @@
 </template>
 <script>
 import { hzList } from 'RJZL_API/patientList'
+import auditOptions from 'utils/auditOptions'
 export default {
   name: 'CancelAll',
   data () {
     return {
       notPassReason: "", //选中的审核不通过
       notPassRemark: '', //不通过详情
-      checkoptions: [
-        {
-          value: "",
-          label: "请选择"
-        },
-        {
-          //审核不通过options
-          value: "1",
-          label: "患者已死亡"
-        },
-        {
-          value: "2",
-          label: "患者不接受随访"
-        },
-        {
-          value: "3",
-          label: "随访方案重复"
-        },
-        {
-          value: "4",
-          label: "方案不匹配"
-        }
-      ],
+      checkoptions: auditOptions, // 审核不通过原因选项
       isClose: {
         close: false, // 是否关闭
-        response: false // 是否请求成功
+        response: false, // 是否请求成功
+        isDeath: false, // 患者是否死亡
+        notPassReason: this.notPassReason,
+        notPassRemark: this.notPassRemark
       }
     }
   },
@@ -89,9 +71,12 @@ export default {
     },
     /** 终止原因--取消 */
     dgFailBtn () {
-      this.$emit('closeCancelDialog', this.isClose)
       this.notPassReason = ''
       this.notPassRemark = ''
+      this.isClose.close =false;
+      this.isClose.response =false;
+      this.isClose.isDeath =false;
+      this.$emit('closeCancelDialog', this.isClose)
     },
      /**
      *审核功能
@@ -106,12 +91,15 @@ export default {
         .then(res => {
 
           if (res.code == 0) {
-            this.notPassReason = ''
-            this.notPassRemark = ''
-            this.$message.success(res.message)
+            if (this.notPassReason == '1') {
+              this.isClose.isDeath = true
+            }
             // 返回父组件请求结果
             this.isClose.response = true
             this.$emit('closeCancelDialog', this.isClose)
+            this.notPassReason = ''
+            this.notPassRemark = ''
+            this.$message.success(res.message)
           }else {
             this.$emit('closeCancelDialog', this.isClose)
             this.$message.error(res.message)
@@ -147,6 +135,11 @@ export default {
           }
         }
       }
+    }
+  }
+  .selectOut {
+    .el-select-dropdown__wrap {
+      margin-bottom: 0!important;
     }
   }
 </style>

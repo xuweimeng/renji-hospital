@@ -4,11 +4,11 @@
 		<el-row class="personInfo">
       <el-col :span="12" class="name">
       	<span class="personName careColor" v-if="patientInfo">
-          {{patientInfo.brxm}}
+          {{patientInfo.brxm?patientInfo.brxm:patientInfo.patientName?patientInfo.patientName:''}}
         </span>
       	<span class="personSex careColor" v-if="patientInfo">
-          {{patientInfo.brxb}} /
-          {{patientInfo.age}}
+          {{patientInfo.brxb?patientInfo.brxb:patientInfo.patientSex?patientInfo.patientSex:''}} /
+          {{patientInfo.age?patientInfo.age:patientInfo.patientAge?patientInfo.patientAge:''}}
         </span>
       	<span class="personXg">{{GzTag}}</span>
       </el-col>
@@ -44,13 +44,14 @@
 import { mapState } from 'vuex';
 import { commonUrl } from 'RJZL_API/commonUrl';
   export default {
+    name: 'hzInfo',
     props: [
       'isCare',
       'GzTag'
     ],
     computed: {
       ...mapState({
-        "patientInfo": state => state.user.scopeRowData
+        "patientInfo": state => state.user.scopeRowData.row
       })
     },
     methods: {

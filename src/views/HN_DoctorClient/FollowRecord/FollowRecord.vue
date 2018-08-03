@@ -64,21 +64,20 @@
       </li>
       <li class="common_search_single">
         <el-button type="primary" icon="el-icon-search"  @click="waySearchBtn"
-                   :loading="param_unhandled.loading || param_handled.loading">查询</el-button>
+                   :loading="params[0].loading || params[1].loading">查询</el-button>
       </li>
     </ul>
     <!-- tab切换 -->
-    <el-tabs type="border-card" @tab-click="handleClick">
-      <!-- 未处理 -->
-      <el-tab-pane :label="`未处理(${param_unhandled.total})`">
-        <el-table :data="param_unhandled.tableData" class="rsTable" v-loading="param_unhandled.loading">
-          <el-table-column label="" align="center" width="25">
+    <el-tabs type="border-card"  @tab-click="handleClick">
+      <el-tab-pane v-for="(item,index) in params" :label="index==='0' ? `${item.label}(${item.total})` : `${item.label}`" :key="index">
+        <el-table
+          :data="item.tableData"
+          border highlight-current-row
+          v-loading="item.loading"
+        >
+          <el-table-column label="姓名" align="center" prop="patientName">
             <template slot-scope="scope">
-              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
-            </template>
-          </el-table-column>
-          <el-table-column label="姓名" align="center" width="120" prop="patientName">
-            <template slot-scope="scope">
+              <i class="iconfont" v-if="scope.row.islike==1">&#xe604;</i>
               <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
             </template>
           </el-table-column>
@@ -87,7 +86,7 @@
               <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="icdName" label="疾病诊断" align="left" header-align="center" show-overflow-tooltip>
+          <el-table-column prop="icdName" label="疾病诊断" align="center" show-overflow-tooltip>
             <template slot-scope="scope">
               <el-tag>{{scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>
               {{scope.row.icdName}}
@@ -113,71 +112,14 @@
           <!--update by yugou 情况进一步细分-->
           <el-table-column label="采集情况" align="center">
             <template slot-scope="scope">
-              <!--<span v-if="scope.row.resultStatus==0" v-bind:class="[scope.row.resultStatus==0?cjsb:'']">采集失败</span>-->
-              <!--<span v-if="scope.row.resultStatus!=0" v-bind:class="[scope.row.currentVisitError>0?yyc:wyc]">{{scope.row.currentVisitError>0?scope.row.currentVisitError+'项异常':'无异常'}}</span>-->
               <span v-if="scope.row.currentVisitError ===0 " :class="scope.row.stateClass">{{scope.row.scquisitionStateText}}</span>
               <span v-if="scope.row.currentVisitError !==0 " class="yyc">{{scope.row.currentVisitError}}项异常</span>
             </template>
           </el-table-column>
-          <el-table-column prop="address" label="随访记录" align="center">
-            <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="wayButton(scope)" class="operateBtn">
-                详情
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="pagination-container">
-          <el-pagination  @current-change="handleCurrentUnhandled" :current-page.sync="param_unhandled.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
-                          :total="param_unhandled.total" v-if="param_unhandled.total">
-          </el-pagination>
-        </div>
-      </el-tab-pane>
-      <!-- 已处理 -->
-      <el-tab-pane :label="`已处理`">
-        <el-table :data="param_handled.tableData" class="rsTable" v-loading="param_handled.loading">
-          <el-table-column label="" align="center" width="25">
-            <template slot-scope="scope">
-              <i class="iconfont" v-if="scope.row.islike==1" style="color: #ff6e40;">&#xe604;</i>
-            </template>
-          </el-table-column>
-          <el-table-column label="姓名" align="center" width="120" prop="patientName">
-            <template slot-scope="scope">
-              <div class="td-hover" @click="tdClick(scope)"><span>{{ scope.row.patientName }}</span></div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="name" label="性别/年龄" align="center">
-            <template slot-scope="scope">
-              <span>{{scope.row.patientSex}}</span>&nbsp;/&nbsp;<span>{{scope.row.patientAge}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="icdName" label="疾病诊断" align="left" header-align="center" show-overflow-tooltip>
-            <template slot-scope="scope">
-              <el-tag>{{scope.row.diagnosetype ==1?'门诊':'住院'}}</el-tag>
-              {{scope.row.icdName}}
-            </template>
-          </el-table-column>
-          <el-table-column label="随访计划" align="center" show-overflow-tooltip>
-            <template slot-scope="scope">
-              <span class="td-hover" @click="sfjhModel(scope)">{{scope.row.schemeName}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="通话状态" align="center" show-overflow-tooltip>
-            <template slot-scope="scope">
-              {{scope.row.backStatusStr}}
-            </template>
-          </el-table-column>
-          <el-table-column prop="dateBegin" label="随访日期" align="center" show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column label="随访进度" align="center">
-            <template slot-scope="scope">
-              <span>{{scope.row.currentVisitTime}}/{{scope.row.visitCount}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="处理意见" align="center">
+          <el-table-column label="处理意见" align="center" v-if="index !== '0'">
             <template slot-scope="scope">
                   <span v-bind:class="[scope.row.visitResult==1?yyc:scope.row.visitResult==2?originC:wyc]">
-                    {{scope.row.visitResult==0?'病情稳定':scope.row.visitResult==1?'通知就诊':scope.row.visitResult==2?'暂不处理':''}}
+                    {{scope.row.visitResult==0?'病情稳定':scope.row.visitResult==1?'通知就诊':scope.row.visitResult==2?'暂不处理':'未知'}}
                   </span>
             </template>
           </el-table-column>
@@ -190,8 +132,8 @@
           </el-table-column>
         </el-table>
         <div class="pagination-container">
-          <el-pagination  @current-change="handleCurrentHandled" :current-page.sync="param_handled.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
-                          :total="param_handled.total" v-if="param_handled.total">
+          <el-pagination @current-change="handlePage" :current-page.sync="item.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
+                          :total="item.total" v-if="item.total">
           </el-pagination>
         </div>
       </el-tab-pane>
@@ -201,8 +143,8 @@
       :patient-id="patientId"
       :visit-order-id="visitOrderId"
       :task-id="taskId"
-      :sf-number="sfNumber"
-      :tab-active="tabActive"
+      :sf-number="sfNumber+''"
+      :tab-active="tabActive+''"
       v-on:refreshData="refreshList"
       ref="followRecord"></follow-record>
     <!-- 就诊档案 不显示 随访记录 链接 -->
@@ -233,7 +175,12 @@ import { FollowRecord } from 'HNDC_API/FollowRecord';
 import patientFile from 'HNDC/common/patientFile';
 import followPlan from 'HNDC/common/FollowPlan';
 import followRecord from 'HNDC/common/followRecord';
-const typeMap = ['unhandled', 'handled']; // 对应：未处理、已处理；用来匹配 不同的param_
+const base_param = {
+  page: 1,
+  total: 0,
+  loading: false,
+  tableData: []
+};
 export default {
   data() {
     return {
@@ -250,21 +197,17 @@ export default {
         scquisitionState: '', // 采集状态 1、无异常。2、有异常。3、部分采集。4、接通未采集。5、接通无应答。6、未接通未采集。
         limit: 10 // 每页条数
       },
-      /* 未处理的数据集合 */
-      param_unhandled: {
-        page: 1,
-        total: 0,
-        loading: false,
-        tableData: [],
-        status: 1
-      },
-      /* 已处理的数据集合 */
-      param_handled: {
-        page: 1,
-        total: 0,
-        loading: false,
-        tableData: [],
-        status: 11
+      params: {
+        0: {
+          ...base_param,
+          label: '未处理',
+          status: 1
+        },
+        1: {
+          ...base_param,
+          label: '已处理',
+          status: 11
+        }
       },
       cjsb: 'cjsb', // 采集失败(灰色)--采集情况不同时，文字颜色不同的处理
       wyc: 'wyc', // 无异常(绿色)
@@ -279,7 +222,7 @@ export default {
   },
   mounted() {
     this.getUserId(11);
-    this.getList(this.param_unhandled);
+    this.getList();
   },
   components: {
     followRecord,
@@ -292,8 +235,7 @@ export default {
        * @function refreshList
        */
     refreshList() {
-      const param_name = `param_${typeMap[this.tabActive]}`;
-      this.getList(this[param_name]);
+      this.getList();
     },
     /**
       * 从sessionStorage获取医生id
@@ -320,7 +262,8 @@ export default {
       * @param {String} pager 当前页码
       * @param {String} limit 每页显示条数
       */
-    getList(param) {
+    getList() {
+      const param = this.params[this.tabActive];
       param.loading = true;
       FollowRecord.list({
         ...this.searchParam,
@@ -334,11 +277,6 @@ export default {
           const stateColorMap = ['', 'wyc', 'yyc', 'yyc', 'cjsb', 'originC', ''];
           // 匹配当前病人是否被关注
           res.data.forEach((item) => {
-            if (item.islike === 0 || item.islike === '0' || !item.islike) {
-              item.islike = false;
-            } else if (item.islike === 1 || item.islike === '1') {
-              item.islike = true;
-            }
             item.stateClass = stateColorMap[item.scquisitionState];
             item.scquisitionStateText = scquisitionStateMap[item.scquisitionState];
           });
@@ -351,37 +289,22 @@ export default {
       });
     },
     /**
-       * 分页--未处理
-       * @function handleCurrentUnhandled
+       * 分页
+       * @function handlePage
        * @param {String} val 当前页码
        * @description
        */
-    handleCurrentUnhandled(page) {
-      this.param_unhandled.page = page;
-      this.getList(this.param_unhandled);
-    },
-    /**
-       * 分页--已处理
-       * @function handleCurrentHandled
-       * @param {String} page 当前页码
-       * @description
-       */
-    handleCurrentHandled(page) {
-      this.param_handled.page = page;
-      this.getList(this.param_handled);
+    handlePage(page) {
+      this.params[this.tabActive].page = page;
+      this.getList();
     },
     /**
       * 查询
       * @function waySearchBtn
       */
     waySearchBtn() {
-      // 修改page会触发 分页方法的调用,无需在调用getList
-      const param_name = `param_${typeMap[this.tabActive]}`;
-      if (this[param_name].page !== 1) {
-        this[param_name].page = 1;
-        return false;
-      }
-      this.getList(this[param_name]);
+      this.params[this.tabActive].page = 1;
+      this.getList();
     },
     /**
       * 获取表格选中行信息
@@ -394,6 +317,7 @@ export default {
       this.taskId = scope.row.taskId;
       this.sfNumber = scope.row.currentVisitTime;
       setTimeout(() => {
+        // this.$refs.followRecord.dialogVisible=true;
         this.$refs.followRecord.toggleShowModal();
       }, 0);
     },
@@ -405,8 +329,7 @@ export default {
        */
     handleClick(tab, event) {
       this.tabActive = tab.index;
-      const param_name = `param_${typeMap[tab.index]}`;
-      this.getList(this[param_name]);
+      this.getList();
     },
     /**
        *@function tdClick
@@ -435,6 +358,10 @@ export default {
 };
 </script>
 <style scoped>
+  .input-separator{
+    line-height: 36px;
+    padding: 0 3px;
+  }
   .td-hover{
     cursor: pointer;
   }
@@ -452,5 +379,10 @@ export default {
   }
   .originC {
     color: #ff6800;
+  }
+  .app-container .iconfont{
+    color: #ff6e40;
+    position: absolute;
+    left: 15px;
   }
 </style>
