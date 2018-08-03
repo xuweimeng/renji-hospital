@@ -105,7 +105,10 @@ export default {
   props: {
     patientId: {
       type: String
-    }
+    },
+    hzxxId:{
+      type: String
+    },
   },
   computed: {
     ...mapGetters(['token'])
@@ -172,7 +175,7 @@ export default {
           NoticePlan.updateGz({
             diagnoseType: 3,
             adminId: this.token,
-            patientId: this.patientId,
+            patientId: this.hzxxId,
             operateType: 0 // (操作类型 1:关注 0：取消关注) （必填）
           })
             .then(res => {
@@ -207,7 +210,7 @@ export default {
           NoticePlan.updateGz({
             diagnoseType: 3,
             adminId: this.token,
-            patientId: this.patientId,
+            patientId: this.hzxxId,
             operateTag: value,
             operateType: 1 // (操作类型 1:关注 0：取消关注) （必填）
           })
