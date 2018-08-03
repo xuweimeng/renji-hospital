@@ -249,6 +249,7 @@ import { Message } from 'element-ui';
 import { MessageBox } from 'element-ui';
 import { initiateNotification } from '../../api/RJ_PhysicalExamination/InitiateNotification';     // 引入 api
 export default {
+  name: 'InitiateNotification',
   data() {
     return {
       step: 0, // 步骤
