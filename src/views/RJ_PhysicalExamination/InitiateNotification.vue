@@ -72,13 +72,13 @@
 
         </li>
         <li class="common_search_single">
-          <el-button type="primary" icon="el-icon-search" @click="getData" >查询</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="searchParams.pager=1,getData()" >查询</el-button>
         </li>
       </ul>
 			<!-- 通知患者 -->
 			<el-row>
 				<el-col :span="24">
-					<el-table :data="dataList" style="width: 100%" class="upTable" ref="multipleTable" border fit highlight-current-row>
+					<el-table :data="dataList"  class="upTable" ref="multipleTable" border fit highlight-current-row>
 						<el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
 						<el-table-column prop="jtdh" label="联系方式" align="center"></el-table-column>
             <el-table-column prop="sfzh" label="身份证号" align="center"></el-table-column>
@@ -89,7 +89,7 @@
 						<el-table-column prop="date" label="操作" width="180" align="center">
 							<template slot-scope="scope">
 								<el-button @click="addPat(scope.row,scope.$index)"
-                  style="height:22px;width:52px;padding:0;margin:0;font-size :13px;"
+                  style="height:28px;width:56px;padding:0;margin:0;font-size :13px;"
                   :type="scope.row.isAdd?'success':'primary'">
                   {{scope.row.isAdd?"已选择":"选择"}}
                </el-button>
@@ -120,7 +120,7 @@
 				<el-badge :value="addList.length" class="item">
 				<el-button type="default" @click="patModal=true;" class="btnStyle">已选中客户</el-button>
 				</el-badge>
-				<el-button type="primary" @click="nextStep" class="btnStyle" style="padding:6px 25px;margin-left: 20px;">下一步</el-button>
+				<el-button type="primary" @click="nextStep" class="btnStyle" style="margin-left: 20px;">下一步</el-button>
 			</el-row>
 		</div>
 		</transition>
@@ -141,12 +141,10 @@
 				<el-col :span="24">
 					<el-table  :data="planList"  border style="width: 100%; margin: 0 auto;" class="upTable">
 						<el-table-column prop="name" label="方案名称" align="center"></el-table-column>
-						<!--<el-table-column prop="diseaseName" label="疾病名称" align="center"></el-table-column>-->
-						<!--<el-table-column prop="departmentName" label="科室" align="center"></el-table-column>-->
 						<el-table-column prop="date" label="操作" width="180" align="center">
 							<template slot-scope="scope">
 								<el-button
-                  @click="selectAction(scope.row,scope.$index)"
+                  @click="selectAction(scope.row,scope.$index )"
                    style="height:28px;width:56px;padding:0;margin:0;font-size :13px;"
 									:type="scope.row.isAdd?'success':'primary'">
                   {{scope.row.isAdd?"已选择":"选择"}}
@@ -218,31 +216,33 @@
 			<!-- <p class="sussP1">通知人数：10人</p> -->
 		</div>
 		</transition>
+
 		<!-- 步骤一已选中患者 -->
-		<div class="addList">
-			<el-dialog
-			title="选中患者"
-			width="1000px"
-			custom-class="addDg"
-			:visible.sync="patModal">
-				<el-table :data="addList" height="490px" width="100%" class="addListTable">
-					<el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
-						<el-table-column prop="jtdh" label="联系方式" align="center"></el-table-column>
-            <el-table-column prop="sfzh" label="身份证号" align="center"></el-table-column>
-						<el-table-column prop="brxb" label="性别" align="center"></el-table-column>
-						<el-table-column prop="age" label="年龄" align="center"></el-table-column>
-						<el-table-column prop="sourcetime" label="预约时间" align="center"></el-table-column>
-						<el-table-column prop="diseaseName" label="疾病名称" align="center" show-overflow-tooltip></el-table-column>
-						<el-table-column prop="date" label="操作" width="180" align="center">
-						<template slot-scope="scope">
-							<el-button @click="removePat(scope.$index)"
-								type="danger"
-								style="height:22px;width:52px;padding:0;margin:0;font-:13px;">移除</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
-			</el-dialog>
-		</div>
+
+      <el-dialog
+
+        custom-class='addDg'
+        width='1000px'
+        title="选中患者"
+        :visible.sync="patModal">
+        <el-table border :data="addList" height="490px"    width='100%' class='addListTable'>
+          <el-table-column prop="brxm" label="姓名" width='100' align="center"></el-table-column>
+          <el-table-column prop="jtdh" label="联系方式"width='130' align="center"></el-table-column>
+          <el-table-column prop="sfzh" label="身份证号"width='180' align="center"></el-table-column>
+          <el-table-column prop="brxb" label="性别" width='60' align="center"></el-table-column>
+          <el-table-column prop="age" label="年龄" width='60' align="center"></el-table-column>
+          <el-table-column prop="sourcetime" width='110'label="预约时间" align="center"></el-table-column>
+          <el-table-column prop="diseaseName"width='120'  label="疾病名称" align="center" ></el-table-column>
+          <el-table-column prop="date" label="操作" width='180' align='center'>
+            <template slot-scope="scope">
+              <el-button @click="removePat(scope.$index)"
+                         type="danger"
+                         size='mini'
+              >移除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
 	</div>
 </template>
 <script>
@@ -363,9 +363,10 @@ export default {
     getData() {
       this.hzLoading = true;
       initiateNotification.queryCustomerList(this.searchParams).then(res => {
-        console.log(res);
         this.hzLoading = false;
+        console.log(res)
         this.dataList = this.formData(res.data);
+        console.log(this.dataList)
         this.totalPage = res.total;
       });
     },
@@ -384,7 +385,7 @@ export default {
     formData(data) {
       for (const item of data) {
         for (const ite of this.addList) {
-          if (item.id == ite.id) {
+          if (item.hzxxId == ite.hzxxId) {
             item.isAdd = 1;
           }
         }
@@ -598,23 +599,39 @@ export default {
 
 <style lang="scss">
 @import "../../styles/common";
-.el-date-editor .el-range-separator{
-  width: auto;
+
+.addDg {
+  .el-dialog__header {
+    padding: 15px 15px 10px;
+    border-bottom: 1px solid #ececec;
+    span {
+      font-size: 14px;
+    }
+  }
+  .el-dialog__body {
+    .addListTable th {
+      background: rgb(248, 248, 249);
+    }
+  }
 }
-  .select-TIME{
-    .el-col-6{
-      display: flex;
-      flex: 0 0 auto;
-      margin-right: 10px;
-    }
-    .demonsAdnice{
-      line-height: 36px;
-      flex-shrink:0 ;
-      padding-right: 8px;
-    }
-    .el-date-editor.el-input, .el-date-editor.el-input__inner{
-      width: 100%;
-    }
+.step2Page {
+  padding-left: 10px;
+  background: #fff;
+  font-size: 14px;
+}
+.btnRow {
+  padding: 30px 0;
+  text-align:center;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+}
+.step3 {
+  min-height: 600px;
+  text-align: center;
+  i {
+    margin: 30px auto 20px;
+    color: #67c23a;
+    font-size: 80px;
   }
   .sussP {
     font-size: 20px;
@@ -625,13 +642,8 @@ export default {
   .sussP1 {
     color: #666;
   }
-  .step3 i{
-    margin: 30px auto 20px;
-    color: #67c23a;
-    font-size: 80px;
-  }
-  .step3 {
-    min-height: 600px;
-    text-align: center;
-  }
+}
+.el-badge__content{
+  line-height: 16px;
+}
 </style>
