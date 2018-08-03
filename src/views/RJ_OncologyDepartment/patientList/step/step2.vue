@@ -278,7 +278,7 @@
 			editjb (scope) {
 				this.diseaseDg = true
 				this.nowIndex = scope.$index
-				this.$store.dispatch('ppid', scope.row.id)
+				this.hzid = scope.row.id
 			},
 			/**
        * 关闭疾病检索弹框

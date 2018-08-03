@@ -53,19 +53,19 @@
             </span>人
           </div>
           <div class="showTopPage-content">
-            <el-row>
+            <!-- <el-row>
               <el-col :span="14" class="showTopPage-bg">
                 成功通知<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[1].statisticsValue}}</span> 人
               </el-col>
               <el-col :span="9" :offset="1" class="showTopPage-bg">
                 未接通<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[5].statisticsValue}}</span> 人
-                </el-col>
-              <el-col :span="14">
+              </el-col>
+             <el-col :span="14">
                 完整采集<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[2].statisticsValue}}</span> 人 |
                 部分采集<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[3].statisticsValue}}</span> 人 |
                 未采集  <span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[4].statisticsValue}}</span>人
               </el-col>
-              <el-col :span="9" :offset="1">
+               <el-col :span="9" :offset="1">
                 等待再次随访<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[7].statisticsValue}}</span>人
               </el-col>
               <el-col :span="24"  class="showTopPage-bg">
@@ -81,6 +81,37 @@
               <el-col :span="24"  class="showTopPage-bg">
                 今日重拨人数<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[6].statisticsValue}}</span> 人                         |
                 异常指标   <span class="show-number" v-if="showTopPageData.abnormal>=0">{{showTopPageData.abnormal}}</span>人
+              </el-col>
+            </el-row> -->
+            <!-- demo -->
+             <el-row>
+              <el-col :span="14" class="showTopPage-bg">
+                成功通知<span class="show-number">200</span> 人
+              </el-col>
+              <el-col :span="9" :offset="1" class="showTopPage-bg">
+                未接通<span class="show-number">300</span> 人
+              </el-col>
+             <el-col :span="14">
+                完整采集<span class="show-number">300</span> 人 |
+                部分采集<span class="show-number">300</span> 人 |
+                未采集  <span class="show-number">200</span>人
+              </el-col>
+               <el-col :span="9" :offset="1">
+                等待再次随访<span class="show-number">2</span>人
+              </el-col>
+              <el-col :span="24"  class="showTopPage-bg">
+                满意度-已评价<span class="show-number">2</span>人 |
+                满意度-未评价  <span class="show-number">33</span>人
+              </el-col>
+              <el-col :span="24">
+                满意度-十分满意<span class="show-number">33</span> 人 |
+                满意度-满意    <span class="show-number">44</span> 人 |
+                满意度-一般    <span class="show-number">66</span>人 |
+                满意度-不满意  <span class="show-number">22</span>人
+              </el-col>
+              <el-col :span="24"  class="showTopPage-bg">
+                今日重拨人数<span class="show-number">7</span> 人                         |
+                异常指标   <span class="show-number">888</span>人
               </el-col>
             </el-row>
 
@@ -169,7 +200,7 @@
           <el-table-column prop="icdName" label="疾病名称" align="center"  show-overflow-tooltip></el-table-column>
           <el-table-column prop="address" label="档案" align="center"  >
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="wayButton(scope)">档案</el-button>
+              <el-button type="primary" size="mini" @click.native="wayButton(scope)">档案</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -823,8 +854,10 @@
       *获取记录信息
       */
       wayButton(scope) {
+        console.log('test');
+
         this.hzDialog = true
-       this.$store.dispatch('getScopeRowData', scope)
+        this.$store.dispatch('getScopeRowData', scope)
       },
       /*
       *已处理
@@ -997,10 +1030,6 @@
           }
         })
       },
-      goDetailPage () {
-        this.$router.push({path: '/Summary'})
-      }
-
     }
   };
 </script>
@@ -1047,7 +1076,7 @@
 }
 /** 特别关心 **/
 .careTable {
-  margin-top: 20px;
+  margin: 20px 0 30px 0;
   padding: 16px;
   background-color: #fff;
   .home-title {
