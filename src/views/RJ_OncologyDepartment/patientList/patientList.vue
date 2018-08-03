@@ -173,7 +173,7 @@
 					<img src="../../../assets/images/animal.png" alt="认识医生">
 				</el-col>
 				<el-col :span="19">
-					您修改的手机号<span class="red"> {{oldMobile}}</span>  有其他计划正在执行<br/>
+					您修改的手机号<span class="red"> {{newMobile}}</span>  有其他计划正在执行<br/>
 					请问您是否需要终止其他计划，或者放弃修改号码
 				</el-col>
 			</el-row>
