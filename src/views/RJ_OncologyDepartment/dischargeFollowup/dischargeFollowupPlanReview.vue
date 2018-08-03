@@ -463,7 +463,9 @@ export default {
 				if(res.code === 0) {
 					this.ids.length = 0
 					this.$message.success(res.message)
-					this.list()
+					// 获取tab对应的tableName, 获取列表数据
+					this.getTableName = `tableData_${tableName[this.tabIndex]}`;
+					this.list(this[this.getTableName]);
 					if (this.noCheck) {
 						this.noCheck = false
 					}
