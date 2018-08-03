@@ -20,5 +20,5 @@ const auditOptions = [
     value: '4',
     label: '方案不匹配'
   }
-]
-export default auditOptions
+];
+export default auditOptions;
