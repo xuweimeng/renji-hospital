@@ -316,13 +316,15 @@
        *@param {object} rows 选中的行（参见element-ui的table-rows）
        */
       toggleSelection(rows) {
-        if (this.multipleSelection.length > 0) {
-          this.$refs.multipleTable0[0].clearSelection();
-        } else {
-          rows.forEach(row => {
-            this.$refs.multipleTable0[0].toggleRowSelection(row, true);
-          });
-        }
+        // if (this.multipleSelection.length > 0) {
+        //   this.$refs.multipleTable0[0].clearSelection();
+        // } else {
+        //   rows.forEach(row => {
+        //     this.$refs.multipleTable0[0].toggleRowSelection(row, true);
+        //   });
+        // }
+        // element-ui自带的方法
+        this.$refs.multipleTable0[0].toggleAllSelection();
       },
       /**
        *待审核表格多选

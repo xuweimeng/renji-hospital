@@ -133,7 +133,7 @@
     return `${year}-${month}-${day}`;
   }
   const today_format = getToday();
-  const follow_default_time_format = [today_format + ' 00:00', today_format + ' 23:59'];
+  const follow_default_time_format = [today_format + ' 00:00:00', today_format + ' 23:59:59'];
   export default {
     data() {
       return {
@@ -219,10 +219,10 @@
         AbnormalStatistic.list(this.searchParam)
           .then((res) => {
             this.tableLoading = false;
-            res.data.forEach(value => {
-              value.outHspitalTime = value.outHspitalTime ? value.outHspitalTime.split(' ')[0] : value.outHspitalTime;
-              value.dateEnd = value.dateEnd ? value.dateEnd.substring(0, value.dateEnd.length - 3) : value.dateEnd;
-            });
+            // res.data.forEach(value => {
+            //   value.outHspitalTime = value.outHspitalTime ? value.outHspitalTime.split(' ')[0] : value.outHspitalTime;
+            //   value.dateEnd = value.dateEnd ? value.dateEnd.substring(0, value.dateEnd.length - 3) : value.dateEnd;
+            // });
             this.tableData = res.data;
             this.total = res.count;
           })
