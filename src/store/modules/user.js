@@ -24,6 +24,7 @@ const user = {
   // 操作全局基础用户数据
   mutations: {
     SET_TOKEN: (state, token) => {
+      sessionStorage.setItem('userId', token);
       state.token = token;
     },
     // 设置用户名
@@ -40,7 +41,7 @@ const user = {
     },
     // 设置部门名字
     SET_DEPARTMENTNAME: (state, departmentName) => {
-      state.laterhours = departmentName;
+      state.departmentName = departmentName;
     },
     // 配置路有权限
     SET_ROLES: (state, roles) => {
@@ -72,7 +73,7 @@ const user = {
         // 配置用户名
         commit('SET_NAME', data.username);
         setParameter('name', data.username);
-        sessionStorage.setItem('userId', data.id)//用户id
+        sessionStorage.setItem('userId', data.id);// 用户id
         // 配置用户头像
         commit('SET_AVATAR', response.aipictureurl);
         setParameter('avatar', data.aipictureurl);
@@ -82,6 +83,8 @@ const user = {
         // 配置科室名字
         commit('SET_DEPARTMENTNAME', data.departmentName);
         setParameter('departmentName', data.departmentName);
+        // yugou 设置海宁医生端的type，用来判断满意度模块是否显示
+        setParameter('hn_type', `海宁市中心医院type${response.data.type}`);
       };
       return new Promise((resolve, reject) => {
         Login.login({
@@ -118,6 +121,10 @@ const user = {
             if ((res.data).indexOf('仁济') > -1) {
               roles = [res.data + getParameter('departmentName')];
             }
+            // 海宁的特殊权限处理
+            if ((res.data).indexOf('海宁') > -1) {
+              roles = [...roles, getParameter('hn_type')];
+            }
             commit('SET_ROLES', roles);
             callBack(roles);
           } else {
@@ -127,9 +134,11 @@ const user = {
       };
       return new Promise((resolve, reject) => {
         Login.hospatilName().then(res => {
+          document.title = res.data; // 2018/7/25 隔鸡新增
           getInfo(res, resolve);
         }).catch(error => {
           Login.newHospatilName().then(res => {
+            document.title = res.data; // 2018/7/25 隔鸡新增
             getInfo(res, resolve);
           }).catch(error => {
             reject(error);
@@ -208,8 +217,7 @@ const user = {
     // 获取个人档案的随访日期(默认获取第一个)
     getUploadNum({ commit }, uploadNum) {
       commit('UPLOADNUM', uploadNum);
-    },
-
+    }
 
   }
 };

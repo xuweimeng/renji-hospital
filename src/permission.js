@@ -3,7 +3,7 @@ import store from './store';
 import { Message } from 'element-ui';
 import NProgress from 'nprogress'; // progress bar
 import 'nprogress/nprogress.css';// progress bar style
-import { getToken } from '@/utils/auth'; // getToken from cookie
+import { getToken } from '@/utils/auth'; // 获取页面token值
 
 NProgress.configure({ showSpinner: false });// NProgress Configuration
 
@@ -37,11 +37,10 @@ router.beforeEach((to, from, next) => {
             next({ ...to, replace: true }); // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           });
         }).catch((err) => {
-          // todo 暂时注释，否则无法使用8084的接口
-          // store.dispatch('FedLogOut').then(() => {
-          //   Message.error(err || 'Verification failed, please login again');
-          //   next({ path: '/' });
-          // });
+          store.dispatch('FedLogOut').then(() => {
+            Message.error(err || 'Verification failed, please login again');
+            next({ path: '/' });
+          });
         });
       } else {
         // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓

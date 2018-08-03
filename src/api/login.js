@@ -36,6 +36,22 @@ export const Login = {
      */
   newLogin(data) {
     return fetch('post', '/wechat/login/check', data);
+  },
+  /**
+   * @function 意见提交接口
+   * @param  {type} data {description}
+   * @return {type} {description}
+   */
+  sendMessage(data) {
+    return fetch('post', '/client/center/sendMessage', data);
+  },
+  /**
+   * @function 修改密码
+   * @param  {type} data {description}
+   * @return {type} {description}
+   */
+  pceditPassword(data) {
+    return fetch('post', '/wechat/login/pceditPassword', data);
   }
 };
 
