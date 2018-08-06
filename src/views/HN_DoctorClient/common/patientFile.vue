@@ -165,7 +165,8 @@
             <template v-for="(item,index) in itemMain">
               <template v-if="item.mzOrZy!='mz' && item.adminPatientDiagnose">
                 <h5 class="record_content_name">就诊信息
-                  <h6 class="record_content_link" v-if="itemMain.isHasVisit=='1' && item.adminPatientDiagnose.taskId" @click="sfDialog(item.adminPatientDiagnose.taskId)">查看随访记录</h6>
+                  <h6 class="record_content_link" v-if="itemMain.isHasVisit=='1' && item.adminPatientDiagnose.taskId && showRecordLink"
+                      @click="sfDialog(item.adminPatientDiagnose.taskId)">查看随访记录</h6>
                 </h5>
                 <!-- 有随访记录展示随访记录 -->
                 <ul class="record_content_list">
@@ -206,7 +207,8 @@
               </template>
               <template v-if="item.mzOrZy!='zy' && item.adminPatientDiagnose">
                 <h5 class="record_content_name">就诊信息
-                  <h6 class="record_content_link" v-if="itemMain.isHasVisit=='1' && item.adminPatientDiagnose.taskId" @click="sfDialog(item.adminPatientDiagnose.taskId)">查看随访记录</h6>
+                  <h6 class="record_content_link" v-if="itemMain.isHasVisit=='1' && item.adminPatientDiagnose.taskId && showRecordLink"
+                      @click="sfDialog(item.adminPatientDiagnose.taskId)">查看随访记录</h6>
                 </h5>
                 <!-- 有随访记录展示随访记录 -->
 
@@ -267,7 +269,6 @@
  */
 import { PatientFile } from 'HNDC_API/common/patientFile';
 import mixin from '@/assets/HN_DoctorClient/js/mixin';
-import { mapGetters } from 'vuex';
 import followRecord from 'HNDC/common/followRecord';
 export default {
   data() {
@@ -317,10 +318,6 @@ export default {
       type: String,
       default: null
     },
-    showRecordLink: {
-      type: Boolean,
-      default: false
-    },
     taskId: {
       type: String,
       default: null
@@ -328,10 +325,11 @@ export default {
     sfNumber: {
       type: String,
       default: null
+    },
+    showRecordLink: {
+      type: Boolean,
+      default: true
     }
-  },
-  computed: {
-    ...mapGetters(['token'])
   },
   // 含getPatientInfo,handleislike两个方法
   mixins: [mixin],
@@ -352,9 +350,7 @@ export default {
     // 有 随访记录 按钮时调用
     sfDialog(taskId) {
       this.taskIdRecord = taskId;
-      setTimeout(() => {
-        this.$refs.followRecord.toggleShowModal();
-      }, 0);
+      this.$refs.followRecord.toggleShowModal();
     },
     /**
      * 切换患者档案弹框的显示
@@ -371,17 +367,18 @@ export default {
         });
       }
     },
-    /*
-      *请求当前时间的患者信息
-      */
+    /**
+     * @description 请求当前时间的患者信息
+     * @param obj tab对象,例如{name:'2018-09-09'}
+     * @function currentPartientInfo
+     */
     currentPartientInfo(obj) {
-      this.timeList.forEach(item => {
-        if (item.diagnosetime == obj.name) {
-          if (item.znjqrCyxjList) {
-            return false;
-          }
+      // 判断是否已经获取过
+      for (const item of this.timeList) {
+        if (item.diagnosetime === obj.name && item[0]) {
+          return false;
         }
-      });
+      }
       PatientFile.getRecordByDate({
         adminId: this.userId,
         patientId: this.patientId,
@@ -390,15 +387,9 @@ export default {
         .then(res => {
           this.timeList.forEach((item, index) => {
             if (item.diagnosetime == obj.name) {
-              if (item.znjqrCyxjList) {
-                return false;
-              }
               // item = Object.assign(item, res.data[0]);
-              const per_date_arr = [];
-              res.data.forEach(item => {
-                per_date_arr.push(item);
-              });
-              item = Object.assign(item, per_date_arr);
+              // 同一天，可能会有多条就诊记录的情况
+              item = Object.assign(item, res.data);
               this.timeList.splice(index, 1, item);
             }
           });

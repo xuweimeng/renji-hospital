@@ -77,7 +77,7 @@
     <patient-file
       :patient-id="patientId"
       :visit-order-id="visitOrderId"
-      :show-record-link="true"
+      :show-record-link="false"
       :task-id="taskId"
       v-on:refreshData="refreshList"
       ref="patientFile"
@@ -223,9 +223,7 @@ export default {
       this.patientId = scope.row.hzxxId;
       this.taskId = scope.row.taskId;
       this.visitOrderId = scope.row.id;
-      setTimeout(() => {
-        this.$refs.patientFile.toggleShowModal();
-      }, 0);
+      this.$refs.patientFile.toggleShowModal();
     },
     /**
        *列表上方的tab切换--不改变page
@@ -244,9 +242,7 @@ export default {
        */
     updateTelBtn(scope) {
       this.patientId = scope.row.hzxxId;
-      setTimeout(() => {
-        this.$refs.updateTel.toggleShowModal();
-      }, 0);
+      this.$refs.updateTel.toggleShowModal();
     }
   },
   watch: {

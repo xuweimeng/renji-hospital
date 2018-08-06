@@ -296,9 +296,7 @@
         this.patientId = scope.row.hzxxId;
         this.taskId = scope.row.id;
         this.visitOrderId = scope.row.visitOrderId;
-        setTimeout(() => {
-          this.$refs.followPlan.toggleShowModal();
-        }, 0);
+        this.$refs.followPlan.toggleShowModal();
       },
       /**
        *列表上方的三个tab切换--不改变page
@@ -446,9 +444,7 @@
       tdClick(scope) {
         this.patientId = scope.row.hzxxId;
         this.visitOrderId = scope.row.visitOrderId;
-        setTimeout(() => {
-          this.$refs.patientFile.toggleShowModal();
-        }, 0);
+        this.$refs.patientFile.toggleShowModal();
       }
     }
   };

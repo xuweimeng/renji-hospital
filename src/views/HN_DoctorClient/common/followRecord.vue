@@ -313,9 +313,9 @@
                   </li>
                 </ul>
                 <h4 class="record_check_name" >AI审核意见:</h4>
-                <p class="record_check_text" >{{checkAdvice || '暂无意见'}}</p>
-                <h4 class="record_check_name"  v-if="baseData.isArtificialCall == 1">人工外呼意见:</h4>
-                <p class="record_check_text"  v-if="baseData.isArtificialCall == 1">{{baseData.callRemark || '暂无人工外呼意见'}}</p>
+                <p class="record_check_text" >{{item.vetRemark || '暂无意见'}}</p>
+                <h4 class="record_check_name"  v-if="item.isArtificialCall == 1">人工外呼意见:</h4>
+                <p class="record_check_text"  v-if="item.isArtificialCall == 1">{{item.callRemark || '暂无人工外呼意见'}}</p>
               </el-tab-pane>
               <!-- 循环遍历出所有的随访相关图标 -->
               <el-tab-pane label="指标图表" v-if="item.targetTab.length">
@@ -332,7 +332,7 @@
                   type="warning"
                   show-icon>
                 </el-alert>
-                <el-tag  v-if="baseData.isArtificialCall">
+                <el-tag  v-if="item.isArtificialCall">
                   人工外呼
                 </el-tag>
                 <ul class="record_content_list record_content_audio">
@@ -344,7 +344,7 @@
                     <li :key="ite.id+'1'" class="record_content_single record_content_patient">
                       <span>客户</span>
                       <audio v-if="ite.audio" :src="baseUrl+ite.audio"  controls="controls" ></audio>
-                      <p v-else-if="baseData.isArtificialCall == 1">此记录为人工呼叫，暂无录音</p>
+                      <p v-else-if="item.isArtificialCall == 1">此记录为人工呼叫，暂无录音</p>
                       <p v-else>此记录暂无录音</p>
                       <div>
                         指标：<el-tag v-if="ite.isNormal" type="primary">正常</el-tag>
@@ -421,7 +421,6 @@
         baseUrl: '', // 语音地址前缀
         adviceCheckDialog: false, // 选择处理意见后的确认弹框是否显示
         btnState: '', // 当前处理意见类型
-        checkAdvice: '', // 审核意见
         isResolved: '', // 是否可以点击 处理意见 的三个选项按钮
         resolvedState: '' // 处理意见 的三个选项按钮的选中num依次2,0,1
       };
@@ -525,10 +524,13 @@
             }
             this.baseUrl = res.AIVOICURL;
             this.fullscreenLoading = false;
-
-            this.selectOptions[num - 1].vetRemark = res.vetRemark || '';
-            this.selectOptions[num - 1].resolvedState = res.diseaseInfo;
-            if (res.diseaseInfo === undefined || res.diseaseInfo === -1) {
+            // AI意见vetRemark,处理意见diseaseInfo,是否人工isArtificialCall,人工意见callRemark--都在res.orderinfo中
+            this.selectOptions[num - 1].vetRemark = res.orderinfo.vetRemark;
+            this.selectOptions[num - 1].isArtificialCall = res.orderinfo.isArtificialCall;
+            this.selectOptions[num - 1].callRemark = res.orderinfo.callRemark;
+            const diseaseInfo = res.orderinfo.diseaseInfo;
+            this.selectOptions[num - 1].resolvedState = diseaseInfo;
+            if (diseaseInfo === undefined || diseaseInfo === -1) {
               this.selectOptions[num - 1].isResolved = false;
             } else {
               this.selectOptions[num - 1].isResolved = true;

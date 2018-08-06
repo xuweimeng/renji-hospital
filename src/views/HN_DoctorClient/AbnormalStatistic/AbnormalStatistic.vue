@@ -292,9 +292,7 @@
       tdClick(scope) {
         this.patientId = scope.row.hzxxId;
         this.visitOrderId = scope.row.visitOrderId || '';
-        setTimeout(() => {
-          this.$refs.patientFile.toggleShowModal();
-        }, 0);
+        this.$refs.patientFile.toggleShowModal();
       }
     }
   };
