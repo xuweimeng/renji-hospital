@@ -135,7 +135,9 @@
 		],
 		mounted () {
 			this.successList()
-			console.log(this.uploadNum);
+			console.log('test', this.uploadNum);
+			console.log(typeof(this.uploadNum));
+
 		},
 		components: {
 			Disease

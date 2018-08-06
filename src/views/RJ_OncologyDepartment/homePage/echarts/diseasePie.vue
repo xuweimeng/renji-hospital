@@ -22,11 +22,11 @@ import echarts from 'echarts'
         this.diseaseChart = echarts.init(document.getElementById('diseasePie'))
         const data_name = [];
         for (var n in _this.dataDisease) {
-            _this.dataDisease[n]['name'] =
-            _this.dataDisease[n]['name'] + '  ' +
-            _this.dataDisease[n]['percent'] + '%'+ '  '+
-            _this.dataDisease[n]['value'];
-            data_name.push(_this.dataDisease[n]['name'])
+          _this.dataDisease[n]['name'] =
+          _this.dataDisease[n]['name'] + '  ' +
+          _this.dataDisease[n]['percent'] + '%'+ '  '+
+          _this.dataDisease[n]['value'];
+          data_name.push(_this.dataDisease[n]['name'])
         }
         this.diseaseChart.setOption({
           tooltip: {
@@ -70,19 +70,23 @@ import echarts from 'echarts'
               label: {
                 normal: {
                   show: true,
-                  position: 'top',
+                  position: 'middle',
                   textStyle: {
                     fontSize: '14',
                     color: 'gray'
                   },
+                  formatter: function(value) {
+                   let getName = value.name.split(' ')
+                   return getName[0]
+                  }
                 }
               },
               labelLine: {
                 normal: {
-                  show: true
+                  show: true,
                 }
               },
-              data:this.dataDisease
+              data: this.dataDisease
             }
           ]
         })
