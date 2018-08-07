@@ -396,7 +396,6 @@
         const id = this.checkId.join(',');
         this.handleCheck(2, 2, id);
         this.$refs.followPlan.toggleShowModal();
-        this.getList();
       },
       /**
        *随访计划详情弹框中 点击不通过
