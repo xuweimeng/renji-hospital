@@ -60,7 +60,7 @@
                 <div>
                   <span
                     class="paddingleft20"
-                    v-for="item in showTopPageData.suifang "
+                    v-for="item in showTopPageData.data "
                     :key="item.statisticsName"
                     v-if="item.parentStatisticsName==='已接通'">
                     {{item.statisticsName}}
@@ -76,7 +76,7 @@
                 <div>
                   <span
                     class="paddingleft20"
-                    v-for="item in showTopPageData.suifang "
+                    v-for="item in showTopPageData.data"
                     :key="item.statisticsName"
                     v-if="item.parentStatisticsName==='未接通'">
                     {{item.statisticsName}}
@@ -92,7 +92,7 @@
                 <div>
                   <span
                     class="paddingleft20"
-                    v-for="item in showTopPageData.manyidu "
+                    v-for="item in showTopPageData.data "
                     :key="item.statisticsName"
                     v-if="item.parentStatisticsName==='满意度-已评价' || item.parentStatisticsName==='满意度-未评价'">
                     {{item.statisticsName}}
@@ -108,7 +108,7 @@
                 <div>
                   <span
                     class="paddingleft20"
-                    v-for="item in showTopPageData.suifang "
+                    v-for="item in showTopPageData.data"
                     :key="item.statisticsName"
                     v-if="item.parentStatisticsName==='今日重播人数'">
                     {{item.statisticsName}}
@@ -1038,7 +1038,7 @@
           if(res.code === 0) {
             this.showTopPageData = res
             let getPhone, notGetPhone
-            res.suifang.forEach( item => {
+            res.data.forEach( item => {
               if(item.parentStatisticsName === '已接通') {
                 return getPhone = item.parentStatisticsValue
               }
