@@ -6,7 +6,7 @@
           <img :src="getAdminInfo.aipicTureUrl">
         </div>
         <div class="notice-content-one">
-          <p class="text-center">您好，{{getAdminInfo.realname}}医生,{{getAdminInfo.AiName}}已等候您{{laterhours?'0':laterhours}}小时了。</p>
+          <p class="text-center">您好，{{getAdminInfo.realname}}医生,{{getAdminInfo.AiName}}已等候您{{getAdminInfo.laterhours?getAdminInfo.laterhours:'0'}}小时了。</p>
           <p class="text-center">上次登录时间:{{getAdminInfo.lastVisitDate?getAdminInfo.lastVisitDate:"无"}}</p>
         </div>
       </el-col>

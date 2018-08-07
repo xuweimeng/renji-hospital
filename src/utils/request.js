@@ -9,10 +9,10 @@ const service = axios.create({
   // todo 海宁8084使用
   // baseURL: process.env.BASE_API, // api的base_url
   // baseURL: 'http://192.168.1.218:8084',
-  // baseURL: 'http://192.168.3.26:8081', // chanji
+  // baseURL: 'http://192.168.3.26:8080', // chanji
   // baseURL: 'http://192.168.3.69:8081', // fugou
   // baseURL: 'http://192.168.3.24:8083', // daogou
-  baseURL: 'http://192.168.1.218:8082',
+  // baseURL: 'http://192.168.1.218:8082',
   // baseURL: '/api', // api的base_url
   // baseURL: 'http://60.190.86.50:6016', // api的base_url
   timeout: 50000 // request timeout
