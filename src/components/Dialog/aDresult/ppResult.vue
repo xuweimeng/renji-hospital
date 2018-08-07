@@ -7,7 +7,6 @@
       :before-close='closeFun'
       :center = 'false'
       custom-class='hzDialog'>
-      <!-- 患者个人信息 -->
      <!-- 患者姓名 -->
       <hz-info
       :isCare='islike'

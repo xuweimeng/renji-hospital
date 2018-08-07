@@ -112,11 +112,11 @@
 							<el-table-column prop="dateEnd" label="随访日期" align="center" show-overflow-tooltip ></el-table-column>
 							<el-table-column prop="totalNum" label="随访进度" align="center"></el-table-column>
 							<el-table-column prop="collectionStr" label="采集情况" align="center"></el-table-column>
-							<!-- <el-table-column label="呼叫情况" align="center">
+							<el-table-column label="呼叫情况" align="center">
 								<template slot-scope="scope">
 									<el-button type="warning" @click="callDetailBtn(scope)" size="mini">呼叫详情</el-button>
 								</template>
-							</el-table-column> -->
+							</el-table-column>
 							<el-table-column label="随访记录" align="center" width="220">
 								<template slot-scope="scope">
 									<el-button type="danger" @click="resolveBtn(scope)" size="mini">结果处理</el-button>
@@ -158,11 +158,11 @@
 									{{scope.row.diseaseInfo == '0' ? '病情稳定': scope.row.diseaseInfo == '1'? '通知就诊': scope.row.diseaseInfo == '2'?'暂不处理':''}}
 								</template>
 							</el-table-column>
-							<!-- <el-table-column label="呼叫情况" align="center">
+							<el-table-column label="呼叫情况" align="center">
 								<template slot-scope="scope">
 									<el-button type="warning" @click="callDetailBtn(scope)" size="mini">呼叫详情</el-button>
 								</template>
-							</el-table-column> -->
+							</el-table-column>
 							<el-table-column label="随访记录" align="center" width="220">
 								<template slot-scope="scope">
 									<el-button type="danger" @click="resolveBtn(scope)" size="mini">重新处理</el-button>
@@ -199,8 +199,7 @@
 			title="结果处理"
 			:visible.sync="resovleDg"
 			custom-class="resovleDg"
-			width="500px"
-		>
+			width="500px">
       <el-row>
         <el-col :span="8" v-for="(item, index) in btnList" :key="index">
           <el-button :type="item.type" plain @click="clBtn(index)">{{item.value}}</el-button>
@@ -208,7 +207,7 @@
       </el-row>
 		</el-dialog>
 		<!-- 呼叫详情 -->
-		<!-- <el-dialog
+		<el-dialog
 			title="呼叫次数"
 			:visible.sync="callDg"
 			custom-class="resovleDg"
@@ -235,17 +234,20 @@
 				</el-collapse-item>
 			</el-collapse>
 			<!-- 无数据的时候 -->
-			<!-- <el-row v-if="!callDetailDate.length">
+			 <el-row v-if="!callDetailDate.length">
 				<el-col :span="24">
 					暂时没有数据哦...
 				</el-col>
 			</el-row>
-		</el-dialog> -->
+		</el-dialog>
   </div>
 </template>
 <script>
-  import { followUp } from 'RJZL_API/followPlan'
-  import Result from 'components/dialog/result/result'
+	import { followUp } from 'RJZL_API/followPlan'
+	import { commonUrl } from 'RJZL_API/commonUrl'
+	import Result from 'components/dialog/result/result'
+	import * as getTime from 'utils/getDate'
+	import * as utilsIndex from 'utils'
   export default {
     name: 'dischargeFollowupResults',
     data () {
@@ -283,31 +285,7 @@
 				yyc: 'yyc',//有异常(红色)
 				createTime: [],
 				pickerTime: {
-        	shortcuts: [{
-            text: '最近七天',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近一个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }]
+					shortcuts: utilsIndex.pickerOptions
 				},
 				resovleDg: false, // 处理意见
 				activeName: 'first', // tab切换
@@ -336,24 +314,14 @@
 			Result
 		},
 		mounted () {
-			// this.getCurrent()
+			this.getCurrent()
 			this.list(1)
 		},
 		methods: {
 			getCurrent() {
-				let current = new Date()
-				let currentYear = current.getFullYear()
-				let currentMonth = current.getMonth() + 1
-				let startDate = current.getDate()
-				let endDate = current.getDate() + 1
-				currentMonth>9?currentMonth:currentMonth='0'+currentMonth
-				startDate>9?startDate:startDate='0'+startDate
-				let currentTime1 = currentYear + '-' + currentMonth + '-' + startDate
-				let currentTime2 = currentYear + '-' + currentMonth + '-' + endDate
-				this.formInline.dateEndBegin = currentTime1
-				this.formInline.dateEndEnd = currentTime2
-				this.createTime.push(currentTime1)
-      	this.createTime.push(currentTime2)
+				this.formInline.dateEndBegin = getTime.currentTime + ' ' + '00:00:00';
+				this.formInline.dateEndEnd =  getTime.currentTime + ' ' + '23:59:59';
+				this.createTime = [this.formInline.dateEndBegin, this.formInline.dateEndEnd]
 			},
 			// 采集情况
 			resultStatusChange (value) {
@@ -399,8 +367,8 @@
      */
 			timeChange(time) {
 				if(time) {
-					this.formInline.dateEndBegin = time[0];
-					this.formInline.dateEndEnd = time[1];
+					this.formInline.dateEndBegin = time[0] + ' ' + '00:00:00';
+					this.formInline.dateEndEnd = time[1] + ' ' + '23:59:59';
 				} else {
 					this.formInline.dateEndBegin = '';
 					this.formInline.dateEndEnd = '';
@@ -412,7 +380,7 @@
           this.loadingSelect = true;
           setTimeout(() => {
             this.loadingSelect = false;
-             API.commonUrl.getdiseasefix({
+             commonUrl.getdiseasefix({
               'jbmc': query
             }).then((res)=>{
               console.log(res)

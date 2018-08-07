@@ -58,7 +58,7 @@
 			  	</el-form-item>
 			  </el-col>
 			  <el-col :span='6'>
-			  	<el-button type='primary' @click='getData'>查询</el-button>
+			  	<el-button type='primary' @click='searchFun'>查询</el-button>
 			  </el-col>
 
 			</el-form>
@@ -290,6 +290,12 @@ export default {
           this.diseaseList = res.data;
         })
         .catch(error => {});
+    },
+    /** 查询 */
+    searchFun() {
+      const getTableName = `tableData_${tableName[this.tabIndex]}`
+      this[getTableName].pager = 1
+      this.getData(this[getTableName])
     },
     /* 获取数据 */
     getData(param) {

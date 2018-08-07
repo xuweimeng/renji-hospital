@@ -480,7 +480,11 @@
        * 上一步，选择患者
        */
       backBtn() {
-        this.step = 0;
+        if(this.isAll === 1) {
+          window.location.reload();
+        } else {
+          this.step = 0;
+        }
       },
       /**@description
        * 发起通知

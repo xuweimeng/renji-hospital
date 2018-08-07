@@ -173,7 +173,7 @@
 					<img src="../../../assets/images/animal.png" alt="认识医生">
 				</el-col>
 				<el-col :span="19">
-					您修改的手机号<span class="red"> {{oldMobile}}</span>  有其他计划正在执行<br/>
+					您修改的手机号<span class="red"> {{newMobile}}</span>  有其他计划正在执行<br/>
 					请问您是否需要终止其他计划，或者放弃修改号码
 				</el-col>
 			</el-row>
@@ -392,6 +392,11 @@
 									buttonType: 'primary',
 									buttonDisabled: false
 								})
+								if(item.status === 4) {
+									item.buttonText = '已终止'
+									item.buttonType = 'danger'
+									item.buttonDisabled = true
+								}
 							})
 							this.mobileDate = res.data
 						} else {
@@ -454,10 +459,17 @@
 			/** 监听终止随访计划弹框关闭 */
 			closeCancelDialog (val) {
 				this.cancelDialog = val.close
+				// response = true表示终止成功
 				if(val.response) {
 					this.mobileDate[this.rowIndex].buttonText = '已终止'
 					this.mobileDate[this.rowIndex].buttonType = 'danger'
 					this.mobileDate[this.rowIndex].buttonDisabled = true
+					// isDeath = true表示终止原因为患者已死亡，此时需妖调用接口传值该患者已死亡
+					if(val.isDeath) {
+						this.hzxxId = this.rowData.hzxxId
+						this.updateIsLiveRadio = 1
+						this.updateIsLiveFun(val)
+					}
 				}
 			},
 			/**
@@ -474,27 +486,39 @@
 			updateIsLiveBtn () {
 				if (this.updateIsLiveRadio === 1) {
 					this.$confirm('标记死亡后该患者的所有随访计划将终止, 确定标记该患者死亡?', '提示', {
-							confirmButtonText: '确定',
-							cancelButtonText: '取消',
-							confirmButtonClass: 'operationBtn',
-							cancelButtonClass: 'operationBtn',
-							type: 'warning'
-						}).then(() => {
-							this.updateIsLiveFun()
-						})
-					} else {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						confirmButtonClass: 'operationBtn',
+						cancelButtonClass: 'operationBtn',
+						type: 'warning'
+					}).then(() => {
 						this.updateIsLiveFun()
-					}
-				},
-			updateIsLiveFun () {
+					})
+				} else {
+					this.updateIsLiveFun()
+				}
+			},
+			updateIsLiveFun (param) {
+				let paramNotPassReason
+				let paramNotPassRemark
+				if(param) {
+					paramNotPassReason = param.notPassReason
+					paramNotPassRemark = param.notPassRemark
+				}
 				hzList.updateIsLive({
           'hzxxId': this.hzxxId,
-          'isDed': this.updateIsLiveRadio
+					'isDed': this.updateIsLiveRadio,
+					'notPassReason': paramNotPassReason,
+					'notPassRemark': paramNotPassRemark
         }).then((res)=>{
           if(res.code == 0) {
 						this.updateIsLiveDg = false
 						this.list(this.currentPage)
 						this.$message.success(res.message)
+						if(param) {
+							console.log('test,  刷新列表');
+							this.isfollowPlan()
+						}
           }
         }).catch((error)=>{
         	console.log(error)

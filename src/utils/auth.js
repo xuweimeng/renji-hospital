@@ -1,7 +1,15 @@
 import Cookies from 'js-cookie';
 
-const TokenKey = 'Admin-Token';
-
+let TokenKey = 'Admin-Token';
+const currentUrl = window.location.href;
+let mark = '';
+if (currentUrl.indexOf('tj') > -1) {
+  mark = 'tj';
+}
+if (currentUrl.indexOf('lc') > -1) {
+  mark = 'lc';
+}
+TokenKey += mark;
 export function getToken() {
   return Cookies.get(TokenKey);
 }
@@ -20,13 +28,13 @@ export function removeToken() {
  * @return {type} {description}
  */
 export function getParameter(name) {
-  return Cookies.get(name);
+  return Cookies.get(name + mark);
 }
 
 export function setParameter(name, value) {
-  return Cookies.set(name, value);
+  return Cookies.set(name + mark, value);
 }
 
 export function removeParameter(name) {
-  return Cookies.remove(name);
+  return Cookies.remove(name + mark);
 }

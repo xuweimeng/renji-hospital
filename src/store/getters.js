@@ -13,6 +13,8 @@ const getters = {
   permission_routers: state => state.permission.routers,
   // 动态新增的路由
   addRouters: state => state.permission.addRouters,
-  errorLogs: state => state.errorLog.logs
+  errorLogs: state => state.errorLog.logs,
+  // 仁济患者列表上传
+  uploadNum: state => state.uploadNum
 };
 export default getters;

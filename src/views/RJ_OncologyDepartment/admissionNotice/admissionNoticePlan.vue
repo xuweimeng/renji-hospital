@@ -427,7 +427,7 @@
       addAllPages() {
         this.isAll = 1;
         if (this.dataList.length == 0) {
-          Message.warning('您尚未添加任何患者');
+          this.$message.warning('您尚未添加任何患者');
           return false;
         }
 
@@ -463,7 +463,7 @@
        */
       nextStep() {
         if (this.addList.length == 0) {
-          Message.warning('您尚未添加任何患者');
+          this.$message.warning('您尚未添加任何患者');
           return false;
         }
         this.step = 1;
@@ -488,7 +488,12 @@
        * 上一步，选择患者
        */
       backBtn() {
-        this.step = 0;
+        // 返回上一步的时候，如果是发起全部，那么应该恢复isAll的状态
+        if(this.isAll === 1) {
+          window.location.reload();
+        } else {
+          this.step = 0;
+        }
       },
       /**@description
        * 发起通知
@@ -499,7 +504,11 @@
           return false;
         }
         if (!this.sendData.orderTime ) {
-          Message.warning('请填写具体入院时间');
+          this.$message.warning('请填写具体入院时间');
+          return false;
+        }
+        if (!this.sendData.schemeId ) {
+          this.$message.warning('请选择方案');
           return false;
         }
         this.$confirm('确定要发起随访吗?', '提示', {
@@ -529,16 +538,13 @@
                 if (res.code == 0) {
                   this.step = 3;
                 } else {
-                  Message.warning(res.message);
+                  this.$message.warning(res.message);
                 }
               })
               .catch(err => {this.sureStepLoading = false});
           })
           .catch(() => {
-            Message({
-              type: 'info',
-              message: '已取消'
-            });
+            this.$message.info('已取消！')
           });
       }
     }

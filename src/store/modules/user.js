@@ -11,13 +11,20 @@ const user = {
     laterhours: getParameter('laterhours'),
     departmentName: getParameter('departmentName'),
     roles: [],
-    scopeRowData: {},
-    visitTime: ''
+    scopeRowData: {}, // 表格点击操作按钮传递scope.row的数据
+    visitTime: '', // 随访结果的时间
+    uploadNum: { // 患者列表批量上传上传成功失败个数
+      downLoadName: '',
+      data: {
+        failNum: null,
+        successNum: null
+      }
+    }
   },
   // 操作全局基础用户数据
   mutations: {
     SET_TOKEN: (state, token) => {
-      sessionStorage.setItem('userId',token);
+      sessionStorage.setItem('userId', token);
       state.token = token;
     },
     // 设置用户名
@@ -47,6 +54,10 @@ const user = {
     // 个人档案的随访日期
     VISIT_TIME: (state, visitTime) => {
       state.visitTime = visitTime;
+    },
+    // 患者列表批量上传上传成功失败个数
+    UPLOADNUM: (state, uploadNum) => {
+      state.uploadNum = uploadNum;
     }
   },
 
@@ -62,7 +73,7 @@ const user = {
         // 配置用户名
         commit('SET_NAME', data.username);
         setParameter('name', data.username);
-        sessionStorage.setItem('userId', data.id)//用户id
+        sessionStorage.setItem('userId', data.id);// 用户id
         // 配置用户头像
         commit('SET_AVATAR', response.aipictureurl);
         setParameter('avatar', data.aipictureurl);
@@ -111,7 +122,7 @@ const user = {
               roles = [res.data + getParameter('departmentName')];
             }
             // 海宁的特殊权限处理
-            if((res.data).indexOf('海宁') > -1){
+            if ((res.data).indexOf('海宁') > -1) {
               roles = [...roles, getParameter('hn_type')];
             }
             commit('SET_ROLES', roles);
@@ -123,11 +134,11 @@ const user = {
       };
       return new Promise((resolve, reject) => {
         Login.hospatilName().then(res => {
-          document.title=res.data;    //2018/7/25 隔鸡新增
+          document.title = res.data; // 2018/7/25 隔鸡新增
           getInfo(res, resolve);
         }).catch(error => {
           Login.newHospatilName().then(res => {
-            document.title=res.data;    //2018/7/25 隔鸡新增
+            document.title = res.data; // 2018/7/25 隔鸡新增
             getInfo(res, resolve);
           }).catch(error => {
             reject(error);
@@ -201,6 +212,11 @@ const user = {
     // 获取个人档案的随访日期(默认获取第一个)
     getVisitTime({ commit }, visitTime) {
       commit('VISIT_TIME', visitTime);
+    },
+
+    // 获取个人档案的随访日期(默认获取第一个)
+    getUploadNum({ commit }, uploadNum) {
+      commit('UPLOADNUM', uploadNum);
     }
 
   }
