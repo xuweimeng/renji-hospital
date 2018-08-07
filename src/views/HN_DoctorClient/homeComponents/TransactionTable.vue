@@ -124,9 +124,7 @@ export default {
       this.patientId = scope.row.hzxxId;
       this.taskId = scope.row.taskId;
       this.visitOrderId = scope.row.id;
-      setTimeout(() => {
-        this.$refs.patientFile.toggleShowModal();
-      }, 0);
+      this.$refs.patientFile.toggleShowModal();
     }
   }
 };

@@ -152,7 +152,6 @@
       :patient-id="patientId"
       :visit-order-id="visitOrderId"
       ref="patientFile"
-      :show-record-link="false"
       v-on:refreshData="refreshList"
     ></patient-file>
     <!-- 随访计划 -->
@@ -316,10 +315,7 @@ export default {
       this.visitOrderId = scope.row.visitOrderId;
       this.taskId = scope.row.taskId;
       this.sfNumber = scope.row.currentVisitTime;
-      setTimeout(() => {
-        // this.$refs.followRecord.dialogVisible=true;
-        this.$refs.followRecord.toggleShowModal();
-      }, 0);
+      this.$refs.followRecord.toggleShowModal();
     },
     /**
        *列表上方的tab切换--不改变page
@@ -338,9 +334,7 @@ export default {
     tdClick(scope) {
       this.patientId = scope.row.hzxxId;
       this.visitOrderId = scope.row.visitOrderId;
-      setTimeout(() => {
-        this.$refs.patientFile.toggleShowModal();
-      }, 0);
+      this.$refs.patientFile.toggleShowModal();
     },
     /**
        *@function sfjhModel
@@ -350,9 +344,7 @@ export default {
       this.patientId = scope.row.hzxxId;
       this.visitOrderId = scope.row.visitOrderId;
       this.taskId = scope.row.taskId;
-      setTimeout(() => {
-        this.$refs.followPlan.toggleShowModal();
-      }, 0);
+      this.$refs.followPlan.toggleShowModal();
     }
   }
 };

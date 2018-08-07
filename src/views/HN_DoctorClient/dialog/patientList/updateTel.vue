@@ -157,16 +157,6 @@
       }
     },
     mixins: [mixin],
-    // 检测patientId是否正常
-    // watch: {
-    //   patientId: {
-    //     handler(val) {
-    //       this.getPatientInfo(undefined, val, null).then(res => {
-    //         this.baseData = res.data;
-    //       });
-    //     }
-    //   }
-    // },
     methods: {
       /**
        * @function 切换显示弹框
@@ -175,6 +165,7 @@
       toggleShowModal() {
         this.modalShow = !this.modalShow;
         if (this.modalShow) {
+          this.phone = '';
           this.$nextTick(() => { // 会偶现patientId 为空的情况
             this.getPatientInfo().then(res => {
               this.baseData = res.data;

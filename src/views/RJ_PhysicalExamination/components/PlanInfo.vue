@@ -50,7 +50,6 @@
   }
 }
 </style>
-
 <template>
     <div class="record">
         <el-dialog top="5vh" :close-on-click-modal="false" class="record_box" title="通知详情" width="55%"  :visible.sync="dialogTableVisible">
@@ -66,7 +65,7 @@
                     </el-tag>
                 </h3>
                 <h4 class="record_header_param">
-                  手机号码: {{baseData.phone?baseData.phone:"无"}}
+                  手机号码: {{baseData.mobile?baseData.mobile:"无"}}
                 </h4>
                 <h4 class="record_header_param">
                   体检套餐: {{baseData.icdName?baseData.icdName:"无"}}
@@ -105,7 +104,10 @@ export default {
   props: {
     patientId: {
       type: String
-    }
+    },
+    hzxxId:{
+      type: String
+    },
   },
   computed: {
     ...mapGetters(['token'])
@@ -172,7 +174,7 @@ export default {
           NoticePlan.updateGz({
             diagnoseType: 3,
             adminId: this.token,
-            patientId: this.patientId,
+            patientId: this.hzxxId,
             operateType: 0 // (操作类型 1:关注 0：取消关注) （必填）
           })
             .then(res => {
@@ -207,7 +209,7 @@ export default {
           NoticePlan.updateGz({
             diagnoseType: 3,
             adminId: this.token,
-            patientId: this.patientId,
+            patientId: this.hzxxId,
             operateTag: value,
             operateType: 1 // (操作类型 1:关注 0：取消关注) （必填）
           })
