@@ -245,6 +245,7 @@ import { commonUrl } from 'RJZL_API/commonUrl';
 import { hzList } from 'RJZL_API/patientList';
 import ExSelect from 'components/dialog/exSelect';
 import Plan from 'components/dialog/plan/plan';
+import formatNotpassReason from './formatNotpassReason';
 const tableName = ['list', 'pass', 'nopass', 'stop'];
 export default {
 	name: 'dischargeFollowupPlanReview',
@@ -319,12 +320,28 @@ export default {
 				'status': param.status,
 				'pager': param.pager
 			}).then(res => {
-				param.loading = false;
+
 				if (res.code === 0) {
+					res.data.forEach( item => {
+					if(item.notPassReason === '1') {
+						item.notPassReason = '患者已死亡'
+					} else if(item.notPassReason === '2') {
+						item.notPassReason =  '患者不接受随访'
+					} else if(item.notPassReason === '3') {
+						item.notPassReason =  '随访方案重复'
+					} else if(item.notPassReason === '4') {
+						item.notPassReason =  '方案不匹配'
+					}else {
+						item.notPassReason =  '其他'
+					}
+
+				})
+					param.loading = false;
 					param.list = res.data;
 					if (param.pager === 1) {
 						param.totalPage = res.total;
 					}
+
 				}
 			});
 		},
@@ -463,7 +480,9 @@ export default {
 				if(res.code === 0) {
 					this.ids.length = 0
 					this.$message.success(res.message)
-					this.list()
+					// 获取tab对应的tableName, 获取列表数据
+					this.getTableName = `tableData_${tableName[this.tabIndex]}`;
+					this.list(this[this.getTableName]);
 					if (this.noCheck) {
 						this.noCheck = false
 					}

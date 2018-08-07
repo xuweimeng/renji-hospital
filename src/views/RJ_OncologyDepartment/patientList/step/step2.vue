@@ -135,7 +135,9 @@
 		],
 		mounted () {
 			this.successList()
-			console.log(this.uploadNum);
+			console.log('test', this.uploadNum);
+			console.log(typeof(this.uploadNum));
+
 		},
 		components: {
 			Disease
@@ -278,7 +280,7 @@
 			editjb (scope) {
 				this.diseaseDg = true
 				this.nowIndex = scope.$index
-				this.$store.dispatch('ppid', scope.row.id)
+				this.hzid = scope.row.id
 			},
 			/**
        * 关闭疾病检索弹框

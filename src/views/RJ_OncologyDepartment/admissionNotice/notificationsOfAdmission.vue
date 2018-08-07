@@ -363,6 +363,7 @@ export default {
     handleCheck( ids, notPassReason) {
       AdmissionNotice
         .cancelNotice({
+          adminId: sessionStorage.getItem('userId'),
           ids: ids,
           notPassReason: notPassReason,
           notPassRemark: '终止计划'
