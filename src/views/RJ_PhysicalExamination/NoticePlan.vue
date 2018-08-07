@@ -115,7 +115,7 @@
         </el-col>
       </el-row>
     </el-dialog>
-    <plan-info ref="record"   :patientId="patientId"></plan-info>
+    <plan-info ref="record"   :patientId="patientId"  :hzxxId="hzxxId"></plan-info>
   </div>
 </template>
 <script>
@@ -130,6 +130,7 @@
     data() {
       return {
         patientId: '',
+        hzxxId:"",   //患者id
         tableLoading: true,
         noPassLoading: true,
         dataRecord: 0,
@@ -280,6 +281,7 @@
        */
       showInfo(scope) {
         this.patientId = scope.row.id;
+        this.hzxxId = scope.row.hzxxId; //患者id
         this.$refs.record.dialogTableVisible = true;
       },
       /**
