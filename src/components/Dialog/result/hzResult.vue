@@ -5,7 +5,7 @@
       <el-col :span="4">随访结果&nbsp;:&nbsp;</el-col>
       <el-col :span="15"></el-col>
       <el-col :span="5">
-        <el-select v-model="checked" popper-class="test-class"  placeholder="请选择" class="selectNum" @change="numberChange">
+        <el-select v-model="checked" placeholder="请选择" class="selectNum" @change="numberChange">
           <el-option
             v-for="item in options"
             :key="item.value"
