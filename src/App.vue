@@ -30,9 +30,7 @@
   .el-popper {
     .el-scrollbar__wrap {
       margin-bottom: 0!important;
-    }
-    .el-scrollbar__wrap {
-      overflow: hidden;
+      overflow-x: hidden;
     }
   }
 </style>

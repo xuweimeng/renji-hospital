@@ -6,26 +6,26 @@ export const NoticeResult = {
    * operateType:1, //(操作类型 1:关注 0：取消关注) （必填）
    * operateTag:老板 //关注的标签
    */
-  updateGz(data){
+  updateGz(data) {
     return fetch('post', '/inspect/index/updateGz', data);
   },
   /**
    * 体检通知结果详情
    */
-  getPatientRecord(data){
+  getPatientRecord(data) {
     return fetch('get', '/visit/doctors/resultDetail', data);
     // return fetch('get', '/visit/order/view', data);
   },
   /**
    * 体检中心-体检套餐自动补全搜索
    */
-  autoComplete(data){
+  autoComplete(data) {
     return fetch('post', '/visit/disease/autocomplete', data);
   },
   /**
    *  获取通知计划列表数据
    **/
-  resultList(data){
+  resultList(data) {
     return fetch('get', '/physical/order/list', data);
   },
   /*
@@ -36,8 +36,8 @@ export const NoticeResult = {
    *'ids': ids,//患者id,全选多选的是id集合
    *'noPassReason': noPassReason,//审核不通过原因
    */
-  editVisitProjectStatus (data) {
+  editVisitProjectStatus(data) {
     return fetch('post', '/wechat/flowUp/editVisitProjectStatus', data);
-  },
+  }
 
-}
+};

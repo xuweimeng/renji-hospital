@@ -95,7 +95,9 @@ div:focus{
     height: 0;
   }
 }
-
+li{
+  list-style: none;
+}
 code {
   background: #eef1f6;
   padding: 15px 16px;
@@ -137,7 +139,8 @@ code {
 }
 
 .pagination-container {
-  margin-top: 30px;
+  text-align:right;
+  margin-top:15px;
 }
 
 .text-center {
@@ -192,5 +195,58 @@ code {
   z-index: 1000 !important;
 }
 // 通用搜索栏样式
+.common{
+  &_search{
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding-top: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+    margin-bottom: 10px;
+    &_single{
+      list-style: none;
+      width: 25%;
+      min-width: 200px;
+      display: flex;
+      box-sizing: border-box;
+      padding: 0 10px;
+      margin-bottom: 10px;
+      >label{
+        width: 100px;
+        padding: 0;
+        flex-grow: 0;
+        flex-shrink: 0;
+        text-align: center;
+        box-sizing: border-box;
+        line-height: 36px;
+        border-radius: 5px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        background-color: #f1f1f1;
+        color: #666;
+        font-size: 14px;
+        // padding-right: 10px;
+      }
+      &_time{
+        min-width: 510px;
+        width: 50%;
+      }
+      &_date{
+        min-width: 360px;
+        width: 50%;
+      }
+      &_longBtn{
+        min-width: 350px;
+      }
+      >div{
+        flex-grow: 1;
+      }
+
+    }
+  }
+}
+
 
 

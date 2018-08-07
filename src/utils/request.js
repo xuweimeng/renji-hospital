@@ -8,22 +8,27 @@ import qs from 'qs';
 const service = axios.create({
   // todo 海宁8084使用
   // baseURL: process.env.BASE_API, // api的base_url
-  // baseURL: 'http://192.168.1.218:8084', // 海宁api的base_url
-  // baseURL: 'http://192.168.1.218:8082', // 仁济api的base_url
-  // baseURL: 'http://192.168.3.26:8080', // 禅鸡的base_url
-  // baseURL: 'http://192.168.3.24:8083', // 懂鸡的base_url
+  // baseURL: 'http://192.168.1.218:8084',
+  // baseURL: 'http://192.168.3.26:8081', // chanji
+  // baseURL: 'http://192.168.3.69:8081', // fugou
+  // baseURL: 'http://192.168.3.24:8083', // daogou
+  baseURL: 'http://192.168.1.218:8082',
+  // baseURL: '/api', // api的base_url
+  // baseURL: 'http://60.190.86.50:6016', // api的base_url
   timeout: 50000 // request timeout
 });
 
 // 请求参数验证
 const JsonData = [
-  '/visit/order/temp/visit', // 仁济肿瘤科-入院通知添加临时随访任务接口
-  '/visit/ordertask/batchcancelall', // 仁济肿瘤科-入院通知批量终止通知接口
-  'visit/ordertask/vet', // 仁济肿瘤科-出院随访-审核接口
+  '/visit/order/temp/visit',
+  '/visit/ordertask/batchcancelall',
+  'visit/ordertask/vet',
   '/visit/ordertask/physicalTemporary',
   '/visit/ordertask/physicalNewTemporary',
-  '/visit/check/temp/visit' // 仁济肿瘤科-发起检查通知-发起检查
+  '/statistic/examination/notice',
+  '/visit/check/temp/visit'
 ];
+
 // request interceptor
 service.interceptors.request.use(config => {
   // 判断是否是需要使用json数据格式的接口
@@ -145,7 +150,7 @@ const fetch = (type, url, params) => {
         if (resultData.code === 0) {
           resolve(resultData);
         } else if (resultData.code === 1) {
-          resolve(resultData);
+          reject(new Error(resultData.message));
         } else {
           Message({
             message: resultData.message,

@@ -65,8 +65,8 @@ export default {
     NoticePlan: '体检通知计划',
     NoticeResult: '体检通知结果',
     Statistics: '体检统计数据',
-    Patient: '患者列表',
-    PatientList: '患者列表',
+    Patient: '客户列表',
+    PatientList: '客户列表',
     // 海宁医生端
     Homepage: '首页',
     FollowPlan: '随访计划',
