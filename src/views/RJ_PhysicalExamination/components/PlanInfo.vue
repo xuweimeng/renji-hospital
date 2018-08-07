@@ -50,7 +50,6 @@
   }
 }
 </style>
-
 <template>
     <div class="record">
         <el-dialog top="5vh" :close-on-click-modal="false" class="record_box" title="通知详情" width="55%"  :visible.sync="dialogTableVisible">
@@ -66,7 +65,7 @@
                     </el-tag>
                 </h3>
                 <h4 class="record_header_param">
-                  手机号码: {{baseData.phone?baseData.phone:"无"}}
+                  手机号码: {{baseData.mobile?baseData.mobile:"无"}}
                 </h4>
                 <h4 class="record_header_param">
                   体检套餐: {{baseData.icdName?baseData.icdName:"无"}}

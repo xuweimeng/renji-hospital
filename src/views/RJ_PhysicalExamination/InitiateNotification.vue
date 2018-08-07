@@ -170,7 +170,7 @@
 				</el-col>
 				 <!--分页-->
 				<el-col :span="12">
-					<div class="block" style="margin: 11px 0;">
+					<div class="block" style="margin: 0px 0;">
 						<el-pagination  style="float: right;margin-right: 20px;" background @current-change="PlanChangePage" :current-page.sync="planParams.pager" :page-size="10" layout="total,prev, pager, next, jumper"
 							:total="patTotalPage" v-if="patTotalPage">
 						</el-pagination>
@@ -617,7 +617,7 @@ export default {
 }
 .step2Page {
   padding-left: 10px;
-  background: #fff;
+  background: #fdf6ec;
   font-size: 14px;
 }
 .btnRow {
