@@ -103,7 +103,7 @@
       </span>
     </el-dialog>
     <!-- 详情 -->
-       
+
     <plan-record
       ref="record"
       :baseData="infoData"
@@ -121,7 +121,8 @@
  */
 import { MySurvey } from 'HNDC_API/MySurvey';
 import { CommonAPI } from 'HNDC_API/common';
-import PlanRecord from "./Pop-ups/PlanRecord";
+import PlanRecord from './Pop-ups/PlanRecord';
+import { mapGetters } from 'vuex';
 const base_param = {
   page: 1,
   total: 0,
@@ -129,7 +130,7 @@ const base_param = {
   tableData: []
 };
 export default {
-  components:{
+  components: {
     PlanRecord
   },
   data() {
@@ -148,10 +149,9 @@ export default {
         questionTempleName: '',
         orderList: []
       },
-      userId: '', // 从localStorage获取登录页的医生id
       searchParam: {
         limit: 10, // 每页数量
-        adminId: this.$store.state.user.token, // 医生ID
+        adminId: this.userId, // 医生ID
         brxm: '', // 患者姓名
         mobile: '', // 联系电话
         departmentId: '', // 科室ID
@@ -163,7 +163,6 @@ export default {
         // status: "", // 状态(4 待审核 2 不通过 1 审核通过 5 已取消)
         activeType: 7 // 6:住院满意度 7.门诊
       },
-      time_plan: '', // 计划执行时间
       time_disease: '', // 就症时间
       surveyPlan: false, // 详情弹框
       params: {
@@ -183,7 +182,6 @@ export default {
           status: 2
         }
       },
-      deparmentId: [],
       departMentList: [] /* 科室 */,
       groupList: [] /* 医疗组 */,
       tabActive: 0, // 当前选中的tab0全部患者1特别关心
@@ -214,7 +212,7 @@ export default {
         }
       ],
       checkId: [], // 随访通过的id(多选时),
-      pickerOptionsShortcuts:  // 时间日期选择器的快捷方式数据
+      pickerOptionsShortcuts: // 时间日期选择器的快捷方式数据
         {
           shortcuts: [{
             text: '最近一周',
@@ -241,17 +239,24 @@ export default {
               picker.$emit('pick', [start, end]);
             }
           }]
-        },
+        }
     };
   },
-  
+  computed: {
+    ...mapGetters({
+      userId: 'token'
+    })
+  },
   mounted() {
-    this.getUserId();
     this.getDepartMentList();
-    this.getGroupList();
+    // this.getGroupList();
     this.getData();
   },
   methods: {
+    /**
+     * @description 获取患者信息--详情弹框
+     * @function getInfoData
+     */
     getInfoData(item) {
       CommonAPI
         .getPatientRecord({
@@ -262,11 +267,18 @@ export default {
           this.infoData = res.data;
           this.infoData.mobile = item.mobile;
           this.infoData.medGpName = item.medGpName;
-          this.infoData.departmentName = item.departmentName;
+          // this.infoData.departmentName = item.departmentName; // 这个不对，和表格的对应不上
         });
-        this.getInfoMessage(item.id);
+      this.getInfoMessage(item.id);
     },
+    /**
+     * @description 获取计划详情--详情弹框
+     * @function getInfoMessage
+     */
     getInfoMessage(id) {
+      this.infoMessage = {
+        orderList: []
+      };
       CommonAPI
         .getVisitOrderDetail({
           taskId: id
@@ -274,11 +286,10 @@ export default {
         .then(res => {
           if (res.data) {
             this.infoMessage = res.data;
-          } else {
-            this.infoMessage = {
-              orderList: []
-            };
           }
+        })
+        .catch(e => {
+          console.log(e);
         });
     },
     /**
@@ -377,14 +388,6 @@ export default {
       }
     },
     /**
-     * 从sessionStorage获取医生id
-     * @function getUserId
-     * @param {String} userId 获取医生id
-     */
-    getUserId() {
-      this.userId = this.$store.state.user.token; // 用户名
-    },
-    /**
      * @description 获取表格数据
      * @function getData
      * @param  {type} param {description}
@@ -438,7 +441,7 @@ export default {
     async getInfo(scope) {
       this.infoData.medGpName = scope.row.medGpName;
       const res = await this.getInfoData(scope.row);
-      this.$refs.record.recordVisible=true;
+      this.$refs.record.recordVisible = true;
       /*  if(res.taskId){
         await this.getInfoMessage(res.taskId);
       } */

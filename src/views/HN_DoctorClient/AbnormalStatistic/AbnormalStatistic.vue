@@ -121,20 +121,10 @@
   import { AbnormalStatistic } from 'HNDC_API/AbnormalStatistic';
   import patientFile from 'HNDC/common/patientFile';
   import { mapGetters } from 'vuex';
+  import { parseTime } from '@/utils/index.js';
 
   // 随访时间，默认是当天
-  const follow_default_time = [new Date(new Date().setHours(0, 0, 0, 0)), new Date(new Date().setHours(23, 59, 59, 59))];
-  function getToday() {
-    const now_date = new Date();
-    const year = now_date.getFullYear();
-    const month = (now_date.getMonth() + 1 + '').padStart(2, '0');
-    const day = (now_date.getDate() + '').padStart(2, '0');
-    // month = month<10 ? `0${month}` : month;
-    // day = day<10? `0${day}` : day;
-    return `${year}-${month}-${day}`;
-  }
-  const today_format = getToday();
-  const follow_default_time_format = [today_format + ' 00:00:00', today_format + ' 23:59:59'];
+  const follow_default_time_format = [parseTime(new Date().setHours(0, 0, 0, 0)), parseTime(new Date().setHours(23, 59, 59, 59))];
   export default {
     data() {
       return {
@@ -153,7 +143,7 @@
         tableData: [], // 表格数据
         tableLoading: false,
         total: 0, // 表格数据总条数
-        followTime: follow_default_time, // 随访时间-搜索
+        followTime: follow_default_time_format, // 随访时间-搜索
         outTime: [], // 出院时间-搜索
         sum_start: follow_default_time_format[0], // 表格上方的一行数据的时间
         sum_end: follow_default_time_format[1],
@@ -220,6 +210,7 @@
         AbnormalStatistic.list(this.searchParam)
           .then((res) => {
             this.tableLoading = false;
+            // 格式化返回数据中的出院时间、随访时间
             // res.data.forEach(value => {
             //   value.outHspitalTime = value.outHspitalTime ? value.outHspitalTime.split(' ')[0] : value.outHspitalTime;
             //   value.dateEnd = value.dateEnd ? value.dateEnd.substring(0, value.dateEnd.length - 3) : value.dateEnd;

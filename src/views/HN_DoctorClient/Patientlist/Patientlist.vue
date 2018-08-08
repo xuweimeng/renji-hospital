@@ -97,6 +97,7 @@
 import { CommonAPI } from 'HNDC_API/common';
 import patientFile from 'HNDC/common/patientFile';
 import updateTel from 'HNDC/dialog/patientList/updateTel';
+import { mapGetters } from 'vuex';
 const base_param = {
   page: 1,
   total: 0,
@@ -129,7 +130,6 @@ export default {
           status: 1
         }
       },
-      userId: '', // 医生id sessionStorage中
       patientId: '', // 病人id
       tabActive: '0', // 当前选中的tab0全部患者1特别关心
       taskId: '',
@@ -140,11 +140,12 @@ export default {
     updateTel,
     patientFile
   },
+  computed: {
+    ...mapGetters({
+      userId: 'token'
+    })
+  },
   mounted() {
-    this.getUserId();
-    if (this.$route.query.paName) {
-      this.searchParam.patientName = this.$route.query.paName;
-    }
     this.getList();
   },
   methods: {
@@ -154,14 +155,6 @@ export default {
        */
     refreshList() {
       this.getList();
-    },
-    /**
-      * 从sessionStorage获取医生id
-      * @function getUserId
-      * @param {String} userId 获取医生id
-      */
-    getUserId() {
-      this.userId = this.$store.state.user.token;// 用户名
     },
     /**
       * 获取列表数据
@@ -243,14 +236,6 @@ export default {
     updateTelBtn(scope) {
       this.patientId = scope.row.hzxxId;
       this.$refs.updateTel.toggleShowModal();
-    }
-  },
-  watch: {
-    $route(to, from) {
-      if (to.path === '/PatientList' && this.$route.query.paName) {
-        this.searchParam.patientName = this.$route.query.paName;
-        this.getList();
-      }
     }
   }
 };

@@ -264,6 +264,9 @@ export default {
         });
     },
     getInfoMessage(id) {
+      this.infoMessage = {
+        orderList: []
+      };
       CommonAPI
         .getVisitOrderDetail({
           taskId: id
@@ -271,10 +274,6 @@ export default {
         .then(res => {
           if (res.data) {
             this.infoMessage = res.data;
-          } else {
-            this.infoMessage = {
-              orderList: []
-            };
           }
         });
     },

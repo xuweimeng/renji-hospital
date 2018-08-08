@@ -164,13 +164,6 @@ export default {
   props: ['patientId', 'visitOrderId', 'taskId', 'tabActive'],
   // 含getPatientInfo,handleislike两个方法
   mixins: [mixin],
-  // watch: {
-  //   dialogVisible() {
-  //     if (!this.dialogVisible) {
-  //       clearInterval(timerInterval);
-  //     }
-  //   }
-  // },
   methods: {
     /**
        * 切换随访计划弹框的显示

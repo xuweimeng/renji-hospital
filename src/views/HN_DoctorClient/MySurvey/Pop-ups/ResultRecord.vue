@@ -55,7 +55,7 @@
       margin-top: 10px;
     }
     &_audio{
-      max-height: 600px; 
+      max-height: 600px;
       overflow-y: auto;
     }
     &_param {
@@ -82,7 +82,7 @@
       > p {
         border-radius: 5px;
         background-color: #f3f3f3;
-        margin-left: 15px;
+        margin-left: 100px;
         box-sizing: border-box;
         padding: 8px 15px;
         color: #333;
@@ -178,7 +178,7 @@
                     随访方案: {{baseData.schemeName}}
                 </h4>
             </div>
-           
+
             <el-tabs v-model="currentTable"  type="border-card" >
                 <el-tab-pane  name="one"  label="体检结果">
                      <ul class="record_content_list">
@@ -250,7 +250,7 @@
 export default {
   data() {
     return {
-        recordVisible:false, 
+        recordVisible:false,
         currentTable: 'one'
     };
   },
