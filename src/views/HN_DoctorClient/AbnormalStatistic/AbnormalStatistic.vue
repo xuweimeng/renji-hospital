@@ -282,7 +282,7 @@
        */
       tdClick(scope) {
         this.patientId = scope.row.hzxxId;
-        this.visitOrderId = scope.row.visitOrderId || '';
+        this.visitOrderId = scope.row.id || '';
         this.$refs.patientFile.toggleShowModal();
       }
     }
