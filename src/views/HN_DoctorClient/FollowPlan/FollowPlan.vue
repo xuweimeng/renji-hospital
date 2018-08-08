@@ -251,12 +251,12 @@
               // 匹配审核不通过原因
               const reasonMap = ['', '患者已死亡', '患者不接受随访', '随访方案重复', '方案不匹配'];
               item.notPassReason = reasonMap[item.notPassReason];
-              // 随访类型
-              if (!item.activeType) {
-                item.activeType = 0;
-              }
-              const activeTypeMap = ['随访', '通知', '临时随访'];
-              item.activeType = activeTypeMap[item.activeType];
+              // 随访类型--未使用
+              // if (!item.activeType) {
+              //   item.activeType = 0;
+              // }
+              // const activeTypeMap = ['随访', '通知', '临时随访'];
+              // item.activeType = activeTypeMap[item.activeType];
             });
             param.tableData = res.data;
             param.total = res.count;
@@ -291,8 +291,7 @@
        */
       wayButton(scope) {
         this.checkId = [];
-        this.checkId.push(scope.row.id);
-        this.isCare = scope.row.islike; // 获取当前患者是否被关注
+        this.checkId.push(scope.row.id); // 记录id，以备弹框中的审核操作使用
         this.patientId = scope.row.hzxxId;
         this.taskId = scope.row.id;
         this.visitOrderId = scope.row.visitOrderId;
@@ -314,18 +313,12 @@
        *@param {object} rows 选中的行（参见element-ui的table-rows）
        */
       toggleSelection(rows) {
-        // if (this.multipleSelection.length > 0) {
-        //   this.$refs.multipleTable0[0].clearSelection();
-        // } else {
-        //   rows.forEach(row => {
-        //     this.$refs.multipleTable0[0].toggleRowSelection(row, true);
-        //   });
-        // }
         // element-ui自带的方法
         this.$refs.multipleTable0[0].toggleAllSelection();
       },
       /**
-       *待审核表格多选
+       * @description 待审核表格多选事件方法
+       * @function handleSelectionChange
        */
       handleSelectionChange(val) {
         this.multipleSelection = val;

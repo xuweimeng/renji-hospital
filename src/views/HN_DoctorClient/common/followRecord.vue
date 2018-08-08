@@ -513,6 +513,7 @@
             }
             // 详情数据赋值
             this.selectOptions[num - 1].modelData = this.dataFormTarget(res.data);
+            // 标记是否拿过该次的数据,tab切换时判断使用
             this.selectOptions[num - 1].alreadyHave = true;
             // target图表赋值
             if (this.targetTab.length) {
