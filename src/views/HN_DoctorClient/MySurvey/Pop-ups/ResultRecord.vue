@@ -82,7 +82,7 @@
       > p {
         border-radius: 5px;
         background-color: #f3f3f3;
-        margin-left: 100px;
+        margin-left: 15px;
         box-sizing: border-box;
         padding: 8px 15px;
         color: #333;
@@ -137,6 +137,7 @@
         padding: 8px 15px;
         color: #333;
         position: relative;
+        margin-left: 100px;
         &::after {
           content: "";
           display: block;
