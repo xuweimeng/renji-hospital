@@ -68,12 +68,14 @@ const user = {
         commit('SET_NAME', data.username);
         setParameter('name', data.username);
         sessionStorage.setItem('userId', data.id);// 用户id
+        sessionStorage.setItem('laterhours', response.laterhours);// 用户等待时间
         // 配置用户头像
         commit('SET_AVATAR', response.aipictureurl);
         setParameter('avatar', data.aipictureurl);
         // 配置最后登录时间
         commit('SET_LATERHOURS', data.laterhours);
-        setParameter('laterhours', data.laterhours);
+        setParameter('laterhours', response.laterhours);
+        sessionStorage.setItem("dateLogin",data.dateLogin);   //上次登录时间
         // 配置科室名字
         commit('SET_DEPARTMENTNAME', data.departmentName);
         setParameter('departmentName', data.departmentName);
