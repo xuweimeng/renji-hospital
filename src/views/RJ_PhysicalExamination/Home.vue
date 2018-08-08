@@ -143,9 +143,12 @@
               total: res.data.noticedPersonSum,
               yesterdayNotice: res.data.noticedPersonCount,
               Informed: res.data.noticedCount,
-              waiting: res.data.laterHours + '',
-              logInTime: res.data.lastVisitDate
+//              waiting: res.data.laterHours + '',
+              waiting: sessionStorage.getItem("laterhours"),
+//              logInTime: res.data.lastVisitDate
+              logInTime: sessionStorage.getItem("dateLogin")
             };
+
           })
           .catch(error => {
             console.log(error);

@@ -111,8 +111,14 @@
       </el-table-column>
 
     </el-table>
-    <div class="pagination-container" style="text-align:right;margin-top:15px;">
-      <el-pagination style="display:inline-block" background  @current-change="handleCurrentChange" :current-page="searchParams.pager"  :page-size="searchParams.limit" layout="total,  prev, pager, next, jumper" :total="totalPage">
+    <div class="pagination-container" style="text-align:right;margin-top:15px;overflow: hidden;margin-bottom: 30px;">
+      <el-pagination
+        style="display:inline-block"
+        background
+        @current-change="handleCurrentChange"
+        :current-page="searchParams.pager"
+        :page-size="searchParams.limit"
+        layout="total,  prev, pager, next, jumper" :total="totalPage">
       </el-pagination>
     </div>
 
