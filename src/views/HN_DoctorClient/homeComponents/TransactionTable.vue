@@ -42,7 +42,7 @@
     <patient-file
       :patient-id="patientId"
       :visit-order-id="visitOrderId"
-      :show-record-link="true"
+      :show-record-link="false"
       :task-id="taskId"
       v-on:refreshData="refreshList"
       ref="patientFile"
@@ -124,9 +124,7 @@ export default {
       this.patientId = scope.row.hzxxId;
       this.taskId = scope.row.taskId;
       this.visitOrderId = scope.row.id;
-      setTimeout(() => {
-        this.$refs.patientFile.toggleShowModal();
-      }, 0);
+      this.$refs.patientFile.toggleShowModal();
     }
   }
 };

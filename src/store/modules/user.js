@@ -13,13 +13,7 @@ const user = {
     roles: [],
     scopeRowData: {}, // 表格点击操作按钮传递scope.row的数据
     visitTime: '', // 随访结果的时间
-    uploadNum: { // 患者列表批量上传上传成功失败个数
-      downLoadName: '',
-      data: {
-        failNum: null,
-        successNum: null
-      }
-    }
+    uploadNum: {} // 患者列表批量上传上传成功失败个数
   },
   // 操作全局基础用户数据
   mutations: {

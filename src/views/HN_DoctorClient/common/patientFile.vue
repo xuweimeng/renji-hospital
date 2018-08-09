@@ -61,6 +61,9 @@
       color: #409eff;
       margin-bottom: 5px;
       font-weight: 400;
+      margin-top: 15px;
+    }
+    &_name:first-child{
       margin-top: 0;
     }
     &_link{
@@ -140,7 +143,7 @@
               <span class="record_header_sexAndage">
                   {{baseData.brxb}}/{{baseData.brage}}
               </span>
-              <el-tag v-show="baseData.gzTag">
+              <el-tag v-show="baseData.GzTag">
                   {{baseData.GzTag}}
               </el-tag>
           </h3>
@@ -157,28 +160,32 @@
           <el-button v-else   icon="el-icon-star-off" class="record_header_cancel"  size="mini" type="primary" @click="addSpecial" >添加关注</el-button>
       </div>
       <el-tabs @tab-click="currentPartientInfo" v-model="currentTable"  type="border-card" v-if="timeList[0]">
-          <el-tab-pane  v-for="(item,index) in timeList" :key="index" :name="item.diagnosetime" >
-                <h6 class="record_table_name" slot="label"><span>{{item.mzOrzy=='1'?'门诊':'住院'}}</span> {{item.diagnosetime}}</h6>
-                <template v-if="item.mzOrZy!='mz' && item.adminPatientDiagnose">
+          <el-tab-pane  v-for="(itemMain,index) in timeList" :key="index" :name="itemMain.diagnosetime" >
+                <h6 class="record_table_name" slot="label"><span>{{itemMain.mzOrzy=='1'?'门诊':'住院'}}</span> {{itemMain.diagnosetime}}</h6>
+            <template v-for="(item,index) in itemMain">
+              <!--mzOrZy字段不对，有时会是空的-->
+              <!--<template v-if="item.mzOrZy!='mz' && item.adminPatientDiagnose">-->
+              <template v-if="itemMain.mzOrzy != '1' && item.adminPatientDiagnose">
                 <h5 class="record_content_name">就诊信息
-                  <h6 class="record_content_link" v-if="item.isHasVisit=='1'" @click="sfDialog(item.adminPatientDiagnose.taskId)">查看随访记录</h6>
+                  <h6 class="record_content_link" v-if="itemMain.isHasVisit=='1' && item.adminPatientDiagnose.taskId && showRecordLink"
+                      @click="sfDialog(item.adminPatientDiagnose.taskId)">查看随访记录</h6>
                 </h5>
                 <!-- 有随访记录展示随访记录 -->
                 <ul class="record_content_list">
                   <li  class="record_content_single">
                     就诊卡号:{{item.mzOrZyNum}}
                   </li>
-                    <li  class="record_content_single">
+                  <li  class="record_content_single">
                     患者性质:{{item.brxz}}
                   </li>
-                    <li class="record_content_single">
+                  <li class="record_content_single">
                     入院时间:{{item.znjqrCyxjList[0].admissiontime}}
                   </li>
                   <li class="record_content_single">
                     出院时间:{{item.znjqrCyxjList[0].leavetime}}
                   </li>
-                  <li class="record_content_single" v-if="item.adminPatientDiagnose">
-                    科室:{{item.adminPatientDiagnose.areaName}}
+                  <li class="record_content_single">
+                    科室:{{item.adminDepartment}}
                   </li>
                   <li class="record_content_single">
                     主治医生:{{item.adminName}}
@@ -187,58 +194,61 @@
                 <h5 class="record_content_msg">出院小结</h5>
                 <div class="record_content_box">
                   <el-steps class="record_content_step" v-if="item.znjqrCyxjList.length>0" direction="vertical" :active="item.znjqrCyxjList.length">
-                      <el-step v-for="ite in item.znjqrCyxjList"  :key="ite.id" :title="ite.admissiontime">
-                        <div slot="description">
-                          <p class="record_content_text" v-for="discharged in Object.keys(dischargedMap)"  :key="discharged">
-                            <el-tag type="warning">
-                              {{dischargedMap[discharged]}}
-                            </el-tag>
-                            {{ite[discharged]}}
-                          </p>
-                        </div>
-                      </el-step>
-                    </el-steps>
+                    <el-step v-for="ite in item.znjqrCyxjList"  :key="ite.id" :title="ite.admissiontime">
+                      <div slot="description">
+                        <p class="record_content_text" v-for="discharged in Object.keys(dischargedMap)"  :key="discharged">
+                          <el-tag type="warning">
+                            {{dischargedMap[discharged]}}
+                          </el-tag>
+                          {{ite[discharged]}}
+                        </p>
+                      </div>
+                    </el-step>
+                  </el-steps>
                 </div>
-                </template>
-                <template v-if="item.mzOrZy!='zy' && item.adminPatientDiagnose">
-                  <h5 class="record_content_name">就诊信息
-                    <h6 class="record_content_link" v-if="item.isHasVisit=='1'" @click="sfDialog(item.adminPatientDiagnose.taskId)">查看随访记录</h6>
-                  </h5>
-                  <!-- 有随访记录展示随访记录 -->
+              </template>
+              <!--<template v-if="item.mzOrZy!='zy' && item.adminPatientDiagnose">-->
+              <template v-if="itemMain.mzOrzy == '1' && item.adminPatientDiagnose">
+                <h5 class="record_content_name">就诊信息
+                  <h6 class="record_content_link" v-if="itemMain.isHasVisit=='1' && item.adminPatientDiagnose.taskId && showRecordLink"
+                      @click="sfDialog(item.adminPatientDiagnose.taskId)">查看随访记录</h6>
+                </h5>
+                <!-- 有随访记录展示随访记录 -->
 
-                  <ul class="record_content_list">
-                    <li  class="record_content_single">
-                      就诊卡号:{{item.mzOrZyNum}}
-                    </li>
-                      <li  class="record_content_single">
-                      患者性质:{{item.brxz}}
-                    </li>
-                      <li class="record_content_single">
-                      医生姓名:{{item.adminName}}
-                    </li>
-                    <li class="record_content_single" v-if="item.adminPatientDiagnose">
-                      科室:{{item.adminPatientDiagnose.areaName}}
-                    </li>
-                    <li class="record_content_single">
-                      疾病诊断:{{item.adminPatientDiagnose.icdName}}
-                    </li>
-                    <li class="record_content_single">
-                      主诉:{{item.zs}}
+                <ul class="record_content_list">
+                  <li  class="record_content_single">
+                    就诊卡号:{{item.mzOrZyNum}}
+                  </li>
+                  <li  class="record_content_single">
+                    患者性质:{{item.brxz}}
+                  </li>
+                  <li class="record_content_single">
+                    医生姓名:{{item.adminName}}
+                  </li>
+                  <li class="record_content_single">
+                    科室:{{item.adminDepartment}}
+                  </li>
+                  <li class="record_content_single">
+                    疾病诊断:{{item.adminPatientDiagnose.icdName}}
+                  </li>
+                  <li class="record_content_single">
+                    主诉:{{item.zs}}
+                  </li>
+                </ul>
+                <h5 class="record_content_msg">处方信息</h5>
+                <div class="record_content_box">
+                  <ul class="record_content_content" v-for="(ite,inde) in item.znjqrCfmxList" :key="inde">
+                    <h6>药品名称:{{ite.ypmc}}</h6>
+                    <li class="record_content_param" v-for="(it,ind) in Object.keys(medicineMap)" :key="ind">
+                      <el-tag type="warning">
+                        {{medicineMap[it]}}
+                      </el-tag>
+                      {{ite[it]}}
                     </li>
                   </ul>
-                  <h5 class="record_content_msg">处方信息</h5>
-                  <div class="record_content_box">
-                      <ul class="record_content_content" v-for="(ite,inde) in item.znjqrCfmxList" :key="inde">
-                        <h6>药品名称:{{ite.ypmc}}</h6>
-                        <li class="record_content_param" v-for="(it,ind) in Object.keys(medicineMap)" :key="ind">
-                          <el-tag type="warning">
-                            {{medicineMap[it]}}
-                          </el-tag>
-                          {{ite[it]}}
-                        </li>
-                      </ul>
-                  </div>
-                </template>
+                </div>
+              </template>
+            </template>
           </el-tab-pane>
       </el-tabs>
     </el-dialog>
@@ -262,7 +272,6 @@
  */
 import { PatientFile } from 'HNDC_API/common/patientFile';
 import mixin from '@/assets/HN_DoctorClient/js/mixin';
-import { mapGetters } from 'vuex';
 import followRecord from 'HNDC/common/followRecord';
 export default {
   data() {
@@ -312,10 +321,6 @@ export default {
       type: String,
       default: null
     },
-    showRecordLink: {
-      type: Boolean,
-      default: false
-    },
     taskId: {
       type: String,
       default: null
@@ -323,10 +328,11 @@ export default {
     sfNumber: {
       type: String,
       default: null
+    },
+    showRecordLink: {
+      type: Boolean,
+      default: true
     }
-  },
-  computed: {
-    ...mapGetters(['token'])
   },
   // 含getPatientInfo,handleislike两个方法
   mixins: [mixin],
@@ -339,14 +345,15 @@ export default {
      * @function  refreshListFunc
      */
     refreshListFunc() {
+      this.getPatientInfo().then(res => {
+        this.baseData = res.data;
+      });
       this.$emit('refreshData');
     },
     // 有 随访记录 按钮时调用
     sfDialog(taskId) {
       this.taskIdRecord = taskId;
-      setTimeout(() => {
-        this.$refs.followRecord.toggleShowModal();
-      }, 0);
+      this.$refs.followRecord.toggleShowModal();
     },
     /**
      * 切换患者档案弹框的显示
@@ -363,17 +370,18 @@ export default {
         });
       }
     },
-    /*
-      *请求当前时间的患者信息
-      */
+    /**
+     * @description 请求当前时间的患者信息
+     * @param obj tab对象,例如{name:'2018-09-09'}
+     * @function currentPartientInfo
+     */
     currentPartientInfo(obj) {
-      this.timeList.forEach(item => {
-        if (item.diagnosetime == obj.name) {
-          if (item.znjqrCyxjList) {
-            return false;
-          }
+      // 判断是否已经获取过
+      for (const item of this.timeList) {
+        if (item.diagnosetime === obj.name && item[0]) {
+          return false;
         }
-      });
+      }
       PatientFile.getRecordByDate({
         adminId: this.userId,
         patientId: this.patientId,
@@ -382,10 +390,9 @@ export default {
         .then(res => {
           this.timeList.forEach((item, index) => {
             if (item.diagnosetime == obj.name) {
-              if (item.znjqrCyxjList) {
-                return false;
-              }
-              item = Object.assign(item, res.data[0]);
+              // item = Object.assign(item, res.data[0]);
+              // 同一天，可能会有多条就诊记录的情况
+              item = Object.assign(item, res.data);
               this.timeList.splice(index, 1, item);
             }
           });

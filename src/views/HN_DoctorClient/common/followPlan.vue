@@ -120,7 +120,7 @@
       </div>
       <!-- 审核 -->
       <div class="record_footer" v-if="tabActive == 0">
-        <div class="el-alert el-alert--info" v-show="timeTip">提示：{{timeTip}}</div>
+        <!--<div class="el-alert el-alert&#45;&#45;info" v-show="timeTip">提示：{{timeTip}}</div>-->
         <el-button type="primary" @click="modelOut">未通过</el-button>
         <el-button type="primary" @click="modelPass">通过</el-button>
       </div>
@@ -135,42 +135,35 @@
  */
 import { CommonAPI } from 'HNDC_API/common';
 import mixin from '@/assets/HN_DoctorClient/js/mixin';
-let timerInterval = null;
-function getAutoPassTime(startTime, databaseCurrentTime) {
-  const oneDayMilliSeconds = 24 * 60 * 60 * 1000;
-  const shouldStartTime = Date.parse(new Date(startTime)) + oneDayMilliSeconds; // 开始时间
-  const currentTime = databaseCurrentTime ? Date.parse(new Date(databaseCurrentTime)) : Date.parse(new Date()); // 当前时间
-  const timeNumber = Number(shouldStartTime) - Number(currentTime);
-  if (timeNumber > 0) {
-    const dd = parseInt(timeNumber / 1000 / 60 / 60 / 24);// 计算剩余的天数
-    const hh = parseInt(timeNumber / 1000 / 60 / 60 % 24);// 计算剩余的小时数
-    const mm = parseInt(timeNumber / 1000 / 60 % 60);// 计算剩余的分钟数
-    return `${dd}天${hh}时${mm}分后默认通过`;
-  } else {
-    clearInterval(timerInterval);
-    return '';
-  }
-}
+// let timerInterval = null;
+// function getAutoPassTime(startTime, databaseCurrentTime) {
+//   const oneDayMilliSeconds = 24 * 60 * 60 * 1000;
+//   const shouldStartTime = Date.parse(new Date(startTime)) + oneDayMilliSeconds; // 开始时间
+//   const currentTime = databaseCurrentTime ? Date.parse(new Date(databaseCurrentTime)) : Date.parse(new Date()); // 当前时间
+//   const timeNumber = Number(shouldStartTime) - Number(currentTime);
+//   if (timeNumber > 0) {
+//     const dd = parseInt(timeNumber / 1000 / 60 / 60 / 24);// 计算剩余的天数
+//     const hh = parseInt(timeNumber / 1000 / 60 / 60 % 24);// 计算剩余的小时数
+//     const mm = parseInt(timeNumber / 1000 / 60 % 60);// 计算剩余的分钟数
+//     return `${dd}天${hh}时${mm}分后默认通过`;
+//   } else {
+//     clearInterval(timerInterval);
+//     return '';
+//   }
+// }
 export default {
   data() {
     return {
       modelFollplanData: { orderList: [] }, // 随访计划data
       loading: false, // 加载动画
       dialogVisible: false, // 弹框是否显示
-      timeTip: '', // 倒计时提示
+      // timeTip: '', // 倒计时提示
       baseData: {} // 患者基本信息
     };
   },
   props: ['patientId', 'visitOrderId', 'taskId', 'tabActive'],
   // 含getPatientInfo,handleislike两个方法
   mixins: [mixin],
-  watch: {
-    dialogVisible() {
-      if (!this.dialogVisible) {
-        clearInterval(timerInterval);
-      }
-    }
-  },
   methods: {
     /**
        * 切换随访计划弹框的显示
@@ -212,16 +205,17 @@ export default {
         } else {
           this.modelFollplanData = { orderList: [] };
         }
-        if (this.tabActive === '0') {
-          const startTime = res.data.startDate;// 开始时间
-          this.timeTip = getAutoPassTime(startTime, res.currentTime);
-          if (!this.timeTip) {
-            return false;
-          }
-          timerInterval = setInterval(() => {
-            this.timeTip = getAutoPassTime(startTime);
-          }, 60000);
-        }
+        // 默认通过倒计时--去掉
+        // if (this.tabActive === '0') {
+        //   const startTime = res.data.startDate;// 开始时间
+        //   this.timeTip = getAutoPassTime(startTime, res.currentTime);
+        //   if (!this.timeTip) {
+        //     return false;
+        //   }
+        //   timerInterval = setInterval(() => {
+        //     this.timeTip = getAutoPassTime(startTime);
+        //   }, 60000);
+        // }
       }).catch((error) => {
         console.log(error);
       });

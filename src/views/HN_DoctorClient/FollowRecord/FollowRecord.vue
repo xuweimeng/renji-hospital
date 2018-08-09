@@ -118,7 +118,7 @@
           </el-table-column>
           <el-table-column label="处理意见" align="center" v-if="index !== '0'">
             <template slot-scope="scope">
-                  <span v-bind:class="[scope.row.visitResult==1?yyc:scope.row.visitResult==2?originC:wyc]">
+                  <span v-bind:class="[scope.row.visitResult==1?'yyc':scope.row.visitResult==2?'originC':'wyc']">
                     {{scope.row.visitResult==0?'病情稳定':scope.row.visitResult==1?'通知就诊':scope.row.visitResult==2?'暂不处理':'未知'}}
                   </span>
             </template>
@@ -152,7 +152,6 @@
       :patient-id="patientId"
       :visit-order-id="visitOrderId"
       ref="patientFile"
-      :show-record-link="false"
       v-on:refreshData="refreshList"
     ></patient-file>
     <!-- 随访计划 -->
@@ -175,6 +174,7 @@ import { FollowRecord } from 'HNDC_API/FollowRecord';
 import patientFile from 'HNDC/common/patientFile';
 import followPlan from 'HNDC/common/FollowPlan';
 import followRecord from 'HNDC/common/followRecord';
+import { mapGetters } from 'vuex';
 const base_param = {
   page: 1,
   total: 0,
@@ -184,7 +184,6 @@ const base_param = {
 export default {
   data() {
     return {
-      userId: '', // 医生id
       searchParam: {
         sex: '', // 病人性别
         patientName: '', // 姓名
@@ -209,10 +208,6 @@ export default {
           status: 11
         }
       },
-      cjsb: 'cjsb', // 采集失败(灰色)--采集情况不同时，文字颜色不同的处理
-      wyc: 'wyc', // 无异常(绿色)
-      yyc: 'yyc', // 有异常(红色)
-      originC: 'originC', // 橙色
       patientId: '', // 病人id
       visitOrderId: '', // 选中的行的visitOrderId
       taskId: '', // 获取病人的taskId
@@ -221,13 +216,17 @@ export default {
     };
   },
   mounted() {
-    this.getUserId(11);
     this.getList();
   },
   components: {
     followRecord,
     patientFile,
     followPlan
+  },
+  computed: {
+    ...mapGetters({
+      userId: 'token'
+    })
   },
   methods: {
     /**
@@ -236,14 +235,6 @@ export default {
        */
     refreshList() {
       this.getList();
-    },
-    /**
-      * 从sessionStorage获取医生id
-      * @function getUserId
-      * @param {String} userId 获取医生id
-      */
-    getUserId() {
-      this.userId = this.$store.state.user.token;// 用户名
     },
     /**
       * 列表数据获取
@@ -275,7 +266,7 @@ export default {
         if (res.code === 0) {
           const scquisitionStateMap = ['', '无异常', '有异常', '部分采集', '接通未采集', '接通无应答', '未接通未采集'];
           const stateColorMap = ['', 'wyc', 'yyc', 'yyc', 'cjsb', 'originC', ''];
-          // 匹配当前病人是否被关注
+          // 采集情况 文字颜色的类名、数字转文字处理
           res.data.forEach((item) => {
             item.stateClass = stateColorMap[item.scquisitionState];
             item.scquisitionStateText = scquisitionStateMap[item.scquisitionState];
@@ -316,10 +307,7 @@ export default {
       this.visitOrderId = scope.row.visitOrderId;
       this.taskId = scope.row.taskId;
       this.sfNumber = scope.row.currentVisitTime;
-      setTimeout(() => {
-        // this.$refs.followRecord.dialogVisible=true;
-        this.$refs.followRecord.toggleShowModal();
-      }, 0);
+      this.$refs.followRecord.toggleShowModal();
     },
     /**
        *列表上方的tab切换--不改变page
@@ -338,9 +326,7 @@ export default {
     tdClick(scope) {
       this.patientId = scope.row.hzxxId;
       this.visitOrderId = scope.row.visitOrderId;
-      setTimeout(() => {
-        this.$refs.patientFile.toggleShowModal();
-      }, 0);
+      this.$refs.patientFile.toggleShowModal();
     },
     /**
        *@function sfjhModel
@@ -350,9 +336,7 @@ export default {
       this.patientId = scope.row.hzxxId;
       this.visitOrderId = scope.row.visitOrderId;
       this.taskId = scope.row.taskId;
-      setTimeout(() => {
-        this.$refs.followPlan.toggleShowModal();
-      }, 0);
+      this.$refs.followPlan.toggleShowModal();
     }
   }
 };
