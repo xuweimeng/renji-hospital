@@ -5,7 +5,7 @@
       padding-top: 0;
     }
     .el-dialog{
-      max-width: 800px;
+      max-width: 730px;
     }
   }
   &_header {
