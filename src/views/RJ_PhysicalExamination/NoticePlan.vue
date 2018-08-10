@@ -108,7 +108,7 @@
         <el-col
           :span="24"
           class="btnCheck"
-          style="margin-top:28px;"
+          style="margin-top:28px;text-align: center;"
         >
           <el-button type="primary"  @click.native="noothroughCkeck">确定</el-button>
           <el-button type="info" @click="cancelSelect">取消</el-button>
@@ -322,6 +322,7 @@
       handleCheck(ids, notPassReason) {
         NoticePlan.cancelNotice({
           id: ids[0],
+          adminId:sessionStorage.getItem("userId"),
           notPassReason: notPassReason,
           notPassRemark: '终止计划'
         })
@@ -343,6 +344,7 @@
       cancelBatchCancelPlot(ids, notPassReason) {
         NoticePlan.cancelBatchCancel({
           ids: ids,
+          adminId:sessionStorage.getItem("userId"),
           notPassReason: notPassReason,
           notPassRemark: '终止计划'
         })
