@@ -105,7 +105,6 @@
     <!-- 就诊档案 -->
     <patient-file
       :patient-id="patientId"
-      :visit-order-id="visitOrderId"
       :show-record-link="true"
       v-on:refreshData="refreshList"
       ref="patientFile"
@@ -175,8 +174,7 @@
               }
             }]
           },
-        patientId: '', // 患者id--子组件props
-        visitOrderId: '' // visitOrderId--子组件props
+        patientId: '' // 患者id--子组件props
       };
     },
     computed: {
@@ -282,7 +280,6 @@
        */
       tdClick(scope) {
         this.patientId = scope.row.hzxxId;
-        this.visitOrderId = scope.row.id || '';
         this.$refs.patientFile.toggleShowModal();
       }
     }

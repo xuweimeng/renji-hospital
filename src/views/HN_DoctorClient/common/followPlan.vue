@@ -161,7 +161,7 @@ export default {
       baseData: {} // 患者基本信息
     };
   },
-  props: ['patientId', 'visitOrderId', 'taskId', 'tabActive'],
+  props: ['patientId', 'taskId', 'tabActive'],
   // 含getPatientInfo,handleislike两个方法
   mixins: [mixin],
   methods: {

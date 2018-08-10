@@ -41,7 +41,6 @@
     <!-- 就诊档案 -->
     <patient-file
       :patient-id="patientId"
-      :visit-order-id="visitOrderId"
       :show-record-link="false"
       :task-id="taskId"
       v-on:refreshData="refreshList"
@@ -58,7 +57,6 @@ export default {
     return {
       list: null,
       patientId: '',
-      visitOrderId: '',
       taskId: '',
       pager: 1,
       limit: 8,
@@ -123,7 +121,6 @@ export default {
     wayButton(scope) {
       this.patientId = scope.row.hzxxId;
       this.taskId = scope.row.taskId;
-      this.visitOrderId = scope.row.id;
       this.$refs.patientFile.toggleShowModal();
     }
   }

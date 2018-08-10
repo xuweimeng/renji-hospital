@@ -430,10 +430,6 @@
         type: String,
         default: null
       },
-      visitOrderId: {
-        type: String,
-        default: null
-      },
       tabActive: {
         type: String,
         default: '1'
@@ -626,12 +622,14 @@
        *@param {String} diseaseInfo diseaseInfo
        */
       clyj(btnState) {
-        // console.log(this.selectOptions[this.currentTable - 1].visitOrderId);
-        const visitOrderId = this.selectOptions[this.currentTable - 1].visitOrderId;
+        // console.log(this.selectOptions);
+        const visitOrderId = this.selectOptions[this.currentTable - 1] ? this.selectOptions[this.currentTable - 1].visitOrderId : '';
         if (!visitOrderId) {
           this.$message.error('记录id为空！');
           return false;
         }
+        // console.log(visitOrderId);
+        // return false;
         FollowRecord.updateDiseaseInfo({
           visitOrderId: visitOrderId,
           diseaseInfo: btnState

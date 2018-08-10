@@ -257,7 +257,6 @@
     <!-- 随访记录 -->
     <follow-record
       :patient-id="patientId"
-      :visit-order-id="visitOrderId"
       :task-id="taskIdRecord"
       v-on:refreshData="refreshListFunc"
       sf-number="1"
@@ -315,10 +314,6 @@ export default {
   },
   props: {
     patientId: {
-      type: String,
-      default: null
-    },
-    visitOrderId: {
       type: String,
       default: null
     },

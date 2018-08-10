@@ -147,10 +147,6 @@
     },
     props: {
       // 原手机号
-      visitOrderId: {
-        type: String,
-        default: ''
-      },
       patientId: {
         type: String,
         default: ''
