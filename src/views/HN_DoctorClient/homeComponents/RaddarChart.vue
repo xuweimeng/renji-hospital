@@ -24,7 +24,8 @@ export default {
       default: '300px'
     },
     dataList: {
-      type: Array
+      type: Array,
+      default: []
     }
   },
   data() {

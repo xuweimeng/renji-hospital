@@ -143,7 +143,7 @@
               <span class="record_header_sexAndage">
                   {{baseData.brxb}}/{{baseData.brage}}
               </span>
-              <el-tag v-show="baseData.GzTag">
+              <el-tag v-if="baseData.GzTag">
                   {{baseData.GzTag}}
               </el-tag>
           </h3>
@@ -167,7 +167,7 @@
               <!--<template v-if="item.mzOrZy!='mz' && item.adminPatientDiagnose">-->
               <template v-if="itemMain.mzOrzy != '1' && item.adminPatientDiagnose">
                 <h5 class="record_content_name">就诊信息
-                  <h6 class="record_content_link" v-if="itemMain.isHasVisit=='1' && item.adminPatientDiagnose.taskId && showRecordLink"
+                  <h6 class="record_content_link" v-if="itemMain.isHasVisit=='1' && item.adminPatientDiagnose.taskId && showRecordLink && item.visitTaskStatus!='没有随访' && item.visitTaskStatus!=''"
                       @click="sfDialog(item.adminPatientDiagnose.taskId)">查看随访记录</h6>
                 </h5>
                 <!-- 有随访记录展示随访记录 -->
@@ -210,7 +210,8 @@
               <!--<template v-if="item.mzOrZy!='zy' && item.adminPatientDiagnose">-->
               <template v-if="itemMain.mzOrzy == '1' && item.adminPatientDiagnose">
                 <h5 class="record_content_name">就诊信息
-                  <h6 class="record_content_link" v-if="itemMain.isHasVisit=='1' && item.adminPatientDiagnose.taskId && showRecordLink"
+                  <h6 class="record_content_link"
+                      v-if="itemMain.isHasVisit=='1' && item.adminPatientDiagnose.taskId && showRecordLink && item.visitTaskStatus!='没有随访' && item.visitTaskStatus!=''"
                       @click="sfDialog(item.adminPatientDiagnose.taskId)">查看随访记录</h6>
                 </h5>
                 <!-- 有随访记录展示随访记录 -->
@@ -256,7 +257,6 @@
     <!-- 随访记录 -->
     <follow-record
       :patient-id="patientId"
-      :visit-order-id="visitOrderId"
       :task-id="taskIdRecord"
       v-on:refreshData="refreshListFunc"
       sf-number="1"
@@ -314,10 +314,6 @@ export default {
   },
   props: {
     patientId: {
-      type: String,
-      default: null
-    },
-    visitOrderId: {
       type: String,
       default: null
     },

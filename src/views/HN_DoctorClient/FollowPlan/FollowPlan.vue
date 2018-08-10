@@ -109,7 +109,6 @@
     <!-- 就诊档案 不显示 随访记录 链接-->
     <patient-file
       :patient-id="patientId"
-      :visit-order-id="visitOrderId"
       :show-record-link="false"
       ref="patientFile"
       v-on:refreshData="refreshList"
@@ -117,7 +116,6 @@
     <!-- 随访计划 -->
     <follow-plan
       :patient-id="patientId"
-      :visit-order-id="visitOrderId"
       :task-id="taskId"
       ref="followPlan"
       :tab-active="tabActive"
@@ -197,8 +195,7 @@
           label: '方案不匹配'
         }],
         checkId: [], // 随访通过的id(多选时),
-        taskId: '', // 选中的行的id ?
-        visitOrderId: '' // 选中的行的visitOrderId
+        taskId: '' // 选中的行的id ?
       };
     },
     computed: {
@@ -294,7 +291,6 @@
         this.checkId.push(scope.row.id); // 记录id，以备弹框中的审核操作使用
         this.patientId = scope.row.hzxxId;
         this.taskId = scope.row.id;
-        this.visitOrderId = scope.row.visitOrderId;
         this.$refs.followPlan.toggleShowModal();
       },
       /**
@@ -435,7 +431,6 @@
        */
       tdClick(scope) {
         this.patientId = scope.row.hzxxId;
-        this.visitOrderId = scope.row.visitOrderId;
         this.$refs.patientFile.toggleShowModal();
       }
     }

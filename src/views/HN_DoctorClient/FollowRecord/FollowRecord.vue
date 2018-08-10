@@ -141,7 +141,6 @@
     <!-- 随访记录 -->
     <follow-record
       :patient-id="patientId"
-      :visit-order-id="visitOrderId"
       :task-id="taskId"
       :sf-number="sfNumber+''"
       :tab-active="tabActive+''"
@@ -150,14 +149,12 @@
     <!-- 就诊档案 不显示 随访记录 链接 -->
     <patient-file
       :patient-id="patientId"
-      :visit-order-id="visitOrderId"
       ref="patientFile"
       v-on:refreshData="refreshList"
     ></patient-file>
     <!-- 随访计划 -->
     <follow-plan
       :patient-id="patientId"
-      :visit-order-id="visitOrderId"
       :task-id="taskId"
       v-on:refreshData="refreshList"
       ref="followPlan"
@@ -209,7 +206,6 @@ export default {
         }
       },
       patientId: '', // 病人id
-      visitOrderId: '', // 选中的行的visitOrderId
       taskId: '', // 获取病人的taskId
       sfNumber: '', // 选中第几次
       tabActive: 0 // 当前选中的tab 0未处理，1已处理
@@ -304,7 +300,6 @@ export default {
       */
     wayButton(scope) {
       this.patientId = scope.row.hzxxId;
-      this.visitOrderId = scope.row.visitOrderId;
       this.taskId = scope.row.taskId;
       this.sfNumber = scope.row.currentVisitTime;
       this.$refs.followRecord.toggleShowModal();
@@ -325,7 +320,6 @@ export default {
        */
     tdClick(scope) {
       this.patientId = scope.row.hzxxId;
-      this.visitOrderId = scope.row.visitOrderId;
       this.$refs.patientFile.toggleShowModal();
     },
     /**
@@ -334,7 +328,6 @@ export default {
        */
     sfjhModel(scope) {
       this.patientId = scope.row.hzxxId;
-      this.visitOrderId = scope.row.visitOrderId;
       this.taskId = scope.row.taskId;
       this.$refs.followPlan.toggleShowModal();
     }

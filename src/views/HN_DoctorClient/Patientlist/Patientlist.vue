@@ -76,7 +76,6 @@
     <!-- 就诊档案 -->
     <patient-file
       :patient-id="patientId"
-      :visit-order-id="visitOrderId"
       :show-record-link="false"
       :task-id="taskId"
       v-on:refreshData="refreshList"
@@ -132,8 +131,7 @@ export default {
       },
       patientId: '', // 病人id
       tabActive: '0', // 当前选中的tab0全部患者1特别关心
-      taskId: '',
-      visitOrderId: ''
+      taskId: ''
     };
   },
   components: {
@@ -215,7 +213,6 @@ export default {
     wayButton(scope) {
       this.patientId = scope.row.hzxxId;
       this.taskId = scope.row.taskId;
-      this.visitOrderId = scope.row.id;
       this.$refs.patientFile.toggleShowModal();
     },
     /**
