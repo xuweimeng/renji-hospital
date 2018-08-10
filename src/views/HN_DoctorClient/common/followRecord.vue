@@ -525,6 +525,8 @@
             }
             this.baseUrl = res.AIVOICURL;
             this.fullscreenLoading = false;
+            // update 0810 原来取的是列表中的id/visitOrderId,但切换随访次数时，visitOrderId都是一个，不对
+            this.selectOptions[num - 1].visitOrderId = res.orderinfo.id;
             // AI意见vetRemark,处理意见diseaseInfo,是否人工isArtificialCall,人工意见callRemark--都在res.orderinfo中
             this.selectOptions[num - 1].vetRemark = res.orderinfo.vetRemark;
             this.selectOptions[num - 1].isArtificialCall = res.orderinfo.isArtificialCall;
@@ -620,12 +622,18 @@
       /**
        *处理意见
        *@function clyj
-       *@param {String} visitOrderId visitOrderId
+       *@param {String} visitOrderId perVisitOrderId
        *@param {String} diseaseInfo diseaseInfo
        */
       clyj(btnState) {
+        // console.log(this.selectOptions[this.currentTable - 1].visitOrderId);
+        const visitOrderId = this.selectOptions[this.currentTable - 1].visitOrderId;
+        if (!visitOrderId) {
+          this.$message.error('记录id为空！');
+          return false;
+        }
         FollowRecord.updateDiseaseInfo({
-          visitOrderId: this.visitOrderId,
+          visitOrderId: visitOrderId,
           diseaseInfo: btnState
         })
           .then(res => {

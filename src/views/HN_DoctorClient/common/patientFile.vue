@@ -167,7 +167,7 @@
               <!--<template v-if="item.mzOrZy!='mz' && item.adminPatientDiagnose">-->
               <template v-if="itemMain.mzOrzy != '1' && item.adminPatientDiagnose">
                 <h5 class="record_content_name">就诊信息
-                  <h6 class="record_content_link" v-if="itemMain.isHasVisit=='1' && item.adminPatientDiagnose.taskId && showRecordLink"
+                  <h6 class="record_content_link" v-if="itemMain.isHasVisit=='1' && item.adminPatientDiagnose.taskId && showRecordLink && item.visitTaskStatus!='没有随访' && item.visitTaskStatus!=''"
                       @click="sfDialog(item.adminPatientDiagnose.taskId)">查看随访记录</h6>
                 </h5>
                 <!-- 有随访记录展示随访记录 -->
@@ -210,7 +210,8 @@
               <!--<template v-if="item.mzOrZy!='zy' && item.adminPatientDiagnose">-->
               <template v-if="itemMain.mzOrzy == '1' && item.adminPatientDiagnose">
                 <h5 class="record_content_name">就诊信息
-                  <h6 class="record_content_link" v-if="itemMain.isHasVisit=='1' && item.adminPatientDiagnose.taskId && showRecordLink"
+                  <h6 class="record_content_link"
+                      v-if="itemMain.isHasVisit=='1' && item.adminPatientDiagnose.taskId && showRecordLink && item.visitTaskStatus!='没有随访' && item.visitTaskStatus!=''"
                       @click="sfDialog(item.adminPatientDiagnose.taskId)">查看随访记录</h6>
                 </h5>
                 <!-- 有随访记录展示随访记录 -->
