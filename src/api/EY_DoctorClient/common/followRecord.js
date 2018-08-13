@@ -13,9 +13,9 @@ export const FollowRecord = {
     return fetch('post', '/wechat/VisitResult/getVisistOrderResult', data);
   },
   /**
-   * @description 获取随访结果的处理意见
+   * @description 获取随访方案名称
    * @function getDiseaseInfo
-   * @param {String} visitOrderId {visitOrderId}
+   * @param {String} data 传入{taskId}
    * @return {type} {description}
    */
   getDiseaseInfo(data) {

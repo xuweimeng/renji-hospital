@@ -1,194 +1,99 @@
 <template>
-  <div class="zySurveyPlan">
+  <div class="app-container">
     <!-- 搜索 -->
-    <el-row class="addUp-search">
-      <el-col :span="24">
-        <el-form>
-          <el-form-item label="季度">
-            <el-select v-model="zyYearQuarters" placeholder="请选择" popper-class="searchSelect" v-show="activeName==6">
-              <el-option
-                v-for="item in zyOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-select v-model="mzYearQuarters" placeholder="请选择" popper-class="searchSelect" v-show="activeName==7">
-              <el-option
-                v-for="item in mzOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item>
-            <el-button type="button" @click="searchBtn">查询</el-button>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="button" @click="exportBtn">导出报表</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
+    <ul class="common_search">
+      <li class="common_search_single common_search_single_time">
+        <label class="radio-label" >季度</label>
+        <el-select
+          clearable
+          v-show="index == tabActive"
+          v-for="item,index in params"
+          v-model="item.selectVal"
+          placeholder="请选择"
+          :key="`op${index}`"
+        >
+          <el-option
+            v-for="op in item.selectOptions"
+            :key="op.value"
+            :label="op.label"
+            :value="op.value">
+          </el-option>
+        </el-select>
+      </li>
+      <li class="common_search_single">
+        <el-button type="primary" style="margin-right: 10px;" icon="el-icon-search" @click="searchBtn" :loading="params[0].loading || params[1].loading">查询</el-button>
+        <el-button class="filter-item" type="primary"  icon="el-icon-download" @click="exportBtn">导出</el-button>
+      </li>
+    </ul>
     <!-- table -->
     <!-- tab切换 -->
-    <el-row class="rsTabs">
-      <el-col :span="24">
-        <el-tabs type="border-card" v-model="activeName">
-          <!-- 住院满意度调查 -->
-          <el-tab-pane label="住院满意度调查" name="6">
-            <el-table :data="zyTableData"
-                      style="width: 1130px"
-                      class="rsTable"
-                      v-loading="Loading"
-            >
-              <el-table-column prop="name" label="医疗组" align="center"></el-table-column>
-              <el-table-column prop="percent" label="住院满意度"  align="center"></el-table-column>
-              <el-table-column prop="nice" label="满意" align="center"></el-table-column>
-              <el-table-column prop="normal" label="一般" align="center"></el-table-column>
-              <el-table-column prop="bad" label="不满意" align="center"></el-table-column>
-            </el-table>
+    <el-tabs type="border-card" @tab-click="handleClick">
+      <el-tab-pane v-for="item,index in params" :label="`${item.label}`" :key="index">
+        <el-table :data="item.tableData"
+                  border highlight-current-row
+                  v-loading="item.loading"
+        >
+          <el-table-column prop="name" :label="index === '0' ? '医疗组' : '科室'" align="center"></el-table-column>
+          <el-table-column prop="percent" :label="index === '0' ? '住院满意度' : '门诊满意度'" align="center"></el-table-column>
+          <el-table-column prop="nice" label="满意" align="center"></el-table-column>
+          <el-table-column prop="normal" label="一般" align="center"></el-table-column>
+          <el-table-column prop="bad" label="不满意" align="center"></el-table-column>
+        </el-table>
 
-            <el-row class="tablePagination" v-show="zyTotal">
-              <el-col :span="12" :offset="12">
-                <el-pagination
-                  @current-change="handleCurrentChangeZY"
-                  :current-page.sync="zyPage"
-                  :page-size="limit"
-                  layout="total,prev, pager, next, jumper"
-                  :total="zyTotal">
-                </el-pagination>
-              </el-col>
-            </el-row>
-
-          </el-tab-pane>
-          <!-- 门诊满意度调查 -->
-          <el-tab-pane label="门诊满意度调查" name="7">
-            <el-table :data="mzTableData"
-                      style="width: 1130px"
-                      class="rsTable"
-                      v-loading="Loading"
-            >
-              <el-table-column prop="name" label="科室" align="center"></el-table-column>
-              <el-table-column prop="percent" label="门诊满意度"  align="center"></el-table-column>
-              <el-table-column prop="nice" label="满意" align="center"></el-table-column>
-              <el-table-column prop="normal" label="一般" align="center"></el-table-column>
-              <el-table-column prop="bad" label="不满意" align="center"></el-table-column>
-            </el-table>
-            <el-row class="tablePagination" v-show="mzTotal">
-              <el-col :span="12" :offset="12">
-                <el-pagination
-                  @current-change="handleCurrentChangeMZ"
-                  :current-page.sync="mzPage"
-                  :page-size="limit"
-                  layout="total,prev, pager, next, jumper"
-                  :total="mzTotal">
-                </el-pagination>
-              </el-col>
-            </el-row>
-          </el-tab-pane>
-        </el-tabs>
-      </el-col>
-    </el-row>
+        <div class="pagination-container" v-if="item.total">
+          <el-pagination
+            @current-change="handlePage"
+            :current-page.sync="item.pager"
+            :page-size="limit"
+            layout="total,prev, pager, next, jumper"
+            :total="item.total">
+          </el-pagination>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 <script>
-  import { MySurvey } from '@/api/HN_DoctorClient/MySurvey';
+  import { MySurvey } from 'HNDC_API/MySurvey';
+  const base_param ={
+    selectOptions: [],
+    selectVal: '',
+    tableData: [],
+    total: 0,
+    pager: 1,
+    loading: false
+  };
   export default {
     name: 'AddUp',
     data() {
       return {
-        activeName: '6', // tab默认选择第几个
-        zyYearQuarters: '', // 年份
-        mzYearQuarters: '',
-        Loading: false,
-        zyTableData: [],
-        mzTableData: [],
-        zyPage: 1, // 当前页
-        mzPage: 1,
-        zyOptions: [],
-        mzOptions: [],
-        limit: 10,
-        zyTotal: 0,
-        mzTotal: 0
+        tabActive: 0,
+        params: {
+          0: {
+            ...base_param,
+            activeType: 6,
+            label: '住院满意度调查'
+          },
+          1: {
+            ...base_param,
+            activeType: 7,
+            label: '门诊满意度调查'
+          }
+        },
+        limit: 10
       };
     },
     mounted() {
       this.getSelectTime();
     },
-    watch: {
-      activeName() {
-        if (!this.mzYearQuarters && this.mzTotal === 0) {
-          this.getSelectTime();
-        }
-      }
-    },
     methods: {
-      searchBtn() {
-        if (this.activeName === '6') {
-          this.zyPage = 1;
-        } else {
-          this.mzPage = 1;
-        }
-        this.getTableData();
-      },
-      /** 导出报表*/
-      exportBtn() {
-        const yearQuarters = this.activeName === '6' ? this.zyYearQuarters : this.mzYearQuarters;
-        const year = yearQuarters.split('_')[0];
-        const quarter = yearQuarters.split('_')[1];
-        MySurvey.calculationResultExport({
-          activeType: this.activeName, // 类型(6:住院满意度,7：门诊满意度)
-          year: year, // 年份（如：2018）
-          quarter: quarter // 季度（1:第一季度,2:第二季度,3:第三季度,4:第四季度）
-        });
-      },
-      handleCurrentChangeZY(val) {
-        this.zyPage = val;
-        this.getTableData();
-      },
-      handleCurrentChangeMZ(val) {
-        this.mzPage = val;
-        this.getTableData();
-      },
       /**
-       * 满意度 医生端 统计数据-表格数据
-       */
-      getTableData() {
-        const yearQuarters = this.activeName === '6' ? this.zyYearQuarters : this.mzYearQuarters;
-        if (!yearQuarters) {
-          this.$message.error('请选择季度!');
-          return false;
-        }
-        const year = yearQuarters.split('_')[0];
-        const quarter = yearQuarters.split('_')[1];
-        const pager = this.activeName === '6' ? this.zyPage : this.mzPage;
-        this.Loading = true;
-        MySurvey.calculationResult({
-          pager: pager,
-          limit: this.limit,
-          activeType: this.activeName, // 类型(6:住院满意度,7：门诊满意度)
-          year: year, // 年份（如：2018）
-          quarter: quarter // 季度（1:第一季度,2:第二季度,3:第三季度,4:第四季度）
-        }).then(res => {
-          this.Loading = false;
-          if (this.activeName === '6') {
-            this.zyTableData = res.data;
-            this.zyTotal = res.total;
-          } else {
-            this.mzTableData = res.data;
-            this.mzTotal = res.total;
-          }
-        });
-      },
-      /**
-       * 统计数据 查询添加初始化--select的数据获取
+       * @description 统计数据 查询添加初始化--select的数据获取
+       * @function getSelectTime
        */
       getSelectTime() {
         MySurvey.satisfactionTime({
-          activeType: this.activeName // 类型(6:住院满意度,7：门诊满意度)
+          activeType: this.params[this.tabActive].activeType // 类型(6:住院满意度,7：门诊满意度)
         }).then(res => {
           const options = [];
           const quarter_map = ['0', '第一季度(1-3月)', '第二季度(4-6月)', '第三季度(7-9月)', '第四季度(10-12月)'];
@@ -201,21 +106,87 @@
             per_ops.value = item.years + '_' + item.quarters;
             options.push(per_ops);
           }
-          if (this.activeName === '6') {
-            this.zyOptions = options;
-            this.zyYearQuarters = options[0].value;
-            this.getTableData();
-          } else {
-            this.mzOptions = options;
-            this.mzYearQuarters = options[0].value;
-            this.getTableData();
-          }
+          this.params[this.tabActive].selectOptions = options;
+          this.params[this.tabActive].selectVal = options[0].value;
+          this.getTableData();
         }).catch(reason => {
           console.log(reason);
         });
-      }
+      },
+      /**
+       *@description 获取表格数据
+       *@function getTableData
+       */
+      getTableData() {
+        const param = this.params[this.tabActive];
+        param.loading = true;
+        param.tableData = [];
+        param.total = 0;
+        const yearQuarters = param.selectVal;
+        if (!yearQuarters) {
+          this.$message.error('请选择季度!');
+          param.loading = false;
+          return false;
+        }
+        const year = yearQuarters.split('_')[0];
+        const quarter = yearQuarters.split('_')[1];
+        MySurvey.calculationResult({
+          pager: param.pager,
+          limit: this.limit,
+          activeType: param.activeType, // 类型(6:住院满意度,7：门诊满意度)
+          year: year, // 年份（如：2018）
+          quarter: quarter // 季度（1:第一季度,2:第二季度,3:第三季度,4:第四季度）
+        }).then(res => {
+          param.loading = false;
+          param.tableData = res.data;
+          param.total = res.total;
+        });
+      },
+      /**
+       *@description 导出报表
+       *@function searchBtn
+       */
+      exportBtn() {
+        const yearQuarters = this.params[this.tabActive].selectVal;
+        if (!yearQuarters) {
+          this.$message.error('请选择季度!');
+          return false;
+        }
+        const year = yearQuarters.split('_')[0];
+        const quarter = yearQuarters.split('_')[1];
+        MySurvey.calculationResultExport({
+          activeType: this.params[this.tabActive].activeType, // 类型(6:住院满意度,7：门诊满意度)
+          year: year, // 年份（如：2018）
+          quarter: quarter // 季度（1:第一季度,2:第二季度,3:第三季度,4:第四季度）
+        });
+      },
+      /**
+       *@description 切换分页
+       *@function handlePage
+       */
+      handlePage(val) {
+        this.params[this.tabActive].pager = val;
+        this.getTableData();
+      },
+      /**
+       *@description 查询按钮
+       *@function searchBtn
+       */
+      searchBtn() {
+        this.getTableData();
+      },
+      /**
+       *@description 列表上方的tab切换
+       *@function handleClick
+       *@param {object} tab tab信息
+       *@param {event} event 点击事件
+       */
+      handleClick(tab, event) {
+        this.tabActive = tab.index;
+        if (this.params[this.tabActive].selectOptions.length === 0) {
+          this.getSelectTime();
+        }
+      },
     }
   };
 </script>
-
-

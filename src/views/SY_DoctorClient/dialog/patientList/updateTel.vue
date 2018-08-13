@@ -10,7 +10,7 @@
     >
       <el-form label-position="right" label-width="90px">
         <el-form-item label="原手机号">
-          <el-input v-model="patientRecord.mobile" disabled></el-input>
+          <el-input v-model="baseData.mobile" disabled></el-input>
         </el-form-item>
         <el-form-item label="修改手机号">
           <el-input v-model="phone" type="number" clearable></el-input>
@@ -39,6 +39,7 @@
       <el-table
         v-show="tableData.length>0"
         :data="tableData"
+        border highlight-current-row
         max-height="500"
       >
         <el-table-column
@@ -47,7 +48,7 @@
           label="姓名">
           <template slot-scope="scope">
             <span>{{scope.row.brxm}}</span>
-            <el-tag v-show="scope.row.brxm == patientRecord.brxm">本人</el-tag>
+            <el-tag v-show="scope.row.brxm == baseData.brxm">本人</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -93,7 +94,7 @@
       <el-form label-width="100px">
         <el-form-item label="选择终止原因">
           <el-select v-model="selectReason" size="small" style="width:200px">
-            <el-option v-for="item in finshReason" :value="item.value" :key="item.value">{{ item.value }}</el-option>
+            <el-option v-for="item in finshReason" :value="item.key" :key="item.key" :label="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="填写终止备注">
@@ -109,7 +110,7 @@
 </template>
 
 <script>
-  import { UpdateTel } from '@/api/HN_DoctorClient/PatientList_updateTel';
+  import { UpdateTel } from 'HNDC_API/PatientList_updateTel';
   import mixin from '@/assets/HN_DoctorClient/js/mixin';
   export default {
     name: 'updateTel',
@@ -124,15 +125,15 @@
             value: '患者已死亡'
           },
           {
-            key: 1,
+            key: 2,
             value: '患者不接受随访'
           },
           {
-            key: 1,
+            key: 3,
             value: '随访方案重复'
           },
           {
-            key: 1,
+            key: 4,
             value: '方案不匹配'
           }
         ] /* 终止原因列表 */,
@@ -141,16 +142,11 @@
         notPassRemark: '' /* 终止随访的备注 */,
         tableData: [], // 随访计划列表
         phone: '', // 新手机号
-        patientRecord: {}, // 患者信息，含原手机号
-        userId: ''
+        baseData: {} // 患者信息，含原手机号
       };
     },
     props: {
       // 原手机号
-      visitOrderId: {
-        type: String,
-        default: ''
-      },
       patientId: {
         type: String,
         default: ''
@@ -164,16 +160,13 @@
        */
       toggleShowModal() {
         this.modalShow = !this.modalShow;
-        if (this.modalShow === true) {
+        if (this.modalShow) {
           this.phone = '';
-          // 解决偶现的patientId为空的情况
-          if (this.patientId) {
-            this.getPatientInfo();
-          } else {
-            setTimeout(() => {
-              this.getPatientInfo();
-            }, 0);
-          }
+          this.$nextTick(() => { // 会偶现patientId 为空的情况
+            this.getPatientInfo().then(res => {
+              this.baseData = res.data;
+            });
+          });
         }
       },
       /**
@@ -215,7 +208,7 @@
         UpdateTel
           .changeMobile({
             patientId: this.patientId,
-            oldPhone: this.patientRecord.mobile, // 修改前的手机号
+            oldPhone: this.baseData.mobile, // 修改前的手机号
             newPhone: this.phone // 要修改成的号码
           })
           .then(res => {
@@ -243,7 +236,7 @@
           });
           return false;
         }
-        if (this.phone === this.patientRecord.mobile) {
+        if (this.phone === this.baseData.mobile) {
           this.$message({
             message: '手机号码和原号码相同',
             type: 'warning'
@@ -253,7 +246,7 @@
         UpdateTel
           .getProject({
             patientId: this.patientId,
-            oldPhone: this.patientRecord.mobile, // 修改前的手机号
+            oldPhone: this.baseData.mobile, // 修改前的手机号
             newPhone: this.phone // 要修改成的号码
           })
           .then(res => {
@@ -284,3 +277,12 @@
     }
   };
 </script>
+<style>
+  /*去掉谷歌，火狐下的type="number"中的右边箭头*/
+  input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+  }
+  .el-input.is-disabled .el-input__inner {
+    color: #606266;
+  }
+</style>
