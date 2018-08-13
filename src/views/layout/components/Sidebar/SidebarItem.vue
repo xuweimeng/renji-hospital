@@ -1,5 +1,19 @@
+<style lang="scss" scoped>
+.logo-con {
+    padding: 8px;
+    text-align: center;
+    img {
+        height: 44px;
+        width: auto;
+    }
+}
+</style>
+
 <template>
   <div class="menu-wrapper">
+    <div class="logo-con">
+      <img v-show="isCollapse" src="../../../../assets/logo.png"> 
+    </div>
     <template v-for="item in routes" v-if="!item.hidden&&item.children">
 
       <router-link v-if="hasOneShowingChildren(item.children) && !item.children[0].children&&!item.alwaysShow" :to="item.path+'/'+item.children[0].path"
@@ -34,8 +48,16 @@
 
 <script>
 import { generateTitle } from '@/utils/i18n';
-
+import { mapGetters } from 'vuex';
 export default {
+  computed: {
+    ...mapGetters([
+      'sidebar'
+    ]),
+    isCollapse() {
+      return this.sidebar.opened;
+    }
+  },
   name: 'SidebarItem',
   props: {
     routes: {

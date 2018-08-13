@@ -1,6 +1,8 @@
 const getters = {
   sidebar: state => state.app.sidebar,
   language: state => state.app.language,
+  department: state => state.user.departmentName,
+  hospital: state => state.user.hospatil,
   device: state => state.app.device,
   visitedViews: state => state.tagsView.visitedViews,
   cachedViews: state => state.tagsView.cachedViews,
