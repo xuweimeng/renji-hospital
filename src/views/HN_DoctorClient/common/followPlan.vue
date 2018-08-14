@@ -86,7 +86,7 @@
           <span class="record_header_sexAndage">
             {{baseData.brxb}}/{{baseData.brage}}
           </span>
-          <el-tag v-show="baseData.GzTag">
+          <el-tag v-if="baseData.GzTag">
             {{baseData.GzTag}}
           </el-tag>
         </h3>

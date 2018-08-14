@@ -106,7 +106,7 @@ export default {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons');
 
-      this.chart.setOption();
+      this.chart.setOption({});
     }
   }
 };
