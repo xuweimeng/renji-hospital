@@ -77,7 +77,7 @@
                   <span
                     v-show="item.isArtificialCall==1"
                     style="line-height: 40px;">
-                    此记录未人工呼叫，暂无录音
+                    此记录为人工呼叫，暂无录音
                   </span>
                   <div class="arrows1"></div>
                 </div>

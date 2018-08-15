@@ -7,8 +7,8 @@ import qs from 'qs';
 let baseURL = '';
 if (process.env.NODE_ENV === 'development') {
   // baseURL = process.env.BASE_API; // api的base_url
-  // baseURL = 'http://192.168.1.218:8084';
-  baseURL = 'http://192.168.3.26:8081'; // chanji
+  baseURL = 'http://192.168.1.218:8084';
+  // baseURL = 'http://192.168.3.26:8081'; // chanji
   // baseURL = 'http://192.168.3.69:8081'; // fugou
   // baseURL = 'http://192.168.3.33:8087'; // daogou
   // baseURL = 'http://192.168.1.218:8082';

@@ -6,7 +6,7 @@
           <img :src="getAdminInfo.aipicTureUrl">
         </div>
         <div class="notice-content-one">
-          <p class="text-center">您好，{{getAdminInfo.realname}}医生,{{getAdminInfo.AiName}}已等候您{{laterhours?'0':laterhours}}小时了。</p>
+          <p class="text-center">您好，{{getAdminInfo.realname}}医生,{{getAdminInfo.AiName}}已等候您{{getAdminInfo.laterhours?getAdminInfo.laterhours:'0'}}小时了。</p>
           <p class="text-center">上次登录时间:{{getAdminInfo.lastVisitDate?getAdminInfo.lastVisitDate:"无"}}</p>
         </div>
       </el-col>
@@ -47,42 +47,82 @@
             <span>出院随访简报</span>
           </div>
           <div class="showTopPage-day">
-            {{showTopPageData.today}} | 应随访人数
-            <span class="show-number" v-if="showTopPageData.suifang">
-              {{showTopPageData.suifang[0].statisticsValue}}
-            </span>人
+            日期:<span class="show-number">{{showTopPageData.today}}</span>
+            应随访人数:<span class="show-number">{{showTotal}}
+            </span>人(单位: 人)
           </div>
           <div class="showTopPage-content">
-            <el-row>
-              <el-col :span="14" class="showTopPage-bg">
-                成功通知<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[1].statisticsValue}}</span> 人
-              </el-col>
-              <el-col :span="9" :offset="1" class="showTopPage-bg">
-                未接通<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[5].statisticsValue}}</span> 人
-                </el-col>
-              <el-col :span="14">
-                完整采集<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[2].statisticsValue}}</span> 人 |
-                部分采集<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[3].statisticsValue}}</span> 人 |
-                未采集  <span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[4].statisticsValue}}</span>人
-              </el-col>
-              <el-col :span="9" :offset="1">
-                等待再次随访<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[7].statisticsValue}}</span>人
-              </el-col>
-              <el-col :span="24"  class="showTopPage-bg">
-                满意度-已评价<span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[0].statisticsValue}}</span>人 |
-                满意度-未评价  <span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[1].statisticsValue}}</span>人
-              </el-col>
-              <el-col :span="24">
-                满意度-十分满意<span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[2].statisticsValue}}</span> 人 |
-                满意度-满意    <span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[3].statisticsValue}}</span> 人 |
-                满意度-一般    <span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[4].statisticsValue}}</span>人 |
-                满意度-不满意  <span class="show-number" v-if="showTopPageData.manyidu">{{showTopPageData.manyidu[5].statisticsValue}}</span>人
-              </el-col>
-              <el-col :span="24"  class="showTopPage-bg">
-                今日重拨人数<span class="show-number" v-if="showTopPageData.suifang">{{showTopPageData.suifang[6].statisticsValue}}</span> 人                         |
-                异常指标   <span class="show-number" v-if="showTopPageData.abnormal>=0">{{showTopPageData.abnormal}}</span>人
-              </el-col>
-            </el-row>
+            <el-collapse v-model="openCollapse" accordion>
+              <el-collapse-item name="1">
+                <template slot="title">
+                  <i class="el-icon-bell showPageIcon"></i>成功通知
+                </template>
+                <div>
+                  <span
+                    class="paddingleft20"
+                    v-for="item in showTopPageData.data "
+                    :key="item.statisticsName"
+                    v-if="item.parentStatisticsName==='已接通'">
+                    {{item.statisticsName}}
+                    <span v-show="item.statisticsName">:</span>
+                    <el-tag type="primary" size="mini">{{item.statisticsValue}}</el-tag>
+                  </span>
+                </div>
+              </el-collapse-item>
+              <el-collapse-item name="2">
+                <template slot="title">
+                  <i class="el-icon-phone showPageIcon"></i>未接通
+                </template>
+                <div>
+                  <span
+                    class="paddingleft20"
+                    v-for="item in showTopPageData.data"
+                    :key="item.statisticsName"
+                    v-if="item.parentStatisticsName==='未接通'">
+                    {{item.statisticsName}}
+                    <span v-show="item.statisticsName">:</span>
+                    <el-tag type="primary" size="mini">{{item.statisticsValue}}</el-tag>
+                  </span>
+                </div>
+              </el-collapse-item>
+              <el-collapse-item name="3">
+                <template slot="title">
+                  <i class="el-icon-edit-outline showPageIcon"></i>满意度 Consistency
+                </template>
+                <div>
+                  <span
+                    class="paddingleft20"
+                    v-for="item in showTopPageData.data "
+                    :key="item.statisticsName"
+                    v-if="item.parentStatisticsName==='满意度-已评价' || item.parentStatisticsName==='满意度-未评价'">
+                    {{item.statisticsName}}
+                    <span v-show="item.statisticsName">:</span>
+                    <el-tag type="primary" size="mini">{{item.statisticsValue}}</el-tag>
+                  </span>
+                </div>
+              </el-collapse-item>
+              <el-collapse-item name="4">
+                <template slot="title">
+                  <i class="el-icon-phone-outline showPageIcon"></i>今日重拨人数
+                </template>
+                <div>
+                  <span
+                    class="paddingleft20"
+                    v-for="item in showTopPageData.data"
+                    :key="item.statisticsName"
+                    v-if="item.parentStatisticsName==='今日重播人数'">
+                    {{item.statisticsName}}
+                    <span v-show="item.statisticsName">:</span>
+                    <el-tag type="primary" size="mini">{{item.statisticsValue}}</el-tag>
+                  </span>
+                  <span class="paddingleft20">
+                    异常指标
+                    <span v-show="showTopPageData.abnormal">:</span>
+                    <el-tag type="primary" size="mini">{{showTopPageData.abnormal}}</el-tag>
+                  </span>
+                </div>
+              </el-collapse-item>
+            </el-collapse>
 
           </div>
         </el-card>
@@ -169,7 +209,7 @@
           <el-table-column prop="icdName" label="疾病名称" align="center"  show-overflow-tooltip></el-table-column>
           <el-table-column prop="address" label="档案" align="center"  >
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="wayButton(scope)">档案</el-button>
+              <el-button type="primary" size="mini" @click.native="wayButton(scope)">档案</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -200,7 +240,6 @@
           <el-button @click.native="routerToHzList" type="primary">立即前往</el-button>
         </el-col>
       </el-row>
-
     </el-row>
     <!-- 生肖头像弹框 -->
     <el-dialog width="522px" :show-close="false" :visible.sync="innerVisible" custom-class="bdzoo">
@@ -363,7 +402,9 @@
         params1: '', // jsonData2
         // departmentCode: '1', // 肿瘤1，体检2
         departmentName: sessionStorage.getItem('departmentName'),
-        showTopPageData: [] // 出院随访简报
+        showTopPageData: [], // 出院随访简报
+        openCollapse: '1', // 出院随访简报默认打开成功通知
+        showTotal: null // 出院随访简报应随访人数
       }
     },
     components: {
@@ -379,8 +420,8 @@
       this.getNoticedDate();   //显示医生信息记录次数
       this.SpecialCare(1)//特别关心
       this.visitCountInfo(1)//随访数量统计
-      this.diagnoseInfo(1);//疾病分布分布情况
-      this.getUseEatInfo(1);//用药依从性
+      this.diagnoseInfo(0);//疾病分布分布情况
+      this.getUseEatInfo(0);//用药依从性
       this.showTopPage() // 首页出院随访简报
     },
     methods: {
@@ -823,8 +864,10 @@
       *获取记录信息
       */
       wayButton(scope) {
+        console.log('test');
+
         this.hzDialog = true
-       this.$store.dispatch('getScopeRowData', scope)
+        this.$store.dispatch('getScopeRowData', scope)
       },
       /*
       *已处理
@@ -994,13 +1037,19 @@
         }).then((res)=>{
           if(res.code === 0) {
             this.showTopPageData = res
+            let getPhone, notGetPhone
+            res.data.forEach( item => {
+              if(item.parentStatisticsName === '已接通') {
+                return getPhone = item.parentStatisticsValue
+              }
+              if(item.parentStatisticsName === '未接通') {
+                return notGetPhone = item.parentStatisticsValue
+              }
+            })
+            this.showTotal = getPhone + notGetPhone
           }
         })
       },
-      goDetailPage () {
-        this.$router.push({path: '/Summary'})
-      }
-
     }
   };
 </script>
@@ -1047,7 +1096,7 @@
 }
 /** 特别关心 **/
 .careTable {
-  margin-top: 20px;
+  margin: 20px 0 30px 0;
   padding: 16px;
   background-color: #fff;
   .home-title {
@@ -1101,54 +1150,32 @@
     height: 40px;
     font-weight: bold;
     border-bottom: 1px solid rgb(235, 238, 245);
-    span {
-      float: left;
-      color: #666;
-    }
-    .el-button {
-      float: right;
-      margin-top: 5px;
-    }
+    color: #666;
   }
   .showTopPage-day {
-    background: #f5f7fa;
-    color: rgba(0,0,0,.65);
+    padding: 0 15px;
     height: 40px;
     line-height: 40px;
-    padding: 0 15px;
+    font-size: 15px;
   }
   .showTopPage-content {
     padding: 15px;
+    padding-top: 0;
     color: rgba(0,0,0,.65);
     font-size: 15px;
-    .el-row {
-      margin: 0 auto;
-      .el-col {
-        border: 1px solid #e1e1e1;
-        height: 42px;
-        line-height: 42px;
-        text-indent: 20px;
-      }
-      .el-col:nth-of-type(1), .el-col:nth-of-type(2){
-        padding-right: 10px;
-      }
-      .el-col:nth-of-type(3), .el-col:nth-of-type(4), .el-col:nth-of-type(6){
-        margin-bottom: 20px;
-        border-top: 0;
-        overflow-x: auto;
-        // white-space: nowrap;
-        // overflow: hidden;
-        // text-overflow: ellipsis;
-      }
-    }
   }
 }
-.showTopPage-bg {
-  background: #ecf5ff;
-  font-size: 16px;
+/** 出院随访简报icon */
+.showPageIcon {
+  padding-right: 5px;
+  font-size: 14px;
+  font-weight: bold;
 }
 .show-number {
   padding: 0 5px;
+}
+.paddingleft20 {
+  padding-left: 20px;
 }
 /**/
 .circleharts{

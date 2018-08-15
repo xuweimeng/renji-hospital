@@ -34,7 +34,8 @@ export default {
 
 <style lang="scss">
 .scrollbar-wrapper {
-  margin-right: 0!important;
+  width:180px ;
+  /*margin-right: 0!important;*/
 }
 </style>
 

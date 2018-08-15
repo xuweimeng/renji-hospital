@@ -5,7 +5,7 @@
       padding-top: 0;
     }
     .el-dialog{
-      max-width: 800px;
+      max-width: 730px;
     }
   }
   &_header {
@@ -170,7 +170,7 @@
                     </el-tag>
                 </h3>
                 <h4 class="record_header_param">
-                  手机号码: {{baseData.phone?baseData.phone:"无"}}
+                  手机号码: {{baseData.mobile?baseData.mobile:"无"}}
                 </h4>
                 <h4 class="record_header_param">
                   体检套餐: {{baseData.icdName?baseData.icdName:"无"}}
@@ -195,9 +195,9 @@
                          </el-tag>
                        </li>
                         <li class="record_content_single">
-                         审核意见:{{baseData.vetRemark}}
+                         审核意见:{{baseData.vetRemark?baseData.vetRemark:"无"}}
                        </li>
-                       <li class="record_content_single">
+                       <li class="record_content_single" v-if="baseData.callRemark">
                          人工外呼:{{baseData.callRemark}}
                        </li>
                      </ul>
@@ -215,8 +215,9 @@
                           <li :key="item.id+'1'" class="record_content_single record_content_patient">
                             <span>客户</span>
                             <audio v-if="item.audio" :src="baseUrl+item.audio"  controls="controls" ></audio>
-                            <p v-else="!item.audio&&patientInfo.isArtificialCall==1">此记录为人工呼叫，暂无录音</p>
-                            <p v-else="!item.audio&&patientInfo.isArtificialCall!=1">此记录为暂无录音</p>
+                            <p v-else-if="!item.audio&&baseData.callStatus&&item.isArtificialCall">此记录为人工呼叫，暂无录音</p>
+                            <p v-else-if="!item.audio&&baseData.callStatus&&!item.isArtificialCall">此记录为暂无录音</p>
+                            <p v-else-if="!item.audio&&!baseData.callStatus&&!item.isArtificialCall">此记录为暂无录音</p>
                             <div>
                               指标：<el-tag v-if="item.isNormal" type="primary">正常</el-tag><el-tag v-else type="error">不正常</el-tag>
                               / {{item.fieldName}} : {{item.fieldValue}}

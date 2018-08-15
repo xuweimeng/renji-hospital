@@ -19,11 +19,11 @@
     <el-row class="targetResult">
       <!-- 审核意见 -->
       <el-row class="checkAdviceRow">
-        <el-col :span="4" class="checkAdviceCol" style="padding-left: 20px;" v-show="vetRemark">AI审核意见：</el-col>
+        <el-col :span="4" class="checkAdviceCol" v-show="vetRemark">AI审核意见：</el-col>
         <el-col :span="20" class="checkAdviceCol" v-show="vetRemark">
           <el-tag type="primary" v-show="vetRemark">{{vetRemark}} &nbsp;</el-tag>
         </el-col>
-        <el-col :span="4" class="checkAdviceCol" style="padding-left: 20px;" v-show="callRemark">外呼审核意见：</el-col>
+        <el-col :span="4" class="checkAdviceCol" v-show="callRemark">外呼审核意见：</el-col>
         <el-col :span="20" class="checkAdviceCol" v-show="callRemark">
           <el-tag type="primary" v-show="callRemark">{{callRemark}} &nbsp;</el-tag>
         </el-col>
@@ -98,7 +98,7 @@
                     <span
                     v-show="item.isArtificialCall==1"
                     style="line-height: 40px;">
-                    此记录未人工呼叫，暂无录音
+                    此记录为人工呼叫，暂无录音
                   </span>
                   <div class="arrows1"></div>
                 </div>
@@ -124,6 +124,7 @@ import { mapState } from 'vuex'
 import { followUp } from 'RJZL_API/followPlan'
 import { Point } from 'utils/selectOptions'
   export default {
+    name: 'hzResult',
     data () {
       return {
         options: [], // select的下拉数据
@@ -159,7 +160,11 @@ import { Point } from 'utils/selectOptions'
           this.options.push(new Point(i))
         }
         this.$nextTick(function () {
-          this.checked = Number(numMax[0])
+          if(Number(numMax[0]) === 0) {
+            this.checked = 1
+          } else {
+            this.checked = Number(numMax[0])
+          }
           this.getDetails(this.checked)
         })
 

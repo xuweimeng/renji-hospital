@@ -1,8 +1,8 @@
 <template>
   <el-menu class="navbar" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
-
-    <breadcrumb class="breadcrumb-container"></breadcrumb>
+    {{`${hospital}  ${department?'/'+department:''}`}}
+    <!-- <breadcrumb class="breadcrumb-container"></breadcrumb> -->
 
     <div class="right-menu">
       <error-log class="errLog-container right-menu-item"></error-log>
@@ -76,7 +76,7 @@ export default {
     ThemePicker
   },
   computed: {
-    ...mapGetters(['sidebar', 'name', 'avatar', 'token'])
+    ...mapGetters(['sidebar', 'name', 'avatar', 'token', 'department', 'hospital'])
   },
   data() {
     return {

@@ -108,14 +108,14 @@
         <el-col
           :span="24"
           class="btnCheck"
-          style="margin-top:28px;"
+          style="margin-top:28px;text-align: center;"
         >
           <el-button type="primary"  @click.native="noothroughCkeck">确定</el-button>
           <el-button type="info" @click="cancelSelect">取消</el-button>
         </el-col>
       </el-row>
     </el-dialog>
-    <plan-info ref="record"   :patientId="patientId"></plan-info>
+    <plan-info ref="record"   :patientId="patientId"  :hzxxId="hzxxId"></plan-info>
   </div>
 </template>
 <script>
@@ -130,6 +130,7 @@
     data() {
       return {
         patientId: '',
+        hzxxId:"",   //患者id
         tableLoading: true,
         noPassLoading: true,
         dataRecord: 0,
@@ -280,6 +281,7 @@
        */
       showInfo(scope) {
         this.patientId = scope.row.id;
+        this.hzxxId = scope.row.hzxxId; //患者id
         this.$refs.record.dialogTableVisible = true;
       },
       /**
@@ -320,6 +322,7 @@
       handleCheck(ids, notPassReason) {
         NoticePlan.cancelNotice({
           id: ids[0],
+          adminId:sessionStorage.getItem("userId"),
           notPassReason: notPassReason,
           notPassRemark: '终止计划'
         })
@@ -341,6 +344,7 @@
       cancelBatchCancelPlot(ids, notPassReason) {
         NoticePlan.cancelBatchCancel({
           ids: ids,
+          adminId:sessionStorage.getItem("userId"),
           notPassReason: notPassReason,
           notPassRemark: '终止计划'
         })
