@@ -11,8 +11,8 @@
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :md="12" :lg="4" class="card-panel-col">
-      <div class="card-panel card-panel-link">
-        <router-link to="/FollowPlan/FollowPlanList">
+      <div class="card-panel card-panel-link" @click="toLink('/FollowPlan/FollowPlanList')">
+        <!--<router-link to="/FollowPlan/FollowPlanList">-->
           <div class="card-panel-icon-wrapper icon-edit">
             <svg-icon icon-class="form" class-name="card-panel-icon" />
           </div>
@@ -20,12 +20,12 @@
             <div class="card-panel-text">随访计划待审核</div>
             <count-to class="card-panel-num" :startVal="0" :endVal="info.needShCount" :duration="2000"></count-to>
           </div>
-        </router-link>
+        <!--</router-link>-->
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :md="12" :lg="4" class="card-panel-col">
-      <div class="card-panel card-panel-link">
-        <router-link to="/FollowRecord/FollowRecordList">
+      <div class="card-panel card-panel-link" @click="toLink('/FollowRecord/FollowRecordList')">
+        <!--<router-link to="/FollowRecord/FollowRecordList">-->
           <div class="card-panel-icon-wrapper icon-shoppingCard">
             <svg-icon icon-class="edit" class-name="card-panel-icon" />
           </div>
@@ -33,7 +33,7 @@
             <div class="card-panel-text">随访记录待处理</div>
             <count-to class="card-panel-num" :startVal="0" :endVal="info.needClCount" :duration="2000"></count-to>
           </div>
-        </router-link>
+        <!--</router-link>-->
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :md="12" :lg="4" class="card-panel-col">
@@ -42,7 +42,7 @@
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">总患者数</div>
+          <div class="card-panel-text">已随访患者数</div>
           <count-to class="card-panel-num" :startVal="0" :endVal="info.hadVisitPeopleCount" :duration="2000"></count-to>
         </div>
       </div>
@@ -77,6 +77,15 @@ export default {
   methods: {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type);
+    },
+    toLink(link) {
+      const role = this.$store.state.user.roles;
+      for (const item of role) {
+        if (item === '海宁市中心医院type3') {
+          return false;
+        }
+      }
+      this.$router.push(link);
     }
   }
 };

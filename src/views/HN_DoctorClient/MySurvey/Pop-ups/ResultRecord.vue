@@ -181,7 +181,7 @@
             </div>
 
             <el-tabs v-model="currentTable"  type="border-card" >
-                <el-tab-pane  name="one"  label="体检结果">
+                <el-tab-pane  name="one"  label="满意度结果">
                      <ul class="record_content_list">
                        <li  class="record_content_single">
                             您对医生的技术水平的评价是

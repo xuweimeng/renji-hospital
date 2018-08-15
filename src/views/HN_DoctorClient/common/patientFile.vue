@@ -179,10 +179,10 @@
                     患者性质:{{item.brxz}}
                   </li>
                   <li class="record_content_single">
-                    入院时间:{{item.znjqrCyxjList[0].admissiontime}}
+                    入院时间:{{item.znjqrCyxjList[0] ? item.znjqrCyxjList[0].admissiontime : ''}}
                   </li>
                   <li class="record_content_single">
-                    出院时间:{{item.znjqrCyxjList[0].leavetime}}
+                    出院时间:{{item.znjqrCyxjList[0] ? item.znjqrCyxjList[0].leavetime : ''}}
                   </li>
                   <li class="record_content_single">
                     科室:{{item.adminDepartment}}
