@@ -98,7 +98,11 @@ export default {
     admissionNotice: 'admissionNotice',
     inspectionNotice: 'inspectionNotice',
     UploadHz: 'UploadHz',
-    HalfInfo: 'HalfInfo'
+    HalfInfo: 'HalfInfo',
+    // 昆明金碧社区
+    DataAddUp: 'DataAddUp',
+    MessageStatistics: 'MessageStatistics',
+    ReturnVisit: 'ReturnVisit'
   },
   // 主题导航那一块
   navbar: {

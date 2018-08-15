@@ -98,7 +98,11 @@ export default {
     admissionNotice: '入院通知',
     inspectionNotice: '检查通知',
     UploadHz: '批量添加',
-    HalfInfo: '未完善信息'
+    HalfInfo: '未完善信息',
+    // 昆明金碧社区
+    DataAddUp: '数据报表',
+    MessageStatistics: '短信统计',
+    ReturnVisit: '回访统计'
   },
   navbar: {
     logOut: '退出登录',
