@@ -1,7 +1,59 @@
 <template>
-  <div class='notificationsOfAdmission'>
+  <div class='app-container'>
     <!-- 查询 -->
-		<el-row class='common-search'>
+    <ul class="common_search">
+      <li class="common_search_single">
+        <label class="radio-label" >姓名</label>
+        <el-input v-model.trim="searchParams.brxm" clearable placeholder="请输入姓名"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >联系方式</label>
+        <el-input v-model.trim="searchParams.mobile" clearable placeholder="请输入联系方式"></el-input>
+      </li>
+     
+      <li class="common_search_single">
+        <label class="radio-label" >随访方案</label>
+        <el-input v-model.trim="searchParams.schemeName" clearable placeholder="请输入通知方案"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >疾病名称</label>
+        <el-select
+							v-model='searchParams.icdName'
+							filterable
+							remote
+              clearable
+							reserve-keyword
+							placeholder='请输入疾病类型'
+							:remote-method='remoteMethod'
+              :loading='queryLoading'
+							>
+							<el-option
+								v-for='item in diseaseList'
+								:key='item.id'
+								:label='item.jbmc'
+								:value='item.jbmc'>
+							</el-option>
+						</el-select>
+      </li>
+       <li class="common_search_single">
+          <label class="radio-label" >性别</label>
+          <el-select v-model='searchParams.brxb' placeholder='性别'>
+				      <el-option label='全部' value=''></el-option>
+				      <el-option label='男' value='男'></el-option>
+				      <el-option label='女' value='女'></el-option>
+				    </el-select>
+        </li>
+       <li class="common_search_single">
+          <label class="radio-label" >年龄</label>
+          <el-input v-model='searchParams.ageBegin' placeholder='0'></el-input>
+          -
+				  <el-input v-model='searchParams.ageEnd'></el-input>
+        </li>
+      <li class="common_search_single">
+        <el-button type="primary" icon="el-icon-search" @click="searchFun">查询</el-button>
+      </li>
+    </ul>
+		<!-- <el-row class='common-search'>
 			<el-form :inline='true' :model='searchParams' label-position='center' label-width='80px'>
 			  <el-col :span='6'>
 			  	<el-form-item label='姓名'>
@@ -62,10 +114,9 @@
 			  </el-col>
 
 			</el-form>
-		</el-row>
+		</el-row> -->
     <!-- 表格 -->
-		<el-row class='common-table'>
-			<el-col :span='24'>
+		<el-card shadow="never">
 				<el-tabs v-model='activeName' @tab-click='handleClick'>
 			    <el-tab-pane label='入院通知' name='first'>
 			    	<el-table
@@ -101,6 +152,7 @@
               <!-- 分页 -->
               <el-col :span='12'>
                 <el-pagination
+                  style="float: right;margin-right: 29px;"
                   @current-change='handleCurrentChange'
                   :current-page.sync='tableData_list.pager'
                   :page-size='10'
@@ -136,6 +188,7 @@
               <!-- 分页 -->
               <el-col :span='12' style='margin-top: 11px; float:right;' :offset="12">
                 <el-pagination
+                  style="float: right;margin-right: 29px;"
                   @current-change='handleCurrentChange'
                   :current-page.sync='tableData_stop.pager'
                   :page-size='10'
@@ -146,8 +199,7 @@
             </el-row>
 					</el-tab-pane>
 			  </el-tabs>
-			</el-col>
-		</el-row>
+		</el-card>
 		<!-- 审核不通过 -->
 		<el-dialog title='终止原因' :visible.sync='noCheck' width='450px' :center = 'false' custom-class='checknoPass'>
 			<el-row slot>
@@ -217,23 +269,23 @@
 <script>
 import Plan from '@/components/dialog/plan/plan';
 import { AdmissionNotice } from 'RJZL_API/hospitalNotice';
-import auditOptions from 'utils/auditOptions'
-const tableName = [ 'list', 'stop'];
+import auditOptions from 'utils/auditOptions';
+const tableName = ['list', 'stop'];
 export default {
   name: 'notificationsOfAdmission',
   data() {
     return {
       searchParams: {
         adminId: sessionStorage.getItem('userId'),
-        pager: 1, //当前页码
-        limit: 10, //每页条数
-        brxm: '', //患者姓名（可选）
-        mobile: null, //；联系方式（可选）
-        brxb: '', //病人性别（可选）
-        schemeName: '', //随访方案（可选）
-        ageBegin: null, //开始年龄（可选）
-        ageEnd: null, //结束年龄（可选）
-        status:null //默认显示入院通知列表，赋值显示已终止通知列表
+        pager: 1, // 当前页码
+        limit: 10, // 每页条数
+        brxm: '', // 患者姓名（可选）
+        mobile: null, // ；联系方式（可选）
+        brxb: '', // 病人性别（可选）
+        schemeName: '', // 随访方案（可选）
+        ageBegin: null, // 开始年龄（可选）
+        ageEnd: null, // 结束年龄（可选）
+        status: null // 默认显示入院通知列表，赋值显示已终止通知列表
       },
       tableData_list: { // 入院通知
         list: [],
@@ -293,30 +345,30 @@ export default {
     },
     /** 查询 */
     searchFun() {
-      const getTableName = `tableData_${tableName[this.tabIndex]}`
-      this[getTableName].pager = 1
-      this.getData(this[getTableName])
+      const getTableName = `tableData_${tableName[this.tabIndex]}`;
+      this[getTableName].pager = 1;
+      this.getData(this[getTableName]);
     },
     /* 获取数据 */
     getData(param) {
-      param.loading1 = true
+      param.loading1 = true;
       AdmissionNotice.getPlan({
         ...this.searchParams,
         status: param.status,
         pager: param.pager
       })
         .then(res => {
-          param.list = res.data
+          param.list = res.data;
           param.totalPage = res.total;
           param.loading = false;
-      }).catch( err => {
-        param.loading = false;
-      });
+        }).catch(err => {
+          param.loading = false;
+        });
     },
 
     /* 展示随访计划详情 */
     showInfo(scope) {
-      this.planDg = true
+      this.planDg = true;
       this.$store.dispatch('getScopeRowData', scope);
     },
     /**
@@ -328,11 +380,11 @@ export default {
       this.selectCheck = value;
     },
     /** 批量审核选择患者 */
-    selectChange(selection){
+    selectChange(selection) {
       this.checkId.length = 0;
-      selection.forEach( item => {
-        this.checkId.push(item.id)
-      })
+      selection.forEach(item => {
+        this.checkId.push(item.id);
+      });
     },
     /**
      *弹框点击不通过确定
@@ -340,15 +392,15 @@ export default {
     *@description 点击表格操作弹框不通过
     */
     noothroughCkeck() {
-      if(this.selectCheck){
+      if (this.selectCheck) {
         this.handleCheck(this.checkId, this.selectCheck);
       }
     },
     /** 取消 */
-    resetBtn () {
-      this.noCheck = false
-      this.selectCheck = ''
-      this.checkId.length = 0
+    resetBtn() {
+      this.noCheck = false;
+      this.selectCheck = '';
+      this.checkId.length = 0;
     },
     /**
      *审核功能
@@ -360,7 +412,7 @@ export default {
     *@param {String} ids 患者id集合,数组转字符串
     *@param {String} noPassReason 审核不通过原因
     */
-    handleCheck( ids, notPassReason) {
+    handleCheck(ids, notPassReason) {
       AdmissionNotice
         .cancelNotice({
           adminId: sessionStorage.getItem('userId'),
@@ -371,10 +423,10 @@ export default {
         .then(res => {
           if (res.code == 0) {
             this.noCheck = false;
-            this.selectCheck = ''
-            this.checkId.length = 0
-            const getTableName = `tableData_${tableName[this.tabIndex]}`
-            this.getData(this[getTableName])
+            this.selectCheck = '';
+            this.checkId.length = 0;
+            const getTableName = `tableData_${tableName[this.tabIndex]}`;
+            this.getData(this[getTableName]);
           }
         })
         .catch(error => {});
@@ -383,16 +435,16 @@ export default {
      * [handleClick description] 切换tab
      */
     handleClick(tab, event) {
-      this.tabIndex = tab.index
-      const getTableName = `tableData_${tableName[this.tabIndex]}`
-      this.getData(this[getTableName])
+      this.tabIndex = tab.index;
+      const getTableName = `tableData_${tableName[this.tabIndex]}`;
+      this.getData(this[getTableName]);
     },
     /**
      * 分页
      */
     handleCurrentChange(page) {
-      const getTableName = `tableData_${tableName[this.tabIndex]}`
-      this.getData(this[getTableName])
+      const getTableName = `tableData_${tableName[this.tabIndex]}`;
+      this.getData(this[getTableName]);
     },
 
     /**
@@ -412,7 +464,7 @@ export default {
     // 部分通过
     numCheck() {
       if (this.checkId.length === 0) {
-        this.$message.error('请选择患者！')
+        this.$message.error('请选择患者！');
         return false;
       }
       this.noCheck = true;
@@ -422,7 +474,7 @@ export default {
      * @type {String}
      */
     passoutBtn(id) {
-      this.checkId.push(id)
+      this.checkId.push(id);
       this.noCheck = true;
     },
     /** 监听详情的关闭操作 */
@@ -430,7 +482,7 @@ export default {
       this.planDg = false;
     }
   }
-}
+};
 </script>
 <style lang='scss'>
   @import '~styles/search';

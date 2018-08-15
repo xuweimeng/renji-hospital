@@ -28,7 +28,7 @@
 
 <script>
   export default {
-    data () {
+    data() {
       return {
         dialogFormVisible: false,
         gridData: [{
@@ -79,28 +79,28 @@
           date: '2016-05-03',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄'
-        }],
+        }]
 
-      }
+      };
     },
     props: [
       'elDialog'
     ],
     methods: {
-      closeDialog () {
-        this.$emit('closeDialogFun', false)
+      closeDialog() {
+        this.$emit('closeDialogFun', false);
       },
-      passBtn () {
-        console.log('移除')
+      passBtn() {
+        console.log('移除');
       }
     },
     watch: {
       elDialog(old, new3) {
-        this.dialogFormVisible = this.elDialog
+        this.dialogFormVisible = this.elDialog;
       }
     }
 
-  }
+  };
 </script>
 
 <style lang="scss">

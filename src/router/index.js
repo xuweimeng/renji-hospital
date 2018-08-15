@@ -7,6 +7,7 @@ import { RJ_PhysicalExamination } from './RJ_PhysicalExamination';// 仁济体�
 import { EY_DoctorClient } from './EY_DoctorClient';// 儿研医生端
 import { SY_DoctorClient } from './SY_DoctorClient';// 十院医生端
 import { RJ_OncologyDepartment } from './RJ_OncologyDepartment';// 仁济肿瘤科
+import { EZ_DoctorClient } from './EZ_DoctorClient';// 台州恩泽医院
 Vue.use(Router);
 
 /* Layout布局器文件 */
@@ -41,12 +42,13 @@ export default new Router({
 });
 
 export const asyncRouterMap = [
-  ...RJ_PhysicalExamination,//仁济体检中心
-  ...LQ_PhysicalExamination,//乐清体检中心
-  ...RJ_OncologyDepartment,//仁济肿瘤科
+  ...RJ_PhysicalExamination, // 仁济体检中心
+  ...LQ_PhysicalExamination, // 乐清体检中心
+  ...RJ_OncologyDepartment, // 仁济肿瘤科
   ...HN_DoctorClient, // 海宁医生端
   ...EY_DoctorClient, // 儿研医生端
   ...SY_DoctorClient, // 十院医生端
+  ...EZ_DoctorClient, // 台州恩泽医院
   // ...default_asyncRouterMap
   { path: '*', redirect: '/404', hidden: true }
 ];

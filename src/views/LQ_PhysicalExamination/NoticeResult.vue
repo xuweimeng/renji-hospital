@@ -2,129 +2,128 @@
   <div class="app-container">
     <!-- 搜索 -->
     <ul class="common_search">
-    <li class="common_search_single">
-          <label class="radio-label" >姓名</label>
-          <el-input v-model.trim="searchParams.brxm" clearable placeholder="请输入姓名"></el-input>
-        </li>
-        <li class="common_search_single">
-          <label class="radio-label" >联系方式</label>
-          <el-input v-model.trim="searchParams.mobile" clearable placeholder="请输入联系方式"></el-input>
-        </li>
-        <li class="common_search_single">
-          <label class="radio-label" >证件号</label>
-          <el-input v-model.trim="searchParams.sfzh" clearable placeholder="请输入证件号"></el-input>
-        </li>
-        <li class="common_search_single">
-          <label class="radio-label" >体检套餐</label>
-          <el-select
-            v-model="searchParams.icd"
-            filterable
-            remote
-            clearable
-            reserve-keyword
-            placeholder="请输入体检套餐"
-            :remote-method="remoteMethod">
-            <el-option
-              v-for="item in diseaseList"
-              :key="item.icd"
-              :label="item.name"
-              :value="item.icd">
-            </el-option>
+      <li class="common_search_single">
+        <label class="radio-label" >姓名</label>
+        <el-input v-model.trim="searchParams.brxm" clearable placeholder="请输入姓名"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >联系方式</label>
+        <el-input v-model.trim="searchParams.mobile" clearable placeholder="请输入联系方式"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >证件号</label>
+        <el-input v-model.trim="searchParams.sfzh" clearable placeholder="请输入证件号"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >体检套餐</label>
+        <el-select
+          v-model="searchParams.icd"
+          filterable
+          remote
+          clearable
+          reserve-keyword
+          placeholder="请输入体检套餐"
+          :remote-method="remoteMethod">
+          <el-option
+            v-for="item in diseaseList"
+            :key="item.icd"
+            :label="item.name"
+            :value="item.icd">
+          </el-option>
+        </el-select>
+      </li>
+      <li class="common_search_single common_search_single_date">
+          <label class="radio-label" >通知时间</label>
+          <el-date-picker
+              @change="notiiceTimeChange"
+              v-model="endBirthday"
+              type="daterange"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :default-time="['00:00:00', '23:59:59']">
+          </el-date-picker>
+      </li>
+      <li class="common_search_single common_search_single_date">
+          <label class="radio-label" >体检时间</label>
+          <el-date-picker
+              @change="orderTimeChange"
+              v-model="orderTime"
+              type="datetimerange"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+          </el-date-picker>
+      </li>
+      <li class="common_search_single">
+          <label class="radio-label" >是否本人</label>
+          <el-select v-model="searchParams.isMySelf" placeholder="请选择" popper-class="mdRtSelect">
+              <el-option label="全部" value=""></el-option>
+              <el-option label="是" value="1"></el-option>
+              <el-option label="否" value="0"></el-option>
           </el-select>
-        </li>
-        <li class="common_search_single common_search_single_date">
-            <label class="radio-label" >通知时间</label>
-            <el-date-picker
-                @change="notiiceTimeChange"
-                v-model="endBirthday"
-                type="daterange"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :default-time="['00:00:00', '23:59:59']">
-            </el-date-picker>
-        </li>
-        <li class="common_search_single common_search_single_date">
-            <label class="radio-label" >体检时间</label>
-            <el-date-picker
-                @change="orderTimeChange"
-                v-model="orderTime"
-                type="datetimerange"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期">
-            </el-date-picker>
-        </li>
-        <li class="common_search_single">
-            <label class="radio-label" >是否本人</label>
-            <el-select v-model="searchParams.isMySelf" placeholder="请选择" popper-class="mdRtSelect">
-                <el-option label="全部" value=""></el-option>
-                <el-option label="是" value="1"></el-option>
-                <el-option label="否" value="0"></el-option>
-            </el-select>
-        </li>
-        <li class="common_search_single">
-            <label class="radio-label" >通话状态</label>
-            <el-select v-model="searchParams.backStatus" placeholder="请选择" popper-class="mdRtSelect">
-                <el-option label="全部" value=""></el-option>
-                <el-option label="呼叫失败" value="1"></el-option>
-                <el-option label="正常通话" value="2"></el-option>
-                <el-option label="通话中" value="3"></el-option>
-                <el-option label="关停机" value="4"></el-option>
-                <el-option label="无人接听" value="5"></el-option>
-                <el-option label="空号" value="6"></el-option>
-                <el-option label="号码有误" value="7"></el-option>
-            </el-select>
-        </li>
-        <li class="common_search_single">
-            <label class="radio-label" >是否到场</label>
-            <el-select v-model="searchParams.isCome" placeholder="请选择" popper-class="mdRtSelect">
-                <el-option label="全部" value=""></el-option>
-                <el-option label="来" value="1"></el-option>
-                <el-option label="不来" value="0"></el-option>
-                <el-option label="改约" value="2"></el-option>
-            </el-select>
-        </li>
-        <li class="common_search_single">
-            <el-button type="primary" @click.native="waySearch" icon="el-icon-search">查询</el-button>
-        </li>
-        </ul>
+      </li>
+      <li class="common_search_single">
+          <label class="radio-label" >通话状态</label>
+          <el-select v-model="searchParams.backStatus" placeholder="请选择" popper-class="mdRtSelect">
+              <el-option label="全部" value=""></el-option>
+              <el-option label="呼叫失败" value="1"></el-option>
+              <el-option label="正常通话" value="2"></el-option>
+              <el-option label="通话中" value="3"></el-option>
+              <el-option label="关停机" value="4"></el-option>
+              <el-option label="无人接听" value="5"></el-option>
+              <el-option label="空号" value="6"></el-option>
+              <el-option label="号码有误" value="7"></el-option>
+          </el-select>
+      </li>
+      <li class="common_search_single">
+          <label class="radio-label" >是否到场</label>
+          <el-select v-model="searchParams.isCome" placeholder="请选择" popper-class="mdRtSelect">
+              <el-option label="全部" value=""></el-option>
+              <el-option label="来" value="1"></el-option>
+              <el-option label="不来" value="0"></el-option>
+              <el-option label="改约" value="2"></el-option>
+          </el-select>
+      </li>
+      <li class="common_search_single">
+          <el-button type="primary" @click.native="waySearch" icon="el-icon-search">查询</el-button>
+      </li>
+    </ul>
      <!--活动通知 -->
-        <el-table :data="tableData" border fit highlight-current-row ref="patientlist"  v-loading="dataLoading">
-          <el-table-column prop="brxm" label="姓名" align="center">
-          </el-table-column>
-          <el-table-column prop="mobile" label="联系电话" align="center">
-          </el-table-column>
-          <el-table-column prop="sfzh" label="身份证号" align="center">
-          </el-table-column>
-          <el-table-column prop="icdName" label="体检套餐" align="center">
-          </el-table-column>
-          <el-table-column prop="orderTime" label="体检时间" align="center">
-          </el-table-column>
-          <el-table-column prop="dateEnd" label="通知时间" align="center">
-          </el-table-column>
-          <el-table-column prop="vetRemark" label="通知结果" align="center">
-          </el-table-column>
-          <el-table-column prop="statusStr" label="通知状态" align="center">
-          </el-table-column>
-          <el-table-column prop="backStatusStr" label="通话状态" align="center">
-          </el-table-column>
-          <el-table-column prop="isMySelfDge" label="是否本人" align="center">
-          </el-table-column>
-          <el-table-column prop="isComeDge" label="是否到场" align="center">
-          </el-table-column>
-          <el-table-column label="操作"  align="center">
-            <template slot-scope="scope">
-              <el-button type="primary" size="mini"  @click="detailBtn(scope)" >详情</el-button>
-            </template>
-          </el-table-column>
+    <el-table :data="tableData" border fit highlight-current-row ref="patientlist"  v-loading="dataLoading">
+      <el-table-column prop="brxm" label="姓名" align="center">
+      </el-table-column>
+      <el-table-column prop="mobile" label="联系电话" align="center">
+      </el-table-column>
+      <el-table-column prop="sfzh" label="身份证号" align="center">
+      </el-table-column>
+      <el-table-column prop="icdName" label="体检套餐" align="center">
+      </el-table-column>
+      <el-table-column prop="orderTime" label="体检时间" align="center">
+      </el-table-column>
+      <el-table-column prop="dateEnd" label="通知时间" align="center">
+      </el-table-column>
+      <el-table-column prop="vetRemark" label="通知结果" align="center">
+      </el-table-column>
+      <el-table-column prop="statusStr" label="通知状态" align="center">
+      </el-table-column>
+      <el-table-column prop="backStatusStr" label="通话状态" align="center">
+      </el-table-column>
+      <el-table-column prop="isMySelfDge" label="是否本人" align="center">
+      </el-table-column>
+      <el-table-column prop="isComeDge" label="是否到场" align="center">
+      </el-table-column>
+      <el-table-column label="操作"  align="center">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini"  @click="detailBtn(scope)" >详情</el-button>
+        </template>
+      </el-table-column>
 
-        </el-table>
-        <div class="pagination-container" style="text-align:right;margin-top:15px;">
-            <el-pagination style="display:inline-block" background  @current-change="handleCurrentChange" :current-page="searchParams.pager"  :page-size="searchParams.limit" layout="total,  prev, pager, next, jumper" :total="totalPage">
-            </el-pagination>
-        </div>
-      
+    </el-table>
+    <div class="pagination-container" style="text-align:right;margin-top:15px;">
+        <el-pagination style="display:inline-block" background  @current-change="handleCurrentChange" :current-page="searchParams.pager"  :page-size="searchParams.limit" layout="total,  prev, pager, next, jumper" :total="totalPage">
+        </el-pagination>
+    </div>
     <result-info ref="record" @refresh="getData" :resultData="dataTail" :patientId="patientId" :hzxxId="hzxxId"></result-info>
   </div>
 </template>
@@ -145,7 +144,7 @@ export default {
   data() {
     return {
       patientId: '',
-      hzxxId:'',
+      hzxxId: '',
       orderTime: '',
       dataTail: {},
       diseaseList: [] /* 疾病列表 */,
@@ -225,7 +224,7 @@ export default {
     detailBtn(scope) {
       this.dataTail = scope.row;
       this.patientId = scope.row.id;
-      this.hzxxId=scope.row.hzxxId;
+      this.hzxxId = scope.row.hzxxId;
       this.$refs.record.dialogTableVisible = true;
     },
     /**

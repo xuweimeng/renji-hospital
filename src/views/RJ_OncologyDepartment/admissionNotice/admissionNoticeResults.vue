@@ -1,7 +1,96 @@
 <template>
-  <div class='admissionNoticeResults'>
+  <div class='app-container'>
     <!-- 查询 -->
-		<el-row class='common-search'>
+    <ul class="common_search">
+      <li class="common_search_single">
+        <label class="radio-label" >姓名</label>
+        <el-input v-model.trim="searchParams.brxm" clearable placeholder="请输入姓名"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >患者性别</label>
+        <el-select v-model='searchParams.brxb' placeholder='性别'>
+				      <el-option label='全部' value=''></el-option>
+				      <el-option label='男' value='男'></el-option>
+				      <el-option label='女' value='女'></el-option>
+				    </el-select>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >联系方式</label>
+        <el-input v-model.trim="searchParams.mobile" clearable placeholder="请输入联系方式"></el-input>
+      </li>
+      
+      <li class="common_search_single">
+        <label class="radio-label" >疾病名称</label>
+        <el-select
+              v-model='searchParams.icdName'
+              filterable
+              clearable
+              remote
+              reserve-keyword
+              placeholder='请输入疾病名称'
+              :remote-method='remoteMethod'
+              :loading='queryLoading'>
+              <el-option
+                v-for='item in diseaseList'
+                :key='item.id'
+                :label='item.value'
+                :value='item.value'>
+              </el-option>
+            </el-select>
+      </li>
+      <li class="common_search_single">
+          <label class="radio-label" >患者年龄</label>
+          <el-input v-model='searchParams.beginAge' placeholder='0'></el-input>
+          -
+				  <el-input v-model='searchParams.endAge'></el-input>
+        </li>
+      <li class="common_search_single common_search_single_date">
+          <label class="radio-label" >通知时间</label>
+          <el-date-picker  @change='timeChange'
+						   v-model='createTime'
+							type='daterange'
+							value-format='yyyy-MM-dd'
+							range-separator='至'
+							start-placeholder='开始日期'
+							end-placeholder='结束日期'
+              :picker-options='pickerTime'>
+						</el-date-picker>
+      </li>
+    
+      <li class="common_search_single">
+          <label class="radio-label" >是否本人</label>
+          <el-select v-model="searchParams.isMySelf" placeholder="请选择" popper-class="mdRtSelect">
+              <el-option label="全部" value=""></el-option>
+              <el-option label="是" value="1"></el-option>
+              <el-option label="否" value="0"></el-option>
+          </el-select>
+      </li>
+      <li class="common_search_single">
+          <label class="radio-label" >通话状态</label>
+          <el-select v-model="searchParams.backStatus" placeholder="请选择" popper-class="mdRtSelect">
+              <el-option label="全部" value=""></el-option>
+              <el-option label="呼叫失败" value="1"></el-option>
+              <el-option label="正常通话" value="2"></el-option>
+              <el-option label="通话中" value="3"></el-option>
+              <el-option label="关停机" value="4"></el-option>
+              <el-option label="无人接听" value="5"></el-option>
+              <el-option label="空号" value="6"></el-option>
+              <el-option label="号码有误" value="7"></el-option>
+          </el-select>
+      </li>
+      <li class="common_search_single">
+          <label class="radio-label" >是否入院</label>
+          <el-select v-model="searchParams.isCome" placeholder="请选择" popper-class="mdRtSelect">
+               <el-option label='全部' value=''></el-option>
+				      <el-option label='不来' value='0'></el-option>
+				      <el-option label='来' value='1'></el-option>
+          </el-select>
+      </li>
+      <li class="common_search_single">
+          <el-button type="primary" @click.native="searchBtn" icon="el-icon-search">查询</el-button>
+      </li>
+    </ul>
+		<!-- <el-row class='common-search'>
 			<el-form :inline='true' :model='searchParams' label-position="center" label-width="80px">
 			  <el-col :span='5'>
 			  	<el-form-item label='患者姓名'>
@@ -54,7 +143,7 @@
 				<el-col :span='6'>
 					<el-form-item label='通知时间'>
 						<el-date-picker  @change='timeChange'
-						 v-model='createTime'
+						   v-model='createTime'
 							type='daterange'
 							value-format='yyyy-MM-dd'
 							range-separator='至'
@@ -100,48 +189,48 @@
 			  	<el-button type='primary' @click='searchBtn'>查询</el-button>
 			  </el-col>
 			</el-form>
-		</el-row>
+		</el-row> -->
     <!-- 表格 -->
-		<el-row class='common-table'>
-			<el-col :span='24'>
-	    	<el-table :data='tableData' border style='width: 100%;' v-loading='dataLoading'>
-	    		<el-table-column prop='brxm' label='姓名' align='center'></el-table-column>
-	    		<el-table-column prop='mobile' label='联系电话' align='center' show-overflow-tooltip ></el-table-column>
-	    		<el-table-column label='性别/年龄' align='center' width='100'>
-            <template slot-scope='scope'>
-              {{scope.row.brxb}} <span v-if='scope.row.brxb && scope.row.age'>/</span> {{scope.row.age}}
-            </template>
-          </el-table-column>
-          <el-table-column prop='backStatusStr' label='通话状态' align='center'></el-table-column>
-	    		<el-table-column prop='icdName' label='疾病名称' align='center' show-overflow-tooltip></el-table-column>
-	    		<el-table-column prop='dateBegin' label='通知时间' align='center' show-overflow-tooltip ></el-table-column>
-	    		<el-table-column prop='vetRemark' label='通知结果' align='center'></el-table-column>
-	    		<el-table-column prop='resultStatusStr' label='采集状态' align='center'></el-table-column>
-	    		<el-table-column  label='是否本人' align='center'>
-						<template slot-scope='scope'>
-							{{ scope.row.isMySelf==0?'否':scope.row.isMySelf==1?'是':'' }}
-						</template>
-					</el-table-column>
-	    		<el-table-column prop='isCome' label='是否入院' align='center'>
-						<template slot-scope='scope'>
-							{{ scope.row.isCome==0?'不来':scope.row.isCome==1?'来':scope.row.isCome==2?'改约':'' }}
-						</template>
-					</el-table-column>
-          	<el-table-column label='详情' align='center'>
-              <template slot-scope='scope'>
-                <el-button type='primary' size='mini' @click='detailBtn(scope)'>详情</el-button>
-              </template>
-            </el-table-column>
-	    	</el-table>
+    <el-table :data='tableData' border  fit highlight-current-row  style='width: 100%;' v-loading='dataLoading'>
+      <el-table-column prop='brxm' label='姓名' align='center'></el-table-column>
+      <el-table-column prop='mobile' label='联系电话' align='center' show-overflow-tooltip ></el-table-column>
+      <el-table-column label='性别/年龄' align='center' width='100'>
+        <template slot-scope='scope'>
+          {{scope.row.brxb}} <span v-if='scope.row.brxb && scope.row.age'>/</span> {{scope.row.age}}
+        </template>
+      </el-table-column>
+      <el-table-column prop='backStatusStr' label='通话状态' align='center'></el-table-column>
+      <el-table-column prop='icdName' label='疾病名称' align='center' show-overflow-tooltip></el-table-column>
+      <el-table-column prop='dateBegin' label='通知时间' align='center' show-overflow-tooltip ></el-table-column>
+      <el-table-column prop='vetRemark' label='通知结果' align='center'></el-table-column>
+      <el-table-column prop='resultStatusStr' label='采集状态' align='center'></el-table-column>
+      <el-table-column  label='是否本人' align='center'>
+        <template slot-scope='scope'>
+          {{ scope.row.isMySelf==0?'否':scope.row.isMySelf==1?'是':'' }}
+        </template>
+      </el-table-column>
+      <el-table-column prop='isCome' label='是否入院' align='center'>
+        <template slot-scope='scope'>
+          {{ scope.row.isCome==0?'不来':scope.row.isCome==1?'来':scope.row.isCome==2?'改约':'' }}
+        </template>
+      </el-table-column>
+        <el-table-column label='详情' align='center'>
+          <template slot-scope='scope'>
+            <el-button type='primary' size='mini' @click='detailBtn(scope)'>详情</el-button>
+          </template>
+        </el-table-column>
+    </el-table>
 
-        <div class='block' style='margin: 30px 50px;text-align: right;'>
-          <el-pagination  @current-change='handleCurrentChange' :current-page.sync='searchParams.pager' :page-size='10' layout='total,prev, pager, next, jumper'
-            :total='totalPage' v-if='totalPage'>
-          </el-pagination>
-        </div>
+    <!-- <div class='block' style='margin: 30px 50px;text-align: right;'>
+      <el-pagination  @current-change='handleCurrentChange' :current-page.sync='searchParams.pager' :page-size='10' layout='total,prev, pager, next, jumper'
+        :total='totalPage' v-if='totalPage'>
+      </el-pagination>
+    </div> -->
 
-			</el-col>
-		</el-row>
+    <div class="pagination-container" style="text-align:right;margin-top:15px;">
+        <el-pagination style="display:inline-block" background  @current-change="handleCurrentChange" :current-page="searchParams.pager"  :page-size="searchParams.limit" layout="total,  prev, pager, next, jumper" :total="totalPage">
+        </el-pagination>
+    </div>
     <!-- 详情 -->
     <ad-result :resultDg='resultDg'
 		@closeChildren='closeChildren'></ad-result>
@@ -152,8 +241,8 @@
   import { commonUrl } from 'RJZL_API/commonUrl';
   import AdResult from '@/components/dialog/aDresult/ppResult';
   import * as getTime from 'utils/getDate';
-  import * as utilsIndex from 'utils'
-  import auditOptions from 'utils/auditOptions'
+  import * as utilsIndex from 'utils';
+  import auditOptions from 'utils/auditOptions';
   export default {
     name: 'admissionNoticeResults',
     data() {
@@ -164,26 +253,26 @@
         /* 搜索条件 */
         searchParams: {
           adminId: sessionStorage.getItem('userId'),
-          pager: 1, //当前页码
-          limit: 10, //每页条数
-          brxm: '', //患者姓名（可选）
-          dateBeginBegin: null, //生成开始时间（可选）
-          dateBeginEnd: null, //生成结束时间（可选）
-          beginAge: null, //开始年龄（可选）
-          endAge: null, //结束年龄（可选）
-          brxb: '', //性别（可选）
-          activeType: 4, //0，随访；1，通知，2，临时随访；3，是出院随访;4入院通知；5体检
-          mobile: null, //联系方式
-          backStatus:'',//通话状态
-          icdName: null, //疾病名称
-          isMySelf: '', //是否本人（1：是，0：否）
-          isCome: '' //是否过来入院（0：不来，1：来，2：改约）
+          pager: 1, // 当前页码
+          limit: 10, // 每页条数
+          brxm: '', // 患者姓名（可选）
+          dateBeginBegin: null, // 生成开始时间（可选）
+          dateBeginEnd: null, // 生成结束时间（可选）
+          beginAge: null, // 开始年龄（可选）
+          endAge: null, // 结束年龄（可选）
+          brxb: '', // 性别（可选）
+          activeType: 4, // 0，随访；1，通知，2，临时随访；3，是出院随访;4入院通知；5体检
+          mobile: null, // 联系方式
+          backStatus: '', // 通话状态
+          icdName: null, // 疾病名称
+          isMySelf: '', // 是否本人（1：是，0：否）
+          isCome: '' // 是否过来入院（0：不来，1：来，2：改约）
         },
         input10: '',
         activeName: 'first', // tab
         tableData: [],
         dataLoading: false, // 表格数据请求等待
-        checkoptions: auditOptions,  // 审核不通过原因
+        checkoptions: auditOptions, // 审核不通过原因
         selectCheck: '', // 选中的审核不通过
         checkId: [], // 随访通过的id(多选时),
         queryLoading: false, // 搜索loading...
@@ -202,11 +291,11 @@
       this.getCurrent();
     },
     methods: {
-       /** 通知时间 */
+      /** 通知时间 */
       getCurrent() {
         this.searchParams.dateBeginBegin = getTime.currentTime + ' ' + '00:00:00';
         this.searchParams.dateBeginEnd = getTime.currentTime + ' ' + '23:59:59';
-        this.createTime = [this.searchParams.dateBeginBegin, this.searchParams.dateBeginEnd]
+        this.createTime = [this.searchParams.dateBeginBegin, this.searchParams.dateBeginEnd];
       },
       /** 疾病远程搜索 */
       remoteMethod(query) {
@@ -215,17 +304,17 @@
           setTimeout(() => {
             commonUrl.autocomplete({
               'zjm': query
-            }).then((res)=>{
+            }).then((res) => {
               this.queryLoading = false;
-              console.log(res)
-              if(res.code == 0) {
-                this.diseaseList = res.data
+              console.log(res);
+              if (res.code == 0) {
+                this.diseaseList = res.data;
               } else {
                 this.options4 = [];
               }
-            }).catch((error)=>{
-              console.log(error)
-            })
+            }).catch((error) => {
+              console.log(error);
+            });
           }, 200);
         } else {
           this.options4 = [];
@@ -254,8 +343,8 @@
       },
       /** 查询按钮 */
       searchBtn() {
-        this.searchParams.pager = 1
-        this.getData()
+        this.searchParams.pager = 1;
+        this.getData();
       },
       /**
        * 分页
