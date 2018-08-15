@@ -98,7 +98,11 @@ export default {
     admissionNotice: 'admissionNotice',
     inspectionNotice: 'inspectionNotice',
     UploadHz: 'UploadHz',
-    HalfInfo: 'HalfInfo'
+    HalfInfo: 'HalfInfo',
+    specialDoctor: 'specialDoctor',
+    doctorList: 'doctorList',
+    noticePlan: 'noticePlan',
+    noticeResult: 'noticeResult'
   },
   // 主题导航那一块
   navbar: {

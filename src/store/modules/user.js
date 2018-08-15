@@ -58,9 +58,12 @@ const user = {
   actions: {
     // 用户名登录
     LoginByUsername({ commit, state }, userInfo) {
+
+
       const username = userInfo.username.trim();
       const dataSetting = (response) => {
         const data = response.data;
+        console.log('data',response);
         // 配置用户id作为token值
         commit('SET_TOKEN', data.id);
         setToken(data.id);
@@ -69,11 +72,12 @@ const user = {
         setParameter('name', data.username);
         sessionStorage.setItem('userId', data.id);// 用户id
         // 配置用户头像
-        commit('SET_AVATAR', response.aipictureurl);
-        setParameter('avatar', data.aipictureurl);
+        commit('SET_AVATAR', response.data.aipictureurl);
+        setParameter('avatar', response.data.aipictureurl);
         // 配置最后登录时间
-        commit('SET_LATERHOURS', data.laterhours);
-        setParameter('laterhours', data.laterhours);
+        commit('SET_LATERHOURS', response.laterhours);
+        setParameter('laterhours', response.laterhours);
+        setParameter('dateLogin', data.dateLogin);
         // 配置科室名字
         commit('SET_DEPARTMENTNAME', data.departmentName);
         setParameter('departmentName', data.departmentName);

@@ -195,5 +195,48 @@ export const RJ_OncologyDepartment = [
         }
       }
     ]
+  },
+  // 特约医生
+  {
+    path: '/specialDoctor',
+    component: Layout,
+    meta: {
+      title: 'specialDoctor',
+      roles: ['上海市仁济医院肿瘤科'],
+      icon: 'jianchaxiang',
+      noCache: true
+    },
+    children: [
+      {
+        path: 'doctorList',
+        component: () => import('RJZL/specialDoctor/doctorList.vue'),
+        name: '/doctorList',
+        meta: {
+          title: 'doctorList',
+          roles: ['上海市仁济医院肿瘤科'],
+          noCache: true
+        }
+      },
+      {
+        path: 'noticePlan',
+        component: () => import('RJZL/specialDoctor/noticePlan.vue'),
+        name: '/noticePlan',
+        meta: {
+          title: 'noticePlan',
+          roles: ['上海市仁济医院肿瘤科'],
+          noCache: true
+        }
+      },
+      {
+        path: 'noticeResult',
+        component: () => import('RJZL/specialDoctor/noticeResult.vue'),
+        name: '/noticeResult',
+        meta: {
+          title: 'noticeResult',
+          roles: ['上海市仁济医院肿瘤科'],
+          noCache: true
+        }
+      }
+    ]
   }
 ];

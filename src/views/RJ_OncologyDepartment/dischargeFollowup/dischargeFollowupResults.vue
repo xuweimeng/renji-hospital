@@ -53,7 +53,7 @@
 				</el-col>
         <el-col :span="6">
           <el-form-item label="采集情况">
-            <el-select v-model="formInline.resultStatus" placeholder="采集情况" @change="resultStatusChange">
+            <el-select v-model="formInline.collections" placeholder="采集情况" @change="resultStatusChange">
             	<el-option label="全部" value=""></el-option>
               <el-option label="部分采集" value="1"></el-option>
 							<el-option label="接通未采集" value="3"></el-option>
@@ -254,8 +254,7 @@
 			return {
 				formInline: {
 					adminId: sessionStorage.getItem('userId'),
-					resultStatus: '',   //采集情况
-					isNormal: '', // 采集是否有异常
+					collections: '', // 采集情况
 					brxm: '', // 病人姓名
 					mobile: '', // 手机号
 					schemeName: '', // 随访方案
@@ -325,14 +324,7 @@
 			},
 			// 采集情况
 			resultStatusChange (value) {
-				console.log(value);
-				if (value === '1'|| value === '2') {
-					this.formInline.isNormal = true
-				} else if (value === '6') {
-					this.formInline.isNormal = false
-				} else {
-					this.formInline.isNormal = ''
-				}
+
 			},
 			/** 待处理 */
 			list () {

@@ -98,7 +98,11 @@ export default {
     admissionNotice: '入院通知',
     inspectionNotice: '检查通知',
     UploadHz: '批量添加',
-    HalfInfo: '未完善信息'
+    HalfInfo: '未完善信息',
+    specialDoctor: '医生看诊通知',
+    doctorList: '医生列表',
+    noticePlan: '看诊通知计划',
+    noticeResult: '看诊通知结果'
   },
   navbar: {
     logOut: '退出登录',
