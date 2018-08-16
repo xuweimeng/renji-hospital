@@ -72,7 +72,7 @@
       <el-pagination
         @current-change="handleCurrentChange"
         :current-page.sync="form.pager"
-        :page-size="10"
+        :page-size="form.limit"
         layout="total,prev, pager, next, jumper"
         :total="totalPage"
         v-show="tableAll.length">
@@ -83,7 +83,7 @@
 <script>
   import { DataAddUp } from 'KMJB_API/DataAddUp';
   // import * as getTime from '@/common/js/getDate';
-  import { parseTime } from '@/utils/index.js';
+  // import { parseTime } from '@/utils/index.js';
   export default {
     name: 'returnVisit',
     data() {
@@ -104,7 +104,7 @@
           dateEndBegin: '', // 开始时间
           dateEndEnd: '', // 结束时间
           pager: 1,
-          limit: '10'
+          limit: 10
         },
         tableAll: [],
         loading: false,
@@ -145,13 +145,13 @@
     },
     methods: {
       // 设置查询时间
-      getCurrent() {
-        // let currentDate1;
-        // getTime.currentDate - 3 > 0 ? currentDate1 = getTime.currentDate - 3 : currentDate1 = 1;
-        // const date1 = getTime.currentTime1 + currentDate1 + ' ' + '00:00:00';
-        // const date2 = getTime.currentTime + ' ' + '23:59:59';
-        this.dateTime = [parseTime(new Date().setHours(0, 0, 0, 0)), parseTime(new Date().setHours(23, 59, 59, 59))];
-      },
+      // getCurrent() {
+      //   // let currentDate1;
+      //   // getTime.currentDate - 3 > 0 ? currentDate1 = getTime.currentDate - 3 : currentDate1 = 1;
+      //   // const date1 = getTime.currentTime1 + currentDate1 + ' ' + '00:00:00';
+      //   // const date2 = getTime.currentTime + ' ' + '23:59:59';
+      //   this.dateTime = [parseTime(new Date().setHours(0, 0, 0, 0)), parseTime(new Date().setHours(23, 59, 59, 59))];
+      // },
       /** 通话状态全选  */
       handleCheckAllChangeStatus(val) {
         this.form.backStatuss = val ? this.mobileStatusList1 : [];
@@ -189,8 +189,8 @@
       /** 随访日期  */
       changeTime(value) {
         if (value) {
-          this.form.dateEndBegin = value[0] + ' ' + '00:00:00';
-          this.form.dateEndEnd = value[1] + ' ' + '23:59:59';
+          this.form.dateEndBegin = value[0];
+          this.form.dateEndEnd = value[1];
         } else {
           this.form.dateEndBegin = '';
           this.form.dateEndEnd = '';

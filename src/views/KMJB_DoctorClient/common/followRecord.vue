@@ -460,8 +460,6 @@
               this.selectOptions = [];
               this.getResultInfo(this.sfNumber);
               this.currentTable = this.sfNumber + '';
-              // 获取方案名称
-              this.getSchemeName();
             });
           });
         }
@@ -521,13 +519,9 @@
             }
             this.baseUrl = res.AIVOICURL;
             this.fullscreenLoading = false;
-            // update 0810 原来取的是列表中的id/visitOrderId,但切换随访次数时，visitOrderId都是一个，不对
-            this.selectOptions[num - 1].visitOrderId = res.orderinfo.id;
-            // AI意见vetRemark,处理意见diseaseInfo,是否人工isArtificialCall,人工意见callRemark--都在res.orderinfo中
-            this.selectOptions[num - 1].vetRemark = res.orderinfo.vetRemark;
-            this.selectOptions[num - 1].isArtificialCall = res.orderinfo.isArtificialCall;
-            this.selectOptions[num - 1].callRemark = res.orderinfo.callRemark;
-            const diseaseInfo = res.orderinfo.diseaseInfo;
+            this.selectOptions[num - 1].visitOrderId = res.visitOrderId;
+            this.getSchemeName(num);
+            const diseaseInfo = res.diseaseInfo;
             this.selectOptions[num - 1].resolvedState = diseaseInfo;
             if (diseaseInfo === undefined || diseaseInfo === -1) {
               this.selectOptions[num - 1].isResolved = false;
@@ -590,12 +584,17 @@
         return data;
       },
       /**
-       * 查询 方案名称 接口
+       * 查询 处理意见、是否人工审核、随访方案 接口
        * @function getSchemeName
        */
-      getSchemeName() {
-        FollowRecord.getDiseaseInfo({ taskId: this.taskId }).then(res => {
-          this.baseData.schemeName = res.schemeName;
+      getSchemeName(num) {
+        const visitOrderId = this.selectOptions[num - 1].visitOrderId;
+        FollowRecord.getDiseaseInfo({ visitOrderId }).then(res => {
+          this.baseData.schemeName = res.data.schemeName;
+          // AI意见vetRemark,处理意见diseaseInfo,是否人工isArtificialCall,人工意见callRemark--都在res中
+          this.selectOptions[num - 1].vetRemark = res.data.vetRemark;
+          this.selectOptions[num - 1].isArtificialCall = res.data.isArtificialCall;
+          this.selectOptions[num - 1].callRemark = res.data.callRemark;
         });
       },
       /**
