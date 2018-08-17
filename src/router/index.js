@@ -8,6 +8,7 @@ import { EY_DoctorClient } from './EY_DoctorClient';// 儿研医生端
 import { SY_DoctorClient } from './SY_DoctorClient';// 十院医生端
 import { RJ_OncologyDepartment } from './RJ_OncologyDepartment';// 仁济肿瘤科
 import { EZ_DoctorClient } from './EZ_DoctorClient';// 台州恩泽医院
+import { KMJB_DoctorClient } from './KMJB_DoctorClient';// 昆明金碧医生端
 Vue.use(Router);
 
 /* Layout布局器文件 */
@@ -49,6 +50,7 @@ export const asyncRouterMap = [
   ...EY_DoctorClient, // 儿研医生端
   ...SY_DoctorClient, // 十院医生端
   ...EZ_DoctorClient, // 台州恩泽医院
+  ...KMJB_DoctorClient, // 昆明金碧
   // ...default_asyncRouterMap
   { path: '*', redirect: '/404', hidden: true }
 ];

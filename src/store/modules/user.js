@@ -159,7 +159,8 @@ const user = {
       const hospitalMap = {
         海宁市中心医院: require('../../assets/login/haining.png'),
         上海市仁济医院: require('../../assets/login/renji.png'),
-        乐清六院: require('../../assets/login/leqing.png')
+        乐清六院: require('../../assets/login/leqing.png'),
+        昆明金碧社区医院: require('../../assets/login/kunmingjinbi.png')
       };
       const getInfo = (res, callBack) => {
         document.title = res.data;

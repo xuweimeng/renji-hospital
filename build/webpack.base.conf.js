@@ -54,6 +54,8 @@ module.exports = {
       'EY_API':resolve('src/api/EY_DoctorClient'),
       'SYDC':resolve('src/views/SY_DoctorClient'),
       'SY_API':resolve('src/api/SY_DoctorClient'),
+      'KMJB':resolve('src/views/KMJB_DoctorClient'),
+      'KMJB_API':resolve('src/api/KMJB_DoctorClient'),
     }
   },
   module: {

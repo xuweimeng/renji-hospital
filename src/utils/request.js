@@ -34,7 +34,8 @@ const JsonData = [
   '/visit/ordertask/physicalTemporary',
   '/visit/ordertask/physicalNewTemporary',
   '/statistic/examination/notice',
-  '/visit/check/temp/visit'
+  '/visit/check/temp/visit',
+  '/statistic/returnVisit/query'
 ];
 
 // request interceptor
