@@ -83,10 +83,19 @@
     <!-- 审核不通过 -->
     <el-dialog title="审核不通过原因" :visible.sync="noCheck" width="350px"   @close="cancelSelect">
       <el-row slot>
-        <el-col :span="24" >
+        <el-col :span="24" style="margin-bottom: 20px;">
           <el-select v-model="selectCheck" placeholder="请选择"  popper-class="selectOut">
             <el-option  v-for="item in checkoptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
+        </el-col>
+        <el-col :span="24" >
+          <span>详情</span>
+          <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="终止原因详情"
+            v-model="notPassRemark">
+          </el-input>
         </el-col>
         <el-col
           :span="24"
@@ -99,7 +108,7 @@
       </el-row>
     </el-dialog>
 
-    <!-- 添加客户弹框-->
+    <!-- 发起肠胃镜通知-->
     <el-dialog title="发起肠胃镜通知" :visible.sync="patientsShow" width="525px" top="30px" :center = "false" custom-class="patientDialog" @close="closeAction('ruleForm')">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="113px" class="demo-ruleForm">
         <el-form-item label="姓名" prop="brxm">
@@ -216,6 +225,7 @@
         callback();
       };
       return {
+        notPassRemark:"",         //终止原因详情
         isDataOrderTime:true,    //初始化加载客户预约日期判断  是不是第一次
         questionschemeDate:"",  //方案列表
         patientId: '',
@@ -441,6 +451,7 @@
       cancelSelect() {
         this.noCheck = false;
         this.selectCheck = '';
+        this.notPassRemark ='';
         this.checkId = [];
       },
       /**
@@ -537,12 +548,13 @@
           id: ids[0],
           adminId:sessionStorage.getItem("userId"),
           notPassReason: notPassReason,
-          notPassRemark: '终止计划'
+          notPassRemark: this.notPassRemark
         })
           .then(res => {
             this.getData();
             this.noCheck = false;
             this.selectCheck = '';
+            this.notPassRemark = '';
           })
           .catch(error => {
             console.log(error);
@@ -559,12 +571,13 @@
           ids: ids,
           adminId:sessionStorage.getItem("userId"),
           notPassReason: notPassReason,
-          notPassRemark: '终止计划'
+          notPassRemark: this.notPassRemark
         })
           .then(res => {
             this.getData();
             this.noCheck = false;
             this.selectCheck = '';
+            this.notPassRemark = '';
           })
           .catch(error => {
             console.log(error);
