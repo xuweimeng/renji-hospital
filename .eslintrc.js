@@ -53,6 +53,7 @@ module.exports = {
       'after': true
     }],
     'handle-callback-err': [2, '^(err|error)$'],
+    // "indent": ["error", "2", "tab"],
     'indent': [2, 2, {
       'SwitchCase': 1
     }],

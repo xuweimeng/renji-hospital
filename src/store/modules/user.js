@@ -1,6 +1,8 @@
 import { Login } from '@/api/login';
 import { getToken, setToken, removeToken, getParameter, setParameter, removeParameter } from '@/utils/auth';
 
+const SCOPE_ROW_DATA = 'SCOPE_ROW_DATA';
+
 const user = {
   state: {
     token: getToken(),
@@ -8,11 +10,16 @@ const user = {
     avatar: getParameter('avatar'),
     laterhours: getParameter('laterhours'),
     departmentName: getParameter('departmentName'),
-    roles: []
+    hospatil: getParameter('hospital'),
+    roles: [],
+    scopeRowData: {}, // 表格点击操作按钮传递scope.row的数据
+    visitTime: '', // 随访结果的时间
+    uploadNum: {} // 患者列表批量上传上传成功失败个数
   },
   // 操作全局基础用户数据
   mutations: {
     SET_TOKEN: (state, token) => {
+      sessionStorage.setItem('userId', token);
       state.token = token;
     },
     // 设置用户名
@@ -31,9 +38,25 @@ const user = {
     SET_DEPARTMENTNAME: (state, departmentName) => {
       state.departmentName = departmentName;
     },
+    // 设置医院名称
+    SET_HOSPITAL: (state, hospital) => {
+      state.hospital = hospital;
+    },
     // 配置路有权限
     SET_ROLES: (state, roles) => {
       state.roles = roles;
+    },
+    // 表格scope.row.data
+    SCOPE_ROW_DATA: (state, scopeRowData) => {
+      state.scopeRowData = scopeRowData;
+    },
+    // 个人档案的随访日期
+    VISIT_TIME: (state, visitTime) => {
+      state.visitTime = visitTime;
+    },
+    // 患者列表批量上传上传成功失败个数
+    UPLOADNUM: (state, uploadNum) => {
+      state.uploadNum = uploadNum;
     }
   },
 
@@ -49,15 +72,20 @@ const user = {
         // 配置用户名
         commit('SET_NAME', data.username);
         setParameter('name', data.username);
+        sessionStorage.setItem('userId', data.id);// 用户id
+        sessionStorage.setItem('laterhours', response.laterhours);// 用户等待时间
         // 配置用户头像
         commit('SET_AVATAR', response.aipictureurl);
         setParameter('avatar', data.aipictureurl);
         // 配置最后登录时间
         commit('SET_LATERHOURS', data.laterhours);
-        setParameter('laterhours', data.laterhours);
+        setParameter('laterhours', response.laterhours);
+        sessionStorage.setItem('dateLogin', data.dateLogin); // 上次登录时间
         // 配置科室名字
         commit('SET_DEPARTMENTNAME', data.departmentName);
         setParameter('departmentName', data.departmentName);
+        // yugou 设置海宁医生端的type，用来判断满意度模块是否显示
+        setParameter('hn_type', `海宁市中心医院type${response.data.type}`);
       };
       return new Promise((resolve, reject) => {
         Login.login({
@@ -68,7 +96,7 @@ const user = {
             dataSetting(response);
             resolve();
           })
-          .catch(error => {
+          .catch(() => {
             Login.newLogin({
               username: username,
               password: userInfo.password
@@ -94,18 +122,52 @@ const user = {
             if ((res.data).indexOf('仁济') > -1) {
               roles = [res.data + getParameter('departmentName')];
             }
+            // 海宁的特殊权限处理
+            if ((res.data).indexOf('海宁') > -1) {
+              roles = [...roles, getParameter('hn_type')];
+            }
             commit('SET_ROLES', roles);
+            commit('SET_HOSPITAL', res.data);
+            setParameter('hospital', res.data);
             callBack(roles);
           } else {
             getInfo();
           }
-        }, 2000);
+        }, 100);
       };
       return new Promise((resolve, reject) => {
         Login.hospatilName().then(res => {
+          document.title = res.data; // 2018/7/25 隔鸡新增
           getInfo(res, resolve);
-        }).catch(error => {
+        }).catch(() => {
           Login.newHospatilName().then(res => {
+            document.title = res.data; // 2018/7/25 隔鸡新增
+            getInfo(res, resolve);
+          }).catch(error => {
+            reject(error);
+          });
+        });
+      });
+    },
+
+    // 获取医院信息
+    GetHospital({ commit, state }) {
+      const hospitalMap = {
+        海宁市中心医院: require('../../assets/login/haining.png'),
+        上海市仁济医院: require('../../assets/login/renji.png'),
+        乐清六院: require('../../assets/login/leqing.png')
+      };
+      const getInfo = (res, callBack) => {
+        document.title = res.data;
+        callBack(hospitalMap[res.data]);
+      };
+      return new Promise((resolve, reject) => {
+        Login.hospatilName().then(res => {
+          document.title = res.data; // 2018/7/25 隔鸡新增
+          getInfo(res, resolve);
+        }).catch(() => {
+          Login.newHospatilName().then(res => {
+            document.title = res.data; // 2018/7/25 隔鸡新增
             getInfo(res, resolve);
           }).catch(error => {
             reject(error);
@@ -169,7 +231,23 @@ const user = {
           resolve();
         });
       });
+    },
+
+    // 同步scope.row.data
+    getScopeRowData({ commit }, scopeRowData) {
+      commit('SCOPE_ROW_DATA', scopeRowData);
+    },
+
+    // 获取个人档案的随访日期(默认获取第一个)
+    getVisitTime({ commit }, visitTime) {
+      commit('VISIT_TIME', visitTime);
+    },
+
+    // 获取个人档案的随访日期(默认获取第一个)
+    getUploadNum({ commit }, uploadNum) {
+      commit('UPLOADNUM', uploadNum);
     }
+
   }
 };
 

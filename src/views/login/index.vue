@@ -1,5 +1,10 @@
 <template>
   <div class="login-container">
+    <div class="top">
+      <img src="../../assets/login/business.png" alt="">
+      <img :src="currentimg" alt="">
+    </div>
+    <img src="../../assets/background.png" alt="" >
     <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
       <div class="title-container">
         <h3 class="title">欢迎登录</h3>
@@ -10,7 +15,7 @@
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入用户名" />
+        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="off" placeholder="请输入用户名" />
       </el-form-item>
 
       <el-form-item prop="password">
@@ -72,6 +77,7 @@ export default {
       }
     };
     return {
+      currentimg: '',
       // 登录数据
       loginForm: {
         username: '',
@@ -106,7 +112,6 @@ export default {
           this.$store
             .dispatch('LoginByUsername', this.loginForm)
             .then((res) => {
-              console.log(0);
               this.loading = false;
               this.$router.push({ path: '/Home' });
             })
@@ -128,7 +133,12 @@ export default {
     }
   },
   created() {
-    // window.addEventListener('hashchange', this.afterQRScan)
+    this.$store.dispatch('GetHospital').then(res => { // 拉取user_info
+      console.log(res);
+      this.currentimg = res;
+    }).catch((err) => {
+      console.log(err);
+    });
   },
   destroyed() {
     // window.removeEventListener('hashchange', this.afterQRScan)
@@ -140,8 +150,8 @@ export default {
 $bg: #2d3a4b;
 $light_gray: #eee;
 
-/* reset element-ui css */
 .login-container {
+  
   .el-input {
     display: inline-block;
     height: 47px;
@@ -155,14 +165,14 @@ $light_gray: #eee;
       color: $light_gray;
       height: 47px;
       &:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: #fff !important;
+        -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
+        -webkit-text-fill-color: #333 !important;
       }
     }
   }
   .el-form-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
+    background:#fff;
     border-radius: 5px;
     color: #454545;
   }
@@ -175,17 +185,41 @@ $dark_gray: #889aa4;
 $light_gray: #eee;
 
 .login-container {
+  >.top{
+    height: 85px;
+    position: relative;
+    &:after{
+      content:"";
+      display: block;
+      width:1px;
+      height: 55px;
+      background:#dadada;
+      left:227px;
+      top:15px;
+      position: absolute;
+    }
+    >img{
+      display: inline-block;
+      height: 55px;
+      margin:15px 20px;
+    }
+  }
+  >img{
+    min-width: 1600px;
+    width: 100%;
+    position: absolute;
+    right: 0;
+    top: 85px;
+  }
   position: fixed;
   height: 100%;
   width: 100%;
-  background-color: $bg;
+  background-color: #fff;
   .login-form {
     position: absolute;
-    left: 0;
-    right: 0;
-    width: 520px;
-    padding: 35px 35px 15px 35px;
-    margin: 120px auto;
+    top:300px;
+    right: 250px;
+    width: 400px;
   }
   .tips {
     font-size: 14px;

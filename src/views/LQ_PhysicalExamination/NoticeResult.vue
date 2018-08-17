@@ -35,12 +35,12 @@
         <li class="common_search_single common_search_single_date">
             <label class="radio-label" >通知时间</label>
             <el-date-picker
-                @change="selectDate"
+                @change="notiiceTimeChange"
                 v-model="endBirthday"
                 type="daterange"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
-                popper-class="mdRtDate"
                 :default-time="['00:00:00', '23:59:59']">
             </el-date-picker>
         </li>
@@ -52,8 +52,7 @@
                 type="datetimerange"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                popper-class="mdRtDate">
+                end-placeholder="结束日期">
             </el-date-picker>
         </li>
         <li class="common_search_single">
@@ -91,7 +90,7 @@
         </li>
         </ul>
      <!--活动通知 -->
-        <el-table :data="tableData" border fit highlight-current-row ref="patientlist"  v-loading="loading1">
+        <el-table :data="tableData" border fit highlight-current-row ref="patientlist"  v-loading="dataLoading">
           <el-table-column prop="brxm" label="姓名" align="center">
           </el-table-column>
           <el-table-column prop="mobile" label="联系电话" align="center">
@@ -116,126 +115,17 @@
           </el-table-column>
           <el-table-column label="操作"  align="center">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini"  @click="detailBtn(scope)" class="operationBtn">详情</el-button>
+              <el-button type="primary" size="mini"  @click="detailBtn(scope)" >详情</el-button>
             </template>
           </el-table-column>
 
         </el-table>
         <div class="pagination-container" style="text-align:right;margin-top:15px;">
-            <el-pagination style="display:inline-block" background  @current-change="handleCurrentChange" :current-page="currentPage"  :page-size="searchParams.limit" layout="total,  prev, pager, next, jumper" :total="totalPage">
+            <el-pagination style="display:inline-block" background  @current-change="handleCurrentChange" :current-page="searchParams.pager"  :page-size="searchParams.limit" layout="total,  prev, pager, next, jumper" :total="totalPage">
             </el-pagination>
         </div>
       
-    <!--随访结果详情-->
-    <!-- 内层弹框 -->
-    <el-dialog width="650px" title="体检结果详情" :visible.sync="dialogWay" top="30px" :center = "false"  custom-class="sfDialog">
-      <el-row class="waymodel">
-        <el-col :span="24">
-          <div class="content" slot>
-            <!-- 个人信息 -->
-            <el-row class="personInfo">
-              <!--&lt;!&ndash; 姓名/年龄/性别/关注内容 &ndash;&gt;-->
-              <el-col :span="12" class="elCol1">
-                <span class="personName colororigen" v-if="patientInfo">{{patientInfo.brxm}}</span>
-                <span class="personSex colororigen" v-if="patientInfo">{{patientInfo.brxb}} / {{patientInfo.brage}}</span>
-                <span class="personXg" v-if="gztag">{{gztag}}</span>
-              </el-col>
-              <!--&lt;!&ndash; 已处理 &ndash;&gt;-->
-              <el-col :span="12" class="elCol2">
-                <el-button type="text"  @click="handleislike" v-bind:class="{ careColor: isCare}">
-                  <i class="iconfont" v-bind:class="{ careColor: isCare}" style="margin-right:5px; font-size:12px;">&#xe604;</i>
-                  {{isCare?'取消关心':'特别关心'}}
-                </el-button>
-              </el-col>
-            </el-row>
-            <el-row class="personResult">
-              <el-col :span="12" class="elCol3"><span class="elCol3Span1">体检套餐&nbsp;:&nbsp;</span><span class="elCol3Span2">{{patientInfo.icdName?patientInfo.icdName:"无"}}</span></el-col>
-              <el-col :span="12" class="elCol4 colororigen" style="font-size: 13px;"></el-col>
-            </el-row>
-            <el-row class="personResult">
-              <el-col :span="12" class="elCol3" v-if="patientInfo.mobile"><span class="elCol3Span1">手机号码&nbsp;:&nbsp;</span><span class="elCol3Span2">{{patientInfo.mobile}}</span></el-col>
-              <el-col :span="12" class="elCol3"></el-col>
-            </el-row>
-           
-            <el-row class="resultNumber">
-              <el-col :span="4" class="elCol5">随访结果&nbsp;:&nbsp;</el-col>
-              <el-col :span="16" class="elCol6"><div></div></el-col>
-            
-            </el-row>
-            <el-row class="targetResult" >
-              <!-- 指标详情 -->
-              <el-row class="targetDetails" style="margin-bottom: 10px;">
-               
-                <div
-                  v-if="dataTail.isMySelfDge"
-                  style="display:inline-block;height:20px;line-height:20px;margin-bottom:10px;float:left;padding-right: 20px;">
-                <span >是否本人&nbsp;:&nbsp;</span>
-                <el-tag  style="height:20px;line-height: 18px;margin-top:10px;">{{dataTail.isMySelfDge}}
-                </el-tag>
-                </div>
-                <div
-                  v-if="dataTail.isComeDge"
-                  style="display:inline-block;height:20px;line-height:20px;margin-bottom:10px;float:left;padding-right: 20px;">
-                  <span >是否到场&nbsp;:&nbsp;</span>
-                  <el-tag  style="height:20px;line-height: 18px;margin-top:10px;">{{dataTail.isComeDge}}
-                  </el-tag>
-                </div>
-                <el-row v-if="!dataTail.isComeDge&&!dataTail.isMySelfDge">
-                  <el-col :span="12" style="height: 250px;line-height:286px;text-align:right;"><img src="../../assets/images/animal.png" style="margin-right:20px;" alt=""></el-col>
-                  <el-col :span="12" style="height: 250px;line-height:250px;text-align:left;"><span>这个病人没有随访指标哦...</span></el-col>
-                </el-row>
-              </el-row>
-              <el-row >
-                  <div style="text-align: left;margin-bottom: 10px;" >审核意见： <span >{{patientInfo.vetRemark}}</span></div>
-                  <div style="text-align: left;" v-if="patientInfo.isArtificialCall==1">人工外呼：<span style="">{{patientInfo.callRemark}}</span></div>
-              </el-row>
-            </el-row>
-            <!-- 随访问题语音 -->
-            <el-row class="resultVoice">
-              <el-col :span="24" class="elCol18">
-                <el-collapse :accordion="true" value="1">
-                  <el-collapse-item name="1">
-                    <template slot="title">
-                      <el-row>
-                        <el-col :span="4" style="text-align:left;">
-                          <div class="collapseTitle">记录详情&nbsp;:&nbsp;</div>
-                        </el-col>
-                        <el-col :span="16"style="border-bottom:1px dotted #ebebeb;margin-top:24px;">
-                          <div tsyle="height:1px;background:#f00; " class="line"></div>
-                        </el-col>
-                      </el-row>
-                    </template>
-                    <el-row v-if="patientInfo.isArtificialCall==1" style="padding-top:10px;padding-bottom:10px;text-align: left;font-weight: bold" ><span>人工外呼</span></el-row>
-                    <el-row v-if="!modelData.length" style="padding-top:20px;"><span>这个病人没有语音记录哦...</span></el-row>
-                    <el-row class="voiceRow" v-for="item in modelData" :key="item.id" v-if="modelData.length">
-                      <el-col :span="24" class="aiyuyin">
-                        <div class="ai" style="text-align: center;">AI</div>
-                        <div class="aiWords" style="line-height: 40px;">
-                          <span>{{item.question}}</span>
-                          <div class="arrows"></div>
-                        </div>
-                      </el-col>
-                      <el-col :span="24" class="hzyuyin">
-                        <div class="hzhead" style="text-align: center;">客户</div>
-                        <div class="hzWords">
-                          <audio :src="urlAddress+item.audio" controls="controls" style="margin-top: 7px;"></audio>
-                          <div class="arrows1"></div>
-                        </div>
-                      </el-col>
-                      <el-col :span="24" class="hzms" >( 指标：{{item.isNormal?'正常':'不正常'}} /  {{item.fieldName}} : {{item.fieldValue}} )</el-col>
-                    </el-row>
-                  </el-collapse-item>
-                </el-collapse>
-              </el-col>
-            </el-row>
-            <!-- div分割线 -->
-          </div>
-          <!-- </el-dialog> -->
-        </el-col>
-      </el-row>
-    </el-dialog>
-
-    <result-info ref="record" @refresh="getData" :patientId="patientId"></result-info>
+    <result-info ref="record" @refresh="getData" :resultData="dataTail" :patientId="patientId" :hzxxId="hzxxId"></result-info>
   </div>
 </template>
 
@@ -246,31 +136,20 @@
  */
 import { NoticeResult } from 'LQPE_API/NoticeResult'; // 引入 api
 import { mapGetters } from 'vuex';
-import resultInfo from './components/resultInfo';
+import ResultInfo from './components/ResultInfo';
 
 export default {
   components: {
-    resultInfo
+    ResultInfo
   },
   data() {
     return {
       patientId: '',
+      hzxxId:'',
       orderTime: '',
-      y: 1,
-      urlAddress: '',
       dataTail: {},
-      patientInfo: {},
-      isCare: false, // 点击记录后，查看病人是否被关注
-      dialogWay: false,
       diseaseList: [] /* 疾病列表 */,
-      modelData: [],
-      loading1: true,
-      resultDg: false, // 详情弹窗
-      createTime: '' /* 创建时间 */,
-      currentPage: 1, // 当前页
-      totalPage: 2000, // 总页数
       endBirthday: '',
-      gztag: '',
       /* 搜索条件 */
       searchParams: {
         backStatus: '',
@@ -289,48 +168,25 @@ export default {
         orderTimeBegin: null,
         orderTimeEnd: null
       },
-      input10: '',
-      activeName: 'first', // tab
       tableData: [],
-      dataLoading: false, // 表格数据请求等待;
-      checkoptions: [
-        {
-          value: '',
-          label: '请选择'
-        },
-        {
-          // 审核不通过options
-          value: '1',
-          label: '患者已死亡'
-        },
-        {
-          value: '2',
-          label: '患者不接受随访'
-        },
-        {
-          value: '3',
-          label: '随访方案重复'
-        },
-        {
-          value: '4',
-          label: '方案不匹配'
-        }
-      ],
-      selectCheck: '', // 选中的审核不通过
-      checkId: [], // 随访通过的id(多选时),
-      noCheck: false // 审核不通过弹框
+      totalPage: 0, // 总页数
+      dataLoading: false // 表格数据请求等待;
     };
   },
   computed: {
     ...mapGetters(['token'])
   },
   mounted() {
-    this.endBirthday = [this.getCurrent(), this.getCurrent()];
+    this.endBirthday = [this.getCurrent() + ' 00:00:00', this.getCurrent() + ' 23:59:59'];
     this.searchParams.dateEndBegin = this.getCurrent() + ' 00:00:00';
     this.searchParams.dateEndEnd = this.getCurrent() + ' 23:59:59';
     this.getData();
   },
   methods: {
+    /**
+     * @function 获取当前时间
+     * @return {type} {description}
+     */
     getCurrent() {
       const nowDate = new Date();
       const year = nowDate.getFullYear();
@@ -344,197 +200,50 @@ export default {
       return dateStr;
     },
     /**
-     * 选中时间
-     **/
-    selectDate(val) {
-      if (val) {
-        const startDate = new Date(val[0]);
-        const endDate = new Date(val[1]);
-        this.searchParams.dateEndBegin =
-          startDate.getFullYear() +
-          '-' +
-          (startDate.getMonth() + 1) +
-          '-' +
-          startDate.getDate() +
-          ' 00:00:00';
-        this.searchParams.dateEndEnd =
-          endDate.getFullYear() +
-          '-' +
-          (endDate.getMonth() + 1) +
-          '-' +
-          endDate.getDate() +
-          ' 23:59:59';
-      } else {
-        this.searchParams.dateEndBegin = '';
-        this.searchParams.dateEndEnd = '';
-      }
+     * @function 通知时间更改
+     * @param  {type} date {description}
+     * @return {type} {description}
+     */
+    notiiceTimeChange(date) {
+      this.searchParams.dateEndBegin = date ? date[0] : null;
+      this.searchParams.dateEndEnd = date ? date[1] : null;
     },
+    /**
+     * @function 体检时间更改
+     * @param  {type} date {description}
+     * @return {type} {description}
+     */
     orderTimeChange(date) {
       this.searchParams.orderTimeBegin = date ? date[0] : null;
       this.searchParams.orderTimeEnd = date ? date[1] : null;
     },
-    /*
-     *已处理
+    /**
+     * @function 查看体检通知结果详情
+     * @param  {type} scope {description}
+     * @return {type} {description}
      */
-    handleislike() {
-      if (this.isCare) {
-        // 取消关注
-        const h = this.$createElement;
-        this.$msgbox({
-          title: '消息',
-          message: h(
-            'div',
-            {
-              style: 'text-align:center'
-            },
-            [
-              h(
-                'img',
-                {
-                  attrs: { src: require('../../../static/images/animal.png') },
-                  style: 'width: 60px;height:52px;margin:0 auto;'
-                },
-                null
-              ),
-              h('p', null, '确定取消关心吗?')
-            ]
-          ),
-          showCancelButton: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          customClass: 'careMsgBox',
-          cancelButtonClass: 'cancelButtonStyle',
-          confirmButtonClass: 'confirmButtonStyle',
-          beforeClose: (action, instance, done) => {
-            done();
-          }
-        })
-          .then(action => {
-            // 取消关注
-            NoticeResult.updateGz({
-              diagnoseType: 3,
-              adminId: this.token,
-              patientId: this.patientId, // 患者的id （必填）
-              operateType: 0, // (操作类型 1:关注 0：取消关注) （必填）
-              operateTag: '' // 关注的标签
-            })
-              .then(res => {
-                if (res.code == 0) {
-                  this.gztag = '';
-                  this.isCare = false;
-                  this.dialogVisible = false;
-                } else {
-                  this.$message.error(res.message);
-                }
-              })
-              .catch(error => {
-                console.log(error);
-              });
-          })
-          .catch(() => {});
-      } else {
-        // 增加关注
-        this.$prompt('  ', '添加标签', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          inputPlaceholder: '请输入标签',
-          customClass: 'careMsgBoxAdd',
-          cancelButtonClass: 'cancelButtonStyle',
-          confirmButtonClass: 'confirmButtonStyle'
-        })
-          .then(({ value }) => {
-            if (!value) {
-              this.$message.error('标签不能为空!');
-            } else if (value.toString().length < 6) {
-              NoticeResult.updateGz({
-                diagnoseType: 3,
-                adminId: this.token,
-                patientId: this.patientId, // 患者的id （必填）
-                operateType: 1, // (操作类型 1:关注 0：取消关注) （必填）
-                operateTag: value // 关注的标签
-              })
-                .then(res => {
-                  if (res.code == 0) {
-                    this.isCare = true;
-                    this.gztag = value;
-                    this.$message({
-                      type: 'success',
-                      message: '关注成功!'
-                    });
-                    //                    this.showInfo(this.scope);
-                  }
-                })
-                .catch(error => {
-                  console.log(error);
-                });
-            } else {
-              this.$message.error('标签长度不能大于5!');
-            }
-          })
-          .catch(() => {
-            this.$message({
-              type: 'info',
-              message: '取消输入'
-            });
-          });
-      }
-    },
-    /** 详情 */
     detailBtn(scope) {
       this.dataTail = scope.row;
       this.patientId = scope.row.id;
+      this.hzxxId=scope.row.hzxxId;
       this.$refs.record.dialogTableVisible = true;
-      // this.detailView(scope);
-    },
-    detailView(scope) {
-      NoticeResult.getPatientRecord({
-        id: scope.row.id,
-        //         id:"03a5832e-f835-11e7-b52b-6cae8b369de2",
-        adminId: this.token
-      }).then(res => {
-        if (res.code == 0) {
-          this.dialogWay = true;
-          if (res.islike) {
-            this.isCare = true;
-          } else {
-            this.isCare = false;
-          }
-          this.gztag = res.gztag;
-          if (res.data) {
-            this.patientInfo = res.data;
-          }
-          this.urlAddress = res.AIVOICURL;
-          if (res.data) {
-            console.log(111111);
-            if (res.data.orderReplyQuestions.length) {
-              this.modelData = res.data.orderReplyQuestions;
-            } else {
-              this.modelData = [];
-            }
-          }
-        } else {
-          this.$message.error(res.message);
-        }
-      });
-    },
-    /** 监听弹窗子组件的关闭动作 */
-    closeChildren(val) {
-      this.resultDg = val;
     },
     /**
-     * 点击查询
-     **/
+     * @function 搜索功能
+     * @return {type} {description}
+     */
     waySearch() {
-      console.log(this.searchParams.icd);
-      this.loading1 = true;
+      this.dataLoading = true;
       this.searchParams.pager = 1;
       this.getData(); // 获取数据
     },
-    /** @description
-     * 体检中心-体检套餐自动补全搜索
+    /**
+     * @function 体检套餐自动补全
+     * @param  {type} query {description}
+     * @return {type} {description}
      */
     remoteMethod(query) {
-      if (query == '') {
+      if (query === '') {
         return false;
       }
       this.diseaseList = [];
@@ -543,12 +252,16 @@ export default {
         diseaseType: 1
       })
         .then(res => {
-          //            this.value9 = res.data;
           this.diseaseList = res.data;
         })
-        .catch(error => {});
+        .catch(error => {
+          console.log(error);
+        });
     },
-    /* 获取数据 */
+    /**
+     * @function 获取列表初始数据
+     * @return {type} {description}
+     */
     getData() {
       NoticeResult.resultList(this.searchParams).then(res => {
         if (res.data) {
@@ -579,7 +292,7 @@ export default {
                 break;
             }
           }
-          this.loading1 = false;
+          this.dataLoading = false;
           this.tableData = res.data;
           this.totalPage = res.total;
         } else {
@@ -589,81 +302,15 @@ export default {
       });
     },
     /**
-     *审核不通过的原因
-     *@function changeSelect
-     *@param {String} value 审核不通过的原因
-     */
-    changeSelect(value) {
-      this.selectCheck = value;
-    },
-    /**
-     *弹框点击不通过确定
-     *@function noothroughCkeck
-     *@description 点击表格操作弹框不通过
-     */
-    noothroughCkeck() {
-      const id = this.checkId.join(',');
-      this.handleCheck(1, 2, id, this.selectCheck);
-      this.dialogVisible = false;
-      this.list(this.currentPage);
-      this.list1(this.currentPage1);
-    },
-    /**
-     *审核功能
-     *@function handleCheck
-     * @description 审核功能均调用这一个函数
-     * @param {String} adminId 医生id
-     * @param {String} operateType 通过(1：不通过 2：通过)
-     * @param {String} isAll 是否全部提交(1:是 2：否)
-     *@param {String} ids 患者id集合,数组转字符串
-     *@param {String} noPassReason 审核不通过原因
-     */
-    handleCheck(operateType, isAll, ids, noPassReason) {
-      NoticeResult.editVisitProjectStatus({
-        adminId: this.userId,
-        operateType: operateType,
-        isAll: isAll,
-        ids: ids,
-        noPassReason: noPassReason
-      })
-        .then(res => {
-          if (res.code == 0) {
-            this.$message({
-              message: '操作已完成',
-              type: 'success'
-            });
-            this.list(this.currentPage);
-            this.list1(this.currentPage1);
-            this.noCheck = false;
-          }
-        })
-        .catch(error => {});
-    },
-    /**
      * 分页
      * @function handleCurrentChange
      * @param {String} val 当前页码
      * @description this.tabActive = 0//全部患者=1特别关心
      */
     handleCurrentChange(page) {
-      this.loading1 = true;
       this.dataLoading = true;
       this.searchParams.pager = page;
       this.getData();
-    },
-    /**
-     *待审核表格全选
-     *@function toggleSelection
-     *@param {object} rows 选中的行（参见element-ui的table-rows）
-     */
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row);
-        });
-      } else {
-        this.$refs.multipleTable.clearSelection();
-      }
     }
   }
 };

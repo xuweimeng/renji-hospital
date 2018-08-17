@@ -1,0 +1,72 @@
+.homePage {
+  margin: 20px 20px 0 20px;
+
+}
+
+// 12生肖选择成功颜色
+.colorShow {
+  color: #9bd542 !important;
+}
+/** 12生肖model */
+.bdzoo {
+  padding: 0 37px 33px 37px;
+  .el-dialog__body {
+    padding: 0;
+    .stepTwo {
+      width: 449px;
+      height: 29px;
+      text-align: center;
+      line-height: 29px;
+    }
+    /*生肖div*/
+    .zooSelect{
+      margin-top: 20px;
+      width: 449px;
+      height: 186px;
+      overflow: hidden;
+      .zooIcon {
+        width: 468px;
+        height: 186px;
+        // background-color:#f7f7f7;
+        li {
+          float: left;
+          .imgzoo {
+            width: 55px;
+            height: 89px;
+            margin-right: 23px;
+
+            img {
+              width: 55px;
+              height: 55px;
+              border-radius: 50%;
+              border: 0;
+              display: block;
+            }
+            i{
+              color: transparent;
+              right:0;
+              bottom:38px;
+              font-size: 18px;
+            }
+            p {
+              line-height: 13px;
+              margin: 6px 0 14px 0;
+              text-align: center;
+              font-size: 13px;
+              color: #949494;
+            }
+          }
+        }
+      }
+    }
+    .stepfinish {
+      width: 449px;
+      height: 44px;
+      text-align: center;
+      background: url(../../../assets/images/aibg.png) center center no-repeat;
+      .nextBtn {
+        margin-top: 12px;
+      }
+    }
+  }
+}

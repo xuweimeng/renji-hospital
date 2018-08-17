@@ -25,7 +25,7 @@ export default {
     },
     dataList: {
       type: Array,
-      default:[],
+      default: []
     }
   },
   data() {

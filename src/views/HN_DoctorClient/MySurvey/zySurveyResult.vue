@@ -1,97 +1,78 @@
-
 <template>
-  <div class="mzSurveyResult">
+  <div class="app-container">
     <!-- 搜索 -->
-    <el-row class="searchList">
-      <el-col :span="24">
-        <el-form :inline="true" :model="searchParam" class="demo-form-inline">
-          <el-form-item label="姓名" class="inputLength">
-            <el-input size="small" v-model.trim="searchParam.brxm" clearable placeholder="请输入患者姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="联系电话" class="inputLength">
-            <el-input size="small" v-model.trim="searchParam.mobile" clearable placeholder="请输入联系电话"></el-input>
-          </el-form-item>
-          <!-- <el-form-item label="科室" class="seclectLength">
-            <el-cascader
-              popper-class="searchSelect"
-              size="small"
-              :options="departMentList"
-              v-model="deparmentId"
-              @change="getDepartchange"
-              clearable
-              >
-            </el-cascader>
-          </el-form-item> -->
-          <el-form-item label="医疗组" class="seclectLength">
-            <el-select size="small"
-            filterable
-            clearable v-model="searchParam.medGpId" placeholder="请选择" popper-class="searchSelect">
-              <el-option
-                v-for="item in groupList"
-                :key="item.zuid"
-                :label="item.zuname"
-                :value="item.zuid">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="通话状态" class="seclectLength">
-            <el-select size="small" clearable v-model="searchParam.backStatus" placeholder="请选择" popper-class="searchSelect">
-              <el-option label="全部" value=""></el-option>
-              <el-option label="呼叫失败" value="1"></el-option>
-              <el-option label="正常通话" value="2"></el-option>
-              <el-option label="通话中" value="3"></el-option>
-              <el-option label="关停机" value="4"></el-option>
-              <el-option label="无人接听" value="5"></el-option>
-              <el-option label="空号" value="6"></el-option>
-              <el-option label="号码有误" value="7"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="出院时间">
-            <el-date-picker
-                size="small"
-                v-model="time_disease"
-                type="datetimerange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                @change="diseaseTime" >
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item label="计划执行时间">
-            <el-date-picker
-                size="small"
-                v-model="time_plan"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                type="datetimerange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                @change="planTime"
-                >
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="button" @click="searchData">查询</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
+    <ul class="common_search">
+      <li class="common_search_single">
+        <label class="radio-label" >姓名</label>
+        <el-input  placeholder="请输入患者姓名"  v-model.trim="searchParam.brxm"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >联系电话</label>
+        <el-input  placeholder="请输入患者电话"  v-model.trim="searchParam.mobile"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >医疗组</label>
+        <el-select clearable v-model="searchParam.medGpId" placeholder="请选择">
+          <el-option
+            v-for="item in groupList"
+            :key="item.zuid"
+            :label="item.zuname"
+            :value="item.zuid">
+          </el-option>
+        </el-select>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >通话状态</label>
+        <el-select clearable v-model="searchParam.backStatus" placeholder="请选择">
+          <el-option label="全部" value=""></el-option>
+          <el-option label="呼叫失败" value="1"></el-option>
+          <el-option label="正常通话" value="2"></el-option>
+          <el-option label="通话中" value="3"></el-option>
+          <el-option label="关停机" value="4"></el-option>
+          <el-option label="无人接听" value="5"></el-option>
+          <el-option label="空号" value="6"></el-option>
+          <el-option label="号码有误" value="7"></el-option>
+        </el-select>
+      </li>
+      <li class="common_search_single common_search_single_time">
+        <label class="radio-label">出院时间</label>
+        <el-date-picker
+          v-model="time_disease"
+          type="datetimerange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']"
+          :picker-options="pickerOptionsShortcuts"
+          @change="diseaseTime" >
+        </el-date-picker>
+      </li>
+      <li class="common_search_single common_search_single_time">
+        <label class="radio-label">计划执行时间</label>
+        <el-date-picker
+          v-model="time_plan"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          type="datetimerange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :default-time="['00:00:00', '23:59:59']"
+          :picker-options="pickerOptionsShortcuts"
+          @change="planTime">
+        </el-date-picker>
+      </li>
+      <li class="common_search_single">
+        <el-button type="primary" icon="el-icon-search"  @click="searchDataBtn" :loading="mzLoading">查询</el-button>
+      </li>
+    </ul>
     <!-- 满意度 -->
-    <el-row class="middleRow">
-      <el-col :span="6" class="middleRowDetail">
-        <!-- <span>医疗组 全部</span>
-        <span>出院时间 2018-04-1 至 2018-06-12</span> -->
-        <span>满意 {{tableType.Okay}}</span>
-        <span>一般 {{tableType.General}}</span>
-        <span>不满意 {{tableType.NOkay}}</span>
-      </el-col>
-      <el-col :span="10" class="outputExcel">
+    <div class="el-alert el-alert--success el-alert__title">
+      <span style="white-space: pre;">满意 {{tableType.Okay}}   一般 {{tableType.General}}    不满意 {{tableType.NOkay}}               </span>
       <el-button type="primary" plain @click="outputExcel">导出报表</el-button>
-      </el-col>
-    </el-row>
+    </div>
     <!-- table -->
-    <el-table :data="mzResultData" style="width: 1110px" class="rsTable" v-loading="mzLoading">
+    <el-table :data="mzResultData" border highlight-current-row v-loading="mzLoading">
       <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
       <el-table-column prop="mobile" label="联系电话" align="center" show-overflow-tooltip></el-table-column>
       <el-table-column prop="medGpName" label="医疗组" align="center"></el-table-column>
@@ -108,6 +89,7 @@
         <template slot-scope="scope">
           <el-button
             type="primary"
+            size="mini"
             @click.stop="detailBtn(scope)"
             class="operationBtn">
             详情
@@ -116,68 +98,26 @@
       </el-table-column>
     </el-table>
     <!-- 分页 -->
-    <table-pagination :total="total"  @currentPageFail="pageChange" v-if="total"></table-pagination>
+    <div class="pagination-container">
+      <el-pagination  @current-change="pageChange" :current-page.sync="searchParam.pager" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
+                      :total="total" v-if="total">
+      </el-pagination>
+    </div>
     <!-- 详情 -->
-    <el-dialog class="result_info" top="5vh"  title="调查计划" :visible.sync="surveyResultDialog">
-        <h3>
-           {{infoData.brxm||""}}
-          <span>
-           {{infoData.brxb||""}}    / {{infoData.brage||""}}
-          </span>
-        </h3>
-        <ul class="result_info_base">
-          <li>联系电话：{{infoData.mobile}}</li>
-          <li>医疗组/科室：{{infoData.departmentName||infoData.medGpName}}</li>
-          <li>出院时间/就诊时间：{{infoData.diagnoseTime}}</li>
-          <li>随访方案 : {{infoData.schemeName}} </li>
-        </ul>
-        <h4>结果详情</h4>
-          <ul class="result_info_result">
-            <li>您对医生的技术水平的评价是
-              <span>{{infoData.orderResult.technical}}</span>
-            </li>
-            <li>您对医生的服务态度的评价是
-              <span>{{infoData.orderResult.service}}</span>
-            </li>
-            <li>您对医院“廉洁行医，医德医风”的评价是
-              <span>{{infoData.orderResult.medicalEthics}}</span>
-            </li>
-             <li>您对医院提供的环境设施、后勤服务的评价是
-              <span>{{infoData.orderResult.environmental}}</span>
-            </li>
-            <li>您对医疗费用的总体评价是
-              <span>{{infoData.orderResult.medicalExpense}}</span>
-            </li>
-            <li>您此次就诊的总体评价为
-              <span>{{infoData.orderResult.evaluate}}</span>
-            </li>
-          </ul>
-        <h4>记录详情</h4>
-        <ul class="result_info_recode">
-            <template v-for="item,index in infoData.orderReplyQuestions"   >
-              <li  class="isAi">
-               <span>
-                  AI
-               </span>
-               <p>{{item.question}}</p>
-            </li>
-            <li >
-               <span>
-                 患者
-               </span>
-               <audio :src="voiceUrl+item.audio" controls>
-               </audio>
-            </li>
-            </template>
-        </ul>
-    </el-dialog>
-    <!-- <survey-result :surveyResultDialog="surveyResultDialog" @planClose="planClose"></survey-result> -->
+    <result-record
+    ref="record"
+    :base-data="infoData"
+    :base-url="voiceUrl"
+    ></result-record>
   </div>
 </template>
 <script>
-  import { MySurvey } from '@/api/HN_DoctorClient/MySurvey';
-  import TablePagination from 'HNDC/common/pagination';
+  import { MySurvey } from 'HNDC_API/MySurvey';
+  import ResultRecord from "./Pop-ups/ResultRecord.vue";
   export default {
+    components:{
+      ResultRecord
+    },
     data() {
       return {
         infoData: {
@@ -225,11 +165,36 @@
         time_plan: [], // 计划执行时间
         time_disease: [], // 就诊时间
         total: 0, // 总条数
-        surveyResultDialog: false // 详情弹框
+        surveyResultDialog: false, // 详情弹框
+        pickerOptionsShortcuts:  // 时间日期选择器的快捷方式数据
+          {
+            shortcuts: [{
+              text: '最近一周',
+              onClick(picker) {
+                const end = new Date(new Date().setHours(23, 59, 59, 59));
+                const start = new Date(new Date().setHours(0, 0, 0, 0));
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                picker.$emit('pick', [start, end]);
+              }
+            }, {
+              text: '最近一个月',
+              onClick(picker) {
+                const end = new Date(new Date().setHours(23, 59, 59, 59));
+                const start = new Date(new Date().setHours(0, 0, 0, 0));
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                picker.$emit('pick', [start, end]);
+              }
+            }, {
+              text: '最近三个月',
+              onClick(picker) {
+                const end = new Date(new Date().setHours(23, 59, 59, 59));
+                const start = new Date(new Date().setHours(0, 0, 0, 0));
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                picker.$emit('pick', [start, end]);
+              }
+            }]
+          },
       };
-    },
-    components: {
-      TablePagination
     },
     mounted() {
       this.searchData();
@@ -399,6 +364,14 @@
             this.$message.error(error.message);
           });
       },
+      /**
+       * @function searchDataBtn
+       * @description 查询按钮方法
+       */
+      searchDataBtn() {
+        this.searchParam.pager = 1;
+        this.searchData();
+      },
       /** 分页 */
       pageChange(page) {
         this.searchParam.pager = page;
@@ -426,7 +399,8 @@
             this.infoData.departmentName = scope.row.medGpName;
             this.voiceUrl = res.AIVOICURL;
           });
-        this.surveyResultDialog = true;
+        this.$refs.record.recordVisible=true;
+        this.$refs.record.currentTable='one';
       },
       /** 详情关闭 */
       planClose(val) {
@@ -439,3 +413,14 @@
     }
   };
 </script>
+<style lang="scss" scoped>
+  @import '../../../styles/HN_DoctorClient/surveyResult.scss';
+  .pagination-container{
+    padding: 15px;
+    margin-top: 0;
+    background-color: white;
+  }
+  .common_search{
+    padding-top: 15px;
+  }
+</style>

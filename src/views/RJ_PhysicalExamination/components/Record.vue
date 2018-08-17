@@ -4,6 +4,9 @@
     .el-dialog__body {
       padding-top: 0;
     }
+    .el-dialog{
+      max-width: 730px;
+    }
   }
   &_header {
     position: relative;
@@ -24,13 +27,18 @@
       color: #f80;
       font-size: 14px;
     }
-    &_cancel{
+    &_cancel {
       position: absolute;
       top: 0;
       right: 30px;
     }
   }
   &_content {
+    &_box{
+      max-height: 300px;
+      overflow-y: auto;
+      border-top: 2px solid #f1f1f1;
+    }
     &_list {
       padding: 0;
       margin: 0;
@@ -43,7 +51,6 @@
       display: flex;
       flex-wrap: wrap;
       padding-top: 10px;
-      border-top: 2px solid #f1f1f1;
       margin-top: 10px;
     }
     &_param {
@@ -58,7 +65,7 @@
 
 <template>
     <div class="record">
-        <el-dialog :close-on-click-modal="false" class="record_box" title="体检档案" width="55%"  :visible.sync="dialogTableVisible">
+        <el-dialog top="5vh" :close-on-click-modal="false" class="record_box" title="体检档案" width="55%"  :visible.sync="dialogTableVisible">
             <!-- header information -->
             <div class="record_header">
                 <h3 class="record_header_name">
@@ -66,7 +73,7 @@
                     <span class="record_header_sexAndage">
                         {{baseData.sex}}/{{baseData.birthday}}
                     </span>
-                    <el-tag>
+                    <el-tag v-if="baseData.gzTag">
                         {{baseData.gzTag}}
                     </el-tag>
                 </h3>
@@ -76,15 +83,16 @@
                 <h4 class="record_header_param">
                   证件号码: {{baseData.identificationCard?baseData.identificationCard:'无'}}
                 </h4>
-                <el-button class="record_header_cancel" size="mini" type="primary" @click="cancelSpecial(baseData)" >取消关注</el-button>
+                <el-button v-if="baseData.gzTag" class="record_header_cancel" size="mini" type="primary" @click="cancelSpecial" >取消关注</el-button>
+                <el-button v-else   icon="el-icon-star-off" class="record_header_cancel"  size="mini" type="primary" @click="addSpecial" >添加关注</el-button>
             </div>
-            <el-tabs type="border-card" v-if="timeList[0]">
-                <el-tab-pane @tab-click="getInfoData(item.clientDate,item.clientId,index)" v-for="(item,index) in timeList" :key="index" :label="item.clientDate">
+            <el-tabs v-model="currentTable"  type="border-card" v-if="timeList[0]">
+                <el-tab-pane @tab-click="getInfoData(item.clientDate,item.clientId,index)" v-for="(item,index) in timeList" :key="index" :name="item.clientDate+index+''"  :label="item.clientDate">
                      <ul class="record_content_list">
-                       <li class="record_content_single">
+                       <li  class="record_content_single">
                          体检套餐:{{item.examinationData.inspectMealName}}
                        </li>
-                        <li class="record_content_single">
+                        <li  class="record_content_single">
                          总检医生:{{item.examinationData.inspectDoctor?item.examinationData.inspectDoctor:"无"}}
                        </li>
                         <li class="record_content_single">
@@ -97,14 +105,16 @@
                          体检健康建议:{{item.examinationData.inspectSuggest?item.examinationData.inspectSuggest:"无"}}
                        </li>
                      </ul>
-                      <ul class="record_content_content" v-if="item.examinationData.inspectProjectsVoList[0]" v-for="(ite,inde) in item.examinationData.inspectProjectsVoList" :key="inde">
-                        <li class="record_content_param" v-for="(it,ind) in Object.keys(ite)" :key="ind">
-                          <el-tag type="warning">
-                            {{nameMap[it]}}
-                          </el-tag>
-                          {{ite[it]}}
-                        </li>
-                      </ul>
+                     <div class="record_content_box">
+                        <ul class="record_content_content" v-if="item.examinationData.inspectProjectsVoList[0]" v-for="(ite,inde) in item.examinationData.inspectProjectsVoList" :key="inde">
+                          <li class="record_content_param" v-for="(it,ind) in Object.keys(ite)" :key="ind">
+                            <el-tag type="warning">
+                              {{nameMap[it]}}
+                            </el-tag>
+                            {{ite[it]}}
+                          </li>
+                        </ul>
+                     </div>
                 </el-tab-pane>
             </el-tabs>
         </el-dialog>
@@ -112,10 +122,17 @@
 </template>
 
 <script>
-import { Home } from 'RJPE_API/Home'; // 引入 api
+import { Home } from 'LQPE_API/Home'; // 引入 api
 import { mapGetters } from 'vuex';
 export default {
   props: {
+    /**
+     * 判断是否从主页进来
+     **/
+    isHome:{
+      type: Boolean,
+      default:false
+    },
     patientId: {
       type: String
     }
@@ -132,6 +149,7 @@ export default {
   },
   data() {
     return {
+      currentTable: null,
       dialogTableVisible: false,
       baseData: {},
       timeList: [
@@ -142,6 +160,7 @@ export default {
       ],
       nameMap: {
         projectName: '项目名称',
+        inspectDate: '项目时间',
         projectConclusion: '项目小结',
         completeStatus: '完成状态',
         inspectDepartment: '体检科室',
@@ -167,6 +186,7 @@ export default {
         .then(res => {
           //      基础数据赋值
           this.baseData = res.data;
+          console.log( this.baseData)
           this.baseData.isCare = !!this.baseData.gzTag;
         })
         .then(() => {
@@ -192,7 +212,10 @@ export default {
             };
           });
           this.timeList = res.data;
-          this.getInfoData(res.data[0].clientDate, res.data[0].clientId, 0);
+          this.currentTable = this.timeList[0].clientDate + '0';
+          this.timeList.forEach((item, index) => {
+            this.getInfoData(item.clientDate, item.clientId, index);
+          });
         })
         .catch(error => {
           console.log(error);
@@ -219,10 +242,10 @@ export default {
         });
     },
     /**
-     * @function {function name}
+     * @function 取消关心
      * @return {type} {description}
      */
-    cancelSpecial(id) {
+    cancelSpecial() {
       this.$msgbox({
         title: '消息',
         message: '确定取消关心吗',
@@ -232,23 +255,65 @@ export default {
         beforeClose: (action, instance, done) => {
           done();
         }
-      }).then(action => {
-        // 取消关注
+      })
+        .then(action => {
+          // 取消关注
+          Home.updateGz({
+            diagnoseType: 3,
+            adminId: this.token,
+            patientId: this.patientId,
+            operateType: 0 // (操作类型 1:关注 0：取消关注) （必填）
+          })
+            .then(res => {
+              this.$emit('refresh');
+              this.baseData.gzTag = '';
+              if(this.isHome){
+                this.dialogTableVisible=false
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    /**
+     * @function 添加关注
+     * @return {type} {description}
+     */
+    addSpecial() {
+      this.$prompt('请填写关注标签（不超过5个字符）', '添加关注', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputErrorMessage: '不得超过5个字'
+      }).then(({ value }) => {
+        if (!value|| value.trim().length > 5 || value.trim().length==0) {
+          this.$message({
+            type: 'error',
+            message: '格式不对，不能为空，不能超过5个字符'
+          });
+          return false;
+        }
         Home.updateGz({
           diagnoseType: 3,
           adminId: this.token,
           patientId: this.patientId,
-          operateType: 0 // (操作类型 1:关注 0：取消关注) （必填）
-        })
-          .then(res => {
-            this.$emit('refresh');
-            this.dialogTableVisible = false;
-          })
-          .catch(error => {
-            console.log(error);
+          operateTag: value,
+          operateType: 1 // (操作类型 1:关注 0：取消关注) （必填）
+        }).then(res => {
+//          this.baseData.gzTag = value;
+          this.$set(this.baseData,'gzTag',value)
+          this.$message({
+            type: 'success',
+            message: '成功添加关注'
           });
-      }).catch(err => {
-        console.log(err);
+        }).catch(error => {
+          console.log(error);
+        });
+      }).catch(() => {
+
       });
     }
   }

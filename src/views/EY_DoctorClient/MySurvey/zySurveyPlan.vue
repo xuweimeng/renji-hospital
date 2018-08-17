@@ -1,215 +1,116 @@
 <template>
-  <div class="followplan">
+  <div class="app-container">
     <!-- 搜索 -->
-    <el-row class="searchList">
-      <el-col :span="24">
-        <el-form :inline="true" :model="searchParam" class="demo-form-inline">
-          <el-form-item label="姓名" class="inputLength">
-            <el-input size="small" v-model.trim="searchParam.brxm" clearable placeholder="请输入患者姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="联系电话" class="inputLength">
-            <el-input size="small" v-model.trim="searchParam.mobile" clearable placeholder="请输入联系电话"></el-input>
-          </el-form-item>
-          <el-form-item label="医疗组" class="seclectLength">
-            <el-select size="small"
-              filterable
-              clearable
-              v-model="searchParam.medGpId"
-              placeholder="请选择"
-              popper-class="searchSelect">
-              <el-option
-                v-for="item in groupList"
-                :key="item.zuid"
-                :label="item.zuname"
-                :value="item.zuid">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="出院时间">
-            <el-date-picker
-                size="small"
-                v-model="time_disease"
-                type="datetimerange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                @change="diseaseTime" >
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="button" @click="searchData">查询</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
+    <ul class="common_search">
+      <li class="common_search_single">
+        <label class="radio-label" >姓名</label>
+        <el-input  placeholder="请输入患者姓名"  v-model.trim="searchParam.brxm"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >联系电话</label>
+        <el-input  placeholder="请输入患者电话"  v-model.trim="searchParam.mobile"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >医疗组</label>
+        <el-select clearable v-model="searchParam.medGpId" placeholder="请选择">
+          <el-option
+            v-for="item in groupList"
+            :key="item.zuid"
+            :label="item.zuname"
+            :value="item.zuid">
+          </el-option>
+        </el-select>
+      </li>
+      <li class="common_search_single common_search_single_time">
+        <label class="radio-label">出院时间</label>
+        <el-date-picker
+          v-model="time_disease"
+          type="datetimerange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']"
+          :picker-options="pickerOptionsShortcuts"
+          @change="diseaseTime" >
+        </el-date-picker>
+      </li>
+      <li class="common_search_single">
+        <el-button type="primary" icon="el-icon-search"  @click="searchData"
+                   :loading="params[0].loading || params[1].loading || params[2].loading">查询</el-button>
+      </li>
+    </ul>
     <!-- tab切换 -->
-    <el-row class="rsTabs">
-      <el-col :span="24">
-        <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
-          <!-- 待审核 -->
-          <el-tab-pane :label="`待审核(${param_wait.total})`" name="first">
-            <el-table :data="param_wait.tableData" style="width: 1130px" class="rsTable" v-loading="param_wait.loading" @selection-change="handleSelectionChange" ref="multipleTable">
-              <el-table-column type="selection" width="55" align="center">
-              </el-table-column>
-              <el-table-column prop="brxm" label="姓名" align="center" width="120px">
-              </el-table-column>
-              <el-table-column prop="mobile" label="联系电话" align="center" show-overflow-tooltip>
-              </el-table-column>
-              <el-table-column prop="schemeName" label="方案名称" align="center" show-overflow-tooltip>
-              </el-table-column>
-              <el-table-column prop="medGpName" label="医疗组" align="center" show-overflow-tooltip>
-              </el-table-column>
-              <el-table-column prop="orderTime" label="出院时间" align="center" show-overflow-tooltip>
-              </el-table-column>
-             <!--  <el-table-column prop="visitStartTimeStr" label="计划开始日期" align="center">
-              </el-table-column> -->
-              <el-table-column label="审核" align="center" width="140">
-                <template slot-scope="scope">
-                  <el-button style="height:22px;width:52px;padding:0;margin:0;font-size
-                  :13px;" @click="throughCkeck(scope)">通过</el-button>
-                  <el-button style="height:22px;width:52px;padding:0;margin:0;font-size
-                  :13px;" @click="noThroughCkeck(scope)">不通过</el-button>
-                </template>
-              </el-table-column>
-              <el-table-column label="详情" align="center" width="140">
-                <template slot-scope="scope">
-                  <el-button type="primary" @click.stop="getInfo(scope)" style="height:23px;width:52px;padding:0;font-size
-                  :13px;background:#1899ff;">详情</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <!-- 分页 -->
-            <el-row v-if="param_wait.tableData.length">
-              <!-- 批量通过 -->
-              <el-col :span="10">
-                <div class="checkPiliang">
-                  <el-button @click="toggleSelection(param_wait.tableData)">全选</el-button>
-                  <el-button @click="numCheck">批量通过</el-button>
-                  <el-button @click="numCheckFail">批量不通过</el-button>
-                </div>
-              </el-col>
-              <!-- 分页 -->
-              <el-col :span="14">
-                <div class="block" style="margin-top: 11px;">
-                  <el-pagination  @current-change="pageChange_wait" :current-page.sync="param_wait.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
-                    :total="param_wait.total" v-if="param_wait.total">
-                  </el-pagination>
-                </div>
-              </el-col>
-            </el-row>
-          </el-tab-pane>
-          <!-- 已通过 -->
-          <el-tab-pane :label="`已通过`" name="second">
-            <el-table :data="param_pass.tableData" style="width: 1110px" class="rsTable" v-loading="param_pass.loading">
-              <el-table-column prop="brxm" label="姓名" width="146" align="center">
-              </el-table-column>
-              <el-table-column prop="mobile" label="联系电话" align="center" show-overflow-tooltip>
-              </el-table-column>
-              <el-table-column prop="schemeName" label="方案名称" align="center" show-overflow-tooltip>
-              </el-table-column>
-              <el-table-column prop="medGpName" label="医疗组" align="center" show-overflow-tooltip>
-              </el-table-column>
-              <el-table-column prop="orderTime" label="出院时间" align="center" show-overflow-tooltip>
-              </el-table-column>
-              <!-- <el-table-column prop="visitStartTimeStr" label="计划开始日期" align="center" show-overflow-tooltip>
-              </el-table-column> -->
-              <el-table-column prop="operator" label="审核人" align="center">
-              </el-table-column>
-              <el-table-column prop="dateUpdate" label="审核时间" align="center" show-overflow-tooltip>
-              </el-table-column>
-              <el-table-column label="详情" align="center">
-                <template slot-scope="scope">
-                  <el-button type="primary" @click.stop="getInfo(scope)" style="height:23px;width:52px;padding:0;font-size
-                  :13px;background:#1899ff;" >详情</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <!-- 分页 -->
-            <el-row class="rsfy">
-              <el-col :span="14" :offset="10" style="margin-top: 11px;">
-                <el-pagination  @current-change="pageChange_pass" :current-page.sync="param_pass.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
-                  :total="param_pass.total" v-if="param_pass.total">
-                </el-pagination>
-              </el-col>
-            </el-row>
-          </el-tab-pane>
-          <!-- 未通过 -->
-          <el-tab-pane :label="`未通过`" name="third">
-            <el-table :data="param_nopass.tableData" style="width: 1110px" class="rsTable" v-loading="param_nopass.loading">
-              <el-table-column prop="brxm" label="姓名" align="center">
-              </el-table-column>
-              <el-table-column prop="mobile" label="联系电话" align="center" show-overflow-tooltip>
-              </el-table-column>
-              <el-table-column prop="schemeName" label="方案名称" align="center" show-overflow-tooltip>
-              </el-table-column>
-              <el-table-column prop="medGpName" label="医疗组" align="center" show-overflow-tooltip>
-              </el-table-column>
-              <el-table-column prop="orderTime" label="出院时间" align="center" show-overflow-tooltip>
-              </el-table-column>
-               <el-table-column prop="notPassReason" label="未通过原因" align="center" show-overflow-tooltip>
-                 <template slot-scope="scope">
-                   {{scope.row.notPassReason==1?"患者已死亡":scope.row.notPassReason==2?"患者不接受随访":scope.row.notPassReason==3?"随访方案重复":"方案不匹配"}}
-                </template>
-              </el-table-column>
-              <el-table-column prop="operator" label="审核人" align="center">
-              </el-table-column>
-              <el-table-column prop="dateUpdate" label="审核时间" align="center" show-overflow-tooltip>
-              </el-table-column>
-              <el-table-column label="详情" align="center">
-                <template slot-scope="scope">
-                  <el-button type="primary" @click.stop="getInfo(scope)" style="height:23px;width:52px;padding:0;font-size
-                  :13px;background:#1899ff;">详情</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <!-- 分页 -->
-            <el-row class="block">
-              <el-col :span="14" :offset="10" style="margin-top: 11px;">
-                <el-pagination  @current-change="pageChange_nopass" :current-page.sync="param_nopass.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
-                  :total="param_nopass.total" v-if="param_nopass.total">
-                </el-pagination>
-              </el-col>
-            </el-row>
-          </el-tab-pane>
-        </el-tabs>
-      </el-col>
-    </el-row>
+    <el-tabs type="border-card" @tab-click="handleClick">
+      <el-tab-pane v-for="item,index in params" :label="index==='0' ? `${item.label}(${item.total})` : `${item.label}`" :key="index">
+        <el-table
+          :data="item.tableData"
+          border highlight-current-row
+          v-loading="item.loading"
+          @selection-change="handleSelectionChange"
+          :ref="`multipleTable${index}`"
+        >
+          <el-table-column type="selection" width="55" align="center" v-if="index === '0'"></el-table-column>
+          <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
+          <el-table-column prop="mobile" label="联系电话" align="center" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="schemeName" label="方案名称" align="center" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="medGpName" label="医疗组" align="center" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="orderTime" label="出院时间" align="center" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="notPassReason" label="未通过原因" align="center" show-overflow-tooltip v-if="index === '2'">
+            <template slot-scope="scope">
+              {{scope.row.notPassReason==1?"患者已死亡":scope.row.notPassReason==2?"患者不接受随访":scope.row.notPassReason==3?"随访方案重复":"方案不匹配"}}
+            </template>
+          </el-table-column>
+          <template v-if="index !== '0'">
+            <el-table-column prop="operator" label="审核人" align="center"></el-table-column>
+            <el-table-column prop="dateUpdate" label="审核时间" align="center" show-overflow-tooltip></el-table-column>
+          </template>
+          <!--  <el-table-column prop="visitStartTimeStr" label="计划开始日期" align="center">
+           </el-table-column> -->
+          <el-table-column label="审核" align="center" width="160" v-if="index === '0'">
+            <template slot-scope="scope">
+              <el-button @click="throughCkeck(scope)" size="mini">通过</el-button>
+              <el-button @click="noThroughCkeck(scope)" size="mini">不通过</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column label="详情" align="center" width="140">
+            <template slot-scope="scope">
+              <el-button type="primary" @click.stop="getInfo(scope)" size="mini">详情</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- 分页 -->
+        <div class="pagination-container">
+          <div style='margin-right:10px;float:left' v-if="item.tableData.length && index === '0'">
+            <el-button type="primary" @click="toggleSelection(item.tableData)">全选</el-button>
+            <el-button type="primary" @click="numCheck">批量通过</el-button>
+            <el-button type="primary" @click="numCheckFail">批量不通过</el-button>
+          </div>
+          <el-pagination  @current-change="pageChange" :current-page.sync="item.page" :page-size="searchParam.limit" layout="total,prev, pager, next, jumper"
+                          :total="item.total" v-if="item.total">
+          </el-pagination>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
     <!-- 审核不通过 -->
-    <el-dialog title="审核不通过原因" :visible.sync="noCheck" width="350px" :center = "false" custom-class="checknoPass">
-      <el-row slot>
-         <el-col :span="24" >
-          <el-select v-model="selectCheck" placeholder="请选择" @change="changeSelect" popper-class="selectOut">
-            <el-option  v-for="item in checkoptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </el-col>
-        <el-col :span="24" class="btnCheck" style="margin-top:28px;" @click.native="noothroughCkeck"><el-button>确定</el-button><el-button @click="noCheck=false">取消</el-button></el-col>
-      </el-row>
+    <el-dialog title="审核不通过原因" :visible.sync="noCheck" width="350px" custom-class="checknoPass">
+      <el-select v-model="selectCheck" placeholder="请选择" @change="changeSelect" popper-class="selectOut">
+        <el-option  v-for="item in checkoptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+      </el-select>
+      <span slot="footer">
+        <el-button @click="noothroughCkeck" type="primary">确定</el-button>
+        <el-button @click="noCheck=false">取消</el-button>
+      </span>
     </el-dialog>
     <!-- 详情 -->
    <!--  <survey-plan :surveyPlan="surveyPlan" @planClose="planClose"></survey-plan> -->
 
-    <el-dialog top="5vh" class="plan_info" title="调查计划" :visible.sync="surveyPlan">
-        <h3>
-			{{infoData.brxm||""}}
-          	<span>
-			{{infoData.brxb||""}}/{{infoData.brage||""}}
-          	</span>
-        </h3>
-        <ul class="plan_info_base">
-			<li>联系电话：{{infoData.mobile}}</li>
-			<li>医疗组/科室：{{infoData.departmentName||infoData.medGpName}}</li>
-			<li>出院时间/就诊时间：{{infoData.diagnoseTime}}</li>
-        </ul>
-        <h4 v-show="infoMessage.orderList.length>0">随访方案 : {{infoMessage.questionTempleName}} </h4>
-        <h4 v-show="infoMessage.orderList.length>0">随访次数 : 共{{infoMessage.allCount}}次</h4>
-			<div class="plan_info_inner">
-				<ul class="plan_info_message" v-for="item,index in infoMessage.orderList" :key="index">
-					<h4>第{{index+1}}次随访: <span>开始时间 :{{item.dateBegin}}</span>   <span>{{item.statusStr}}</span> </h4>
-					<li v-for="ite,ins in item.CollectionIndex.split(',')" v-show="ite" :key="ins">{{ite}}</li>
-				</ul>
-			</div>
-    </el-dialog>
+    <plan-record
+      ref="record"
+      :baseData="infoData"
+      :planInfo="infoMessage"
+    >
+    </plan-record>
 
   </div>
 </template>
@@ -219,10 +120,20 @@
  * 随访计划
  * @module followParam
  */
-import { MySurvey } from '@/api/HN_DoctorClient/MySurvey';
-import { CommonAPI } from '@/api/HN_DoctorClient/common';
-const typeMap = ['wait', 'pass', 'nopass']; // 依次是 待审核、已通过、未通过；用来匹配 不同的param_
+import { MySurvey } from 'HNDC_API/MySurvey';
+import { CommonAPI } from 'HNDC_API/common';
+import PlanRecord from "./Pop-ups/PlanRecord";
+
+const base_param = {
+  page: 1,
+  total: 0,
+  loading: false,
+  tableData: []
+};
 export default {
+  components:{
+    PlanRecord
+  },
   data() {
     return {
       /* 计划详情 */
@@ -248,45 +159,31 @@ export default {
         VisitStartTimeEnd: '', // 计划执行时间结束时间
         dateAddBegin: '', // 就诊(出院)开始时间
         dateAddEnd: '', // 就诊（出院）结束时间
-        // status: "", // 状态(4 待审核 2 不通过 1 审核通过 5 已取消)
         activeType: '6' // 6:住院满意度 7.门诊
       },
       time_plan: '', // 计划执行时间
       time_disease: '', // 就症时间
       surveyPlan: false, // 详情弹框
-      activeName: 'first', // tab切换默认选中
-      dialogVisible: false,
-      /* 待审核的数据集合 */
-      param_wait: {
-        page: 1,
-        total: 0,
-        loading: false,
-        tableData: [],
-        status: 4
+      params: {
+        0: {
+          ...base_param,
+          label: '待审核',
+          status: 4
+        },
+        1: {
+          ...base_param,
+          label: '已通过',
+          status: 1
+        },
+        2: {
+          ...base_param,
+          label: '未通过',
+          status: 2
+        }
       },
-      /* 通过的数据集合 */
-      param_pass: {
-        page: 1,
-        total: 0,
-        loading: false,
-        tableData: [],
-        status: 1
-      },
-      /* 未通过的数据集合 */
-      param_nopass: {
-        page: 1,
-        total: 0,
-        loading: false,
-        tableData: [],
-        status: 2
-      },
-
       deparmentId: [],
       departMentList: [] /* 科室 */,
       groupList: [] /* 医疗组 */,
-
-      isNull: false,
-      activeName2: '1', // 随访语音折叠面板
       tabActive: 0, // 当前选中的tab0全部患者1特别关心
       multipleSelection: [] /* 选中的数据*/,
       noCheck: false, // 审核不通过弹框
@@ -315,15 +212,41 @@ export default {
         }
       ],
       checkId: [], // 随访通过的id(多选时),
-
-      modelFollplanData: [] // 随访计划data
+      pickerOptionsShortcuts:  // 时间日期选择器的快捷方式数据
+        {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date(new Date().setHours(23, 59, 59, 59));
+              const start = new Date(new Date().setHours(0, 0, 0, 0));
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date(new Date().setHours(23, 59, 59, 59));
+              const start = new Date(new Date().setHours(0, 0, 0, 0));
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date(new Date().setHours(23, 59, 59, 59));
+              const start = new Date(new Date().setHours(0, 0, 0, 0));
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
     };
   },
   mounted() {
     this.getUserId();
     this.getDepartMentList();
     this.getGroupList();
-    this.getData(this.param_wait);
+    this.getData();
   },
   methods: {
     getInfoData(item) {
@@ -341,6 +264,9 @@ export default {
         });
     },
     getInfoMessage(id) {
+      this.infoMessage = {
+        orderList: []
+      };
       CommonAPI
         .getVisitOrderDetail({
           taskId: id
@@ -348,10 +274,6 @@ export default {
         .then(res => {
           if (res.data) {
             this.infoMessage = res.data;
-          } else {
-            this.infoMessage = {
-              orderList: []
-            };
           }
         });
     },
@@ -464,7 +386,8 @@ export default {
      * @param  {type} param {description}
      * @return {type} {description}
      */
-    getData(param) {
+    getData() {
+      const param = this.params[this.tabActive];
       param.loading = true;
       MySurvey
         .queryOrderTaskMYDList({
@@ -475,14 +398,6 @@ export default {
         .then(res => {
           param.loading = false;
           if (res.code === 0) {
-            // 匹配当前病人是否被关注
-            res.data.forEach(item => {
-              if (item.islike === 0 || item.islike === '0' || !item.islike) {
-                item.islike = false;
-              } else if (item.islike === 1 || item.islike === '1') {
-                item.islike = true;
-              }
-            });
             param.tableData = res.data;
             param.total = res.total;
           }
@@ -493,34 +408,14 @@ export default {
         });
     },
     /**
-     * 待审核分页
-     * @function pageChange_wait
-     * @param {String} val 当前页码
+     * 分页
+     * @function pageChange
+     * @param {String} page 当前页码
      * @description
      */
-    pageChange_wait(page) {
-      this.param_wait.page = page;
-      this.getData(this.param_wait);
-    },
-    /**
-     * 已通过分页
-     * @function pageChange_wait
-     * @param {String} val 当前页码
-     * @description
-     */
-    pageChange_pass(page) {
-      this.param_pass.page = page;
-      this.getData(this.param_pass);
-    },
-    /**
-     * 不通过分页
-     * @function pageChange_wait
-     * @param {String} val 当前页码
-     * @description
-     */
-    pageChange_nopass(page) {
-      this.param_nopass.page = page;
-      this.getData(this.param_nopass);
+    pageChange(page) {
+      this.params[this.tabActive].page = page;
+      this.getData();
     },
     /**
      * 数据查询
@@ -528,13 +423,8 @@ export default {
      * @param {String} 1 返回第一页
      */
     searchData() {
-      // 修改page会触发 分页方法的调用,无需在调用getData
-      const param_name = `param_${typeMap[this.tabActive]}`;
-      if (this[param_name].page !== 1) {
-        this[param_name].page = 1;
-        return false;
-      }
-      this.getData(this[param_name]);
+      this.params[this.tabActive].page = 1;
+      this.getData();
     },
     /**
      * 获取详情
@@ -542,10 +432,10 @@ export default {
      * @param {Object} scope 点击列表的scope的信息
      */
     async getInfo(scope) {
-      this.surveyPlan = true;
       this.infoData.medGpName = scope.row.medGpName;
       this.infoData.departmentName = scope.row.departmentName;
       const res = await this.getInfoData(scope.row);
+      this.$refs.record.recordVisible=true;
       /*  if(res.taskId){
         await this.getInfoMessage(res.taskId);
       } */
@@ -559,8 +449,7 @@ export default {
      */
     handleClick(tab, event) {
       this.tabActive = tab.index;
-      const param_name = `param_${typeMap[tab.index]}`;
-      this.getData(this[param_name]);
+      this.getData();
     },
     /**
      *待审核表格全选
@@ -568,19 +457,13 @@ export default {
      *@param {object} rows 选中的行（参见element-ui的table-rows）
      */
     toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row, true);
-        });
-      } else {
-        this.$refs.multipleTable.clearSelection();
-      }
+      // element-ui自带的方法
+      this.$refs.multipleTable0[0].toggleAllSelection();
     },
     /**
      *待审核表格多选
      */
     handleSelectionChange(val) {
-      console.log(val);
       this.multipleSelection = val;
     },
     /**
@@ -685,9 +568,7 @@ export default {
               message: '操作已完成',
               type: 'success'
             });
-            this.getData(this.param_wait);
-            this.getData(this.param_pass);
-            this.getData(this.param_nopass);
+            this.getData();
             this.noCheck = false;
           }
         })
@@ -698,5 +579,6 @@ export default {
   }
 };
 </script>
-
-
+<style lang="scss" scoped>
+  @import '../../../styles/HN_DoctorClient/surveyPlan.scss';
+</style>

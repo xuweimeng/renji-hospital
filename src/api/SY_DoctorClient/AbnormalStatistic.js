@@ -37,6 +37,6 @@ export const AbnormalStatistic = {
     for (const key in data) {
       resultUrl += key + '=' + (data[key] ? data[key] : '') + '&';
     }
-    window.open((process.env.BASE_API ? process.env.BASE_API : '') + '/wechat/VisitResult/exportVisistOrderError?' + resultUrl);
+    window.open('/wechat/VisitResult/exportVisistOrderError?' + resultUrl);
   }
 };
