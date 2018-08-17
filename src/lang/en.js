@@ -102,7 +102,11 @@ export default {
     // 昆明金碧社区
     DataAddUp: 'DataAddUp',
     MessageStatistics: 'MessageStatistics',
-    ReturnVisit: 'ReturnVisit'
+    ReturnVisit: 'ReturnVisit',
+    specialDoctor: 'specialDoctor',
+    doctorList: 'doctorList',
+    noticePlan: 'noticePlan',
+    noticeResult: 'noticeResult'
   },
   // 主题导航那一块
   navbar: {

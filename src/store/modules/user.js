@@ -70,6 +70,7 @@ const user = {
       const username = userInfo.username.trim();
       const dataSetting = (response) => {
         const data = response.data;
+        console.log('data', response);
         // 配置用户id作为token值
         commit('SET_TOKEN', data.id);
         setToken(data.id);
@@ -79,12 +80,13 @@ const user = {
         sessionStorage.setItem('userId', data.id);// 用户id
         sessionStorage.setItem('laterhours', response.laterhours);// 用户等待时间
         // 配置用户头像
-        commit('SET_AVATAR', response.aipictureurl);
-        setParameter('avatar', data.aipictureurl);
+        commit('SET_AVATAR', response.data.aipictureurl);
+        setParameter('avatar', response.data.aipictureurl);
         // 配置最后登录时间
-        commit('SET_LATERHOURS', data.laterhours);
+        commit('SET_LATERHOURS', response.laterhours);
         setParameter('laterhours', response.laterhours);
-        sessionStorage.setItem('dateLogin', data.dateLogin); // 上次登录时间
+        setParameter('dateLogin', data.dateLogin);
+        sessionStorage.setItem('dateLogin', data.dateLogin);
         // 配置科室名字
         commit('SET_DEPARTMENTNAME', data.departmentName);
         setParameter('departmentName', data.departmentName);

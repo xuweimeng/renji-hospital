@@ -135,7 +135,7 @@
 				</el-col>
         <el-col :span="6">
           <el-form-item label="采集情况">
-            <el-select v-model="formInline.resultStatus" placeholder="采集情况" @change="resultStatusChange">
+            <el-select v-model="formInline.collections" placeholder="采集情况" @change="resultStatusChange">
             	<el-option label="全部" value=""></el-option>
               <el-option label="部分采集" value="1"></el-option>
 							<el-option label="接通未采集" value="3"></el-option>
@@ -559,7 +559,7 @@ export default {
 	          this.activeNames.push(res.data.length);
 	          this.callDetailDate = res.data;
 	        }
-      }).catch((error) => {});
+	      }).catch((error) => {});
 	    },
 	    beforeClose(done) {
 	      console.log('test');

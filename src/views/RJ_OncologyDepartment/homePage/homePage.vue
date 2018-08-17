@@ -6,8 +6,8 @@
           <img :src="getAdminInfo.aipicTureUrl">
         </div>
         <div class="notice-content-one">
-          <p class="text-center">您好，{{getAdminInfo.realname}}医生,{{getAdminInfo.AiName}}已等候您{{getAdminInfo.laterhours?getAdminInfo.laterhours:'0'}}小时了。</p>
-          <p class="text-center">上次登录时间:{{getAdminInfo.lastVisitDate?getAdminInfo.lastVisitDate:"无"}}</p>
+          <p class="text-center">您好，{{getAdminInfo.realname}}医生,{{getAdminInfo.AiName}}已等候您{{laterhours?laterhours:'0'}}小时了。</p>
+          <p class="text-center">上次登录时间:{{dateLoginlc?dateLoginlc:"无"}}</p>
         </div>
       </el-col>
       <el-col :span="5" style="margin-left: 2.56%" class="public-style noticeNum-two" @click.native="routerToFollowupPlanReview">
@@ -87,7 +87,7 @@
               </el-collapse-item>
               <el-collapse-item name="3">
                 <template slot="title">
-                  <i class="el-icon-edit-outline showPageIcon"></i>满意度 Consistency
+                  <i class="el-icon-edit-outline showPageIcon"></i>满意度
                 </template>
                 <div>
                   <span
@@ -293,6 +293,7 @@
         exportChart: exportChart, // 导出图表
         userId: '',//医生id
         laterhours: '',//距上次登录
+        dateLoginlc: '', // 上次登录时间
         isinspectPlength:true,
         PhysicalExSet:{},   //体检套餐信息
         //医生个人信息
@@ -431,8 +432,9 @@
        * @param {String} userId 获取医生id
        */
       getUserId() {
-        this.userId = sessionStorage.getItem('userId')//用户名
-        this.laterhours = Cookies.get('laterhours')//用户名
+        this.userId = sessionStorage.getItem('userId')
+        this.laterhours = Cookies.get('laterhourslc')
+        this.dateLoginlc = Cookies.get('dateLoginlc')
       },
       /** 监听子组件关闭 */
       closeChildren (val) {

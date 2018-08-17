@@ -102,7 +102,12 @@ export default {
     // 昆明金碧社区
     DataAddUp: '数据报表',
     MessageStatistics: '短信统计',
-    ReturnVisit: '回访统计'
+    ReturnVisit: '回访统计',
+    // 仁济医生看诊
+    specialDoctor: '医生看诊通知',
+    doctorList: '医生列表',
+    noticePlan: '看诊通知计划',
+    noticeResult: '看诊通知结果'
   },
   navbar: {
     logOut: '退出登录',
