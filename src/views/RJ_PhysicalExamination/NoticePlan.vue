@@ -18,6 +18,20 @@
         <label class="radio-label" >通知方案</label>
         <el-input v-model.trim="searchParams.schemeName" clearable placeholder="请输入通知方案"></el-input>
       </li>
+      <li class="common_search_single common_search_single_time">
+        <label class="radio-label" >预约时间</label>
+        <el-date-picker
+          @change="timeChange"
+          v-model="startTime"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          :picker-options="pickerOptions"
+          end-placeholder="结束日期">
+        </el-date-picker>
+
+      </li>
       <li class="common_search_single">
         <label class="radio-label" >体检套餐</label>
         <el-select
@@ -121,6 +135,7 @@
 <script>
   import { NoticePlan } from 'LQPE_API/NoticePlan'; // 引入 api
   import { mapGetters } from 'vuex';
+  import * as utilsIndex from 'utils';
   import PlanInfo from './components/PlanInfo';
 
   export default {
@@ -133,10 +148,13 @@
         hzxxId:"",   //患者id
         tableLoading: true,
         noPassLoading: true,
+        startTime: '',
         dataRecord: 0,
         recordFlag: 1, // 1.代表终止 2.代表批量终止
         ordersList: [], // 采集指标
         searchParams: {
+          orderTimeBegin:"",
+          orderTimeEnd:"",
           adminId: this.token,
           pager: 1, // 当前页码
           limit: 10, // 每页条数
@@ -146,6 +164,9 @@
           sfzh: '', // 身份证号
           schemeName: '',
           activeType: 5
+        },
+        pickerOptions: { // 日期选择器
+          shortcuts: utilsIndex.pickerOptions
         },
         nosearchParams: {
           adminId: this.token,
@@ -210,6 +231,19 @@
         this.noCheck = false;
         this.selectCheck = '';
         this.checkId = [];
+      },
+      /** @description
+       * 创建时间更改;
+       */
+      timeChange(time) {
+        if (time) {
+          console.log(time)
+          this.searchParams.orderTimeBegin    = time[0];
+          this.searchParams.orderTimeEnd    = time[1].replace("00:00:00","23:59:59");
+        } else {
+          this.searchParams.orderTimeBegin = '';
+          this.searchParams.orderTimeEnd = '';
+        }
       },
       /**
        * @function 搜索按钮

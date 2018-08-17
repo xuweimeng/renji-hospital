@@ -64,7 +64,7 @@
 </template>
 
 <script>
-  import { Home } from 'LQPE_API/Home'; // 引入 api
+  import { Home } from 'RJPE_API/Home'; // 引入 api
   import { mapGetters } from 'vuex';
 
   // 顶部数据展示集合
@@ -102,7 +102,7 @@
           name: '管理员',
           total: 0, // 总客户数量
           yesterdayNotice: 0, // 昨日通知客户数量
-          Informed: 0, // 已通知数量
+          Informed: 0, // 已通知人次
           waiting: '', // 等待时间
           logInTime: '' // 上次登录时间
         },
@@ -140,9 +140,9 @@
           .then(res => {
             this.panelGroupData = {
               name: res.data.realname,
-              total: res.data.noticedPersonSum,
-              yesterdayNotice: res.data.noticedPersonCount,
-              Informed: res.data.noticedCount,
+              total: res.data.noticedPersonSum ,    //人數
+              yesterdayNotice: res.data.noticedCount,   //昨日通知结果条数
+              Informed: res.data.noticedPersonCount  ,  //已通知人次
 //              waiting: res.data.laterHours + '',
               waiting: sessionStorage.getItem("laterhours"),
 //              logInTime: res.data.lastVisitDate

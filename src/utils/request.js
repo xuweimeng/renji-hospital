@@ -13,8 +13,8 @@ if (process.env.NODE_ENV === 'development') {
   // baseURL = 'http://192.168.3.26:8081'; // chanji
   // baseURL = 'http://192.168.3.69:8081'; // fugou
   // baseURL = 'http://192.168.3.33:8087'; // daogou
-  baseURL = 'http://192.168.1.218:8082';
-  // baseURL = '/api'; // api的base_url
+  // baseURL = 'http://192.168.1.218:8082';
+  baseURL = '/api'; // api的base_url
   // baseURL = 'http://60.190.86.50:6016'; // api的base_url
 }
 // else {
@@ -31,6 +31,8 @@ const JsonData = [
   '/visit/order/temp/visit',
   '/visit/ordertask/batchcancelall',
   'visit/ordertask/vet',
+  '/vist/notice/list',      //胃肠镜通知结果
+  // "doctors/ordertask/GastroenteroscopyTemporary",
   '/visit/ordertask/physicalTemporary',
   '/visit/ordertask/physicalNewTemporary',
   '/statistic/examination/notice',

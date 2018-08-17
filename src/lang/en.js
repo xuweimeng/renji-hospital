@@ -58,6 +58,9 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: 'I18n',
     // 自定义路由实例
+    GastrointestinalEndoscopy:"GastrointestinalEndoscopy",
+    Gastroenteroscopy:"Gastroenteroscopy",
+    GastrointestinalResult:"GastrointestinalResult",
     // 乐青六院
     PhysicalExaminationNotice: 'PhysicalExaminationNotice',
     InitiateNotification: 'InitiateNotification',

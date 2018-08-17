@@ -352,7 +352,7 @@ export default {
     timeChange(time) {
       if (time) {
         this.searchParams.beginTime = time[0];
-        this.searchParams.endTime = time[1];
+        this.searchParams.endTime = time[1].replace("00:00:00","23:59:59");
       } else {
         this.searchParams.beginTime = '';
         this.searchParams.endTime = '';
