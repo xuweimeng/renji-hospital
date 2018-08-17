@@ -2,10 +2,10 @@
   <div class="doctorList">
     <!-- 查询 -->
 		<el-row class="common-search">
-			<el-form :inline="true" :model="formInline" class="demo-form-inline">
+			<el-form :inline="true" :model="formInline" label-width="80px">
 			  <el-col :span="6">
-			  	<el-form-item label="患者姓名">
-				    <el-input v-model.trim="formInline.brxm" placeholder="请输入姓名" clearable></el-input>
+			  	<el-form-item label="医生姓名">
+				    <el-input v-model.trim="formInline.name" placeholder="请输入姓名" clearable></el-input>
 				  </el-form-item>
 				</el-col>
 				<el-col :span="6">
@@ -15,12 +15,12 @@
 				</el-col>
 				<el-col :span="6">
 			  	<el-form-item label="科室">
-				    <el-input v-model.trim="formInline.schemeName" placeholder="请输入科室名称" clearable></el-input>
+				    <el-input v-model.trim="formInline.departmentName" placeholder="请输入科室名称" clearable></el-input>
 				  </el-form-item>
 				</el-col>
 			  <el-col :span="6">
           <el-button type="primary" size="small" @click="searchBtn">查询</el-button>
-			  	<el-button type="primary" size="small" @click="editDoctor()">新增</el-button>
+			  	<el-button type="primary" size="small" @click="editDoctor">新增</el-button>
 			  </el-col>
 
 			</el-form>
@@ -34,13 +34,13 @@
           style="width: 100%;"
           v-loading="tableData_list.loading"
         >
-          <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
+          <el-table-column prop="name" label="姓名" align="center"></el-table-column>
           <el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
-          <el-table-column prop="mobile" label="所属科室" align="center"></el-table-column>
+          <el-table-column prop="departmentName" label="所属科室" align="center"></el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
-              <el-button type="danger" size="mini" @click="editDoctor(scope)">删除</el-button>
-              <el-button type="primary" size="mini" @click="editDoctor(scope)">编辑</el-button>
+              <el-button type="danger" size="mini" @click="deleteDoctor(scope.row)">删除</el-button>
+              <el-button type="primary" size="mini" @click="editDoctor(scope.row)">编辑</el-button>
               <el-button type="warning" size="mini" @click="lookDetailes(scope)">通知TA看诊</el-button>
             </template>
           </el-table-column>
@@ -69,19 +69,30 @@
       width="900px"
       >
       <el-form :model="addDoctorForm" :rules="rules" ref="ruleForm" label-width="100px">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="addDoctorForm.name"></el-input>
+        <el-form-item label="姓名" prop="name" class="tipNameitem">
+          <el-input v-model="addDoctorForm.name" @change='nameChange'></el-input>
+          <p class="tipName" v-if="tipName">该医生已存在!</p>
         </el-form-item>
         <el-form-item label="联系电话" prop="mobile">
           <el-input v-model="addDoctorForm.mobile"></el-input>
         </el-form-item>
-        <el-form-item label="科室名称" prop="deparment">
-          <el-input v-model="addDoctorForm.deparment"></el-input>
+        <el-form-item label="科室名称" prop="departmentName">
+          <el-input v-model="addDoctorForm.departmentName"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="resetForm('ruleForm')">保存</el-button>
-        <el-button type="primary" @click="addDoctor('ruleForm')">保存并发起通知</el-button>
+        <el-button 
+          @click="addDoctorBtn('ruleForm')" 
+          :loading="addDoctorBtnLoading.addLoading" 
+          :disabled="addDoctorBtnLoading.addDisabled">
+          保存
+        </el-button>
+        <el-button 
+        type="primary" 
+          @click="addDoctorAndPlan('ruleForm')" 
+          :loading="addDoctorBtnLoading.planLoading" 
+          :disabled="addDoctorBtnLoading.addDisabled">保存并发起通知
+        </el-button>
       </span>
     </el-dialog>
     <!-- 通知看诊 -->
@@ -90,6 +101,7 @@
       :visible.sync="addPlanDialog"
       custom-class="dialogBorder"
       width="1200px"
+      :before-close="resetPlanDialog"
       >
       <el-row class="common-table" style="padding: 0;">
         <el-col :span="24">
@@ -135,7 +147,7 @@
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="addPlanDialog=false">取 消</el-button>
+        <el-button @click="resetPlanDialog">取 消</el-button>
         <el-button type="primary" @click="schemeBtn">发起通知</el-button>
       </span>
     </el-dialog>
@@ -160,13 +172,13 @@
         formInline: {
           name: '',
           mobile: '',
-          deparment: '',
+          departmentName: '',
           pager: 1,
           limit: 10
         },
         tableData_list: {
-          list: [{}],
-          totalPage: 100,
+          list: [],
+          totalPage: null,
           pager: 1,
           loading: false
         },
@@ -174,13 +186,19 @@
         addDoctorForm: { // 新增/编辑医生表单校验
           name: '',
           mobile: '',
-          deparment: ''
+          departmentName: ''
+        },
+        addDoctorBtnLoading: { // 新增按钮
+          addLoading: false,
+          addDisabled: false,
+          planLoading: false,
+          planDisabled: false
         },
         rules: {
           name: [
             { required: true, message: '请输入医生姓名', trigger: 'blur'}
           ],
-          deparment: [
+          departmentName: [
             { required: true, message: '请输入科室名称', trigger: 'blur'}
           ],
           mobile: [
@@ -198,36 +216,175 @@
           appointmentTime: "", //医生预约时间
           visitTime: "",   //AI通知时间
           activeType: "10"   //随访类型  10--特约门诊通知。
-        }
+        },
+        markId: '', // 编辑医生的id
+        tipName: false // 新增时该医生是否存在
 
       }
     },
     mounted() {
+      this.getData()
     },
     methods: {
       /** 查询 */
       searchBtn() {
-
+        this.tableData_list.pager = 1
+        this.getData()
+      },
+      /** 获取列表 */
+      getData(item) {
+        this.tableData_list.loading = true;
+        specialDoctor.specialdoctorList(this.formInline).then(res => {
+          this.tableData_list.loading = false;
+          if(res.code === 0) {
+            if(!item) {
+              this.tableData_list.list = res.data
+              if(this.tableData_list.pager==1) {
+                this.tableData_list.totalPage = res.count
+              }
+            }else{
+              res.data.length?this.tipName=true:this.tipName=false
+            }
+            
+          } else {
+            this.$message.error(res.message)
+          }
+        }).catch(err => {
+          this.tableData_list.loading = false;
+          this.$message.error(err.message)
+        })
+      },
+      nameChange(value) {
+       
+        this.formInline.name = value
+        this.formInline.limit = 100000
+        this.getData(true)
       },
       /** 分页 */
       handleCurrentChange(page) {
-
+        this.formInline.pager = page
+        this.getData()
       },
       /** 打开 新增/编辑医生 弹框*/
       editDoctor(row) {
         this.addDoctorDialog = true
+        this.addDoctorForm.departmentName = row.departmentName
+        this.addDoctorForm.name = row.name
+        this.addDoctorForm.mobile = row.mobile
+        // 如果 选择编辑医生时获取该医生的id
+        if(row.id) {
+          this.markId = row.id
+        }
       },
-      /** 新增/编辑医生 */
-      addDoctor(formName) {
+      /** 新增/编辑医生按钮 */
+      addDoctorBtn(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            if(this.markId) {
+              this.updateDoctorFun()
+            }else {
+              this.addDoctorFun()
+            }
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
       },
+      /** 新增医生 */
+      addDoctorFun(item) {
+        this.addDoctorBtnLoading.addLoading = true
+        this.addDoctorBtnLoading.addDisabled = true
+        specialDoctor.specialdoctorSave(this.addDoctorForm).then(res => {
+          this.tipName?this.tipName=false:this.tipName
+          this.addDoctorBtnLoading.addLoading = false
+          this.addDoctorBtnLoading.addDisabled = false
+          // 如果点击的按钮为保存并发起通知
+          if(item) {
+            this.addDoctorBtnLoading.planLoading = false
+            this.addDoctorBtnLoading.planDisabled = false
+          }
+          if(res.code === 0) {
+            this.$refs.ruleForm.resetFields();
+            this.addDoctorDialog = false
+            this.getData()
+            this.$message.success(res.message)
+            // 发起看诊通知
+            if(item) {
+              this.markId = res.data
+              this.addPlanDialog = true
+              this.getSchemList()
+            }
+          } else {
+            this.$message.error(res.message)
+          }
+        }).catch(err => {
+          this.tipName?this.tipName=false:this.tipName
+          this.addDoctorBtnLoading.addLoading = false
+          this.addDoctorBtnLoading.addDisabled = false
+          if(item) {
+            this.addDoctorBtnLoading.planLoading = false
+            this.addDoctorBtnLoading.planDisabled = false
+          }
+          this.$message.error(err.message)
+        })
+      },
+       /** 编辑医生 */
+      updateDoctorFun(item) {
+        this.addDoctorBtnLoading.addLoading = true
+        this.addDoctorBtnLoading.addDisabled = true
+        specialDoctor.specialdoctorUpdate({
+          ...this.addDoctorForm,
+          id:this.markId
+          }).then(res => {
+          this.tipName?this.tipName=false:this.tipName
+          this.addDoctorBtnLoading.addLoading = false
+          this.addDoctorBtnLoading.addDisabled = false
+          // 如果点击的按钮为保存并发起通知
+          if(item) {
+            this.addDoctorBtnLoading.planLoading = false
+            this.addDoctorBtnLoading.planDisabled = false
+          }
+          
+          if(res.code === 0) {
+            this.$refs.ruleForm.resetFields();
+            this.addDoctorDialog = false
+            this.getData()
+            this.$message.success(res.message)
+            // 发起看诊通知
+            if(item) {
+              this.addPlanDialog = true
+              this.getSchemList()
+            } else {
+              this.markId = ''
+            }
+          } else {
+            this.$message.error(res.message)
+          }
+        }).catch(err => {
+          this.tipName?this.tipName=false:this.tipName
+          this.markId = ''
+          this.addDoctorBtnLoading.addLoading = false
+          this.addDoctorBtnLoading.addDisabled = false
+          if(item) {
+            this.addDoctorBtnLoading.planLoading = false
+            this.addDoctorBtnLoading.planDisabled = false
+          }
+          this.$message.error(err.message)
+        })
+      },
+      /** 编辑并发起通知 */
+      addDoctorAndPlan() {
+        // 判断该医生是否已存在
+        this.addDoctorBtnLoading.planLoading = true
+        this.addDoctorBtnLoading.planDisabled = true
+        // 如果存在markId,则为编辑，否则为新增
+        if(this.markId) {
+          this.updateDoctorFun(true)
+        }else {
+          this.addDoctorFun(true)
+        }
+      },
+      // 清空form
       resetForm(formName) {
         this.$refs[formName].resetFields();
         this.addDoctorDialog = false
@@ -235,6 +392,22 @@
       beforeClose() {
         this.$refs.ruleForm.resetFields();
         this.addDoctorDialog = false
+        this.tipName?this.tipName=false:this.tipName
+      },
+      /** 删除医生 */
+      deleteDoctor(row) {
+        specialDoctor.specialdoctorDelete({
+          id: row.id
+        }).then(res => {
+          if(res.code === 0) {
+            this.getData()
+            this.$message.success(res.message)
+          } else {
+            this.$message.error(res.message)
+          }
+        }).catch(err => {
+          this.$message.error(err.message)
+        })
       },
        /** 打开 通知就诊 弹框*/
       lookDetailes(scope) {
@@ -272,7 +445,7 @@
           // 选中方案信息
           this.schemePramer= {
             ...this.schemePramer,
-            doctorId: scope.row.doctorId,
+            doctorId: scope.row.id,
             schemeId: scope.row.id,
             schemeName: scope.row.name, //随访方案名称
           }
@@ -291,23 +464,13 @@
       },
       /** 发起通知 */
       schemeBtn() {
-        // if(this.schemePramer.appointmentTime =='' || this.schemePramer.visitTime =='') {
-        //   this.$message.error('请选择时间!')
-        // } else if (this.schemePramer.schemeId =='') {
-        //   this.$message.error('请选择方案!')
-        // } else {
-          specialDoctor.clinic(
-            // this.schemePramer
-            {
-                  "doctorId": "19a6419d-9b87-11e8-bea8-005056a77d99", //看疹医生ID
-                  "adminId": "23b62522-058e-11e8-aef9-005056a9612c",  //登录账号ID（操作者为护士）
-                  "schemeId": "07595524-a049-11e8-95d3-005056a77d99", //随访方案ID
-                  "schemeName": "看诊通知", //随访方案名称
-                  "appointmentTime": "2018-08-20 09:00:00", //看疹预约时间
-                  "visitTime": "2018-08-18",   //通知时间
-                  "activeType": "10"   //随访类型  10--特约门诊通知。
-            }
-            ).then(res => {
+        if(this.schemePramer.appointmentTime =='' || this.schemePramer.visitTime =='') {
+          this.$message.error('请选择时间!')
+        } else if (this.schemePramer.schemeId =='') {
+          this.$message.error('请选择方案!')
+        } else {
+          specialDoctor.clinic(this.schemePramer)
+          .then(res => {
             this.addPlanDialog = false
             if(res.code === 0) {
               this.$message.success(res.message)
@@ -318,7 +481,13 @@
             this.addPlanDialog = false
             this.$message.error(err.message)
           })
-      //   }
+        }
+      },
+      /** 取消通知 */
+      resetPlanDialog() {
+        this.schemePramer.appointmentTime = ''
+        this.schemePramer.visitTime = ''
+        this.addPlanDialog = false
       }
     }
   }
@@ -345,6 +514,18 @@
     .el-dialog__footer {
       text-align: center;
       border-top: 1px solid #EBEEF5;
+    }
+  }
+  .tipNameitem {
+    position: relative;
+    .tipName{
+      color: #f56c6c;
+      font-size: 12px;
+      line-height: 1;
+      padding-top: 4px;
+      position: absolute;
+      top: 25px;
+      left: 0;
     }
   }
 </style>

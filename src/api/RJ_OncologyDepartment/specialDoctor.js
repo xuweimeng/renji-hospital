@@ -4,6 +4,30 @@ import fetch from '@/utils/request';
   出院随访
  **/
 export const specialDoctor = {
+  /**
+  特约医生--列表
+   */
+  specialdoctorList(data) {
+    return fetch('post', '/followUpVisit/specialdoctor/list', data);
+  },
+  /**
+  特约医生--添加
+   */
+  specialdoctorSave(data) {
+    return fetch('post', '/followUpVisit/specialdoctor/save', data);
+  },
+  /**
+  特约医生--删除
+   */
+  specialdoctorDelete(data) {
+    return fetch('post', '/followUpVisit/specialdoctor/delete', data);
+  },
+  /**
+  特约医生--编辑
+   */
+  specialdoctorUpdate(data) {
+    return fetch('post', '/followUpVisit/specialdoctor/update', data);
+  },
   /* 肿瘤科--特约门诊发起通知
     {
       "doctorId": "19a6419d-9b87-11e8-bea8-005056a77d99", //看疹医生ID

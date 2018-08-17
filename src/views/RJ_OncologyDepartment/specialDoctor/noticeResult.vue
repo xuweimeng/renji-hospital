@@ -2,7 +2,7 @@
   <div class='specialDoctorResults'>
     <!-- 查询 -->
 		<el-row class='common-search'>
-			<el-form :inline='true' :model='searchParams' label-position="center" label-width="100px">
+			<el-form :inline='true' :model='searchParams' label-position="center" label-width="90px">
 			  <el-col :span='6'>
 			  	<el-form-item label='医生姓名'>
 				    <el-input v-model='searchParams.brxm' placeholder='请输入医生姓名' clearable ></el-input>
@@ -139,7 +139,7 @@
       /* 获取数据 */
       getData() {
         this.dataLoading = true;
-        specialDoctor.noticeResultList(JSON.parse(this.searchParams)).then(res => {
+        specialDoctor.noticeResultList(this.searchParams).then(res => {
           this.dataLoading = false;
           this.tableData = res.data;
           this.totalPage = res.total;
