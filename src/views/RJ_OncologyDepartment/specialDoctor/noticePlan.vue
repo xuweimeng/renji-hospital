@@ -42,7 +42,6 @@
 			  <el-col :span='6'>
 			  	<el-button type='primary' @click='searchFun'>查询</el-button>
 			  </el-col>
-
 			</el-form>
 		</el-row>
     <!-- 表格 -->
@@ -59,13 +58,13 @@
 			    		<el-table-column type='selection' align='center'></el-table-column>
 			    		<el-table-column prop='brxm' label='医生姓名' align='center'></el-table-column>
 			    		<el-table-column prop='mobile' label='联系电话' align='center' show-overflow-tooltip ></el-table-column>
-              <el-table-column prop='schemeName' label='所属科室' align='center' show-overflow-tooltip></el-table-column>
-			    		<el-table-column prop='schemeName' label='通知方案' align='center' show-overflow-tooltip></el-table-column>
-              <el-table-column prop='visitStartTime' label='预约看诊时间' align='center'></el-table-column>
+              <el-table-column prop='department' label='所属科室' align='center' show-overflow-tooltip></el-table-column>
+			    		<el-table-column prop='schemeName' label='方案名称' align='center' show-overflow-tooltip></el-table-column>
+              <el-table-column prop='orderTime' label='预约看诊时间' align='center'></el-table-column>
               <el-table-column prop='visitStartTime' label='AI通知时间' align='center'></el-table-column>
 			    		<el-table-column label='操作' width='200' align='center'>
 			    			<template slot-scope='scope'>
-                  <el-button type='danger' @click='passoutBtn(scope.row.id)' size='mini'>终止</el-button>
+                  <el-button type='danger' @click='passoutBtn(scope.row.taskId)' size='mini'>终止</el-button>
                   <el-button type='primary' @click='showInfo(scope)' size='mini'>详情</el-button>
                 </template>
 			    		</el-table-column>
@@ -92,13 +91,13 @@
 						<el-table border :data='tableData_stop.list' style='width: 100%;' v-loading='tableData_stop.loading'>
 			    		<el-table-column prop='brxm' label='医生姓名' align='center'></el-table-column>
 			    		<el-table-column prop='mobile' label='联系电话' align='center' show-overflow-tooltip ></el-table-column>
-              <el-table-column prop='mobile' label='所属科室' align='center' show-overflow-tooltip ></el-table-column>
-			    		<el-table-column prop='schemeName' label='通知方案' align='center' show-overflow-tooltip></el-table-column>
-              <el-table-column prop='schemeName' label='预约看诊时间' align='center' show-overflow-tooltip></el-table-column>
+              <el-table-column prop='department' label='所属科室' align='center' show-overflow-tooltip ></el-table-column>
+			    		<el-table-column prop='schemeName' label='方案名称' align='center' show-overflow-tooltip></el-table-column>
+              <el-table-column prop='orderTime' label='预约看诊时间' align='center' show-overflow-tooltip></el-table-column>
 			    		<el-table-column prop='visitStartTime' label='通知开始时间' align='center'></el-table-column>
-               <el-table-column prop='schemeName' label='终止原因' align='center' show-overflow-tooltip></el-table-column>
-                <el-table-column prop='schemeName' label='终止时间' align='center' show-overflow-tooltip></el-table-column>
-			    		<el-table-column prop='name' label='操作' align='center'>
+              <el-table-column prop='noPassReason' label='终止原因' align='center' show-overflow-tooltip></el-table-column>
+              <el-table-column prop='dateUpdate' label='终止时间' align='center' show-overflow-tooltip></el-table-column>
+			    		<el-table-column label='操作' align='center'>
 			    			<template slot-scope='scope'>
                   <el-button
                   type='primary'
@@ -127,9 +126,18 @@
 		<el-dialog title='终止原因' :visible.sync='noCheck' width='450px' :center = 'false' custom-class='checknoPass'>
 			<el-row slot>
 				 <el-col :span='24' >
-					<el-select v-model='selectCheck' placeholder='请选择' @change='changeSelect' popper-class='selectOut'>
+					<el-select v-model='selectCheck' placeholder='请选择' @change='changeSelect' style="width: 80%;" >
 						<el-option  v-for='item in checkoptions' :key='item.value' :label='item.label' :value='item.value'></el-option>
 					</el-select>
+				</el-col>
+         <el-col :span='24' >
+					<el-input
+            type="textarea"
+            :autosize="{ minRows: 3, maxRows: 5}"
+            placeholder="请输入内容"
+            v-model="notPassRemark"
+            style="margin-top: 20px;width: 80%">
+          </el-input>
 				</el-col>
 				<el-col
 					:span='24'
@@ -141,48 +149,6 @@
 				</el-col>
 			</el-row>
 		</el-dialog>
-    <!-- 通知详情 -->
-		<el-dialog :visible.sync='infoShow' title='通知计划详情' class-name='sfjhModel' >
-      <el-row class='sfjhContent'>
-        <el-row class='patientMs'>
-          <el-col :span='4' :offset='4' class='hzName'>{{infoParams.znjqrHzxx.brxm}}</el-col>
-          <el-col :span='16' class='hzxq'>{{infoParams.znjqrHzxx.brxb}}
-          <span>/</span>{{infoParams.znjqrHzxx.age}}</el-col>
-        </el-row>
-        <el-row class='patientMs2'>
-          <el-col :span='4' :offset='4' class='hzXx1'>疾病诊断:</el-col>
-          <el-col :span='16' class='hzXx2'>{{infoParams.icdName}}</el-col>
-        </el-row>
-        <el-row class='patientMs2'>
-          <el-col :span='4' :offset='4' class='hzXx1'>电话号码:</el-col>
-          <el-col :span='16' class='hzXx2'>{{infoParams.znjqrHzxx.jtdh}}</el-col>
-        </el-row>
-        <el-row class='patientMs2'>
-          <el-col :span='4' :offset='4' class='hzXx1'>就诊日期:</el-col>
-          <el-col :span='16' class='hzXx2'>{{infoParams.visitStartTime}}</el-col>
-        </el-row>
-        <!-- 随访模板 -->
-        <el-row class='patientMs2 gray'>
-          <el-col :span='4' :offset='4' class='hzXx1'>通知方案:</el-col>
-          <el-col :span='16' class='hzXx2'>{{infoParams.schemeName}}</el-col>
-        </el-row>
-        <el-row class='patientMs2 gray'>
-          <el-col :span='4' :offset='4' class='hzXx1'>通知进度:</el-col>
-          <el-col :span='16' class='hzXx2'>{{infoParams.totalNum}}</el-col>
-        </el-row>
-        <!-- 随访计划时间 -->
-        <el-row style='height:500px;overflow-y:auto;'>
-          <el-row class='gray' style='font-size:14px;padding-top:20px;' v-for='(item,index) in infoParams.orders' :key='index'>
-            <el-col :span='20' :offset='4'>{{item.startDate}}</el-col>
-            <el-row style='padding-left:200px;'>
-              <el-col :span='6' v-for='(item1,index1) in (item.CollectionIndex.split(','))' :key='index1+1' style='line-height:30px;'>{{item1}}</el-col>
-            </el-row>
-          </el-row>
-        </el-row>
-      </el-row>
-      <el-row slot='footer'>
-      </el-row>
-    </el-dialog>
     	<!-- 随访计划 -->
 		<plan
       :planDg='planDg'
@@ -194,10 +160,11 @@ import Plan from '@/components/dialog/plan/plan';
 import { AdmissionNotice } from 'RJZL_API/hospitalNotice';
 import { specialDoctor } from 'RJZL_API/specialDoctor';
 import auditOptions from 'utils/auditOptions'
+import formatNotpassReason from 'utils/formatNotpassReason'
 import * as utilsIndex from 'utils'
 const tableName = [ 'list', 'stop'];
 export default {
-  name: 'notificationsOfAdmission',
+  name: 'noticePlan',
   data() {
     return {
       searchParams: {
@@ -230,16 +197,10 @@ export default {
       activeName: 'first', // tab
       diseaseList: [] /* 疾病列表 */,
       checkoptions: auditOptions, // 审核不通过原因
-      infoShow: false /* 通知计划详情显示 */,
-      infoParams: {
-        znjqrHzxx: {
-          brxm: ''
-        }
-      },
       selectCheck: '', // 选中的审核不通过
+      notPassRemark: '', // 审核不通过原因
       checkId: [], // 随访通过的id(多选时),
       noCheck: false, // 审核不通过弹框
-      queryLoading: false,
       planDg: false, // 详情弹窗
       tabIndex: '0', // tab 0:入院通知，1：已终止通知
       pickerTime: {
@@ -255,16 +216,15 @@ export default {
     this.getData(this.tableData_list);
   },
   methods: {
-     timeChange(time) {
-        if (time) {
-          this.searchParams.orderTimeStart = time[0];
-          this.searchParams.orderTimeEnd = time[1];
-        } else {
-          this.searchParams.orderTimeStart = '';
-          this.searchParams.orderTimeEnd = '';
-        }
-      },
-
+    timeChange(time) {
+      if (time) {
+        this.searchParams.orderTimeStart = time[0];
+        this.searchParams.orderTimeEnd = time[1];
+      } else {
+        this.searchParams.orderTimeStart = '';
+        this.searchParams.orderTimeEnd = '';
+      }
+    },
     /** 查询 */
     searchFun() {
       const getTableName = `tableData_${tableName[this.tabIndex]}`
@@ -280,6 +240,9 @@ export default {
         pager: param.pager
       })
         .then(res => {
+          console.log(formatNotpassReason);
+
+          formatNotpassReason(res.data)
           param.list = res.data
           param.totalPage = res.total;
           param.loading = false;
@@ -291,6 +254,8 @@ export default {
     /* 展示随访计划详情 */
     showInfo(scope) {
       this.planDg = true
+      // 添加来源为特约门诊
+      scope.row.from = 'tymn'
       this.$store.dispatch('getScopeRowData', scope);
     },
     /**
@@ -305,7 +270,7 @@ export default {
     selectChange(selection){
       this.checkId.length = 0;
       selection.forEach( item => {
-        this.checkId.push(item.id)
+        this.checkId.push(item.taskId)
       })
     },
     /**
@@ -322,6 +287,7 @@ export default {
     resetBtn () {
       this.noCheck = false
       this.selectCheck = ''
+      this.notPassRemark = ''
       this.checkId.length = 0
     },
     /**
@@ -340,12 +306,13 @@ export default {
           adminId: sessionStorage.getItem('userId'),
           ids: ids,
           notPassReason: notPassReason,
-          notPassRemark: '终止计划'
+          notPassRemark: this.notPassRemark
         })
         .then(res => {
           if (res.code == 0) {
             this.noCheck = false;
             this.selectCheck = ''
+            this.notPassRemark = ''
             this.checkId.length = 0
             const getTableName = `tableData_${tableName[this.tabIndex]}`
             this.getData(this[getTableName])

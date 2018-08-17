@@ -71,8 +71,14 @@ export default {
   },
   methods: {
     getView() {
+      let paramId
+      if(this.patientInfo.from == 'tymn') {
+        paramId = this.patientInfo.taskId
+      } else {
+         paramId = this.patientInfo.id
+      }
       followUp.detail({
-        'id': this.patientInfo.id,
+        'id': paramId,
       }).then((res) => {
         if (res.code === 0) {
           this.modelFollplanData = res.data;
