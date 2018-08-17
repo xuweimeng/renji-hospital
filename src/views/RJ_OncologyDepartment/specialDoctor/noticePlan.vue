@@ -240,8 +240,6 @@ export default {
         pager: param.pager
       })
         .then(res => {
-          console.log(formatNotpassReason);
-
           formatNotpassReason(res.data)
           param.list = res.data
           param.totalPage = res.total;

@@ -20,7 +20,7 @@
 				</el-col>
 			  <el-col :span="6">
           <el-button type="primary" size="small" @click="searchBtn">查询</el-button>
-			  	<el-button type="primary" size="small" @click="editDoctor">新增</el-button>
+			  	<el-button type="success" plain size="small" @click="editDoctor">新增</el-button>
 			  </el-col>
 
 			</el-form>
@@ -228,7 +228,7 @@
     methods: {
       /** 查询 */
       searchBtn() {
-        this.tableData_list.pager = 1
+        this.formInline.pager = 1
         this.getData()
       },
       /** 获取列表 */
