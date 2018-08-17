@@ -1,7 +1,44 @@
 <template>
-  <div class='initiatingNoticePlan'>
+  <div class='app-container'>
     <!-- 查询 -->
-    <el-row class='common-search'>
+    <ul class="common_search">
+      <li class="common_search_single">
+        <label class="radio-label" >患者姓名</label>
+        <el-input v-model.trim="searchParams.name" clearable placeholder="请输入姓名"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >联系方式</label>
+        <el-input v-model.trim="searchParams.mobile" clearable placeholder="请输入联系方式"></el-input>
+      </li>
+     <li class="common_search_single common_search_single_date">
+          <label class="radio-label" >检查时间</label>
+          <el-date-picker
+              v-model='startTime'
+              @change='timeChange'
+              type="daterange"
+							value-format="yyyy-MM-dd"
+							range-separator="至"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+              :picker-options="pickerTime">
+            </el-date-picker>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >检查项目</label>
+        <el-select v-model='searchParams.icdCheckItem' clearable filterable  placeholder='请选择'>
+          <el-option
+            v-for='item in ProjectList'
+            :key='item.icd10'
+            :label='item.jbmc'
+            :value='item.icd10'>
+            </el-option>
+        </el-select>
+      </li>
+      <li class="common_search_single">
+        <el-button type="primary" icon="el-icon-search" @click="searchBtn">查询</el-button>
+      </li>
+    </ul>
+    <!-- <el-row class='common-search'>
 			<el-form :inline='true' :model='searchParams' label-position='center' label-width='80px'>
 			  <el-col :span='5'>
 			  	<el-form-item label='姓名'>
@@ -43,14 +80,13 @@
 			  	<el-button type='primary' @click='searchBtn'>查询</el-button>
 			  </el-col>
 			</el-form>
-		</el-row>
+		</el-row> -->
     <!-- 表格 -->
-		<el-row class='common-table'>
-			<el-col :span='24'>
+    <el-card shadow="never">
 				<el-tabs v-model='activeName' @tab-click='handleClick'>
 			    <el-tab-pane label='检查通知列表' name='first'>
 			    	<el-table
-              border
+              border  fit highlight-current-row
               :data='tableData_list.list'
               @selection-change='selectChange'
               v-loading='tableData_list.loading'
@@ -81,6 +117,7 @@
               </el-col>
               <el-col :span='12'>
                 <el-pagination
+                  style="float: right;margin-right: 29px;"
                   @current-change='handleCurrentChange'
                   :current-page.sync='tableData_list.pager'
                   :page-size='10'
@@ -92,7 +129,7 @@
 			    </el-tab-pane>
 			    <el-tab-pane label='已终止通知' name='second'>
 						<el-table
-              border
+              border  fit highlight-current-row
               :data='tableData_stop.list'
               style='width: 100%;'
               v-loading='tableData_stop.loading'>
@@ -119,6 +156,7 @@
 			    	<el-row v-if='tableData_stop.totalPage' style="padding-top: 20px;">
               <el-col :span='12' :offset="12">
                 <el-pagination
+                  style="float: right;margin-right: 29px;"
                   @current-change='handleCurrentChange'
                   :current-page.sync='tableData_stop.pager'
                   :page-size='10'
@@ -129,8 +167,7 @@
             </el-row>
 					</el-tab-pane>
 			  </el-tabs>
-			</el-col>
-		</el-row>
+    </el-card>
 		<!-- 审核不通过 -->
 		<el-dialog title='终止原因'
       :visible.sync='noCheck'
@@ -173,9 +210,9 @@
 <script>
 import { InspectionNotice } from 'RJZL_API/InitiateNotification';
 import { commonUrl } from 'RJZL_API/commonUrl';
-import auditOptions from 'utils/auditOptions'
+import auditOptions from 'utils/auditOptions';
 import CheckedList from './checkedList/checkedList';
-import * as utilsIndex from 'utils'
+import * as utilsIndex from 'utils';
 const tabPaneName = ['list', 'stop'];
 export default {
   name: 'initiatingNoticePlan',
@@ -220,7 +257,7 @@ export default {
       hzxxId: '', // 患者信息id
       pickerTime: {
         shortcuts: utilsIndex.pickerOptions
-      },
+      }
     };
   },
   components: {
@@ -240,13 +277,13 @@ export default {
         status: param.status,
         pager: param.pager
       })
-      .then(res => {
-        param.list = res.data;
-        param.loading = false;
-        if (param.pager === 1) {
-          param.totalPage = res.count;
-        }
-      });
+        .then(res => {
+          param.list = res.data;
+          param.loading = false;
+          if (param.pager === 1) {
+            param.totalPage = res.count;
+          }
+        });
     },
     /** 查询列表 */
     searchBtn() {
@@ -290,13 +327,13 @@ export default {
       InspectionNotice
         .queryCheckDetail({
           hzxxId: rows.hzxxId,
-          orderTime: rows.orderTime,
+          orderTime: rows.orderTime
         })
         .then(res => {
           if (res.code == 0) {
-            this.gridData = res.data
-          }else {
-            this.$message.error(res.message)
+            this.gridData = res.data;
+          } else {
+            this.$message.error(res.message);
           }
         })
         .catch(error => {});
@@ -306,7 +343,7 @@ export default {
       this.checkId.length = 0;
       selection.forEach(item => {
         this.checkId.push(item.id);
-      })
+      });
     },
     /** 弹框点击不通过确定 */
     dgPassBtn() {
@@ -321,7 +358,7 @@ export default {
     },
     /** 终止原因--取消 */
     dgFailBtn() {
-      this.checkId.length = 0
+      this.checkId.length = 0;
       this.noCheck = false;
       this.selectCheck = '';
       this.notPassRemark = '';

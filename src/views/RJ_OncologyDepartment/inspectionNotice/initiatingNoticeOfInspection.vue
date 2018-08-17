@@ -1,7 +1,7 @@
 <template>
-  <div class='initiatingNoticeOfInspection'>
+  <div class='app-container'>
     <!-- 步骤 -->
-		<el-row style='background: #fbfbfb;padding: 10px'>
+		<!-- <el-row style='background: #fbfbfb;padding: 10px'>
 		  <el-col :span='12' :offset='6'>
 				<el-steps :active='step'  align-center process-status='finish' finish-status='success'>
 					<el-step title='选择患者'></el-step>
@@ -9,16 +9,22 @@
 					<el-step title='发起成功'></el-step>
 				</el-steps>
 		  </el-col>
-		  <el-col :span='6'></el-col>
-		</el-row>
+		</el-row> -->
+    <el-card  style="margin-bottom:10px">
+      <el-steps :active='step'  align-center process-status='finish' finish-status='success'>
+        <el-step title='选择患者'></el-step>
+        <el-step title='选择检查'></el-step>
+        <el-step title='发起成功'></el-step>
+      </el-steps>
+    </el-card>
 		<!-- 步骤一 -->
 		<transition name='el-zoom-in-top'>
       <div class='stepContent' v-if='step === 0'>
-        <el-row class='upnum'>
+        <!-- <el-row class='upnum'>
 				  <el-col :span='24'><el-tag type='primary' size='medium'>请选择需要通知的患者</el-tag></el-col>
-			  </el-row>
+			  </el-row> -->
         <!-- 查询 -->
-        <el-row class='common-search'>
+        <!-- <el-row class='common-search'>
           <el-form :inline='true' :model='searchParams' label-position='center' label-width='80px'>
             <el-col :span='4'>
               <el-form-item label='姓名'>
@@ -67,10 +73,53 @@
               <el-button type='primary' @click='searchParams.pager=1;getData()'>查询</el-button>
             </el-col>
           </el-form>
-        </el-row>
+        </el-row> -->
+        <ul class="common_search">
+          <li class="common_search_single">
+            <label class="radio-label" >姓名</label>
+            <el-input v-model.trim="searchParams.brxm" clearable placeholder="请输入姓名"></el-input>
+          </li>
+          <li class="common_search_single">
+            <label class="radio-label" >联系方式</label>
+            <el-input v-model.trim="searchParams.mobile" clearable placeholder="请输入联系方式"></el-input>
+          </li>
+          <li class="common_search_single common_search_single_date">
+              <label class="radio-label" >创建时间</label>
+              <el-date-picker
+                @change='timeChange'
+                v-model='startTime'
+                value-format='yyyy-MM-dd HH:mm:ss'
+                type='daterange'
+                range-separator='至'
+                start-placeholder='开始日期'
+                end-placeholder='结束日期'>
+              </el-date-picker>
+          </li>
+          <li class="common_search_single">
+            <label class="radio-label" >疾病名称</label>
+            <el-select
+                v-model='searchParams.diseaseId'
+                filterable
+                clearable
+                remote
+                reserve-keyword
+                placeholder='请输入疾病类型'
+                :remote-method='remoteMethod'
+                :loading='queryLoading'>
+                <el-option
+                  v-for='item in diseaseList'
+                  :key='item.id'
+                  :label='item.value'
+                  :value='item.id'>
+                </el-option>
+              </el-select>
+          </li>
+          <li class="common_search_single">
+              <el-button type="primary" @click.native="getData" icon="el-icon-search">查询</el-button>
+          </li>
+        </ul>
         <!-- 通知患者 -->
-        <el-row class="common-table">
-          <el-col :span='24'>
+        <el-card shadow="never">
             <el-table :data='dataList' border style='width: 100%' v-loading='hzLoading'>
               <el-table-column prop='brxm' label='姓名' align='center'></el-table-column>
               <el-table-column prop='jtdh' label='联系方式' align='center'></el-table-column>
@@ -101,22 +150,15 @@
                 </template>
               </el-table-column>
             </el-table>
-          </el-col>
-        </el-row>
+        </el-card>
         <el-row v-if='dataList.length' :style="{'padding' : '11px 0', 'background': '#fff'}">
           <!-- 批量添加 -->
-          <el-col :span='12'>
-            <div style="padding-left: 10px;">
-              <el-button type='primary' size="small" @click='addAll'>添加当前页</el-button>
-              <el-button type='warning' size="small" @click='addAllPages'>添加所有页</el-button>
-            </div>
-          </el-col>
+            <el-button type='primary' style="margin-left:15px" size="small" @click='addAll'>添加当前页</el-button>
+            <el-button type='warning' size="small" @click='addAllPages'>添加所有页</el-button>
           <!-- 分页 -->
-          <el-col :span='12'>
-            <el-pagination  @current-change='handleCurrentChange' :current-page.sync='searchParams.pager' :page-size='10' layout='total,prev, pager, next, jumper'
-              :total='totalPage' v-if='totalPage'>
-            </el-pagination>
-          </el-col>
+          <el-pagination style="float:right;margin-right:15px"  @current-change='handleCurrentChange' :current-page.sync='searchParams.pager' :page-size='10' layout='total,prev, pager, next, jumper'
+            :total='totalPage' v-if='totalPage'>
+          </el-pagination>
         </el-row>
         <el-row class='rowCenter' v-if='dataList.length'>
           <el-badge :value='addList.length' class='item'>
@@ -129,7 +171,7 @@
 		<!-- 步骤二 -->
 		<transition name='el-zoom-in-top'>
 			<div class='step2' v-if='step === 1'>
-        <el-row class='upnum'>
+        <el-row class='upnum' style="padding:10px">
           <el-col :span='24'><el-tag type='primary' size='medium'>已选中患者:</el-tag></el-col>
           <el-col :span='24' :style="{'marginTop': '10px'}">
             <el-tag
@@ -276,7 +318,7 @@
         startTime: '',
         queryLoading: false, // 疾病loading
         projectName: [], // 检查项目
-        projectAdress: [],// 检查地点
+        projectAdress: [], // 检查地点
         icd: '选项3',
         locationId: '选项5',
         pickerOptions1: {
@@ -290,8 +332,8 @@
             icd: '',
             locationId: '',
             orderTime: '',
-            icdName:'',
-            locationName:''
+            icdName: '',
+            locationName: ''
           }
         ],
         icdName: '',
@@ -300,12 +342,12 @@
           adminId: sessionStorage.getItem('userId'),
           hzxxIds: [],
           isAll: '',
-          beginTime: '', //导入开始时间：年月日时分秒(可选)
-          endTime: '', //导入结束时间：年月日时分秒（可选）
-          mobile: '', //联系方式
-          brxm: '' ,//病人姓名（可选）
+          beginTime: '', // 导入开始时间：年月日时分秒(可选)
+          endTime: '', // 导入结束时间：年月日时分秒（可选）
+          mobile: '', // 联系方式
+          brxm: '', // 病人姓名（可选）
           diseaseId: '',
-          checkVos: [],
+          checkVos: []
         },
         step2Loading: false, // 确定发起通知
         projectIndex: '0', // 选中的当前项目行
@@ -329,22 +371,22 @@
             commonUrl.autocomplete({
               'zjm': query,
               'diseaseType': '0'
-            }).then((res)=>{
+            }).then((res) => {
               this.queryLoading = false;
-              if(res.code == 0) {
-                this.diseaseList = res.data
+              if (res.code == 0) {
+                this.diseaseList = res.data;
               } else {
                 this.diseaseList = [];
               }
-            }).catch((error)=>{
-              console.log(error)
-            })
+            }).catch((error) => {
+              console.log(error);
+            });
           }, 200);
         } else {
           this.diseaseList = [];
         }
       },
-      /**@description
+      /** @description
        * 创建时间更改
        */
       timeChange(time) {
@@ -357,13 +399,13 @@
           this.searchParams.endTime = '';
         }
       },
-      /***@description
+      /** *@description
        * 获取患者数据
        */
       getData() {
-        this.hzLoading = true
+        this.hzLoading = true;
         InspectionNotice.select(this.searchParams).then(res => {
-          this.hzLoading = false
+          this.hzLoading = false;
           this.dataList = this.formData(res.data);
           this.totalPage = res.total;
         });
@@ -380,26 +422,26 @@
       /**
        * 查看已预约项目
        */
-      lookDetailsBtn (rows) {
-        this.infoShow = true
+      lookDetailsBtn(rows) {
+        this.infoShow = true;
         InspectionNotice.checktaskList({
           'hzxxId': rows.id
         }).then(res => {
-          this.gridData = res.data
-        })
+          this.gridData = res.data;
+        });
       },
       /**
        * 关闭已预约的弹框
        */
-      closeList (value) {
-        this.infoShow = value
+      closeList(value) {
+        this.infoShow = value;
       },
       /**
        * 数据格式化
        */
       formData(data) {
-        for (let item of data) {
-          for (let ite of this.addList) {
+        for (const item of data) {
+          for (const ite of this.addList) {
             if (item.id == ite.id) {
               item.isAdd = 1;
             }
@@ -414,7 +456,7 @@
         if (data.isAdd) {
           return false;
         }
-        let copyData = JSON.parse(JSON.stringify(data));
+        const copyData = JSON.parse(JSON.stringify(data));
         copyData.isAdd = 1;
         this.dataList.splice(index, 1, copyData);
         this.addList.push(copyData);
@@ -424,9 +466,9 @@
        */
       removePat(index) {
         this.addList.splice(index, 1);
-        for (let item of this.dataList) {
+        for (const item of this.dataList) {
           let flag = 0;
-          for (let ite of this.addList) {
+          for (const ite of this.addList) {
             if (item.id == ite.id) {
               flag++;
               item.isAdd = 1;
@@ -459,10 +501,10 @@
         }
         this.step = 1;
         this.$nextTick(function() {
-          this.getProjectList()
-        })
+          this.getProjectList();
+        });
       },
-      /**@description
+      /** @description
        * 下一步，选择方案
        */
       nextStep() {
@@ -472,121 +514,120 @@
         }
         this.step = 1;
         this.$nextTick(function() {
-          this.getProjectList()
-        })
-
+          this.getProjectList();
+        });
       },
-      /**@description
+      /** @description
        * 上一步，选择患者
        */
       backBtn() {
-        if(this.isAll === 1) {
+        if (this.isAll === 1) {
           window.location.reload();
         } else {
           this.step = 0;
         }
       },
-      /**@description
+      /** @description
        * 发起通知
        */
       sureStep() {
         let foo = 0;
         // 判断是否为空
-        this.checkVos.forEach( item => {
-          if(!item.icd || !item.locationId || !item.orderTime) {
+        this.checkVos.forEach(item => {
+          if (!item.icd || !item.locationId || !item.orderTime) {
             this.$message.warning('请填写完整信息！');
-            foo++
+            foo++;
             return false;
           }
-        })
+        });
 
-        if(foo < 1) {
+        if (foo < 1) {
           this.$confirm('确定要发起随访吗?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           })
-          .then(() => {
-            if (this.isAll == 0) {
-              this.params.isAll = 0
-              this.params.hzxxIds = [];
-              for (let item of this.addList) {
-                this.params.hzxxIds.push(item.id);
-              }
-            } else if (this.isAll == 1) {
-              this.params.isAll = 1;
-              this.params.brxm = this.searchParams.brxm;
-              this.params.beginTime = this.searchParams.beginTime;
-              this.params.endTime = this.searchParams.endTime;
-              this.params.diseaseId = this.searchParams.diseaseId;
-              this.params.mobile = this.searchParams.mobile;
-            }
-            this.params.checkVos = this.checkVos
-            let pp = this.params
-            this.step2Loading = true
-            InspectionNotice.visit(pp)
-              .then(res => {
-                this.step2Loading = false
-                if (res.code == 0) {
-                  this.step = 3;
-                } else {
-                  this.$message.warning(res.message);
+            .then(() => {
+              if (this.isAll == 0) {
+                this.params.isAll = 0;
+                this.params.hzxxIds = [];
+                for (const item of this.addList) {
+                  this.params.hzxxIds.push(item.id);
                 }
-              })
-              .catch(err => {
-                this.step2Loading = false
-              });
-          })
-          .catch(() => {
-            this.$message.info('已取消')
-          });
+              } else if (this.isAll == 1) {
+                this.params.isAll = 1;
+                this.params.brxm = this.searchParams.brxm;
+                this.params.beginTime = this.searchParams.beginTime;
+                this.params.endTime = this.searchParams.endTime;
+                this.params.diseaseId = this.searchParams.diseaseId;
+                this.params.mobile = this.searchParams.mobile;
+              }
+              this.params.checkVos = this.checkVos;
+              const pp = this.params;
+              this.step2Loading = true;
+              InspectionNotice.visit(pp)
+                .then(res => {
+                  this.step2Loading = false;
+                  if (res.code == 0) {
+                    this.step = 3;
+                  } else {
+                    this.$message.warning(res.message);
+                  }
+                })
+                .catch(err => {
+                  this.step2Loading = false;
+                });
+            })
+            .catch(() => {
+              this.$message.info('已取消');
+            });
         }
       },
       /** 选择发起时间 */
-      selectTime (val) {
-        this.orderTime = val
+      selectTime(val) {
+        this.orderTime = val;
         console.log(this.checkVos);
       },
       /**
        * 选中的当前项目index
        */
-      liClick (index) {
+      liClick(index) {
         console.log(index);
 
-        this.projectIndex = index
+        this.projectIndex = index;
       },
       /** 选择发起地点 */
       selectAdress(value) {
         let obj = {};
-        obj = this.projectAdress.find((item)=>{
-            return item.id === value;
+        obj = this.projectAdress.find((item) => {
+          return item.id === value;
         });
-        this.locationName = ''
-        this.locationName = obj.location
-        this.checkVos[this.projectIndex].locationName = this.locationName
+        this.locationName = '';
+        this.locationName = obj.location;
+        this.checkVos[this.projectIndex].locationName = this.locationName;
       },
       /** 再次添加 */
-      addAgainButton () {
+      addAgainButton() {
         this.checkVos.push({
           icd: '',
           locationId: '',
           orderTime: '',
-          icdName:'',
-          locationName:''
-        })
+          icdName: '',
+          locationName: ''
+        });
       },
       /** 获取检查项目的label */
-      selectProjectName (value) {
-        let selectProject = ''
-        this.icdName = ''
+      selectProjectName(value) {
+        let selectProject = '';
+        this.icdName = '';
         this.projectName.forEach(item => {
-          if(item.disease.icd === value) {
-            selectProject = item.disease.id
-            this.icdName = item.disease.name
+          if (item.disease.icd === value) {
+            selectProject = item.disease.id;
+            this.icdName = item.disease.name;
           }
-        })
-        this.checkVos[this.projectIndex].icdName = this.icdName
-        this.getAdressList(selectProject)
+        });
+        this.checkVos[this.projectIndex].icdName = this.icdName;
+        this.getAdressList(selectProject);
       },
       /** 步骤二获取检查项目列表 */
       getProjectList() {
@@ -595,19 +636,19 @@
           diseaseType: '2',
           limit: '100000'
         })
-        .then(res => {
-          if(res.code === 0) {
-            this.projectName = res.data
-            this.checkVos[0].icd = res.data[0].disease.icd
-            this.checkVos[0].icdName = res.data[0].disease.name
-            this.$nextTick(function() {
-              this.getAdressList(res.data[0].disease.id)
-            })
-          }
-        })
-        .catch(error => {
-          this.$message.error(error.message)
-        });
+          .then(res => {
+            if (res.code === 0) {
+              this.projectName = res.data;
+              this.checkVos[0].icd = res.data[0].disease.icd;
+              this.checkVos[0].icdName = res.data[0].disease.name;
+              this.$nextTick(function() {
+                this.getAdressList(res.data[0].disease.id);
+              });
+            }
+          })
+          .catch(error => {
+            this.$message.error(error.message);
+          });
       },
       /** 步骤二获取检查地点 */
       getAdressList(value) {
@@ -617,32 +658,32 @@
           associateId: value,
           associateType: '1'
         })
-        .then(res => {
-          console.log(res);
-          if(res.code === 0) {
-            if(res.data.length) {
-              this.projectAdress = res.data
-              this.$nextTick(function() {
-                this.checkVos[this.projectIndex].locationId = res.data[0].id
-                this.checkVos[this.projectIndex].locationName = res.data[0].location
-              })
+          .then(res => {
+            console.log(res);
+            if (res.code === 0) {
+              if (res.data.length) {
+                this.projectAdress = res.data;
+                this.$nextTick(function() {
+                  this.checkVos[this.projectIndex].locationId = res.data[0].id;
+                  this.checkVos[this.projectIndex].locationName = res.data[0].location;
+                });
+              }
             }
-          }
-        })
-        .catch(error => {
-          this.$message.error('test')
-        });
+          })
+          .catch(error => {
+            this.$message.error('test');
+          });
       },
       /** 删除检查项目 */
       deleteBtn(index) {
-        this.checkVos.splice(index, 1)
+        this.checkVos.splice(index, 1);
       }
     }
   };
 </script>
 <style lang='scss'>
   @import '~styles/search';
-  .initiatingNoticeOfInspection {
+  .app-container {
     .step2 {
       background: #fff;
       .step2-select-list {
