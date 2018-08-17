@@ -174,11 +174,15 @@
                 <h4 class="record_header_param">
                   手机号码: {{baseData.mobile?baseData.mobile:"无"}}
                 </h4>
-                <h4 class="record_header_param">
+                <h4 class="record_header_param" v-if="isGastroenteroscopy">
                   体检套餐: {{baseData.icdName?baseData.icdName:"无"}}
                 </h4>
                 <h4 class="record_header_param">
-                  证件号码: {{baseData.identificationCard?baseData.identificationCard:'无'}}
+                  <!--身份证号: {{baseData.identificationCard?baseData.identificationCard:'无'}}-->
+                  身份证号: {{baseData.sfzh?baseData.sfzh:'无'}}
+                </h4>
+                <h4 class="record_header_param">
+                  客户预约时间: {{baseData.orderTime?baseData.orderTime:'无'}}
                 </h4>
                 <el-button v-if="baseData.gzTag" class="record_header_cancel" size="mini" type="primary" @click="cancelSpecial" >取消关注</el-button>
                 <el-button v-else   icon="el-icon-star-off" class="record_header_cancel"  size="mini" type="primary" @click="addSpecial" >添加关注</el-button>
@@ -249,6 +253,11 @@ export default {
       default: () => {
         return {};
       }
+    },
+    // 判断是否是胃肠镜通知
+    isGastroenteroscopy:{
+      type: Boolean,
+      default:true
     }
   },
   computed: {

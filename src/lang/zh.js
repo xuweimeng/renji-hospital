@@ -59,6 +59,10 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: '国际化',
     // 自定义路由实例
+    //仁济体检
+    GastrointestinalEndoscopy:"肠胃镜通知",
+    Gastroenteroscopy:"胃肠镜通知列表",
+    GastrointestinalResult:"胃肠镜通知结果",
     // 乐青六院
     PhysicalExaminationNotice: '体检通知',
     InitiateNotification: '发起体检通知计划',

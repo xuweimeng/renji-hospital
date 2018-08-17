@@ -58,7 +58,7 @@
                 <h3 class="record_header_name">
                     {{baseData.brxm}}
                     <span class="record_header_sexAndage">
-                        {{baseData.znjqrHzxx.csny}}
+                        {{baseData.znjqrHzxx.brxb}}
                     </span>
                     <el-tag v-if="baseData.gzTag">
                         {{baseData.gzTag}}
@@ -67,11 +67,12 @@
                 <h4 class="record_header_param">
                   手机号码: {{baseData.mobile?baseData.mobile:"无"}}
                 </h4>
-                <h4 class="record_header_param">
+                <h4 class="record_header_param" v-if="isGastroenteroscopy">
                   体检套餐: {{baseData.icdName?baseData.icdName:"无"}}
                 </h4>
                 <h4 class="record_header_param">
-                  证件号码: {{baseData.identificationCard?baseData.identificationCard:'无'}}
+                  证件号码: {{baseData.znjqrHzxx.sfzh?baseData.znjqrHzxx.sfzh:'无'}}
+                  <!--证件号码: {{baseData.identificationCard?baseData.identificationCard:'无'}}-->
                 </h4>
                 <h4 class="record_header_param">
                   预约时间: {{baseData.orderTime?baseData.orderTime:"无"}}
@@ -108,6 +109,13 @@ export default {
     hzxxId:{
       type: String
     },
+    /**
+     * 判断页面是否是肠胃镜列表
+     **/
+    isGastroenteroscopy:{
+      type:Boolean,
+      default:true
+    }
   },
   computed: {
     ...mapGetters(['token'])

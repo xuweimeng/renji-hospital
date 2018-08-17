@@ -47,6 +47,26 @@ export const RJ_PhysicalExamination = [
     ]
   },
   {
+    path: '/GastrointestinalEndoscopy',
+    component: Layout,
+    meta: { title: 'GastrointestinalEndoscopy', roles: roles, icon: 'icon', noCache: true },
+    children: [
+
+      {
+        path: 'Gastroenteroscopy',
+        component: () => import('RJPE/Gastroenteroscopy.vue'),
+        name: 'Gastroenteroscopy',
+        meta: { title: 'Gastroenteroscopy', roles: roles, noCache: true }
+      },
+      {
+        path: 'GastrointestinalResult',
+        component: () => import('RJPE/GastrointestinalResult.vue'),
+        name: 'GastrointestinalResult',
+        meta: { title: 'GastrointestinalResult', roles: roles, noCache: true }
+      }
+    ]
+  },
+  {
     path: '/Patient',
     component: Layout,
     meta: { title: 'Patient', roles: roles, icon: 'list', noCache: true },
