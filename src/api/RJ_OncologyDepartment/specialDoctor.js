@@ -28,7 +28,7 @@ export const specialDoctor = {
     activeType:10      //（必须选）
   */
   planList(data) {
-    return fetch("get", "/visit/questionscheme/list", data);
+    return fetch('get', '/visit/questionscheme/list', data);
   },
   /**
    * @description 通知计划列表
@@ -44,7 +44,7 @@ export const specialDoctor = {
       status (integer): 1:看诊通知列表 2:已终止通知
    */
   specialList(data) {
-    return fetch("post", "/doctors/special/list", data);
+    return fetch('post', '/doctors/special/list', data);
   },
   /**
    * @description 通知结果列表
@@ -59,8 +59,15 @@ export const specialDoctor = {
       type (string, optional): 管理台传2，医生端传1 ,
    */
   noticeResultList(data) {
-    return fetch("post", "/special/doctor/list", data);
+    return fetch('post', '/special/doctor/list', data);
   },
-
+  /**
+   * @function 获取详情
+   * @param  {type} data {description}
+   * @return {type} {description}
+   */
+  getResultInfo(data) {
+    return fetch('post', '/visit/order/view', data);
+  }
 
 };

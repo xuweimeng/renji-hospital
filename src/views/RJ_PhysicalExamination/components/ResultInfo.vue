@@ -6,6 +6,7 @@
     }
     .el-dialog{
       max-width: 730px;
+      min-width: 600px;
     }
   }
   &_header {
@@ -137,6 +138,7 @@
         padding: 8px 15px;
         color: #333;
         position: relative;
+        margin-left: 100px;
         &::after {
           content: "";
           display: block;
@@ -239,7 +241,7 @@ export default {
     patientId: {
       type: String
     },
-    hzxxId:{
+    hzxxId: {
       type: String
     },
     resultData: {
@@ -261,7 +263,7 @@ export default {
   },
   data() {
     return {
-      gzTag:"",
+      gzTag: '',
       currentTable: 'one',
       dialogTableVisible: false,
       baseData: {
@@ -286,7 +288,7 @@ export default {
       })
         .then(res => {
           // 基础数据赋值
-          res.data.gzTag =  res.gztag;
+          res.data.gzTag = res.gztag;
           this.baseData = res.data;
           this.baseData.isCare = !!this.baseData.gzTag;
           this.baseUrl = res.AIVOICURL;

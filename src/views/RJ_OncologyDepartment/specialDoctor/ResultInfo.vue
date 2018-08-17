@@ -4,8 +4,9 @@
     .el-dialog__body {
       padding-top: 0;
     }
+    
     .el-dialog{
-      max-width: 800px;
+      max-width: 730px;
       min-width: 600px;
     }
   }
@@ -159,7 +160,7 @@
 
 <template>
     <div class="record">
-        <el-dialog top="5vh" :close-on-click-modal="false" class="record_box" title="通知详情" width="55%"  :visible.sync="dialogTableVisible">
+        <el-dialog top="5vh" :close-on-click-modal="false" class="record_box" title="通知详情" width="55%" :visible.sync="dialogTableVisible">
             <!-- header information -->
             <div class="record_header">
                 <h3 class="record_header_name">
@@ -172,40 +173,33 @@
                     </el-tag>
                 </h3>
                 <h4 class="record_header_param">
-                  手机号码: {{baseData.phone?baseData.phone:"无"}}
+                  所属科室: {{resultData.department?resultData.department:"无"}}
                 </h4>
                 <h4 class="record_header_param">
-                  体检套餐: {{baseData.icdName?baseData.icdName:"无"}}
+                  手机号码: {{baseData.mobile?baseData.mobile:"无"}}
                 </h4>
                 <h4 class="record_header_param">
-                  证件号码: {{baseData.identificationCard?baseData.identificationCard:'无'}}
+                  预约看诊时间: {{resultData.orderTime?resultData.orderTime:'无'}}
                 </h4>
-                <el-button v-if="baseData.gzTag" class="record_header_cancel" size="mini" type="primary" @click="cancelSpecial" >取消关注</el-button>
-                <el-button v-else   icon="el-icon-star-off" class="record_header_cancel"  size="mini" type="primary" @click="addSpecial" >添加关注</el-button>
             </div>
             <el-tabs v-model="currentTable"  type="border-card" >
                 <el-tab-pane  name="one"  label="体检结果">
                      <ul class="record_content_list">
-                       <li  class="record_content_single">
-                         <el-tag>
-                         是否本人 ：{{resultData.isMySelfDge}}
-                         </el-tag>
-                       </li>
                         <li  class="record_content_single">
                          <el-tag>
-                         是否到场 ：{{resultData.isComeDge}}
+                         是否过来 ：{{resultData.fieldValue}}
                          </el-tag>
                        </li>
                         <li class="record_content_single">
-                         审核意见:{{baseData.vetRemark}}
+                         审核意见:{{baseData.vetRemark?baseData.vetRemark:"无"}}
                        </li>
-                       <li class="record_content_single">
+                       <li class="record_content_single" v-if="baseData.callRemark">
                          人工外呼:{{baseData.callRemark}}
                        </li>
                      </ul>
                 </el-tab-pane>
                 <el-tab-pane  name="two"  label="记录详情"  v-if="recordData.length">
-                    <el-tag  v-if="baseData.isArtificialCall">
+                    <el-tag  v-if="baseData.isArtificialCall" style="margin-bottom:10px; ">
                         人工外呼
                     </el-tag>
                      <ul class="record_content_list record_content_audio">
@@ -217,7 +211,9 @@
                           <li :key="item.id+'1'" class="record_content_single record_content_patient">
                             <span>客户</span>
                             <audio v-if="item.audio" :src="baseUrl+item.audio"  controls="controls" ></audio>
-                            <p v-else>此记录为人工呼叫，暂无录音</p>
+                            <p v-else-if="!item.audio&&baseData.callStatus&&item.isArtificialCall">此记录为人工呼叫，暂无录音</p>
+                            <p v-else-if="!item.audio&&baseData.callStatus&&!item.isArtificialCall">此记录为暂无录音</p>
+                            <p v-else-if="!item.audio&&!baseData.callStatus&&!item.isArtificialCall">此记录为暂无录音</p>
                             <div>
                               指标：<el-tag v-if="item.isNormal" type="primary">正常</el-tag><el-tag v-else type="error">不正常</el-tag>
                               / {{item.fieldName}} : {{item.fieldValue}}
@@ -232,14 +228,12 @@
 </template>
 
 <script>
-import { NoticeResult } from 'LQPE_API/NoticeResult'; // 引入 api
+
+import { AdmissionNotice } from 'RJZL_API/hospitalNotice'; // 引入 api
 import { mapGetters } from 'vuex';
 export default {
   props: {
     patientId: {
-      type: String
-    },
-    hzxxId: {
       type: String
     },
     resultData: {
@@ -261,9 +255,12 @@ export default {
   },
   data() {
     return {
+      gzTag: '',
       currentTable: 'one',
       dialogTableVisible: false,
-      baseData: {},
+      baseData: {
+
+      },
       baseUrl: '',
       recordData: []
     };
@@ -277,7 +274,7 @@ export default {
      */
     getBaseData(id) {
       this.currentTable = 'one';
-      NoticeResult.getPatientRecord({
+      AdmissionNotice.resultDetail({
         adminId: this.token,
         id: id
       })
@@ -295,79 +292,6 @@ export default {
         .catch(error => {
           console.log(error);
         });
-    },
-    /**
-     * @function 取消关心
-     * @return {type} {description}
-     */
-    cancelSpecial() {
-      this.$msgbox({
-        title: '消息',
-        message: '确定取消关心吗',
-        showCancelButton: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        beforeClose: (action, instance, done) => {
-          done();
-        }
-      })
-        .then(action => {
-          // 取消关注
-          NoticeResult.updateGz({
-            diagnoseType: 3,
-            adminId: this.token,
-            patientId: this.hzxxId,
-            operateType: 0 // (操作类型 1:关注 0：取消关注) （必填）
-          })
-            .then(res => {
-              this.$emit('refresh');
-              this.baseData.gzTag = '';
-            })
-            .catch(error => {
-              console.log(error);
-            });
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    /**
-     * @function 添加关注
-     * @return {type} {description}
-     */
-    addSpecial() {
-      this.$prompt('请填写关注标签（不超过5个字符）', '添加关注', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        inputErrorMessage: '不得超过5个字'
-      })
-        .then(({ value }) => {
-          if (value.trim().length > 5 || value.trim().length === 0) {
-            this.$message({
-              type: 'error',
-              message: '格式不对，不能为空，不能超过5个字符'
-            });
-            return false;
-          }
-          NoticeResult.updateGz({
-            diagnoseType: 3,
-            adminId: this.token,
-            patientId: this.hzxxId,
-            operateTag: value,
-            operateType: 1 // (操作类型 1:关注 0：取消关注) （必填）
-          })
-            .then(res => {
-              this.$set(this.baseData, 'gzTag', value);
-              this.$message({
-                type: 'success',
-                message: '成功添加关注'
-              });
-            })
-            .catch(error => {
-              console.log(error);
-            });
-        })
-        .catch(() => {});
     }
   }
 };

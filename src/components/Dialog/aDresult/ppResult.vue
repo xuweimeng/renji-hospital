@@ -34,7 +34,7 @@ export default {
       'isData': {}, // res.data
       'AIVOICURL': '', // 语音前缀
       'mergePathWav': '' // 一键语音合成地址
-    }
+    };
   },
   props: [
     'resultDg'
@@ -55,7 +55,7 @@ export default {
      * @DateTime    2018-04-18
      */
     closeFun() {
-      this.$emit('closeChildren', false)
+      this.$emit('closeChildren', false);
     },
     /** 请求特别关注 */
     careFun(id) {
@@ -64,7 +64,7 @@ export default {
       // this.AIVOICURL = ''
       AdmissionNotice.resultDetail({
         'adminId': sessionStorage.getItem('userId'),
-        'id': id,
+        'id': id
       }).then((res) => {
         if (res.code === 0) {
           this.GzTag = res.gztag;
@@ -76,7 +76,7 @@ export default {
           this.isData = res.data;
           this.AIVOICURL = res.AIVOICURL;
           // 有语音记录，再拉取一键合成语音的数据
-          if (res.data.orderReplyQuestions.length>0) {
+          if (res.data.orderReplyQuestions.length > 0) {
             // this.mergeWav(id)
           }
         }
@@ -97,11 +97,11 @@ export default {
         id: id
       })
         .then(res => {
-          if (res.code !=0) {
+          if (res.code != 0) {
             this.$message.error('语音合成失败：' + res.message);
           }
           this.mergePathWav = res.mergePath;
-        })
+        });
     }
   },
   watch: {
@@ -113,7 +113,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style lang='scss'>
