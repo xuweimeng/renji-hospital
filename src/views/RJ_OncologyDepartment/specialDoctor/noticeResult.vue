@@ -1,5 +1,5 @@
 <template>
-  <div class='admissionNoticeResults'>
+  <div class='specialDoctorResults'>
     <!-- 查询 -->
 		<el-row class='common-search'>
 			<el-form :inline='true' :model='searchParams' label-position="center" label-width="100px">
@@ -15,13 +15,13 @@
 				</el-col>
         <el-col :span='6'>
 			  	<el-form-item label='所属科室'>
-				    <el-input v-model='searchParams.mobile' placeholder='请输入医生联系电话' clearable ></el-input>
+				    <el-input v-model='searchParams.department' placeholder='请输入医生联系电话' clearable ></el-input>
 				  </el-form-item>
 				</el-col>
 				<el-col :span='6'>
 					<el-form-item label='AI通知时间'>
 						<el-date-picker  @change='timeChange'
-						 v-model='createTime'
+						  v-model='createTime'
 							type="datetimerange"
 							range-separator='至'
 							start-placeholder='开始日期'
@@ -34,10 +34,10 @@
 				</el-col>
         <el-col :span='6'>
 			  	<el-form-item label='是否过来'>
-				    <el-select v-model='searchParams.isCome' placeholder='是否来住院'>
-				      <el-option label='全部' value=''></el-option>
+				    <el-select v-model='searchParams.fieldValue ' placeholder='是否过来'>
+				      <el-option label='全部' value='0'></el-option>
 				      <el-option label='来' value='1'></el-option>
-              <el-option label='不来' value='0'></el-option>
+              <el-option label='不来' value='2'></el-option>
 				    </el-select>
 				  </el-form-item>
 				</el-col>
@@ -82,46 +82,35 @@
   </div>
 </template>
 <script>
-  import { AdmissionNotice } from 'RJZL_API/hospitalNotice';
-  import { commonUrl } from 'RJZL_API/commonUrl';
+  import { specialDoctor } from 'RJZL_API/specialDoctor';
   import AdResult from '@/components/dialog/aDresult/ppResult';
   import * as getTime from 'utils/getDate';
   import * as utilsIndex from 'utils'
   import auditOptions from 'utils/auditOptions'
   export default {
-    name: 'admissionNoticeResults',
+    name: 'specialDoctorResults',
     data() {
       return {
         createTime: [] /* 创建时间 */,
-        currentPage1: 1, // 当前页
         totalPage: null, // 总页数
-        /* 搜索条件 */
-        searchParams: {
-          adminId: sessionStorage.getItem('userId'),
-          pager: 1, //当前页码
-          limit: 10, //每页条数
-          brxm: '', //医生姓名（可选）
-          dateBeginBegin: null, //生成开始时间（可选）
-          dateBeginEnd: null, //生成结束时间（可选）
-          beginAge: null, //开始年龄（可选）
-          endAge: null, //结束年龄（可选）
-          brxb: '', //性别（可选）
-          activeType: 4, //0，随访；1，通知，2，临时随访；3，是出院随访;4入院通知；5体检
-          mobile: null, //联系方式
-          backStatus:'',//通话状态
-          icdName: null, //疾病名称
-          isMySelf: '', //是否本人（1：是，0：否）
-          isCome: '' //是否过来入院（0：不来，1：来，2：改约）
+        searchParams: {  /* 搜索条件 */
+          // adminId: sessionStorage.getItem('userId'),
+          brxm: "",
+          dateEndEnd: "",
+          dateEndStart: "",
+          department: "",
+          fieldValue: "",
+          limit: 10,
+          mobile: "",
+          pager: 1,
+          type: "1"
         },
-        input10: '',
-        activeName: 'first', // tab
         tableData: [],
         dataLoading: false, // 表格数据请求等待
         checkoptions: auditOptions,  // 审核不通过原因
         selectCheck: '', // 选中的审核不通过
         checkId: [], // 随访通过的id(多选时),
         queryLoading: false, // 搜索loading...
-        diseaseList: [], // 疾病list
         resultDg: false, // 详情弹窗
         pickerTime: {
           shortcuts: utilsIndex.pickerOptions
@@ -133,54 +122,24 @@
     },
     mounted() {
       this.getData();
-      this.getCurrent();
     },
     methods: {
-       /** 通知时间 */
-      getCurrent() {
-        this.searchParams.dateBeginBegin = getTime.currentTime + ' ' + '00:00:00';
-        this.searchParams.dateBeginEnd = getTime.currentTime + ' ' + '23:59:59';
-        this.createTime = [this.searchParams.dateBeginBegin, this.searchParams.dateBeginEnd]
-      },
-      /** 疾病远程搜索 */
-      remoteMethod(query) {
-        if (query !== '') {
-          this.queryLoading = true;
-          setTimeout(() => {
-            commonUrl.autocomplete({
-              'zjm': query
-            }).then((res)=>{
-              this.queryLoading = false;
-              console.log(res)
-              if(res.code == 0) {
-                this.diseaseList = res.data
-              } else {
-                this.options4 = [];
-              }
-            }).catch((error)=>{
-              console.log(error)
-            })
-          }, 200);
-        } else {
-          this.options4 = [];
-        }
-      },
       /** @description
        * 创建时间更改
        */
       timeChange(time) {
         if (time) {
-          this.searchParams.dateBeginBegin = time[0] + ' ' + '00:00:00';
-          this.searchParams.dateBeginEnd = time[1] + ' ' + '23:59:59';
+          this.searchParams.dateEndStart   = time[0];
+          this.searchParams.dateEndEnd   = time[1];
         } else {
-          this.searchParams.dateBeginBegin = '';
-          this.searchParams.dateBeginEnd = '';
+          this.searchParams.dateEndStart   = '';
+          this.searchParams.dateEndEnd   = '';
         }
       },
       /* 获取数据 */
       getData() {
         this.dataLoading = true;
-        AdmissionNotice.resultList(this.searchParams).then(res => {
+        specialDoctor.noticeResultList(JSON.parse(this.searchParams)).then(res => {
           this.dataLoading = false;
           this.tableData = res.data;
           this.totalPage = res.total;
@@ -217,6 +176,6 @@
 </script>
 <style lang='scss'>
   @import '~styles/search';
-  .admissionNoticeResults {
+  .specialDoctorResults {
   }
 </style>

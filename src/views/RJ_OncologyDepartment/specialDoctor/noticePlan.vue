@@ -20,7 +20,7 @@
 				</el-col>
 				<el-col :span='6'>
 			  	<el-form-item label='所属科室'>
-					   <el-input v-model='searchParams.schemeName' placeholder='请输入所属科室' clearable></el-input>
+					   <el-input v-model='searchParams.department' placeholder='请输入所属科室' clearable></el-input>
 					</el-form-item>
 				</el-col>
 			  <el-col :span='6'>
@@ -192,6 +192,7 @@
 <script>
 import Plan from '@/components/dialog/plan/plan';
 import { AdmissionNotice } from 'RJZL_API/hospitalNotice';
+import { specialDoctor } from 'RJZL_API/specialDoctor';
 import auditOptions from 'utils/auditOptions'
 import * as utilsIndex from 'utils'
 const tableName = [ 'list', 'stop'];
@@ -200,23 +201,24 @@ export default {
   data() {
     return {
       searchParams: {
-        adminId: sessionStorage.getItem('userId'),
-        pager: 1, //当前页码
-        limit: 10, //每页条数
-        brxm: '', //患者姓名（可选）
-        mobile: null, //；联系方式（可选）
-        brxb: '', //病人性别（可选）
-        schemeName: '', //随访方案（可选）
-        ageBegin: null, //开始年龄（可选）
-        ageEnd: null, //结束年龄（可选）
-        status:null //默认显示入院通知列表，赋值显示已终止通知列表
+        // adminId: sessionStorage.getItem('userId'),
+        pager: 1, // 当前页码
+        limit: 10, // 每页条数
+        activeType: '10', // 类型 9胃肠镜通知;10特约门诊通知 ,
+        brxm: '', // 医生姓名 ,
+        department: '', // 医生所属科室 ,
+        mobile: '', // 联系电话 ,
+        orderTimeEnd: '', // 医生预约结束看诊时间 ,
+        orderTimeStart: '', // 医生预约开始看诊时间 ,
+        schemeName: '', // 方案名称 ,
+        status: '1', // 1:看诊通知列表 2:已终止通知
       },
       tableData_list: { // 入院通知
         list: [],
         pager: 1,
         totalPage: null,
         loading: false,
-        status: null
+        status: '1'
       },
       tableData_stop: { // 已终止通知
         list: [],
@@ -254,34 +256,15 @@ export default {
   },
   methods: {
      timeChange(time) {
-       console.log(time);
-
-        // if (time) {
-        //   this.searchParams.dateBeginBegin = time[0] + ' ' + '00:00:00';
-        //   this.searchParams.dateBeginEnd = time[1] + ' ' + '23:59:59';
-        // } else {
-        //   this.searchParams.dateBeginBegin = '';
-        //   this.searchParams.dateBeginEnd = '';
-        // }
+        if (time) {
+          this.searchParams.orderTimeStart = time[0];
+          this.searchParams.orderTimeEnd = time[1];
+        } else {
+          this.searchParams.orderTimeStart = '';
+          this.searchParams.orderTimeEnd = '';
+        }
       },
-    /**
-     * 疾病远程搜索
-     */
-    remoteMethod(query) {
-      this.queryLoading = true;
-      if (query === '') {
-        return false;
-      }
-      this.diseaseList = [];
-      AdmissionNotice.getDisease({
-        jbmc: query
-      })
-        .then(res => {
-          this.queryLoading = false;
-          this.diseaseList = res.data;
-        })
-        .catch(error => {});
-    },
+
     /** 查询 */
     searchFun() {
       const getTableName = `tableData_${tableName[this.tabIndex]}`
@@ -291,7 +274,7 @@ export default {
     /* 获取数据 */
     getData(param) {
       param.loading1 = true
-      AdmissionNotice.getPlan({
+      specialDoctor.specialList({
         ...this.searchParams,
         status: param.status,
         pager: param.pager
