@@ -1038,9 +1038,8 @@
           'activeType': '0'
         }).then((res)=>{
           if(res.code === 0) {
-            this.showTopPageData = res
             let getPhone, notGetPhone
-            res.data.forEach( item => {
+            res.data.data.forEach( item => {
               if(item.parentStatisticsName === '已接通') {
                 return getPhone = item.parentStatisticsValue
               }
@@ -1048,6 +1047,7 @@
                 return notGetPhone = item.parentStatisticsValue
               }
             })
+            this.showTopPageData = res.data
             this.showTotal = getPhone + notGetPhone
           }
         })
