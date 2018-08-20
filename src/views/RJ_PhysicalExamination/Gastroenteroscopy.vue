@@ -655,7 +655,7 @@
                   console.log(res.suceess)
                   if (res.code == 0) {
                     if(!res.suceess){
-                      this.$message.error("发起失败，请检查计划是否重复");
+                      this.$message.error(res.message);
                       this.isRepeat = false;
                        return false;
                     }
