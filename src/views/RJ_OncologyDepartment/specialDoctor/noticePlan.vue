@@ -1,7 +1,43 @@
 <template>
-  <div class='notificationsOfAdmission'>
+  <div class='app-container'>
     <!-- 查询 -->
-		<el-row class='common-search'>
+    <ul class="common_search">
+      <li class="common_search_single">
+        <label class="radio-label" >医生姓名</label>
+        <el-input v-model.trim="searchParams.brxm" clearable placeholder="请输入姓名"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >联系方式</label>
+        <el-input v-model.trim="searchParams.mobile" clearable placeholder="请输入联系方式"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >所属科室</label>
+        <el-input v-model.trim="searchParams.department" clearable placeholder="请输入证件号"></el-input>
+      </li>
+       <li class="common_search_single">
+          <label class="radio-label" >随访方案</label>
+          <el-input v-model='searchParams.schemeName' placeholder='请输入随访方案' clearable></el-input>
+      </li>
+      <li class="common_search_single common_search_single_date">
+          <label class="radio-label" >预约时间</label>
+          <el-date-picker
+                @change='timeChange'
+						    v-model='createTime'
+                type="datetimerange"
+                :picker-options="pickerTime"
+                value-format='yyyy-MM-dd HH:mm:ss'
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :default-time="['00:00:00', '23:59:59']"
+                align="right">
+              </el-date-picker>
+      </li>
+      <li class="common_search_single">
+          <el-button type="primary" @click.native="searchFun" icon="el-icon-search">查询</el-button>
+      </li>
+    </ul>
+		<!-- <el-row class='common-search'>
 			<el-form :inline='true' :model='searchParams' label-position='center' label-width='80px'>
 			  <el-col :span='6'>
 			  	<el-form-item label='医生姓名'>
@@ -43,7 +79,7 @@
 			  	<el-button type='primary' @click='searchFun'>查询</el-button>
 			  </el-col>
 			</el-form>
-		</el-row>
+		</el-row> -->
     <!-- 表格 -->
 		<el-row class='common-table'>
 			<el-col :span='24'>
@@ -159,10 +195,10 @@
 import Plan from '@/components/dialog/plan/plan';
 import { AdmissionNotice } from 'RJZL_API/hospitalNotice';
 import { specialDoctor } from 'RJZL_API/specialDoctor';
-import auditOptions from 'utils/auditOptions'
-import formatNotpassReason from 'utils/formatNotpassReason'
-import * as utilsIndex from 'utils'
-const tableName = [ 'list', 'stop'];
+import auditOptions from 'utils/auditOptions';
+import formatNotpassReason from 'utils/formatNotpassReason';
+import * as utilsIndex from 'utils';
+const tableName = ['list', 'stop'];
 export default {
   name: 'noticePlan',
   data() {
@@ -178,7 +214,7 @@ export default {
         orderTimeEnd: '', // 医生预约结束看诊时间 ,
         orderTimeStart: '', // 医生预约开始看诊时间 ,
         schemeName: '', // 方案名称 ,
-        status: '1', // 1:看诊通知列表 2:已终止通知
+        status: '1' // 1:看诊通知列表 2:已终止通知
       },
       tableData_list: { // 入院通知
         list: [],
@@ -206,7 +242,7 @@ export default {
       pickerTime: {
         shortcuts: utilsIndex.pickerOptions
       },
-      createTime: [] /* 创建时间 */,
+      createTime: [] /* 创建时间 */
     };
   },
   components: {
@@ -227,33 +263,33 @@ export default {
     },
     /** 查询 */
     searchFun() {
-      const getTableName = `tableData_${tableName[this.tabIndex]}`
-      this[getTableName].pager = 1
-      this.getData(this[getTableName])
+      const getTableName = `tableData_${tableName[this.tabIndex]}`;
+      this[getTableName].pager = 1;
+      this.getData(this[getTableName]);
     },
     /* 获取数据 */
     getData(param) {
-      param.loading1 = true
+      param.loading1 = true;
       specialDoctor.specialList({
         ...this.searchParams,
         status: param.status,
         pager: param.pager
       })
         .then(res => {
-          formatNotpassReason(res.data)
-          param.list = res.data
+          formatNotpassReason(res.data);
+          param.list = res.data;
           param.totalPage = res.total;
           param.loading = false;
-      }).catch( err => {
-        param.loading = false;
-      });
+        }).catch(err => {
+          param.loading = false;
+        });
     },
 
     /* 展示随访计划详情 */
     showInfo(scope) {
-      this.planDg = true
+      this.planDg = true;
       // 添加来源为特约门诊
-      scope.row.from = 'tymn'
+      scope.row.from = 'tymn';
       this.$store.dispatch('getScopeRowData', scope);
     },
     /**
@@ -265,11 +301,11 @@ export default {
       this.selectCheck = value;
     },
     /** 批量审核选择患者 */
-    selectChange(selection){
+    selectChange(selection) {
       this.checkId.length = 0;
-      selection.forEach( item => {
-        this.checkId.push(item.taskId)
-      })
+      selection.forEach(item => {
+        this.checkId.push(item.taskId);
+      });
     },
     /**
      *弹框点击不通过确定
@@ -277,16 +313,16 @@ export default {
     *@description 点击表格操作弹框不通过
     */
     noothroughCkeck() {
-      if(this.selectCheck){
+      if (this.selectCheck) {
         this.handleCheck(this.checkId, this.selectCheck);
       }
     },
     /** 取消 */
-    resetBtn () {
-      this.noCheck = false
-      this.selectCheck = ''
-      this.notPassRemark = ''
-      this.checkId.length = 0
+    resetBtn() {
+      this.noCheck = false;
+      this.selectCheck = '';
+      this.notPassRemark = '';
+      this.checkId.length = 0;
     },
     /**
      *审核功能
@@ -298,7 +334,7 @@ export default {
     *@param {String} ids 患者id集合,数组转字符串
     *@param {String} noPassReason 审核不通过原因
     */
-    handleCheck( ids, notPassReason) {
+    handleCheck(ids, notPassReason) {
       AdmissionNotice
         .cancelNotice({
           adminId: sessionStorage.getItem('userId'),
@@ -309,11 +345,11 @@ export default {
         .then(res => {
           if (res.code == 0) {
             this.noCheck = false;
-            this.selectCheck = ''
-            this.notPassRemark = ''
-            this.checkId.length = 0
-            const getTableName = `tableData_${tableName[this.tabIndex]}`
-            this.getData(this[getTableName])
+            this.selectCheck = '';
+            this.notPassRemark = '';
+            this.checkId.length = 0;
+            const getTableName = `tableData_${tableName[this.tabIndex]}`;
+            this.getData(this[getTableName]);
           }
         })
         .catch(error => {});
@@ -322,16 +358,16 @@ export default {
      * [handleClick description] 切换tab
      */
     handleClick(tab, event) {
-      this.tabIndex = tab.index
-      const getTableName = `tableData_${tableName[this.tabIndex]}`
-      this.getData(this[getTableName])
+      this.tabIndex = tab.index;
+      const getTableName = `tableData_${tableName[this.tabIndex]}`;
+      this.getData(this[getTableName]);
     },
     /**
      * 分页
      */
     handleCurrentChange(page) {
-      const getTableName = `tableData_${tableName[this.tabIndex]}`
-      this.getData(this[getTableName])
+      const getTableName = `tableData_${tableName[this.tabIndex]}`;
+      this.getData(this[getTableName]);
     },
 
     /**
@@ -351,7 +387,7 @@ export default {
     // 部分通过
     numCheck() {
       if (this.checkId.length === 0) {
-        this.$message.error('请选择患者！')
+        this.$message.error('请选择患者！');
         return false;
       }
       this.noCheck = true;
@@ -361,7 +397,7 @@ export default {
      * @type {String}
      */
     passoutBtn(id) {
-      this.checkId.push(id)
+      this.checkId.push(id);
       this.noCheck = true;
     },
     /** 监听详情的关闭操作 */
@@ -369,7 +405,7 @@ export default {
       this.planDg = false;
     }
   }
-}
+};
 </script>
 <style lang='scss'>
   @import '~styles/search';

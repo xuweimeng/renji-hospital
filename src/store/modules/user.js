@@ -10,7 +10,7 @@ const user = {
     avatar: getParameter('avatar'),
     laterhours: getParameter('laterhours'),
     departmentName: getParameter('departmentName'),
-    hospatil: getParameter('hospital'),
+    hospital: getParameter('hospital'),
     roles: [],
     scopeRowData: {}, // 表格点击操作按钮传递scope.row的数据
     visitTime: '', // 随访结果的时间
@@ -166,6 +166,8 @@ const user = {
       };
       const getInfo = (res, callBack) => {
         document.title = res.data;
+        commit('SET_HOSPITAL', res.data);
+        setParameter('hospital', res.data);
         callBack(hospitalMap[res.data]);
       };
       return new Promise((resolve, reject) => {

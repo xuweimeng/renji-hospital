@@ -17,7 +17,7 @@ export const RJ_PhysicalExamination = [
         component: () => import('RJPE/Home.vue'),
         name: 'Home',
         meta: { title: 'Home', icon: 'dashboard', roles: roles, noCache: true }
-      },
+      }
     ]
   },
   {
@@ -49,7 +49,7 @@ export const RJ_PhysicalExamination = [
   {
     path: '/GastrointestinalEndoscopy',
     component: Layout,
-    meta: { title: 'GastrointestinalEndoscopy', roles: roles, icon: 'icon', noCache: true },
+    meta: { title: 'GastrointestinalEndoscopy', roles: roles, icon: 'jianchaxiang', noCache: true },
     children: [
 
       {

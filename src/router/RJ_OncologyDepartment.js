@@ -2,6 +2,7 @@
  * @description 仁济肿瘤科
  */
 import Layout from '@/views/layout/Layout';
+const role_tymz = '上海市仁济医院特约门诊';
 
 export const RJ_OncologyDepartment = [
   {
@@ -198,11 +199,22 @@ export const RJ_OncologyDepartment = [
   },
   // 特约医生
   {
+    path: '/',
+    component: Layout,
+    redirect: '/specialDoctor/doctorList',
+    meta: {
+      title: 'specialDoctor',
+      icon: 'shouye',
+      roles: [role_tymz],
+      noCache: true
+    }
+  },
+  {
     path: '/specialDoctor',
     component: Layout,
     meta: {
       title: 'specialDoctor',
-      roles: ['上海市仁济医院肿瘤科'],
+      roles: [role_tymz],
       icon: 'jianchaxiang',
       noCache: true
     },
@@ -213,7 +225,7 @@ export const RJ_OncologyDepartment = [
         name: '/doctorList',
         meta: {
           title: 'doctorList',
-          roles: ['上海市仁济医院肿瘤科'],
+          roles: [role_tymz],
           noCache: true
         }
       },
@@ -223,7 +235,7 @@ export const RJ_OncologyDepartment = [
         name: '/noticePlan',
         meta: {
           title: 'noticePlan',
-          roles: ['上海市仁济医院肿瘤科'],
+          roles: [role_tymz],
           noCache: true
         }
       },
@@ -233,7 +245,7 @@ export const RJ_OncologyDepartment = [
         name: '/noticeResult',
         meta: {
           title: 'noticeResult',
-          roles: ['上海市仁济医院肿瘤科'],
+          roles: [role_tymz],
           noCache: true
         }
       }

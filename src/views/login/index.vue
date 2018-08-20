@@ -105,6 +105,7 @@ export default {
         this.passwordType = 'password';
       }
     },
+    // 登录
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -113,7 +114,7 @@ export default {
             .dispatch('LoginByUsername', this.loginForm)
             .then((res) => {
               this.loading = false;
-              this.$router.push({ path: '/Home' });
+              this.$router.push({ path: '/' });
             })
             .catch(() => {
               this.loading = false;

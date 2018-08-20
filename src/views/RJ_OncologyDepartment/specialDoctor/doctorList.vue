@@ -1,7 +1,7 @@
 <template>
-  <div class="doctorList">
+  <div class="app-container">
     <!-- 查询 -->
-		<el-row class="common-search">
+		<!-- <el-row class="common-search">
 			<el-form :inline="true" :model="formInline" label-width="80px">
 			  <el-col :span="6">
 			  	<el-form-item label="医生姓名">
@@ -24,7 +24,25 @@
 			  </el-col>
 
 			</el-form>
-		</el-row>
+		</el-row> -->
+    <ul class="common_search">
+      <li class="common_search_single">
+        <label class="radio-label" >医生姓名</label>
+        <el-input v-model.trim="formInline.name" clearable placeholder="请输入姓名"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >联系方式</label>
+        <el-input v-model.trim="formInline.mobile" clearable placeholder="请输入联系方式"></el-input>
+      </li>
+      <li class="common_search_single">
+        <label class="radio-label" >所属科室</label>
+        <el-input v-model.trim="formInline.departmentName" clearable placeholder="请输入证件号"></el-input>
+      </li>
+      <li class="common_search_single">
+          <el-button type="primary" size="small" @click="searchBtn">查询</el-button>
+			  	<el-button type="success" plain size="small" @click="editDoctor">新增</el-button>
+      </li>
+    </ul>
 		<!-- 表格 -->
 		<el-row class="common-table">
 			<el-col :span="24">
@@ -159,7 +177,7 @@
     name: 'doctorList',
     data() {
       var checkMobile = (rule, value, callback) => {
-        var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
+        var myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
         if (value === '') {
           callback(new Error('手机号不能为空'));
         } else if (myreg.test(value)) {
@@ -168,7 +186,7 @@
           callback(new Error('手机号码格式错误!'));
         }
       };
-     　return {
+      return {
         formInline: {
           name: '',
           mobile: '',
@@ -196,13 +214,13 @@
         },
         rules: {
           name: [
-            { required: true, message: '请输入医生姓名', trigger: 'blur'}
+            { required: true, message: '请输入医生姓名', trigger: 'blur' }
           ],
           departmentName: [
-            { required: true, message: '请输入科室名称', trigger: 'blur'}
+            { required: true, message: '请输入科室名称', trigger: 'blur' }
           ],
           mobile: [
-            { required: true, validator: checkMobile, trigger: 'blur'}
+            { required: true, validator: checkMobile, trigger: 'blur' }
             // { required: true, message: '请输入科室名称', trigger: 'blur'},
           ]
         },
@@ -212,78 +230,76 @@
           doctorId: '',
           adminId: sessionStorage.getItem('userId'),
           schemeId: '',
-          schemeName: "", //随访方案名称
-          appointmentTime: "", //医生预约时间
-          visitTime: "",   //AI通知时间
-          activeType: "10"   //随访类型  10--特约门诊通知。
+          schemeName: '', // 随访方案名称
+          appointmentTime: '', // 医生预约时间
+          visitTime: '', // AI通知时间
+          activeType: '10' // 随访类型  10--特约门诊通知。
         },
         markId: '', // 编辑医生的id
         tipName: false // 新增时该医生是否存在
 
-      }
+      };
     },
     mounted() {
-      this.getData()
+      this.getData();
     },
     methods: {
       /** 查询 */
       searchBtn() {
-        this.formInline.pager = 1
-        this.getData()
+        this.formInline.pager = 1;
+        this.getData();
       },
       /** 获取列表 */
       getData(item) {
         this.tableData_list.loading = true;
         specialDoctor.specialdoctorList(this.formInline).then(res => {
           this.tableData_list.loading = false;
-          if(res.code === 0) {
-            if(!item) {
-              this.tableData_list.list = res.data
-              if(this.tableData_list.pager==1) {
-                this.tableData_list.totalPage = res.count
+          if (res.code === 0) {
+            if (!item) {
+              this.tableData_list.list = res.data;
+              if (this.tableData_list.pager == 1) {
+                this.tableData_list.totalPage = res.count;
               }
-            }else{
-              res.data.length?this.tipName=true:this.tipName=false
+            } else {
+              res.data.length ? this.tipName = true : this.tipName = false;
             }
-            
           } else {
-            this.$message.error(res.message)
+            this.$message.error(res.message);
           }
         }).catch(err => {
           this.tableData_list.loading = false;
-          this.$message.error(err.message)
-        })
+          this.$message.error(err.message);
+        });
       },
       nameChange(value) {
-       
-        this.formInline.name = value
-        this.formInline.limit = 100000
-        this.getData(true)
+        this.formInline.name = value;
+        this.formInline.limit = 100000;
+        this.getData(true);
       },
       /** 分页 */
       handleCurrentChange(page) {
-        this.formInline.pager = page
-        this.getData()
+        this.formInline.pager = page;
+        this.getData();
       },
       /** 打开 新增/编辑医生 弹框*/
       editDoctor(row) {
-        this.addDoctorDialog = true
-        this.addDoctorForm.departmentName = row.departmentName
-        this.addDoctorForm.name = row.name
-        this.addDoctorForm.mobile = row.mobile
+        this.addDoctorDialog = true;
+        this.addDoctorForm.departmentName = row.departmentName;
+        this.addDoctorForm.name = row.name;
+        this.addDoctorForm.mobile = row.mobile;
         // 如果 选择编辑医生时获取该医生的id
-        if(row.id) {
-          this.markId = row.id
+        if (row.id) {
+          this.markId = row.id;
         }
       },
       /** 新增/编辑医生按钮 */
       addDoctorBtn(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if(this.markId) {
-              this.updateDoctorFun()
-            }else {
-              this.addDoctorFun()
+            if (this.markId) {
+              this.updateDoctorFun();
+            } else {
+              this.addDoctorFun();
             }
           } else {
             return false;
@@ -292,127 +308,127 @@
       },
       /** 新增医生 */
       addDoctorFun(item) {
-        this.addDoctorBtnLoading.addLoading = true
-        this.addDoctorBtnLoading.addDisabled = true
+        this.addDoctorBtnLoading.addLoading = true;
+        this.addDoctorBtnLoading.addDisabled = true;
         specialDoctor.specialdoctorSave(this.addDoctorForm).then(res => {
-          this.tipName?this.tipName=false:this.tipName
-          this.addDoctorBtnLoading.addLoading = false
-          this.addDoctorBtnLoading.addDisabled = false
+          this.tipName ? this.tipName = false : this.tipName;
+          this.addDoctorBtnLoading.addLoading = false;
+          this.addDoctorBtnLoading.addDisabled = false;
           // 如果点击的按钮为保存并发起通知
-          if(item) {
-            this.addDoctorBtnLoading.planLoading = false
-            this.addDoctorBtnLoading.planDisabled = false
+          if (item) {
+            this.addDoctorBtnLoading.planLoading = false;
+            this.addDoctorBtnLoading.planDisabled = false;
           }
-          if(res.code === 0) {
+          if (res.code === 0) {
             this.$refs.ruleForm.resetFields();
-            this.addDoctorDialog = false
-            this.getData()
-            this.$message.success(res.message)
+            this.addDoctorDialog = false;
+            this.getData();
+            this.$message.success(res.message);
             // 发起看诊通知
-            if(item) {
-              this.markId = res.data
-              this.addPlanDialog = true
-              this.getSchemList()
+            if (item) {
+              this.markId = res.data;
+              this.addPlanDialog = true;
+              this.getSchemList();
             }
           } else {
-            this.$message.error(res.message)
+            this.$message.error(res.message);
           }
         }).catch(err => {
-          this.tipName?this.tipName=false:this.tipName
-          this.addDoctorBtnLoading.addLoading = false
-          this.addDoctorBtnLoading.addDisabled = false
-          if(item) {
-            this.addDoctorBtnLoading.planLoading = false
-            this.addDoctorBtnLoading.planDisabled = false
+          this.tipName ? this.tipName = false : this.tipName;
+          this.addDoctorBtnLoading.addLoading = false;
+          this.addDoctorBtnLoading.addDisabled = false;
+          if (item) {
+            this.addDoctorBtnLoading.planLoading = false;
+            this.addDoctorBtnLoading.planDisabled = false;
           }
-          this.$message.error(err.message)
-        })
+          this.$message.error(err.message);
+        });
       },
-       /** 编辑医生 */
+      /** 编辑医生 */
       updateDoctorFun(item) {
-        this.addDoctorBtnLoading.addLoading = true
-        this.addDoctorBtnLoading.addDisabled = true
+        this.addDoctorBtnLoading.addLoading = true;
+        this.addDoctorBtnLoading.addDisabled = true;
         specialDoctor.specialdoctorUpdate({
           ...this.addDoctorForm,
-          id:this.markId
-          }).then(res => {
-          this.tipName?this.tipName=false:this.tipName
-          this.addDoctorBtnLoading.addLoading = false
-          this.addDoctorBtnLoading.addDisabled = false
+          id: this.markId
+        }).then(res => {
+          this.tipName ? this.tipName = false : this.tipName;
+          this.addDoctorBtnLoading.addLoading = false;
+          this.addDoctorBtnLoading.addDisabled = false;
           // 如果点击的按钮为保存并发起通知
-          if(item) {
-            this.addDoctorBtnLoading.planLoading = false
-            this.addDoctorBtnLoading.planDisabled = false
+          if (item) {
+            this.addDoctorBtnLoading.planLoading = false;
+            this.addDoctorBtnLoading.planDisabled = false;
           }
-          
-          if(res.code === 0) {
+  
+          if (res.code === 0) {
             this.$refs.ruleForm.resetFields();
-            this.addDoctorDialog = false
-            this.getData()
-            this.$message.success(res.message)
+            this.addDoctorDialog = false;
+            this.getData();
+            this.$message.success(res.message);
             // 发起看诊通知
-            if(item) {
-              this.addPlanDialog = true
-              this.getSchemList()
+            if (item) {
+              this.addPlanDialog = true;
+              this.getSchemList();
             } else {
-              this.markId = ''
+              this.markId = '';
             }
           } else {
-            this.$message.error(res.message)
+            this.$message.error(res.message);
           }
         }).catch(err => {
-          this.tipName?this.tipName=false:this.tipName
-          this.markId = ''
-          this.addDoctorBtnLoading.addLoading = false
-          this.addDoctorBtnLoading.addDisabled = false
-          if(item) {
-            this.addDoctorBtnLoading.planLoading = false
-            this.addDoctorBtnLoading.planDisabled = false
+          this.tipName ? this.tipName = false : this.tipName;
+          this.markId = '';
+          this.addDoctorBtnLoading.addLoading = false;
+          this.addDoctorBtnLoading.addDisabled = false;
+          if (item) {
+            this.addDoctorBtnLoading.planLoading = false;
+            this.addDoctorBtnLoading.planDisabled = false;
           }
-          this.$message.error(err.message)
-        })
+          this.$message.error(err.message);
+        });
       },
       /** 编辑并发起通知 */
       addDoctorAndPlan() {
         // 判断该医生是否已存在
-        this.addDoctorBtnLoading.planLoading = true
-        this.addDoctorBtnLoading.planDisabled = true
+        this.addDoctorBtnLoading.planLoading = true;
+        this.addDoctorBtnLoading.planDisabled = true;
         // 如果存在markId,则为编辑，否则为新增
-        if(this.markId) {
-          this.updateDoctorFun(true)
-        }else {
-          this.addDoctorFun(true)
+        if (this.markId) {
+          this.updateDoctorFun(true);
+        } else {
+          this.addDoctorFun(true);
         }
       },
       // 清空form
       resetForm(formName) {
         this.$refs[formName].resetFields();
-        this.addDoctorDialog = false
+        this.addDoctorDialog = false;
       },
       beforeClose() {
         this.$refs.ruleForm.resetFields();
-        this.addDoctorDialog = false
-        this.tipName?this.tipName=false:this.tipName
+        this.addDoctorDialog = false;
+        this.tipName ? this.tipName = false : this.tipName;
       },
       /** 删除医生 */
       deleteDoctor(row) {
         specialDoctor.specialdoctorDelete({
           id: row.id
         }).then(res => {
-          if(res.code === 0) {
-            this.getData()
-            this.$message.success(res.message)
+          if (res.code === 0) {
+            this.getData();
+            this.$message.success(res.message);
           } else {
-            this.$message.error(res.message)
+            this.$message.error(res.message);
           }
         }).catch(err => {
-          this.$message.error(err.message)
-        })
+          this.$message.error(err.message);
+        });
       },
-       /** 打开 通知就诊 弹框*/
+      /** 打开 通知就诊 弹框*/
       lookDetailes(scope) {
-        this.addPlanDialog = true
-        this.getSchemList()
+        this.addPlanDialog = true;
+        this.getSchemList();
       },
       /** 获取方案列表 */
       getSchemList() {
@@ -423,74 +439,74 @@
           diseaseId: '',
           activeType: '10'
         }).then(res => {
-          if(res.code === 0) {
+          if (res.code === 0) {
             res.data.forEach(item => {
               item = Object.assign(item, {
                 selected: false
-              })
-            })
-            this.addPlanData = res.data
+              });
+            });
+            this.addPlanData = res.data;
           } else {
-            this.$message.error(res.message)
+            this.$message.error(res.message);
           }
         }).catch(err => {
-          this.$message.error(err.message)
-        })
+          this.$message.error(err.message);
+        });
       },
       /** 选择方案 */
       selectScheme(scope) {
-        scope.row.selected = !scope.row.selected
+        scope.row.selected = !scope.row.selected;
         // 选中方案，则其他方案为false，否则全部为false
-        if(scope.row.selected){
+        if (scope.row.selected) {
           // 选中方案信息
-          this.schemePramer= {
+          this.schemePramer = {
             ...this.schemePramer,
             doctorId: scope.row.id,
             schemeId: scope.row.id,
-            schemeName: scope.row.name, //随访方案名称
-          }
+            schemeName: scope.row.name // 随访方案名称
+          };
           this.addPlanData.forEach((item, index) => {
-            if(index == scope.$index) {
-              return item.selected
+            if (index == scope.$index) {
+              return item.selected;
             } else {
-              item.selected = false
+              item.selected = false;
             }
-          })
+          });
         } else {
           this.addPlanData.forEach((item, index) => {
-            item.selected = false
-          })
+            item.selected = false;
+          });
         }
       },
       /** 发起通知 */
       schemeBtn() {
-        if(this.schemePramer.appointmentTime =='' || this.schemePramer.visitTime =='') {
-          this.$message.error('请选择时间!')
-        } else if (this.schemePramer.schemeId =='') {
-          this.$message.error('请选择方案!')
+        if (this.schemePramer.appointmentTime == '' || this.schemePramer.visitTime == '') {
+          this.$message.error('请选择时间!');
+        } else if (this.schemePramer.schemeId == '') {
+          this.$message.error('请选择方案!');
         } else {
           specialDoctor.clinic(this.schemePramer)
-          .then(res => {
-            this.addPlanDialog = false
-            if(res.code === 0) {
-              this.$message.success(res.message)
-            } else {
-              this.$message.error(res.message)
-            }
-          }).catch(err => {
-            this.addPlanDialog = false
-            this.$message.error(err.message)
-          })
+            .then(res => {
+              this.addPlanDialog = false;
+              if (res.code === 0) {
+                this.$message.success(res.message);
+              } else {
+                this.$message.error(res.message);
+              }
+            }).catch(err => {
+              this.addPlanDialog = false;
+              this.$message.error(err.message);
+            });
         }
       },
       /** 取消通知 */
       resetPlanDialog() {
-        this.schemePramer.appointmentTime = ''
-        this.schemePramer.visitTime = ''
-        this.addPlanDialog = false
+        this.schemePramer.appointmentTime = '';
+        this.schemePramer.visitTime = '';
+        this.addPlanDialog = false;
       }
     }
-  }
+  };
 </script>
 <style lang="scss">
   @import '~styles/search';
