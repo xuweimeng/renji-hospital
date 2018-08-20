@@ -1,30 +1,6 @@
 <template>
   <div class="app-container">
     <!-- 查询 -->
-		<!-- <el-row class="common-search">
-			<el-form :inline="true" :model="formInline" label-width="80px">
-			  <el-col :span="6">
-			  	<el-form-item label="医生姓名">
-				    <el-input v-model.trim="formInline.name" placeholder="请输入姓名" clearable></el-input>
-				  </el-form-item>
-				</el-col>
-				<el-col :span="6">
-			  	<el-form-item label="联系电话">
-				    <el-input v-model.trim="formInline.mobile" placeholder="请输入联系电话" clearable></el-input>
-				  </el-form-item>
-				</el-col>
-				<el-col :span="6">
-			  	<el-form-item label="科室">
-				    <el-input v-model.trim="formInline.departmentName" placeholder="请输入科室名称" clearable></el-input>
-				  </el-form-item>
-				</el-col>
-			  <el-col :span="6">
-          <el-button type="primary" size="small" @click="searchBtn">查询</el-button>
-			  	<el-button type="success" plain size="small" @click="editDoctor">新增</el-button>
-			  </el-col>
-
-			</el-form>
-		</el-row> -->
     <ul class="common_search">
       <li class="common_search_single">
         <label class="radio-label" >医生姓名</label>
@@ -59,7 +35,7 @@
             <template slot-scope="scope">
               <el-button type="danger" size="mini" @click="deleteDoctor(scope.row)">删除</el-button>
               <el-button type="primary" size="mini" @click="editDoctor(scope.row)">编辑</el-button>
-              <el-button type="warning" size="mini" @click="lookDetailes(scope)">通知TA看诊</el-button>
+              <el-button type="warning" size="mini" plain @click="lookDetailes(scope)">通知TA看诊</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -100,7 +76,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button 
-          @click="addDoctorBtn('ruleForm')" 
+          @click="addDoctorBtnFun('ruleForm')" 
           :loading="addDoctorBtnLoading.addLoading" 
           :disabled="addDoctorBtnLoading.addDisabled">
           保存
@@ -293,7 +269,7 @@
         }
       },
       /** 新增/编辑医生按钮 */
-      addDoctorBtn(formName) {
+      addDoctorBtnFun(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.markId) {
@@ -360,9 +336,11 @@
             this.addDoctorBtnLoading.planLoading = false;
             this.addDoctorBtnLoading.planDisabled = false;
           }
-  
           if (res.code === 0) {
             this.$refs.ruleForm.resetFields();
+            this.addDoctorForm.departmentName = ''
+            this.addDoctorForm.mobile = ''
+            this.addDoctorForm.name = ''
             this.addDoctorDialog = false;
             this.getData();
             this.$message.success(res.message);
@@ -429,6 +407,7 @@
       lookDetailes(scope) {
         this.addPlanDialog = true;
         this.getSchemList();
+        this.schemePramer.doctorId =scope.row.id
       },
       /** 获取方案列表 */
       getSchemList() {
@@ -461,7 +440,6 @@
           // 选中方案信息
           this.schemePramer = {
             ...this.schemePramer,
-            doctorId: scope.row.id,
             schemeId: scope.row.id,
             schemeName: scope.row.name // 随访方案名称
           };
@@ -488,12 +466,24 @@
           specialDoctor.clinic(this.schemePramer)
             .then(res => {
               this.addPlanDialog = false;
+              this.schemePramer.adminId = ''
+              this.schemePramer.appointmentTime = ''
+              this.schemePramer.doctorId = ''
+              this.schemePramer.schemeId = ''
+              this.schemePramer.schemeName = ''
+              this.schemePramer.visitTime = ''
               if (res.code === 0) {
                 this.$message.success(res.message);
               } else {
                 this.$message.error(res.message);
               }
             }).catch(err => {
+              this.schemePramer.adminId = ''
+              this.schemePramer.appointmentTime = ''
+              this.schemePramer.doctorId = ''
+              this.schemePramer.schemeId = ''
+              this.schemePramer.schemeName = ''
+              this.schemePramer.visitTime = ''
               this.addPlanDialog = false;
               this.$message.error(err.message);
             });
@@ -501,8 +491,12 @@
       },
       /** 取消通知 */
       resetPlanDialog() {
-        this.schemePramer.appointmentTime = '';
-        this.schemePramer.visitTime = '';
+        this.schemePramer.adminId = ''
+        this.schemePramer.appointmentTime = ''
+        this.schemePramer.doctorId = ''
+        this.schemePramer.schemeId = ''
+        this.schemePramer.schemeName = ''
+        this.schemePramer.visitTime = ''
         this.addPlanDialog = false;
       }
     }
@@ -510,16 +504,14 @@
 </script>
 <style lang="scss">
   @import '~styles/search';
-  .doctorList {
-    .timeStyle {
-      padding-top: 20px;
-      .time-tips {
-        line-height: 36px;
-        color: rgba(0,0,0,.7);
-        .tipIcon {
-          color: #ff7800;
-          padding-right: 10px;
-        }
+  .timeStyle {
+    margin-top: 20px;
+    .time-tips {
+      line-height: 36px;
+      color: rgba(0,0,0,.7);
+      .tipIcon {
+        color: #ff7800;
+        padding-right: 10px;
       }
     }
   }
