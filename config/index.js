@@ -12,9 +12,9 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       "/api": {
-        // target: "http://192.168.1.218:8082",
+        target: "http://192.168.1.218:8082",
         // target: "http://192.168.3.29:8088",   //申狗
-        target: "http://192.168.3.21:8083",   //申狗
+        // target: "http://192.168.3.21:8083",   //申狗
         // target: "http://192.168.3.35:8082",   //架狗
         // target: "http://192.168.3.24:8083",   //懂鸡
 

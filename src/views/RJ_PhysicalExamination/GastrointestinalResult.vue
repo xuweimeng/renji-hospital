@@ -164,9 +164,9 @@
     },
     mounted() {
       this.endBirthday = [this.getCurrent() + ' 00:00:00', this.getCurrent() + ' 23:59:59'];
-      this.appointmentTime = [this.getCurrent() + ' 00:00:00', this.getCurrent() + ' 23:59:59'];
-      this.searchParams.dateEndBegin = this.getCurrent() + ' 00:00:00';
-      this.searchParams.dateEndEnd = this.getCurrent() + ' 23:59:59';
+//      this.appointmentTime = [this.getCurrent() + ' 00:00:00', this.getCurrent() + ' 23:59:59'];
+//      this.searchParams.dateEndBegin = this.getCurrent() + ' 00:00:00';
+//      this.searchParams.dateEndEnd = this.getCurrent() + ' 23:59:59';
       this.searchParams.orderTimeBegin = this.getCurrent() + ' 00:00:00';
       this.searchParams.orderTimeEnd = this.getCurrent() + ' 23:59:59';
       this.getData();

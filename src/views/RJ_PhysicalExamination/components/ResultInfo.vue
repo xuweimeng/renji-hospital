@@ -222,6 +222,7 @@
                             <p v-else-if="!item.audio&&baseData.callStatus&&item.isArtificialCall">此记录为人工呼叫，暂无录音</p>
                             <p v-else-if="!item.audio&&baseData.callStatus&&!item.isArtificialCall">此记录为暂无录音</p>
                             <p v-else-if="!item.audio&&!baseData.callStatus&&!item.isArtificialCall">此记录为暂无录音</p>
+                            <p v-else-if="!item.audio&&!baseData.callStatus&&item.isArtificialCall">此记录为人工呼叫，暂无录音</p>
                             <div>
                               指标：<el-tag v-if="item.isNormal" type="primary">正常</el-tag><el-tag v-else type="error">不正常</el-tag>
                               / {{item.fieldName}} : {{item.fieldValue}}
