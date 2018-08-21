@@ -383,16 +383,20 @@ export default {
             orderTime: initDateTime
           })
             .then(res => {
+              console.log(res.message)
               if (res.code == 0) {
                 this.$message.success(res.message);
                 this.isModify = false;
                 this.list();
                 this.repeatFlag = true;
+              }else{
+                this.$message.error(res.message);
               }
             })
             .catch(res => {
+              var resDate = res+""
               this.repeatFlag = true;
-              this.$message.error(res);
+              this.$message.error(resDate);
             });
         }
       });
