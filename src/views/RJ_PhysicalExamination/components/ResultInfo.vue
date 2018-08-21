@@ -299,7 +299,7 @@ export default {
           res.data.gzTag =  res.gztag;
           this.baseData = res.data;
           this.baseData.isCare = !!this.baseData.gzTag;
-          this.baseUrl = res.AIVOICURL;
+          this.baseUrl = res.AIVOICURL||'';
           this.recordData =
             this.baseData.orderReplyQuestions.length > 0
               ? this.baseData.orderReplyQuestions
