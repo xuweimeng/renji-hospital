@@ -164,7 +164,7 @@
             <!-- header information -->
             <div class="record_header">
                 <h3 class="record_header_name">
-                    {{baseData.brxm}}
+                    {{resultData.brxm}}
                     <span class="record_header_sexAndage">
                         {{`${baseData.brxb}${baseData.brage?('/'+baseData.brage):''}`}}
                     </span>
@@ -176,7 +176,7 @@
                   所属科室: {{resultData.department?resultData.department:"无"}}
                 </h4>
                 <h4 class="record_header_param">
-                  手机号码: {{baseData.mobile?baseData.mobile:"无"}}
+                  手机号码: {{resultData.mobile?resultData.mobile:"无"}}
                 </h4>
                 <h4 class="record_header_param">
                   预约看诊时间: {{resultData.orderTime?resultData.orderTime:'无'}}
