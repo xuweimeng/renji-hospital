@@ -225,6 +225,7 @@
       },
       /** 获取列表 */
       getData(item) {
+        this.tipName=false
         this.tableData_list.loading = true;
         let paramer = {}
         if(item) {
@@ -241,7 +242,16 @@
                 this.tableData_list.totalPage = res.count;
               }
             } else {
-              res.data.length ? this.tipName = true : this.tipName = false;
+              // 如果模糊查询到了医生，进一步匹配
+              if(res.data.length) {
+                console.log(paramer);
+                res.data.forEach(item=>{
+                  if(item.name == paramer.name && item.mobile == paramer.mobile) {
+                    console.log(item.name,item.mobile);
+                    this.tipName = true
+                  }
+                })
+               }
             }
           } else {
             this.$message.error(res.message);
@@ -272,8 +282,6 @@
           this.tipName = false
         }
         if(obj.name&&obj.mobile){
-          console.log(obj.mobile);
-          
           this.getData(obj);
         }
       },

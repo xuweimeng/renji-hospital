@@ -12,7 +12,7 @@
       </li>
       <li class="common_search_single">
         <label class="radio-label" >所属科室</label>
-        <el-input v-model.trim="searchParams.department" clearable placeholder="请输入证件号"></el-input>
+        <el-input v-model.trim="searchParams.department" clearable placeholder="请输入所属科室"></el-input>
       </li>
        <li class="common_search_single">
           <label class="radio-label" >随访方案</label>
@@ -218,14 +218,6 @@ export default {
       if (time) {
         this.searchParams.orderTimeStart = time[0];
         this.searchParams.orderTimeEnd = time[1];
-        // if (this.searchParams.orderTimeStart.indexOf('00:00:00') < 0) {
-        //   this.searchParams.orderTimeStart = this.searchParams.orderTimeStart.slice(0, 11) + '00:00:00';
-        //   this.createTime[0] = this.searchParams.orderTimeStart;
-        // }
-        // if (this.searchParams.orderTimeEnd.indexOf('23:59:59') < 0) {
-        //   this.searchParams.orderTimeEnd = this.searchParams.orderTimeEnd.slice(0, 11) + '23:59:59';
-        //   this.createTime[1] = this.searchParams.orderTimeEnd;
-        // }
       } else {
         this.searchParams.orderTimeStart = '';
         this.searchParams.orderTimeEnd = '';
@@ -258,15 +250,19 @@ export default {
     },
     /** 不通过原因 */
     formatNotpassReason(data) {
-      data.forEach(item => {
-        if (item.notPassReason === '2') {
-          item.notPassReason = '时间不匹配';
-        } else if (item.notPassReason === '3') {
-          item.notPassReason = '随访方案重复';
-        } else if (item.notPassReason === '4') {
-          item.notPassReason = '方案不匹配';
-        } else if (item.notPassReason === '5') {
-          item.notPassReason = '其他';
+       data.forEach(item => {
+         if(item.notPassReason === '1') {
+          item.notPassReason =  '医生已死亡'
+        } else if(item.notPassReason === '2') {
+          item.notPassReason =  '医生不接受随访'
+        } else if(item.notPassReason === '3') {
+          item.notPassReason =  '随访方案重复'
+        } else if(item.notPassReason === '4') {
+          item.notPassReason =  '方案不匹配'
+        }else if(item.notPassReason === '5') {
+          item.notPassReason =  '其他'
+        }else if(item.notPassReason === '6') {
+          item.notPassReason =  '医生已删除'
         }
       });
     },
