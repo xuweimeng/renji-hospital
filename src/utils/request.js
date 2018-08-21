@@ -117,6 +117,11 @@ const fetch = (type, url, params) => {
         if (resultData.code === 0) {
           resolve(resultData);
         } else if (resultData.code === 1) {
+          Message({
+            message: resultData.message,
+            type: 'error',
+            duration: 5 * 1000
+          });
           reject(new Error(resultData.message));
         } else {
           Message({
