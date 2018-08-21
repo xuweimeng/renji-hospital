@@ -12,7 +12,7 @@
       </li>
       <li class="common_search_single">
         <label class="radio-label" >所属科室</label>
-        <el-input v-model.trim="searchParams.department" clearable placeholder="请输入证件号"></el-input>
+        <el-input v-model.trim="searchParams.department" clearable placeholder="请输入所属科室"></el-input>
       </li>
        <li class="common_search_single">
           <label class="radio-label" >是否过来</label>
@@ -39,51 +39,6 @@
           <el-button type="primary" @click.native="searchBtn" icon="el-icon-search">查询</el-button>
       </li>
     </ul>
-		<!-- <el-row class='common-search'>
-			<el-form :inline='true' :model='searchParams' label-position="center" label-width="100px">
-			  <el-col :span='6'>
-			  	<el-form-item label='医生姓名'>
-				    <el-input v-model='searchParams.brxm' placeholder='请输入医生姓名' clearable ></el-input>
-				  </el-form-item>
-				</el-col>
-				<el-col :span='6'>
-			  	<el-form-item label='联系电话'>
-				    <el-input v-model='searchParams.mobile' placeholder='请输入医生联系电话' clearable ></el-input>
-				  </el-form-item>
-				</el-col>
-        <el-col :span='6'>
-			  	<el-form-item label='所属科室'>
-				    <el-input v-model='searchParams.department' placeholder='请输入医生联系电话' clearable ></el-input>
-				  </el-form-item>
-				</el-col>
-				<el-col :span='6'>
-					<el-form-item label='AI通知时间'>
-						<el-date-picker  @change='timeChange'
-						  v-model='createTime'
-							type="datetimerange"
-							range-separator='至'
-							start-placeholder='开始日期'
-							end-placeholder='结束日期'
-              value-format='yyyy-MM-dd HH:mm:ss'
-              :default-time="['00:00:00', '23:59:59']"
-              :picker-options='pickerTime'>
-						</el-date-picker>
-					</el-form-item>
-				</el-col>
-        <el-col :span='6'>
-			  	<el-form-item label='是否过来'>
-				    <el-select v-model='searchParams.fieldValue ' placeholder='是否过来'>
-				      <el-option label='全部' value='0'></el-option>
-				      <el-option label='来' value='1'></el-option>
-              <el-option label='不来' value='2'></el-option>
-				    </el-select>
-				  </el-form-item>
-				</el-col>
-			  <el-col :span='3'>
-			  	<el-button type='primary' @click='searchBtn'>查询</el-button>
-			  </el-col>
-			</el-form>
-		</el-row> -->
     <!-- 表格 -->
 		<el-row class='common-table'>
 			<el-col :span='24'>
@@ -110,14 +65,10 @@
          <result-info ref="record" @refresh="getData" :resultData="dataTail" :patientId="patientId" ></result-info>
 			</el-col>
 		</el-row>
-    <!-- 详情 -->
-    <ad-result :resultDg='resultDg'
-		@closeChildren='closeChildren'></ad-result>
   </div>
 </template>
 <script>
   import { specialDoctor } from 'RJZL_API/specialDoctor';
-  import AdResult from '@/components/dialog/aDresult/ppResult';
   import * as getTime from 'utils/getDate';
   import * as utilsIndex from 'utils';
   import ResultInfo from './ResultInfo';
@@ -145,7 +96,6 @@
         selectCheck: '', // 选中的审核不通过
         checkId: [], // 随访通过的id(多选时),
         queryLoading: false, // 搜索loading...
-        resultDg: false, // 详情弹窗
         pickerTime: {
           shortcuts: utilsIndex.pickerOptions
         },
@@ -154,7 +104,6 @@
       };
     },
     components: {
-      AdResult,
       ResultInfo
     },
     mounted() {
@@ -168,6 +117,14 @@
         if (time) {
           this.searchParams.dateEndStart = time[0];
           this.searchParams.dateEndEnd = time[1];
+          if(this.searchParams.dateEndStart.indexOf('23:59:59')<0) {
+            this.searchParams.dateEndStart = this.searchParams.dateEndStart.slice(0,11) + '00:00:00'
+            this.createTime[0] = this.searchParams.dateEndStart
+          }
+          if(this.searchParams.dateEndEnd.indexOf('23:59:59')<0) {
+            this.searchParams.dateEndEnd = this.searchParams.dateEndEnd.slice(0,11) + '23:59:59'
+            this.createTime[1] = this.searchParams.dateEndEnd
+          }
         } else {
           this.searchParams.dateEndStart = '';
           this.searchParams.dateEndEnd = '';
@@ -203,12 +160,6 @@
         this.dataTail = scope.row;
         this.patientId = scope.row.orderId;
         this.$refs.record.dialogTableVisible = true;
-        // this.resultDg = true;
-        // this.$store.dispatch('getScopeRowData', scope);
-      },
-      /** 监听弹窗子组件的关闭动作 */
-      closeChildren(val) {
-        this.resultDg = val;
       }
     }
   };

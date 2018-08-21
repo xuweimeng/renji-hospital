@@ -1,5 +1,5 @@
 <template>
-  <div class='app-container'>
+  <div class='noticePlan'>
     <!-- 查询 -->
     <ul class="common_search">
       <li class="common_search_single">
@@ -21,65 +21,22 @@
       <li class="common_search_single common_search_single_date">
           <label class="radio-label" >预约时间</label>
           <el-date-picker
-                @change='timeChange'
-						    v-model='createTime'
-                type="datetimerange"
-                :picker-options="pickerTime"
-                value-format='yyyy-MM-dd HH:mm:ss'
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :default-time="['00:00:00', '23:59:59']"
-                align="right">
-              </el-date-picker>
+            @change='timeChange'
+            v-model='createTime'
+            type="datetimerange"
+            :picker-options="pickerTime"
+            value-format='yyyy-MM-dd HH:mm:ss'
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :default-time="['00:00:00', '23:59:59']"
+            align="right">
+          </el-date-picker>
       </li>
       <li class="common_search_single">
           <el-button type="primary" @click.native="searchFun" icon="el-icon-search">查询</el-button>
       </li>
     </ul>
-		<!-- <el-row class='common-search'>
-			<el-form :inline='true' :model='searchParams' label-position='center' label-width='80px'>
-			  <el-col :span='6'>
-			  	<el-form-item label='医生姓名'>
-				    <el-input v-model='searchParams.brxm' placeholder='请输入患者姓名' clearable></el-input>
-				  </el-form-item>
-				</el-col>
-				<el-col :span='6'>
-			  	<el-form-item label='联系电话'>
-				    <el-input v-model='searchParams.mobile' placeholder='请输入患者联系电话' clearable></el-input>
-				  </el-form-item>
-				</el-col>
-				<el-col :span='6'>
-			  	<el-form-item label='随访方案'>
-				    <el-input v-model='searchParams.schemeName' placeholder='请输入随访方案' clearable></el-input>
-				  </el-form-item>
-				</el-col>
-				<el-col :span='6'>
-			  	<el-form-item label='所属科室'>
-					   <el-input v-model='searchParams.department' placeholder='请输入所属科室' clearable></el-input>
-					</el-form-item>
-				</el-col>
-			  <el-col :span='6'>
-			  	<el-form-item label='预约时间'>
-              <el-date-picker
-                @change='timeChange'
-						    v-model='createTime'
-                type="datetimerange"
-                :picker-options="pickerTime"
-                value-format='yyyy-MM-dd HH:mm:ss'
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :default-time="['00:00:00', '23:59:59']"
-                align="right">
-              </el-date-picker>
-			  	</el-form-item>
-			  </el-col>
-			  <el-col :span='6'>
-			  	<el-button type='primary' @click='searchFun'>查询</el-button>
-			  </el-col>
-			</el-form>
-		</el-row> -->
     <!-- 表格 -->
 		<el-row class='common-table'>
 			<el-col :span='24'>
@@ -131,7 +88,7 @@
 			    		<el-table-column prop='schemeName' label='方案名称' align='center' show-overflow-tooltip></el-table-column>
               <el-table-column prop='orderTime' label='预约看诊时间' align='center' show-overflow-tooltip></el-table-column>
 			    		<el-table-column prop='visitStartTime' label='通知开始时间' align='center'></el-table-column>
-              <el-table-column prop='noPassReason' label='终止原因' align='center' show-overflow-tooltip></el-table-column>
+              <el-table-column prop='notPassReason' label='终止原因' align='center' show-overflow-tooltip></el-table-column>
               <el-table-column prop='dateUpdate' label='终止时间' align='center' show-overflow-tooltip></el-table-column>
 			    		<el-table-column label='操作' align='center'>
 			    			<template slot-scope='scope'>
@@ -189,14 +146,17 @@
 		<plan
       :planDg='planDg'
       @closeChildrenPlan='closeChildrenPlan'></plan>
+    <!-- 特约门诊 -->
+    <not-pass-dialog ref="notPassDialog" :checkId="checkId" @getNotPassReason="getNotPassReason">
+    </not-pass-dialog>
   </div>
 </template>
 <script>
 import Plan from '@/components/dialog/plan/plan';
 import { AdmissionNotice } from 'RJZL_API/hospitalNotice';
 import { specialDoctor } from 'RJZL_API/specialDoctor';
-import auditOptions from 'utils/auditOptions';
-import formatNotpassReason from 'utils/formatNotpassReason';
+import notpassReasonOptions from './notpassReason';
+import NotPassDialog from './notPassDialog';
 import * as utilsIndex from 'utils';
 const tableName = ['list', 'stop'];
 export default {
@@ -232,7 +192,7 @@ export default {
       },
       activeName: 'first', // tab
       diseaseList: [] /* 疾病列表 */,
-      checkoptions: auditOptions, // 审核不通过原因
+      checkoptions: notpassReasonOptions, // 审核不通过原因
       selectCheck: '', // 选中的审核不通过
       notPassRemark: '', // 审核不通过原因
       checkId: [], // 随访通过的id(多选时),
@@ -242,20 +202,30 @@ export default {
       pickerTime: {
         shortcuts: utilsIndex.pickerOptions
       },
-      createTime: [] /* 创建时间 */
+      createTime: [], /* 创建时间 */
     };
   },
   components: {
-    Plan
+    Plan,
+    NotPassDialog
   },
   mounted() {
     this.getData(this.tableData_list);
   },
   methods: {
+    /** 选择预约时间 */
     timeChange(time) {
-      if (time) {
+      if(time) {
         this.searchParams.orderTimeStart = time[0];
         this.searchParams.orderTimeEnd = time[1];
+        if(this.searchParams.orderTimeStart.indexOf('00:00:00')<0) {
+          this.searchParams.orderTimeStart = this.searchParams.orderTimeStart.slice(0,11) + '00:00:00'
+          this.createTime[0] = this.searchParams.orderTimeStart
+        }
+        if(this.searchParams.orderTimeEnd.indexOf('23:59:59')<0) {
+          this.searchParams.orderTimeEnd = this.searchParams.orderTimeEnd.slice(0,11) + '23:59:59'
+          this.createTime[1] = this.searchParams.orderTimeEnd
+        }
       } else {
         this.searchParams.orderTimeStart = '';
         this.searchParams.orderTimeEnd = '';
@@ -269,20 +239,37 @@ export default {
     },
     /* 获取数据 */
     getData(param) {
-      param.loading1 = true;
+      param.loading = true;
       specialDoctor.specialList({
         ...this.searchParams,
         status: param.status,
         pager: param.pager
       })
         .then(res => {
-          formatNotpassReason(res.data);
+          
+          if(this.tabIndex == 1) {
+            this.formatNotpassReason(res.data);
+          }
           param.list = res.data;
           param.totalPage = res.total;
           param.loading = false;
         }).catch(err => {
           param.loading = false;
         });
+    },
+    /** 不通过原因 */
+    formatNotpassReason(data) {
+       data.forEach(item => {
+        if(item.notPassReason === '2') {
+          item.notPassReason =  '时间不匹配'
+        } else if(item.notPassReason === '3') {
+          item.notPassReason =  '随访方案重复'
+        } else if(item.notPassReason === '4') {
+          item.notPassReason =  '方案不匹配'
+        }else if(item.notPassReason === '5') {
+          item.notPassReason =  '其他'
+        }
+      })
     },
 
     /* 展示随访计划详情 */
@@ -343,13 +330,15 @@ export default {
           notPassRemark: this.notPassRemark
         })
         .then(res => {
-          if (res.code == 0) {
+          if (res.code === '0') {
             this.noCheck = false;
             this.selectCheck = '';
             this.notPassRemark = '';
             this.checkId.length = 0;
             const getTableName = `tableData_${tableName[this.tabIndex]}`;
             this.getData(this[getTableName]);
+          }else {
+            this.$message.error(res.message)
           }
         })
         .catch(error => {});
@@ -390,27 +379,37 @@ export default {
         this.$message.error('请选择患者！');
         return false;
       }
-      this.noCheck = true;
+     this.$refs.notPassDialog.noCheckDg = true
     },
     /**
      * [lang description]表格通过按钮
      * @type {String}
      */
     passoutBtn(id) {
+      this.checkId.length=0;
       this.checkId.push(id);
-      this.noCheck = true;
+      this.$refs.notPassDialog.noCheckDg = true
     },
     /** 监听详情的关闭操作 */
     closeChildrenPlan(val) {
       this.planDg = false;
+      const getTableName = `tableData_${tableName[this.tabIndex]}`;
+      this.getData(this[getTableName]);
+    },
+    /** 监听审核，成功后刷新页面 */
+    getNotPassReason(item) {
+      if(item) {
+        const getTableName = `tableData_${tableName[this.tabIndex]}`;
+        this.getData(this[getTableName]);
+      }
     }
   }
 };
 </script>
 <style lang='scss'>
   @import '~styles/search';
-  .notificationsOfAdmission {
-    .checknoPass {
+  .noticePlan {
+    .checknoPass .el-dialog__body{
       text-align: center;
     }
   }

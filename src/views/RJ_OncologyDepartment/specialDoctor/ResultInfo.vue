@@ -183,7 +183,7 @@
                 </h4>
             </div>
             <el-tabs v-model="currentTable"  type="border-card" >
-                <el-tab-pane  name="one"  label="体检结果">
+                <el-tab-pane  name="one"  label="随访结果">
                      <ul class="record_content_list">
                         <li  class="record_content_single">
                          <el-tag>

@@ -12,7 +12,7 @@
       </li>
       <li class="common_search_single">
         <label class="radio-label" >所属科室</label>
-        <el-input v-model.trim="formInline.departmentName" clearable placeholder="请输入证件号"></el-input>
+        <el-input v-model.trim="formInline.departmentName" clearable placeholder="请输入所属科室"></el-input>
       </li>
       <li class="common_search_single">
           <el-button type="primary" size="small" @click="searchBtn">查询</el-button>
@@ -64,11 +64,11 @@
       >
       <el-form :model="addDoctorForm" :rules="rules" ref="ruleForm" label-width="100px">
         <el-form-item label="姓名" prop="name" class="tipNameitem">
-          <el-input v-model="addDoctorForm.name" @change='nameChange'></el-input>
+          <el-input v-model="addDoctorForm.name" @change="nameChange"></el-input>
           <p class="tipName" v-if="tipName">该医生已存在!</p>
         </el-form-item>
         <el-form-item label="联系电话" prop="mobile">
-          <el-input v-model="addDoctorForm.mobile"></el-input>
+          <el-input v-model="addDoctorForm.mobile" @change='mobileChange'></el-input>
         </el-form-item>
         <el-form-item label="科室名称" prop="departmentName">
           <el-input v-model="addDoctorForm.departmentName"></el-input>
@@ -197,7 +197,6 @@
           ],
           mobile: [
             { required: true, validator: checkMobile, trigger: 'blur' }
-            // { required: true, message: '请输入科室名称', trigger: 'blur'},
           ]
         },
         addPlanDialog: false, // 通知看诊弹框
@@ -213,7 +212,6 @@
         },
         markId: '', // 编辑医生的id
         tipName: false // 新增时该医生是否存在
-
       };
     },
     mounted() {
@@ -228,7 +226,13 @@
       /** 获取列表 */
       getData(item) {
         this.tableData_list.loading = true;
-        specialDoctor.specialdoctorList(this.formInline).then(res => {
+        let paramer = {}
+        if(item) {
+          paramer = item
+        }else {
+          paramer = this.formInline
+        }
+        specialDoctor.specialdoctorList(paramer).then(res => {
           this.tableData_list.loading = false;
           if (res.code === 0) {
             if (!item) {
@@ -247,10 +251,31 @@
           this.$message.error(err.message);
         });
       },
+      // 查询是否存在本人
+      mobileChange(value) {
+        let obj = {
+          name: this.addDoctorForm.name,
+          limit: 10000000,
+          mobile: value
+        }
+        if(obj.name&&obj.mobile){
+          this.getData(obj);
+        }
+      },
       nameChange(value) {
-        this.formInline.name = value;
-        this.formInline.limit = 100000;
-        this.getData(true);
+        let obj = {
+          name: value,
+          limit: 10000000,
+          mobile: this.addDoctorForm.mobile
+        }
+        if(!value){
+          this.tipName = false
+        }
+        if(obj.name&&obj.mobile){
+          console.log(obj.mobile);
+          
+          this.getData(obj);
+        }
       },
       /** 分页 */
       handleCurrentChange(page) {
@@ -266,6 +291,7 @@
         // 如果 选择编辑医生时获取该医生的id
         if (row.id) {
           this.markId = row.id;
+          this.schemePramer.doctorId = row.id;
         }
       },
       /** 新增/编辑医生按钮 */
@@ -275,7 +301,12 @@
             if (this.markId) {
               this.updateDoctorFun();
             } else {
-              this.addDoctorFun();
+              // 判断是否有该医生存在
+              if(this.tipName) {
+                return false
+              } else {
+                this.addDoctorFun();
+              }
             }
           } else {
             return false;
@@ -303,6 +334,7 @@
             // 发起看诊通知
             if (item) {
               this.markId = res.data;
+              this.schemePramer.doctorId = res.data
               this.addPlanDialog = true;
               this.getSchemList();
             }
@@ -367,16 +399,28 @@
         });
       },
       /** 编辑并发起通知 */
-      addDoctorAndPlan() {
-        // 判断该医生是否已存在
-        this.addDoctorBtnLoading.planLoading = true;
-        this.addDoctorBtnLoading.planDisabled = true;
+      addDoctorAndPlan(formName) {
         // 如果存在markId,则为编辑，否则为新增
-        if (this.markId) {
-          this.updateDoctorFun(true);
-        } else {
-          this.addDoctorFun(true);
-        }
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            // 判断该医生是否已存在
+            if (this.markId) {
+              this.schemePramer.doctorId = this.markId
+              this.updateDoctorFun(true);
+            } else {
+              // 判断是否有该医生存在
+              if(this.tipName) {
+                return false
+              } else {
+                this.addDoctorFun(true);
+              }
+            }
+            this.addDoctorBtnLoading.planLoading = true;
+            this.addDoctorBtnLoading.planDisabled = true;
+          } else {
+            return false;
+          }
+        });
       },
       // 清空form
       resetForm(formName) {
@@ -384,25 +428,39 @@
         this.addDoctorDialog = false;
       },
       beforeClose() {
+        this.markId = ''
         this.$refs.ruleForm.resetFields();
         this.addDoctorDialog = false;
         this.tipName ? this.tipName = false : this.tipName;
       },
       /** 删除医生 */
       deleteDoctor(row) {
-        specialDoctor.specialdoctorDelete({
-          id: row.id
-        }).then(res => {
-          if (res.code === 0) {
-            this.getData();
-            this.$message.success(res.message);
-          } else {
-            this.$message.error(res.message);
-          }
-        }).catch(err => {
-          this.$message.error(err.message);
+        this.$confirm('此操作将永久删除该医生, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          specialDoctor.specialdoctorDelete({
+            id: row.id
+          }).then(res => {
+            if (res.code === 0) {
+              this.getData();
+              this.$message.success(res.message);
+            } else {
+              this.$message.error(res.message);
+            }
+          }).catch(err => {
+            this.$message.error(err.message);
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
         });
+        
       },
+
       /** 打开 通知就诊 弹框*/
       lookDetailes(scope) {
         this.addPlanDialog = true;
@@ -466,19 +524,21 @@
           specialDoctor.clinic(this.schemePramer)
             .then(res => {
               this.addPlanDialog = false;
-              this.schemePramer.adminId = ''
+              this.schemePramer.adminId = sessionStorage.getItem('userId')
               this.schemePramer.appointmentTime = ''
               this.schemePramer.doctorId = ''
               this.schemePramer.schemeId = ''
               this.schemePramer.schemeName = ''
               this.schemePramer.visitTime = ''
+              this.markId = ''
               if (res.code === 0) {
                 this.$message.success(res.message);
               } else {
                 this.$message.error(res.message);
               }
             }).catch(err => {
-              this.schemePramer.adminId = ''
+              this.markId = ''
+              this.schemePramer.adminId = sessionStorage.getItem('userId')
               this.schemePramer.appointmentTime = ''
               this.schemePramer.doctorId = ''
               this.schemePramer.schemeId = ''
@@ -491,7 +551,7 @@
       },
       /** 取消通知 */
       resetPlanDialog() {
-        this.schemePramer.adminId = ''
+        this.schemePramer.adminId = sessionStorage.getItem('userId')
         this.schemePramer.appointmentTime = ''
         this.schemePramer.doctorId = ''
         this.schemePramer.schemeId = ''

@@ -36,7 +36,7 @@
     <el-row class="personResult" v-show="patientInfo.from=='tymn'">
       <el-col :span="12">
         <span>所属科室&nbsp;:&nbsp;</span>
-        <span>{{patientInfo.deparment}}</span>
+        <span>{{patientInfo.department}}</span>
       </el-col>
     </el-row>
     <!-- 手机号码 -->
@@ -51,6 +51,13 @@
       <el-col :span="12">
         <span>预约看诊时间&nbsp;:&nbsp;</span>
         <span>{{patientInfo.orderTime}}</span>
+      </el-col>
+    </el-row>
+    <!-- AI通知时间 -->
+    <el-row class="personResult" v-show="patientInfo.from=='tymn'">
+      <el-col :span="12">
+        <span>AI通知时间&nbsp;:&nbsp;</span>
+        <span>{{patientInfo.visitStartTime}}</span>
       </el-col>
     </el-row>
 	</div>
