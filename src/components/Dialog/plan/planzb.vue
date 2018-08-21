@@ -25,7 +25,7 @@
     <div class='content3'>
       <el-row style='height:47px;margin-top:14px;' v-if="patientInfo.from == 'tymn'">
         <el-col :span='24' style="text-align: center;">
-          <el-button type='danger' plain  @click='modelOutTymz'>终止</el-button>
+          <el-button type='danger' plain  @click='modelOutTymz' v-show="patientInfo.status===3">终止</el-button>
         </el-col>
       </el-row>
       <el-row style='height:47px;margin-top:14px;' v-else>

@@ -12,7 +12,7 @@
       </li>
       <li class="common_search_single">
         <label class="radio-label" >所属科室</label>
-        <el-input v-model.trim="searchParams.department" clearable placeholder="请输入证件号"></el-input>
+        <el-input v-model.trim="searchParams.department" clearable placeholder="请输入所属科室"></el-input>
       </li>
        <li class="common_search_single">
           <label class="radio-label" >随访方案</label>
@@ -218,14 +218,6 @@ export default {
       if(time) {
         this.searchParams.orderTimeStart = time[0];
         this.searchParams.orderTimeEnd = time[1];
-        if(this.searchParams.orderTimeStart.indexOf('00:00:00')<0) {
-          this.searchParams.orderTimeStart = this.searchParams.orderTimeStart.slice(0,11) + '00:00:00'
-          this.createTime[0] = this.searchParams.orderTimeStart
-        }
-        if(this.searchParams.orderTimeEnd.indexOf('23:59:59')<0) {
-          this.searchParams.orderTimeEnd = this.searchParams.orderTimeEnd.slice(0,11) + '23:59:59'
-          this.createTime[1] = this.searchParams.orderTimeEnd
-        }
       } else {
         this.searchParams.orderTimeStart = '';
         this.searchParams.orderTimeEnd = '';
