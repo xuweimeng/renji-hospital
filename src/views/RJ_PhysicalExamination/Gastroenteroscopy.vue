@@ -259,7 +259,7 @@
           sfzh: '', // 身份证号
           schemeName: '',   //方案名称
           activeType: 9,
-          status:"3",    //状态3 已排期 4 已取消
+          status:"3,6",    //状态3 已排期 4 已取消
         },
         nosearchParams: {
           adminId: sessionStorage.getItem("userId"),
@@ -475,7 +475,7 @@
        */
       getDataAction() {
         if (!this.dataRecord) {
-          this.searchParams.status =3;
+          this.searchParams.status ='3,6';
           this.tableLoading = true;
           this.searchParams.pager = 1;
           this.getData();
