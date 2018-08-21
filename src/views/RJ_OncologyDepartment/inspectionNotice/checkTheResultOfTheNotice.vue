@@ -47,86 +47,30 @@
         <el-button type="primary" icon="el-icon-search" @click="searchParams.pager=1,getData()">查询</el-button>
       </li>
     </ul>
-    <!-- <el-row class="common-search">
-			<el-form :inline="true" :model="searchParams" class="demo-form-inline" label-position='center' label-width='80px'>
-        <el-col :span="6">
-			  	<el-form-item label="患者姓名">
-				    <el-input v-model="searchParams.name" placeholder="请输入患者姓名" clearable ></el-input>
-				  </el-form-item>
-				</el-col>
-				<el-col :span="6">
-			  	<el-form-item label="联系电话">
-				    <el-input v-model="searchParams.mobile" placeholder="请输入患者联系电话" clearable ></el-input>
-				  </el-form-item>
-				</el-col>
-        <el-col :span="6">
-			  	<el-form-item label="检查项目">
-				    <el-select v-model="searchParams.icdCheckItem" filterable clearable  placeholder="请选择">
-				      <el-option
-                v-for="item in ProjectList"
-                :key="item.icd10"
-                :label="item.jbmc"
-                :value="item.icd10">
-               </el-option>
-				    </el-select>
-				  </el-form-item>
-				</el-col>
-				<el-col :span="6">
-					<el-form-item label="状态">
-						<el-select v-model="searchParams.status" placeholder="请选择">
-							<el-option label="全部" value=""></el-option>
-							<el-option label="已通知" value="2"></el-option>
-							<el-option label="通知失败" value="3"></el-option>
-              <el-option label="已取消" value="4"></el-option>
-						</el-select>
-					</el-form-item>
-				</el-col>
-        <el-col :span="6">
-					<el-form-item label="检查时间" class="formTime">
-						<el-date-picker
-              v-model="startTime"
-              @change="timeChange"
-              type="daterange"
-							value-format="yyyy-MM-dd"
-							range-separator="至"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-              :picker-options="pickerTime">
-            </el-date-picker>
-					</el-form-item>
-				</el-col>
-			  <el-col :span="4">
-			  	<el-button type="primary" size="medium" @click="searchParams.pager=1,getData()">查询</el-button>
-			  </el-col>
-			</el-form>
-		</el-row> -->
-	    	<el-table border :data="tableData" style="width: 100%;" v-loading="dataLoading">
-	    		<el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
-	    		<el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
-          <el-table-column label="性别/年龄" align="center" width="115">
-            <template slot-scope="scope">
-              {{scope.row.brxb}} <span v-if="scope.row.brxb && scope.row.age">/</span> {{scope.row.age}}
-            </template>
-          </el-table-column>
-	    		<el-table-column prop="icdName" label="检查项目" align="center" show-overflow-tooltip></el-table-column>
-	    		<el-table-column prop="orderTime" label="检查时间" align="center" show-overflow-tooltip ></el-table-column>
-	    		<el-table-column prop="vetRemark" label="通知结果" align="center" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="vetDate" label="通知时间" align="center" show-overflow-tooltip></el-table-column>
-	    		<el-table-column prop="statusStr" label="状态" align="center" width="100"></el-table-column>
-          <el-table-column label="检查详情" align="center">
-            <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="detailBtn(scope.row)">检查详情</el-button>
-            </template>
-          </el-table-column>
-	    	</el-table>
-        <!-- <div class="block" style="margin: 30px 50px;text-align: right;">
-          <el-pagination  @current-change="handleCurrentChange" :current-page.sync="searchParams.pager" :page-size="10" layout="total,prev, pager, next, jumper"
-            :total="totalPage" v-if="totalPage">
-          </el-pagination>
-        </div> -->
-        <div class="pagination-container" style="text-align:right;margin-top:15px;">
-        <el-pagination style="display:inline-block" background  @current-change="handleCurrentChange" :current-page="searchParams.pager"  :page-size="searchParams.limit" layout="total,  prev, pager, next, jumper" :total="totalPage">
-        </el-pagination>
+  
+    <el-table border :data="tableData" style="width: 100%;" v-loading="dataLoading">
+      <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
+      <el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
+      <el-table-column label="性别/年龄" align="center" width="115">
+        <template slot-scope="scope">
+          {{scope.row.brxb}} <span v-if="scope.row.brxb && scope.row.age">/</span> {{scope.row.age}}
+        </template>
+      </el-table-column>
+      <el-table-column prop="icdName" label="检查项目" align="center" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="orderTime" label="检查时间" align="center" show-overflow-tooltip ></el-table-column>
+      <el-table-column prop="vetRemark" label="通知结果" align="center" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="vetDate" label="通知时间" align="center" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="statusStr" label="状态" align="center" width="100"></el-table-column>
+      <el-table-column label="检查详情" align="center">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="detailBtn(scope.row)">检查详情</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+      
+    <div class="pagination-container" style="text-align:right;margin-top:15px;">
+      <el-pagination style="display:inline-block" background  @current-change="handleCurrentChange" :current-page="searchParams.pager"  :page-size="searchParams.limit" layout="total,  prev, pager, next, jumper" :total="totalPage">
+      </el-pagination>
     </div>
     	<!-- 步骤一已预约检查 -->
     <checked-list

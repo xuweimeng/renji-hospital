@@ -11,7 +11,7 @@
 				<el-row slot>
 				 <el-col :span='24' >
 					<el-select v-model='notPassParams.notPassReason' placeholder='请选择' style="width: 80%;" >
-						<el-option  v-for='item in checkoptions' :key='item.value' :label='item.label' :value='item.value'></el-option>
+						<el-option  v-for='item in checkoptions' :key='item.value' :label='item.label' :value='item.value' v-show="item.value!='6'"></el-option>
 					</el-select>
 				</el-col>
          <el-col :span='24' >

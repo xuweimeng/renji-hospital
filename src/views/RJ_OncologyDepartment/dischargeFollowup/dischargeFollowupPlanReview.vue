@@ -51,66 +51,6 @@
         <el-button type="primary" icon="el-icon-search" @click="searchBtn">查询</el-button>
       </li>
     </ul>
-    <!-- <el-row class="common-search">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-col :span="6">
-        <el-form-item label="患者姓名">
-          <el-input v-model.trim="formInline.brxm" placeholder="请输入患者姓名" clearable></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-        <el-form-item label="联系电话">
-          <el-input v-model.trim="formInline.mobile" placeholder="请输入患者联系电话" clearable></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-        <el-form-item label="随访方案">
-          <el-input v-model.trim="formInline.schemeName" placeholder="请输入随访方案" clearable></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-        <el-form-item label="疾病名称">
-            <el-select
-              v-model="formInline.icdName"
-              filterable
-              remote
-              clearable
-              placeholder="请输入关键词"
-              @change="handChange"
-              :remote-method="remoteMethod"
-              :loading="loadingSelect">
-              <el-option
-              v-for="(item, index) in icdNameList"
-              :key="index"
-              :label="item.label"
-              :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-        <el-form-item label="患者性别">
-          <el-select v-model="formInline.brxb" placeholder="性别">
-            <el-option label="全部" value=""></el-option>
-            <el-option label="男" value="男"></el-option>
-            <el-option label="女" value="女"></el-option>
-          </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-        <el-form-item label="患者年龄">
-          <el-row>
-            <el-col :span="11"><el-input v-model="formInline.beginAge" placeholder="0"></el-input></el-col>
-            <el-col :span="2" style="text-align: center;">-</el-col>
-            <el-col :span="11"><el-input v-model="formInline.endAge"></el-input></el-col>
-          </el-row>
-        </el-form-item>
-        </el-col>
-        <el-col :span="6">
-        <el-button type="primary" size="small" @click="searchBtn">查询</el-button>
-        </el-col>
-      </el-form>
-    </el-row> -->
     <!-- 表格 -->
     <el-card shadow="never">
 			<el-tabs v-model="activeName" @tab-click="handleClick">

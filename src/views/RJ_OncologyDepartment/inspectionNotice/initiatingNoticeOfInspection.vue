@@ -1,15 +1,6 @@
 <template>
   <div class='app-container'>
     <!-- 步骤 -->
-		<!-- <el-row style='background: #fbfbfb;padding: 10px'>
-		  <el-col :span='12' :offset='6'>
-				<el-steps :active='step'  align-center process-status='finish' finish-status='success'>
-					<el-step title='选择患者'></el-step>
-					<el-step title='选择检查'></el-step>
-					<el-step title='发起成功'></el-step>
-				</el-steps>
-		  </el-col>
-		</el-row> -->
     <el-card  style="margin-bottom:10px">
       <el-steps :active='step'  align-center process-status='finish' finish-status='success'>
         <el-step title='选择患者'></el-step>
@@ -20,60 +11,10 @@
 		<!-- 步骤一 -->
 		<transition name='el-zoom-in-top'>
       <div class='stepContent' v-if='step === 0'>
-        <!-- <el-row class='upnum'>
+        <el-row class='upnum'>
 				  <el-col :span='24'><el-tag type='primary' size='medium'>请选择需要通知的患者</el-tag></el-col>
-			  </el-row> -->
+			  </el-row>
         <!-- 查询 -->
-        <!-- <el-row class='common-search'>
-          <el-form :inline='true' :model='searchParams' label-position='center' label-width='80px'>
-            <el-col :span='4'>
-              <el-form-item label='姓名'>
-                <el-input v-model='searchParams.brxm' placeholder='请输入姓名' clearable></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span='4'>
-              <el-form-item label='联系电话'>
-                <el-input v-model='searchParams.mobile' placeholder='请输入联系电话' clearable></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span='4'>
-              <el-form-item label='疾病名称'>
-                <el-select
-                  v-model='searchParams.diseaseId'
-                  filterable
-                  clearable
-                  remote
-                  reserve-keyword
-                  placeholder='请输入疾病类型'
-                  :remote-method='remoteMethod'
-                  :loading='queryLoading'>
-                  <el-option
-                    v-for='item in diseaseList'
-                    :key='item.id'
-                    :label='item.value'
-                    :value='item.id'>
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span='9'>
-              <el-form-item label='创建时间'>
-                <el-date-picker
-                  @change='timeChange'
-                  v-model='startTime'
-                  value-format='yyyy-MM-dd'
-                  type='daterange'
-                  range-separator='至'
-                  start-placeholder='开始日期'
-                  end-placeholder='结束日期'>
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :span='3'>
-              <el-button type='primary' @click='searchParams.pager=1;getData()'>查询</el-button>
-            </el-col>
-          </el-form>
-        </el-row> -->
         <ul class="common_search">
           <li class="common_search_single">
             <label class="radio-label" >姓名</label>
