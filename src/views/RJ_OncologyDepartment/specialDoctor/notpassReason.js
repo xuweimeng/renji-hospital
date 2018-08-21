@@ -1,16 +1,12 @@
 /** 审核不通过原因选项 */
-const auditOptions = [
+const notpassReasonOptions = [
   {
     value: '',
     label: '请选择'
   },
   {
-    value: '1',
-    label: '患者已死亡'
-  },
-  {
     value: '2',
-    label: '患者不接受随访'
+    label: '时间不匹配'
   },
   {
     value: '3',
@@ -25,4 +21,4 @@ const auditOptions = [
     label: '其他'
   }
 ];
-export default auditOptions;
+export default notpassReasonOptions;

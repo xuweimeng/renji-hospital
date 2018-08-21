@@ -95,7 +95,7 @@ export default {
     initiatingNoticeOfInspection: '发起检查通知',
     initiatingNoticePlan: '检查通知计划',
     checkTheResultOfTheNotice: '检查通知结果',
-    hzList: '客户列表',
+    hzList: '患者列表',
     addPatient: '批量添加患者',
     imperfectMessage: '未完善信息',
     dischargeFollowUp: '出院随访',
