@@ -1,4 +1,5 @@
 import { Login } from '@/api/login';
+import Cookies from 'js-cookie';
 import { getToken, setToken, removeToken, getParameter, setParameter, removeParameter } from '@/utils/auth';
 
 const SCOPE_ROW_DATA = 'SCOPE_ROW_DATA';
@@ -14,16 +15,13 @@ const user = {
     roles: [],
     scopeRowData: {}, // 表格点击操作按钮传递scope.row的数据
     visitTime: '', // 随访结果的时间
-    uploadNum: {
-      data: {
-
-      }
-    } // 患者列表批量上传上传成功失败个数
+    uploadNum: {} // 患者列表批量上传上传成功失败个数
   },
   // 操作全局基础用户数据
   mutations: {
     SET_TOKEN: (state, token) => {
       sessionStorage.setItem('userId', token);
+      Cookies.set('userId', token);
       state.token = token;
     },
     // 设置用户名
@@ -70,7 +68,6 @@ const user = {
       const username = userInfo.username.trim();
       const dataSetting = (response) => {
         const data = response.data;
-        console.log('data', response);
         // 配置用户id作为token值
         commit('SET_TOKEN', data.id);
         setToken(data.id);
@@ -78,6 +75,7 @@ const user = {
         commit('SET_NAME', data.username);
         setParameter('name', data.username);
         sessionStorage.setItem('userId', data.id);// 用户id
+        
         sessionStorage.setItem('laterhours', response.laterhours);// 用户等待时间
         // 配置用户头像
         commit('SET_AVATAR', response.data.aipictureurl);
