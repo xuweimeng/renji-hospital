@@ -252,14 +252,18 @@ export default {
     /** 不通过原因 */
     formatNotpassReason(data) {
        data.forEach(item => {
-        if(item.notPassReason === '2') {
-          item.notPassReason =  '时间不匹配'
+         if(item.notPassReason === '1') {
+          item.notPassReason =  '医生已死亡'
+        } else if(item.notPassReason === '2') {
+          item.notPassReason =  '医生不接受随访'
         } else if(item.notPassReason === '3') {
           item.notPassReason =  '随访方案重复'
         } else if(item.notPassReason === '4') {
           item.notPassReason =  '方案不匹配'
         }else if(item.notPassReason === '5') {
           item.notPassReason =  '其他'
+        }else if(item.notPassReason === '6') {
+          item.notPassReason =  '医生已删除'
         }
       })
     },
