@@ -117,14 +117,14 @@
         if (time) {
           this.searchParams.dateEndStart = time[0];
           this.searchParams.dateEndEnd = time[1];
-          if (this.searchParams.dateEndStart.indexOf('23:59:59') < 0) {
-            this.searchParams.dateEndStart = this.searchParams.dateEndStart.slice(0, 11) + '00:00:00';
-            this.createTime[0] = this.searchParams.dateEndStart;
-          }
-          if (this.searchParams.dateEndEnd.indexOf('23:59:59') < 0) {
-            this.searchParams.dateEndEnd = this.searchParams.dateEndEnd.slice(0, 11) + '23:59:59';
-            this.createTime[1] = this.searchParams.dateEndEnd;
-          }
+          // if (this.searchParams.dateEndStart.indexOf('23:59:59') < 0) {
+          //   this.searchParams.dateEndStart = this.searchParams.dateEndStart.slice(0, 11) + '00:00:00';
+          //   this.createTime[0] = this.searchParams.dateEndStart;
+          // }
+          // if (this.searchParams.dateEndEnd.indexOf('23:59:59') < 0) {
+          //   this.searchParams.dateEndEnd = this.searchParams.dateEndEnd.slice(0, 11) + '23:59:59';
+          //   this.createTime[1] = this.searchParams.dateEndEnd;
+          // }
         } else {
           this.searchParams.dateEndStart = '';
           this.searchParams.dateEndEnd = '';

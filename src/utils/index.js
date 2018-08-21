@@ -1,6 +1,7 @@
 /**
  * Created by jiachenpan on 16/11/18.
  */
+// import { currentTime } from './getDate';
 
 export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
@@ -168,36 +169,40 @@ export function toggleClass(element, className) {
   element.className = classString;
 }
 
+const current = new Date();
+const currentYear = current.getFullYear();
+const currentMonth = current.getMonth() + 1;
+const currentDate = current.getDate();
+const currentTime = currentYear + '-' + currentMonth + '-' + currentDate;
+const detailTime = new Date(currentTime).getTime();
+const end = new Date(detailTime + 24 * 60 * 60 * 1000 - 1000);
 export const pickerOptions = [
   {
     text: '今天',
     onClick(picker) {
-      const end = new Date();
-      const start = new Date(new Date().toDateString());
-      end.setTime(start.getTime());
+      const start = new Date(currentTime);
       picker.$emit('pick', [start, end]);
     }
   }, {
     text: '最近一周',
     onClick(picker) {
-      const end = new Date(new Date().toDateString());
-      const start = new Date();
-      start.setTime(end.getTime() - 3600 * 1000 * 24 * 7);
+      const start = new Date(currentTime);
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
       picker.$emit('pick', [start, end]);
     }
   }, {
     text: '最近一个月',
     onClick(picker) {
-      const end = new Date(new Date().toDateString());
-      const start = new Date();
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+      // const end = new Date(new Date(currentTime).toDateString());
+      const start = new Date(currentTime);
+      start.setTime(start - 3600 * 1000 * 24 * 30);
       picker.$emit('pick', [start, end]);
     }
   }, {
     text: '最近三个月',
     onClick(picker) {
-      const end = new Date(new Date().toDateString());
-      const start = new Date();
+      // const end = new Date(new Date().toDateString());
+      const start = new Date(currentTime);
       start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
       picker.$emit('pick', [start, end]);
     }

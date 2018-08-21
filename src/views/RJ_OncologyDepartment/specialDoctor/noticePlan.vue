@@ -30,7 +30,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             :default-time="['00:00:00', '23:59:59']"
-            align="right">
+            align="left">
           </el-date-picker>
       </li>
       <li class="common_search_single">
@@ -202,7 +202,7 @@ export default {
       pickerTime: {
         shortcuts: utilsIndex.pickerOptions
       },
-      createTime: [], /* 创建时间 */
+      createTime: [] /* 创建时间 */
     };
   },
   components: {
@@ -215,17 +215,17 @@ export default {
   methods: {
     /** 选择预约时间 */
     timeChange(time) {
-      if(time) {
+      if (time) {
         this.searchParams.orderTimeStart = time[0];
         this.searchParams.orderTimeEnd = time[1];
-        if(this.searchParams.orderTimeStart.indexOf('00:00:00')<0) {
-          this.searchParams.orderTimeStart = this.searchParams.orderTimeStart.slice(0,11) + '00:00:00'
-          this.createTime[0] = this.searchParams.orderTimeStart
-        }
-        if(this.searchParams.orderTimeEnd.indexOf('23:59:59')<0) {
-          this.searchParams.orderTimeEnd = this.searchParams.orderTimeEnd.slice(0,11) + '23:59:59'
-          this.createTime[1] = this.searchParams.orderTimeEnd
-        }
+        // if (this.searchParams.orderTimeStart.indexOf('00:00:00') < 0) {
+        //   this.searchParams.orderTimeStart = this.searchParams.orderTimeStart.slice(0, 11) + '00:00:00';
+        //   this.createTime[0] = this.searchParams.orderTimeStart;
+        // }
+        // if (this.searchParams.orderTimeEnd.indexOf('23:59:59') < 0) {
+        //   this.searchParams.orderTimeEnd = this.searchParams.orderTimeEnd.slice(0, 11) + '23:59:59';
+        //   this.createTime[1] = this.searchParams.orderTimeEnd;
+        // }
       } else {
         this.searchParams.orderTimeStart = '';
         this.searchParams.orderTimeEnd = '';
@@ -246,8 +246,7 @@ export default {
         pager: param.pager
       })
         .then(res => {
-          
-          if(this.tabIndex == 1) {
+          if (this.tabIndex == 1) {
             this.formatNotpassReason(res.data);
           }
           param.list = res.data;
@@ -259,17 +258,17 @@ export default {
     },
     /** 不通过原因 */
     formatNotpassReason(data) {
-       data.forEach(item => {
-        if(item.notPassReason === '2') {
-          item.notPassReason =  '时间不匹配'
-        } else if(item.notPassReason === '3') {
-          item.notPassReason =  '随访方案重复'
-        } else if(item.notPassReason === '4') {
-          item.notPassReason =  '方案不匹配'
-        }else if(item.notPassReason === '5') {
-          item.notPassReason =  '其他'
+      data.forEach(item => {
+        if (item.notPassReason === '2') {
+          item.notPassReason = '时间不匹配';
+        } else if (item.notPassReason === '3') {
+          item.notPassReason = '随访方案重复';
+        } else if (item.notPassReason === '4') {
+          item.notPassReason = '方案不匹配';
+        } else if (item.notPassReason === '5') {
+          item.notPassReason = '其他';
         }
-      })
+      });
     },
 
     /* 展示随访计划详情 */
@@ -337,8 +336,8 @@ export default {
             this.checkId.length = 0;
             const getTableName = `tableData_${tableName[this.tabIndex]}`;
             this.getData(this[getTableName]);
-          }else {
-            this.$message.error(res.message)
+          } else {
+            this.$message.error(res.message);
           }
         })
         .catch(error => {});
@@ -379,16 +378,16 @@ export default {
         this.$message.error('请选择患者！');
         return false;
       }
-     this.$refs.notPassDialog.noCheckDg = true
+      this.$refs.notPassDialog.noCheckDg = true;
     },
     /**
      * [lang description]表格通过按钮
      * @type {String}
      */
     passoutBtn(id) {
-      this.checkId.length=0;
+      this.checkId.length = 0;
       this.checkId.push(id);
-      this.$refs.notPassDialog.noCheckDg = true
+      this.$refs.notPassDialog.noCheckDg = true;
     },
     /** 监听详情的关闭操作 */
     closeChildrenPlan(val) {
@@ -398,7 +397,7 @@ export default {
     },
     /** 监听审核，成功后刷新页面 */
     getNotPassReason(item) {
-      if(item) {
+      if (item) {
         const getTableName = `tableData_${tableName[this.tabIndex]}`;
         this.getData(this[getTableName]);
       }
