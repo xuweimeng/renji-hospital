@@ -129,7 +129,7 @@
         </el-col>
       </el-row>
     </el-dialog>
-    <plan-info ref="record"   :patientId="patientId"  :hzxxId="hzxxId"></plan-info>
+    <plan-info ref="record"   :patientId="patientId"  :hzxxId="hzxxId" :isComplete="isComplete" @stopAction="cancelAction"></plan-info>
   </div>
 </template>
 <script>
@@ -144,6 +144,8 @@
     },
     data() {
       return {
+        isComplete:"",    //0代表可以终止  1代表不终止的
+        isStop:false,   //判断是否已经成功终止
         patientId: '',
         hzxxId:"",   //患者id
         tableLoading: true,
@@ -224,6 +226,16 @@
     },
     methods: {
       /**
+       * 终止按钮
+       **/
+      cancelAction(){
+        this.isStop = false;
+        this.termination(this.patientId);
+        if(this.isStop){
+          this.$refs.record.dialogTableVisible = false;
+        }
+      },
+      /**
        * @function 取消终止
        * @return {type} {description}
        */
@@ -283,6 +295,7 @@
             this.diseaseList = res.data;
           })
           .catch(error => {
+            this.$message.error(+"")
             console.log(error);
           });
       },
@@ -314,6 +327,15 @@
        * @return {type} {description}
        */
       showInfo(scope) {
+        if(scope.row.isComplete){
+          if(scope.row.isComplete!='0'){
+            this.isComplete ='1';
+          }else{
+            this.isComplete ='0'
+          }
+        }else{
+          this.isComplete ='1';
+        }
         this.patientId = scope.row.id;
         this.hzxxId = scope.row.hzxxId; //患者id
         this.$refs.record.dialogTableVisible = true;
@@ -361,12 +383,14 @@
           notPassRemark: '终止计划'
         })
           .then(res => {
+            this.isStop = true;
             this.getData();
             this.noCheck = false;
             this.selectCheck = '';
           })
           .catch(error => {
-            console.log(error);
+            var res = error+"";
+            this.$message.error(res)
           });
       },
       /**
