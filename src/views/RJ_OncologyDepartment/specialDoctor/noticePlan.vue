@@ -57,7 +57,7 @@
               <el-table-column prop='visitStartTime' label='AI通知时间' align='center'></el-table-column>
 			    		<el-table-column label='操作' width='200' align='center'>
 			    			<template slot-scope='scope'>
-                  <el-button type='danger' @click='passoutBtn(scope.row.taskId)' size='mini'>终止</el-button>
+                  <el-button type='danger' @click='passoutBtn(scope.row.taskId)' size='mini' v-show="scope.row.status!=6">终止</el-button>
                   <el-button type='primary' @click='showInfo(scope)' size='mini'>详情</el-button>
                 </template>
 			    		</el-table-column>
@@ -158,11 +158,13 @@ import { specialDoctor } from 'RJZL_API/specialDoctor';
 import notpassReasonOptions from './notpassReason';
 import NotPassDialog from './notPassDialog';
 import * as utilsIndex from 'utils';
+import Cookies from 'js-cookie';
 const tableName = ['list', 'stop'];
 export default {
   name: 'noticePlan',
   data() {
     return {
+      userId: Cookies.get('userId'),
       searchParams: {
         // adminId: sessionStorage.getItem('userId'),
         pager: 1, // 当前页码
@@ -319,7 +321,7 @@ export default {
     handleCheck(ids, notPassReason) {
       AdmissionNotice
         .cancelNotice({
-          adminId: sessionStorage.getItem('userId'),
+          adminId: this.userId,
           ids: ids,
           notPassReason: notPassReason,
           notPassRemark: this.notPassRemark

@@ -124,7 +124,8 @@
             v-model="schemePramer.appointmentTime"
             value-format='yyyy-MM-dd HH:mm:ss'
             type="datetime"
-            placeholder="选择日期时间">
+            placeholder="选择日期时间"
+            :picker-options='pickerOptions1'>
           </el-date-picker>
         </el-col>
         <el-col :span="12">
@@ -133,7 +134,8 @@
             v-model="schemePramer.visitTime"
             value-format='yyyy-MM-dd'
             type="date"
-            placeholder="选择日期">
+            placeholder="选择日期"
+            :picker-options='pickerOptions1'>
           </el-date-picker>
         </el-col>
         <el-col :span="24" class="time-tips">
@@ -211,7 +213,12 @@
           activeType: '10' // 随访类型  10--特约门诊通知。
         },
         markId: '', // 编辑医生的id
-        tipName: false // 新增时该医生是否存在
+        tipName: false, // 新增时该医生是否存在
+         pickerOptions1: { // 不能选择早于今天之前的时间
+          disabledDate(time) {
+            return time.getTime() <= (Date.now() - 3600 * 1000 * 24);
+          }
+        }
       };
     },
     mounted() {
@@ -526,6 +533,9 @@
       schemeBtn() {
         if (this.schemePramer.appointmentTime == '' || this.schemePramer.visitTime == '') {
           this.$message.error('请选择时间!');
+        } else if (new Date(this.schemePramer.visitTime ) > new Date(this.schemePramer.appointmentTime)) {
+          this.$message.error('医生预约日期不得早于AI通知日期！');
+          return false;
         } else if (this.schemePramer.schemeId == '') {
           this.$message.error('请选择方案!');
         } else {
