@@ -295,7 +295,7 @@
             this.diseaseList = res.data;
           })
           .catch(error => {
-            this.$message.error(+"")
+//            this.$message.error(+"")
             console.log(error);
           });
       },
@@ -390,7 +390,7 @@
           })
           .catch(error => {
             var res = error+"";
-            this.$message.error(res)
+//            this.$message.error(res)
           });
       },
       /**

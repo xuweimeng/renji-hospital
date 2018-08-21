@@ -581,7 +581,7 @@
             this.notPassRemark = '';
           })
           .catch(error => {
-            this.$message.error(error+"")
+//            this.$message.error(error+"")
             console.log(error);
           });
       },
@@ -605,7 +605,7 @@
             this.notPassRemark = '';
           })
           .catch(error => {
-            this.$message.error(error+"")
+//            this.$message.error(error+"")
             console.log(error);
           });
       },

@@ -140,15 +140,15 @@
           pager: 1,   // 当前页码
           limit: 10,  // 每页条数
           brxm: '',   // 患者姓名（可选）
-          dateEndBegin: null, // 预约开始时间（可选）
-          dateEndEnd: null, // 预约结束时间（可选）
+          dateEndBegin: '', // 预约开始时间（可选）
+          dateEndEnd: '', // 预约结束时间（可选）
           activeType: 9, // 随访类型 0代表疾病随访；1代表通知；2临时随访;3出院随访;4入院通知；5体检 6:住院满意度，7门诊满意度，8产妇三访，9胃肠镜通知，10特约门诊通知
-          mobile: null, // 联系方式
+          mobile: '', // 联系方式
           isMySelf: '', // 是否本人（1：是，0：否）
           isCome: '', // 是否过来入院（0：不来，1：来，2：改约）
           icd: '', // 体检套餐名称id
-          orderTimeBegin: null,
-          orderTimeEnd: null
+          orderTimeBegin: '',
+          orderTimeEnd: ''
         },
         tableData: [],
         hzxxId:"",   //患者id
@@ -163,12 +163,12 @@
       ...mapGetters(['token'])
     },
     mounted() {
-      this.endBirthday = [this.getCurrent() + ' 00:00:00', this.getCurrent() + ' 23:59:59'];
-      this.appointmentTime = [this.getCurrent() + ' 00:00:00', this.getCurrent() + ' 23:59:59'];
-      this.searchParams.dateEndBegin = this.getCurrent() + ' 00:00:00';
-      this.searchParams.dateEndEnd = this.getCurrent() + ' 23:59:59';
-      this.searchParams.orderTimeBegin = this.getCurrent() + ' 00:00:00';
-      this.searchParams.orderTimeEnd = this.getCurrent() + ' 23:59:59';
+      this.endBirthday = [this.getCurrent() + ' 00:00:00', this.getCurrent() + ' 23:59:59'];   //AI通知时间
+//      this.appointmentTime = [this.getCurrent() + ' 00:00:00', this.getCurrent() + ' 23:59:59'];
+      this.searchParams.dateEndBegin = this.getCurrent() + ' 00:00:00';   //AI通知时间
+      this.searchParams.dateEndEnd = this.getCurrent() + ' 23:59:59';   //AI通知时间
+//      this.searchParams.orderTimeBegin = this.getCurrent() + ' 00:00:00';    //预约时间
+//      this.searchParams.orderTimeEnd = this.getCurrent() + ' 23:59:59';
       this.getData();
     },
     methods: {
@@ -189,22 +189,22 @@
         return dateStr;
       },
       /**
-       * @function 通知时间更改
-       * @param  {type} date {description}
-       * @return {type} {description}
-       */
-      notiiceTimeChange(date) {
-        this.searchParams.dateEndBegin = date ? date[0] : null;
-        this.searchParams.dateEndEnd = date ? date[1] : null;
-      },
-      /**
-       * @function 体检时间更改
+       * @function客户预约时间
        * @param  {type} date {description}
        * @return {type} {description}
        */
       orderTimeChange(date) {
-        this.searchParams.orderTimeBegin = date ? date[0] : null;
-        this.searchParams.orderTimeEnd = date ? date[1] : null;
+        this.searchParams.orderTimeBegin = date ? date[0] : '';
+        this.searchParams.orderTimeEnd = date ? date[1] : '';
+      },
+      /**
+       * @function  AI通知时间
+       * @param  {type} date {description}
+       * @return {type} {description}
+       */
+      notiiceTimeChange(date) {
+        this.searchParams.dateEndBegin = date ? date[0] : '';
+        this.searchParams.dateEndEnd = date ? date[1] : '';
       },
       /**
        * @function 查看体检通知结果详情
