@@ -129,11 +129,13 @@ const fetch = (type, url, params) => {
 
           reject(new Error(resultData.message));
         } else {
-          Message({
-            message: resultData.message,
-            type: 'error',
-            duration: 5 * 1000
-          });
+          if (resultData.message !== '异常') {
+            Message({
+              message: resultData.message,
+              type: 'error',
+              duration: 5 * 1000
+            });
+          }
           reject(new Error(resultData.message));
         }
       }).catch((error) => {
