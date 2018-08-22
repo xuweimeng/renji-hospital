@@ -118,7 +118,7 @@
             :clearable="true"
             :fetch-suggestions="nameChangeAction"
             placeholder="请输入内容"
-            style="width: 330px;"
+            style="width: 372px;"
             @select="handleSelect"
           >
             <template slot-scope="{ item }">
@@ -764,10 +764,11 @@
 
 <style>
 .select-name{
-  width: 60px;
+  width: 55px;
   height:28px ;
   border-radius: 4px;
   text-align: center;
+  line-height: 29px;
   float: right;
   color: #fff;
   margin-top: 2px;
