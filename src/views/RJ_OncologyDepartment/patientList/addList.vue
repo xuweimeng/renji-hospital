@@ -26,7 +26,7 @@
           </el-autocomplete>
         </el-form-item>
         <el-form-item label="联系电话" prop="mobile">
-          <el-input v-model.trim="ruleForm.mobile" auto-complete="off" placeholder="请输入患者联系电话"></el-input>
+          <el-input v-model.trim="ruleForm.mobile" maxlength="11" auto-complete="off" placeholder="请输入患者联系电话"></el-input>
         </el-form-item>
         <el-form-item label="疾病名称" prop="icd">
           <el-col :span="11">
@@ -107,16 +107,17 @@
   export default {
     name: 'AddList',
     data () {
-      var checkMobile = (rule, value, callback) => {
-        var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
-        if (value === '') {
-          callback(new Error('手机号不能为空'));
-        } else if (myreg.test(value)) {
-          callback();
-        } else {
-          callback(new Error('手机号码格式错误!'));
-        }
-      };
+      // var checkMobile = (rule, value, callback) => {
+      //   // var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
+      //   // if (value === '') {
+      //   //   callback(new Error('手机号不能为空'));
+      //   // } 
+      //   // else if (myreg.test(value)) {
+      //   //   callback();
+      //   // } else {
+      //   //   callback(new Error('手机号码格式错误!'));
+      //   // }
+      // };
       return {
         dialogFormVisible: false,
         ruleForm: {
@@ -140,7 +141,7 @@
             { required: true, message: '请输入患者姓名', trigger: 'blur' }
           ],
           mobile: [
-            { required: true, validator: checkMobile, trigger: 'blur' },
+            { required: true, message: '请输入手机号码', trigger: 'blur' },
           ],
           icd: [
             { required: true, message: '请输入疾病名称', trigger: 'blur' }
