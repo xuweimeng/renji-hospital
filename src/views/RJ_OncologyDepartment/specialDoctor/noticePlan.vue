@@ -299,7 +299,7 @@ export default {
             if(cannotCheck>1){
               this.$message.warning(`${cannotCheck}条通知计划已完成，不能被终止！`)
             }else{
-              this.$message.warning(`该条条通知计划已完成，不能被终止！`)
+              this.$message.warning(`该条通知计划已完成，不能被终止！`)
             }
             
           }
