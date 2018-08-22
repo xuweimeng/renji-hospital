@@ -151,6 +151,7 @@
 </template>
 <script>
   import { specialDoctor } from 'RJZL_API/specialDoctor';
+  import Cookie from'js-cookie';
   export default {
     name: 'doctorList',
     data() {
@@ -165,6 +166,7 @@
         }
       };
       return {
+        userId: Cookie.get('userId'),
         formInline: {
           name: '',
           mobile: '',
@@ -198,7 +200,8 @@
             { required: true, message: '请输入科室名称', trigger: 'blur' }
           ],
           mobile: [
-            { required: true, validator: checkMobile, trigger: 'blur' }
+            // { required: true, validator: checkMobile, trigger: 'blur' }
+            { required: true, message: '请输入手机号码', trigger: 'blur' }
           ]
         },
         addPlanDialog: false, // 通知看诊弹框
@@ -456,6 +459,7 @@
           type: 'warning'
         }).then(() => {
           specialDoctor.specialdoctorDelete({
+            adminId: this.userId,
             id: row.id
           }).then(res => {
             if (res.code === 0) {
