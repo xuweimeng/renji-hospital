@@ -81,7 +81,7 @@
     </el-tabs>
 
     <!-- 审核不通过 -->
-    <el-dialog title="审核不通过原因" :visible.sync="noCheck" width="350px"   @close="cancelSelect">
+    <el-dialog title="终止原因" :visible.sync="noCheck" width="350px"   @close="cancelSelect">
       <el-row slot>
         <el-col :span="24" style="margin-bottom: 20px;">
           <el-select v-model="selectCheck" placeholder="请选择"  popper-class="selectOut">
@@ -89,7 +89,7 @@
           </el-select>
         </el-col>
         <el-col :span="24" >
-          <span>详情</span>
+          <span style="line-height: 35px;">详情</span>
           <el-input
             type="textarea"
             :rows="2"
@@ -752,8 +752,6 @@
         if(isComplete==0){
           this.isComplete = 0;
         }
-
-
         // 单个终止
         this.recordFlag = 1;
         this.noCheck = true;
