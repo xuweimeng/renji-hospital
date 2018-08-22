@@ -112,7 +112,7 @@
     </el-tabs>
 
     <!-- 审核不通过 -->
-    <el-dialog title="审核不通过原因" :visible.sync="noCheck" width="350px"   @close="cancelSelect">
+    <el-dialog title="终止原因" :visible.sync="noCheck" width="350px"   @close="cancelSelect">
       <el-row slot>
         <el-col :span="24" >
           <el-select v-model="selectCheck" placeholder="请选择"  popper-class="selectOut">
