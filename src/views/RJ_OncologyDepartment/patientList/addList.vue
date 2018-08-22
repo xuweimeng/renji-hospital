@@ -26,7 +26,7 @@
           </el-autocomplete>
         </el-form-item>
         <el-form-item label="联系电话" prop="mobile">
-          <el-input v-model.trim="ruleForm.mobile" maxlength="11" auto-complete="off" placeholder="请输入患者联系电话"></el-input>
+          <el-input v-model.trim="ruleForm.mobile" auto-complete="off" placeholder="请输入患者联系电话"></el-input>
         </el-form-item>
         <el-form-item label="疾病名称" prop="icd">
           <el-col :span="11">
