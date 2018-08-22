@@ -152,6 +152,7 @@
 <script>
   import { specialDoctor } from 'RJZL_API/specialDoctor';
   import Cookie from'js-cookie';
+  import * as getTime from 'utils/getDate';
   export default {
     name: 'doctorList',
     data() {
@@ -225,9 +226,15 @@
       };
     },
     mounted() {
+      this.getCurrent();
       this.getData();
     },
     methods: {
+      /** 随访日期 */
+      getCurrent() {
+        let time =  getTime.currentTime1 + (getTime.currentDate + 1) + ' ' + '00:00:00';
+        this.schemePramer.appointmentTime = time;
+      },
       /** 查询 */
       searchBtn() {
         this.formInline.pager = 1;
@@ -418,6 +425,7 @@
       },
       /** 编辑并发起通知 */
       addDoctorAndPlan(formName) {
+        this.getCurrent()
         // 如果存在markId,则为编辑，否则为新增
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -484,6 +492,7 @@
       lookDetailes(scope) {
         this.addPlanDialog = true;
         this.getSchemList();
+        this.getCurrent()
         this.schemePramer.doctorId =scope.row.id
       },
       /** 获取方案列表 */
