@@ -288,9 +288,23 @@ export default {
     /** 批量审核选择患者 */
     selectChange(selection) {
       this.checkId.length = 0;
-      selection.forEach(item => {
-        this.checkId.push(item.taskId);
-      });
+      if(selection.length){
+        // 判断是否是已完成，是的话不能被选择，否的话可以被选择
+        selection.forEach(item => {
+          if(item.status!=6) {
+            this.checkId.push(item.taskId);
+          }else {
+            this.$refs.multipleTable.toggleRowSelection(item, false)
+            let cannotCheck = selection.length-this.checkId.length
+            if(cannotCheck>1){
+              this.$message.warning(`${cannotCheck}条通知计划已完成，不能被终止！`)
+            }else{
+              this.$message.warning(`该条条通知计划已完成，不能被终止！`)
+            }
+            
+          }
+        });
+      }
     },
     /**
      *弹框点击不通过确定

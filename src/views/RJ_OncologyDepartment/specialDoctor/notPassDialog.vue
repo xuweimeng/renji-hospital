@@ -41,6 +41,7 @@
 	import notpassReasonOptions from './notpassReason'
 	import { AdmissionNotice } from 'RJZL_API/hospitalNotice';
 	import { mapState } from 'vuex';
+	import Cookie from 'js-cookie';
 	export default {
 		name: 'notPassDialog',
 		data () {
@@ -88,7 +89,7 @@
 			handleCheck(ids) {
 				AdmissionNotice
 					.cancelNotice({
-						adminId: sessionStorage.getItem('userId'),
+						adminId: Cookie.get('userId'),
 						ids: ids,
 						notPassReason: this.notPassParams.notPassReason,
 						notPassRemark: this.notPassParams.notPassRemark
