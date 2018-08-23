@@ -251,7 +251,7 @@ export default {
       }
       localStorage.setItem('idList', JSON.stringify(this.idList));
       this.$router.push({
-        path: '/AdNotice'
+        path: '/PhysicalExaminationNotice/InitiateNotification'
       });
     }
   }
