@@ -62,7 +62,7 @@
           :data="tableData"
           border fit highlight-current-row
         >
-          <el-table-column type="selection"  width="55" align="center"></el-table-column>
+          <el-table-column type="selection"  width="55" align="center" :selectable="checkboxInit"></el-table-column>
           <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
           <el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
           <el-table-column prop="sfzh" label="证件号" align="center"></el-table-column>
@@ -225,6 +225,16 @@
       ...mapGetters(['token'])
     },
     methods: {
+      /**
+       * 当已经完成的不可点
+       **/
+      checkboxInit(row){
+        if(row.isComplete==0){
+          return 1
+        }else{
+          return 0
+        }
+      },
       /**
        * 终止按钮
        **/

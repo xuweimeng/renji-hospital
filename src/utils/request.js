@@ -13,8 +13,8 @@ if (process.env.NODE_ENV === 'development') {
   // baseURL = 'http://192.168.3.26:8081'; // chanji
   // baseURL = 'http://192.168.3.69:8081'; // fugou
   // baseURL = 'http://192.168.3.33:8087'; // daogou
-  baseURL = 'http://192.168.1.218:8093';
-  // baseURL = '/api';
+  // baseURL = 'http://192.168.1.218:8093';
+  baseURL = '/api';
   // baseURL = '/api'; // api的base_url
   // baseURL = 'http://60.190.86.50:6016'; // api的base_url
 }
@@ -86,11 +86,11 @@ const codeMessage = {
   503: '服务不可用，服务器暂时过载或维护。',
   504: '网关超时。'
 };
-  /**
-   * @function 请求状态码检测
-   * @param  {type} response {description}
-   * @return {type} {description}
-   */
+/**
+ * @function 请求状态码检测
+ * @param  {type} response {description}
+ * @return {type} {description}
+ */
 const checkStatus = response => {
   if (response.status >= 200 && response.status < 300) {
     return response;
@@ -106,7 +106,7 @@ const checkStatus = response => {
   error.response = response;
   throw error;
 };
-  /* 返回一个Promise(发送post请求) */
+/* 返回一个Promise(发送post请求) */
 const fetch = (type, url, params) => {
   return new Promise((resolve, reject) => {
     const data = type === 'get' ? { params: params } : params;
@@ -139,8 +139,8 @@ const fetch = (type, url, params) => {
           reject(new Error(resultData.message));
         }
       }).catch((error) => {
-        reject(error);
-      });
+      reject(error);
+    });
   });
 };
 
