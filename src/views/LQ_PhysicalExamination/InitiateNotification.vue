@@ -561,6 +561,7 @@ export default {
             this.sendData.icd = this.searchParams.icd;
             this.sendData.ageBegin = this.searchParams.ageBegin;
             this.sendData.ageEnd = this.searchParams.ageEnd;
+            this.sendData.jtdh = this.searchParams.jtdh;
           }
           InitiateNotification.confirmationFollowUp(this.sendData)
             .then(res => {
