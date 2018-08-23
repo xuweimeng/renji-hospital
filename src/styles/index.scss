@@ -226,7 +226,7 @@ code {
         border-bottom-right-radius: 0;
         background-color: #f1f1f1;
         color: #666;
-        font-size: 14px;
+        font-size: 13px;
         // padding-right: 10px;
       }
       &_time{
@@ -249,4 +249,11 @@ code {
 }
 
 
-
+.app-container{
+  .el-table{
+    font-size: 13px;
+    th{
+      background: #f8f8f9;
+    }
+  }
+}

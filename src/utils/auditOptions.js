@@ -19,6 +19,10 @@ const auditOptions = [
   {
     value: '4',
     label: '方案不匹配'
+  },
+  {
+    value: '5',
+    label: '其他'
   }
 ];
 export default auditOptions;

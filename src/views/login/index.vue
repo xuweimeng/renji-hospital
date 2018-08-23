@@ -28,7 +28,7 @@
         </span>
       </el-form-item>
 
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button type="primary" size="large" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
 
       <!-- <div class="tips">
         <span>{{$t('login.username')}} : admin</span>
@@ -105,6 +105,7 @@ export default {
         this.passwordType = 'password';
       }
     },
+    // 登录
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -113,7 +114,7 @@ export default {
             .dispatch('LoginByUsername', this.loginForm)
             .then((res) => {
               this.loading = false;
-              this.$router.push({ path: '/Home' });
+              this.$router.push({ path: '/' });
             })
             .catch(() => {
               this.loading = false;

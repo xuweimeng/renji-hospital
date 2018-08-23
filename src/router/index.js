@@ -4,10 +4,11 @@ import Router from 'vue-router';
 import { LQ_PhysicalExamination } from './LQ_PhysicalExamination';// 乐清六院
 import { HN_DoctorClient } from './HN_DoctorClient';// 海宁医生端
 import { RJ_PhysicalExamination } from './RJ_PhysicalExamination';// 仁济体检中心
-import { EY_DoctorClient } from './EY_DoctorClient';// 儿研医生端
+// import { EY_DoctorClient } from './EY_DoctorClient';// 儿研医生端
 import { SY_DoctorClient } from './SY_DoctorClient';// 十院医生端
 import { RJ_OncologyDepartment } from './RJ_OncologyDepartment';// 仁济肿瘤科
 import { EZ_DoctorClient } from './EZ_DoctorClient';// 台州恩泽医院
+import { KMJB_DoctorClient } from './KMJB_DoctorClient';// 昆明金碧医生端
 Vue.use(Router);
 
 /* Layout布局器文件 */
@@ -29,7 +30,7 @@ import Layout from '@/views/layout/Layout';
   }
 **/
 export const constantRouterMap = [
-  { path: '/', redirect: '/Home', hidden: true },
+  // { path: '/', redirect: '/Home', hidden: true },
   { path: '/login', component: () => import('@/views/login/index'), hidden: true },
   { path: '/404', component: () => import('@/views/errorPage/404'), hidden: true },
   { path: '/401', component: () => import('@/views/errorPage/401'), hidden: true }
@@ -46,9 +47,10 @@ export const asyncRouterMap = [
   ...LQ_PhysicalExamination, // 乐清体检中心
   ...RJ_OncologyDepartment, // 仁济肿瘤科
   ...HN_DoctorClient, // 海宁医生端
-  ...EY_DoctorClient, // 儿研医生端
+  // ...EY_DoctorClient, // 儿研医生端
   ...SY_DoctorClient, // 十院医生端
   ...EZ_DoctorClient, // 台州恩泽医院
+  ...KMJB_DoctorClient, // 昆明金碧
   // ...default_asyncRouterMap
   { path: '*', redirect: '/404', hidden: true }
 ];

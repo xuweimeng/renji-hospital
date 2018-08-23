@@ -8,7 +8,6 @@ export const GastrointestinalResult = {
   */
   GastrointestinalResult(data) {
     return fetch('post', '/vist/notice/list', data);
-  },
+  }
 
-
-}
+};

@@ -1,7 +1,10 @@
 
 import Layout from '@/views/layout/Layout';
 
-const roles = ['测试系统ey'];
+// const roles = ['测试系统'];
+const roles = ['儿研所']; // 首页
+// const roles = ['海宁市中心医院type0', '海宁市中心医院type1', '海宁市中心医院type2']; // 随访计划、随访记录、患者列表、异常数据
+// const roles = ['海宁市中心医院type0', '海宁市中心医院type3']; // 满意度
 
 // todo roles的值待改，权限控制
 export const EY_DoctorClient = [
@@ -11,9 +14,15 @@ export const EY_DoctorClient = [
     redirect: 'Home',
     meta: { title: '', roles: roles, icon: 'dashboard', noCache: true },
     children: [
+      // {
+      //   path: 'Home',
+      //   component: () => import('EYDC/Homepage/Homepage.vue'),
+      //   name: 'Home',
+      //   meta: { title: 'Home', icon: 'dashboard', roles: roles, noCache: true }
+      // },
       {
         path: 'Home',
-        component: () => import('EYDC/Homepage/Homepage.vue'),
+        component: () => import('EYDC/Homepage/Index.vue'),
         name: 'Home',
         meta: { title: 'Home', icon: 'dashboard', roles: roles, noCache: true }
       }

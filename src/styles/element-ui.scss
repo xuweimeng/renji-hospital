@@ -80,21 +80,3 @@
     display: block
   }
 }
-// 绿色按钮
-.el-button--success {
-  background-color: #00cc66;
-  border-color: #00cc66;
-  &:hover {
-    background-color: #00cc66;
-    border-color: #00cc66;
-  }
-}
-// 警告按钮
-.el-button--warning {
-  background-color: #f60;
-  border-color: #f60;
-  &:hover {
-    background-color: #f60;
-    border-color: #f60;
-  }
-}

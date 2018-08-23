@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-      <!-- 搜索 -->
+    <!-- 搜索 -->
     <ul class="common_search">
         <li class="common_search_single">
           <label class="radio-label" >姓名</label>
@@ -40,62 +40,62 @@
           <el-button type="primary" icon="el-icon-search" @click="getDataAction">查询</el-button>
         </li>
     </ul>
-      <!-- tab切换 -->
-      <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick" class="mdTabs" >
-        <el-tab-pane label="体检通知" name="first" v-loading="tableLoading">
-          <el-table
-            @selection-change="selectChange"
-            :data="tableData"
-            border fit highlight-current-row
-            >
-            <el-table-column type="selection"  width="55" align="center"></el-table-column>
-            <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
-            <el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
-            <el-table-column prop="sfzh" label="证件号" align="center"></el-table-column>
-            <el-table-column prop="schemeName" label="通知方案" align="center"></el-table-column>
-            <el-table-column prop="icdName" label="体检套餐" align="center"></el-table-column>
-            <el-table-column prop="orderTime" label="预约时间" align="center"></el-table-column>
-            <el-table-column prop="visitStartTime" label="通知开始时间" align="center"></el-table-column>
-            <el-table-column label="详情" align="center" width="150">
-              <template slot-scope="scope">
-                <el-button size="mini" type="primary" @click="showInfo(scope)">详情</el-button>
-                <el-button size="mini" type="danger" @click="termination(scope.row.id)" v-if="scope.row.isComplete==0">终止</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+    <!-- tab切换 -->
+    <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick" class="mdTabs" >
+      <el-tab-pane label="体检通知" name="first" v-loading="tableLoading">
+        <el-table
+          @selection-change="selectChange"
+          :data="tableData"
+          border fit highlight-current-row
+          >
+          <el-table-column type="selection"  width="55" align="center"></el-table-column>
+          <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
+          <el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
+          <el-table-column prop="sfzh" label="证件号" align="center"></el-table-column>
+          <el-table-column prop="schemeName" label="通知方案" align="center"></el-table-column>
+          <el-table-column prop="icdName" label="体检套餐" align="center"></el-table-column>
+          <el-table-column prop="orderTime" label="预约时间" align="center"></el-table-column>
+          <el-table-column prop="visitStartTime" label="通知开始时间" align="center"></el-table-column>
+          <el-table-column label="详情" align="center" width="150">
+            <template slot-scope="scope">
+              <el-button size="mini" type="primary" @click="showInfo(scope)">详情</el-button>
+              <el-button size="mini" type="danger" @click="termination(scope.row.id)" v-if="scope.row.isComplete==0">终止</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
 
-          <div v-if="tableData.length" class="pagination-container" style="text-align:right;margin-top:15px;">
-            <el-button style='margin-right:10px;float:left' type="warning"   @click="batchTermination" >批量终止</el-button>
-            <el-pagination style="display:inline-block" background  @current-change="handleCurrentChange" :current-page="searchParams.pager"  :page-size="searchParams.limit" layout="total,  prev, pager, next, jumper" :total="totalPage">
-            </el-pagination>
-          </div>
-         
-        </el-tab-pane>
-        <el-tab-pane label="终止通知" name="second">
-          <el-table
-            :data="noPassData"
-            border fit highlight-current-row
-            v-loading="noPassLoading"
-            >
-            <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
-            <el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
-            <el-table-column prop="sfzh" label="证件号" align="center"></el-table-column>
-            <el-table-column prop="schemeName" label="通知方案" align="center"></el-table-column>
-            <el-table-column prop="icdName" label="体检套餐" align="center"></el-table-column>
-            <el-table-column prop="orderTime" label="预约时间" align="center"></el-table-column>
-            <el-table-column prop="visitStartTime" label="通知开始时间" align="center"></el-table-column>
-            <el-table-column label="详情" align="center" >
-              <template slot-scope="scope">
-                <el-button size="mini" type="primary" @click="showInfo(scope)">详情</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <div v-if="noPassData.length" class="pagination-container" style="text-align:right;margin-top:15px;">
-            <el-pagination style="display:inline-block" background  @current-change="pageChange" :current-page="nosearchParams.pager"  :page-size="nosearchParams.limit" layout="total,  prev, pager, next, jumper" :total="noTotalPage">
-            </el-pagination>
-          </div>
-        </el-tab-pane>
-      </el-tabs>
+        <div v-if="tableData.length" class="pagination-container" style="text-align:right;margin-top:15px;">
+          <el-button style='margin-right:10px;float:left' type="warning"   @click="batchTermination" >批量终止</el-button>
+          <el-pagination style="display:inline-block" background  @current-change="handleCurrentChange" :current-page="searchParams.pager"  :page-size="searchParams.limit" layout="total,  prev, pager, next, jumper" :total="totalPage">
+          </el-pagination>
+        </div>
+        
+      </el-tab-pane>
+      <el-tab-pane label="终止通知" name="second">
+        <el-table
+          :data="noPassData"
+          border fit highlight-current-row
+          v-loading="noPassLoading"
+          >
+          <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
+          <el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
+          <el-table-column prop="sfzh" label="证件号" align="center"></el-table-column>
+          <el-table-column prop="schemeName" label="通知方案" align="center"></el-table-column>
+          <el-table-column prop="icdName" label="体检套餐" align="center"></el-table-column>
+          <el-table-column prop="orderTime" label="预约时间" align="center"></el-table-column>
+          <el-table-column prop="visitStartTime" label="通知开始时间" align="center"></el-table-column>
+          <el-table-column label="详情" align="center" >
+            <template slot-scope="scope">
+              <el-button size="mini" type="primary" @click="showInfo(scope)">详情</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div v-if="noPassData.length" class="pagination-container" style="text-align:right;margin-top:15px;">
+          <el-pagination style="display:inline-block" background  @current-change="pageChange" :current-page="nosearchParams.pager"  :page-size="nosearchParams.limit" layout="total,  prev, pager, next, jumper" :total="noTotalPage">
+          </el-pagination>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
 
       <!-- 审核不通过 -->
       <el-dialog title="审核不通过原因" :visible.sync="noCheck" width="350px"   @close="cancelSelect">

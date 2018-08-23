@@ -1,56 +1,53 @@
 <template>
-	<div class="uploadHz">
-		<el-row style="background: #fbfbfb;padding: 10px">
-		  <el-col :span="12" :offset="6">
-				<el-steps :active="step" align-center>
-					<el-step title="上传信息" icon="el-icon-edit"></el-step>
-					<el-step title="完善信息" icon="el-icon-upload"></el-step>
-					<el-step title="上传完成" icon="el-icon-success"></el-step>
-				</el-steps>
-		  </el-col>
-		  <el-col :span="6"></el-col>
-		</el-row>
-		<transition name="el-zoom-in-top">
-		<div class="stepContent" v-if="step === 0">
-			<step1 @stepFun="stepFun"></step1>
-		</div>
-		</transition>
-		<div class="step2" v-if="step === 1">
-		  <step2 :step="step"></step2>
-		</div>
+	<div class="app-container">
+		<el-card shadow="never">
+			<el-steps :active="step" align-center>
+				<el-step title="上传信息" icon="el-icon-edit"></el-step>
+				<el-step title="完善信息" icon="el-icon-upload"></el-step>
+				<el-step title="上传完成" icon="el-icon-success"></el-step>
+			</el-steps>
+			<transition name="el-zoom-in-top">
+				<div class="stepContent" v-if="step === 0">
+					<step1 @stepFun="stepFun"></step1>
+				</div>
+			</transition>
+			<div class="step2" v-if="step === 1">
+				<step2 :step="step"></step2>
+			</div>
+		</el-card>
 	</div>
 </template>
 
 <script>
-	import { hzList } from 'RJZL_API/patientList'
-	import Step1 from './step/step1'
-	import Step2 from './step/step2'
+	import { hzList } from 'RJZL_API/patientList';
+	import Step1 from './step/step1';
+	import Step2 from './step/step2';
 	export default {
-		data () {
-			return {
-				// API: API,
-				data1: {
-					adminId: sessionStorage.getItem('userId')
-				},
-				step: 0, // 步骤
-			}
-		},
-		components: {
-			Step1,
-			Step2
-		},
-		mounted () {},
-		methods: {
-			/**
+	  data() {
+	    return {
+	      // API: API,
+	      data1: {
+	        adminId: sessionStorage.getItem('userId')
+	      },
+	      step: 1 // 步骤
+	    };
+	  },
+	  components: {
+	    Step1,
+	    Step2
+	  },
+	  mounted() {},
+	  methods: {
+	    /**
 			 * [stepFun description]
 			 * @description 监听子组件的step1的step
 			 * @DateTime    2018-04-19
 			 */
-			stepFun (val) {
-				this.step = val
-			},
-		}
-	}
+	    stepFun(val) {
+	      this.step = val;
+	    }
+	  }
+	};
 </script>
 
 <style lang="scss">

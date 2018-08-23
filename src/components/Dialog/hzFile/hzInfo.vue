@@ -6,7 +6,7 @@
       	<span class="personName careColor" v-if="patientInfo">
           {{patientInfo.brxm?patientInfo.brxm:patientInfo.patientName?patientInfo.patientName:''}}
         </span>
-      	<span class="personSex careColor" v-if="patientInfo">
+      	<span class="personSex careColor" v-show="patientInfo.from&&patientInfo.from!='tymn'">
           {{patientInfo.brxb?patientInfo.brxb:patientInfo.patientSex?patientInfo.patientSex:''}} /
           {{patientInfo.age?patientInfo.age:patientInfo.patientAge?patientInfo.patientAge:''}}
         </span>
@@ -15,26 +15,49 @@
       <el-col :span="12" class="care">
         <el-button type="text"
         	@click="handleislike"
-        	:class="{ careColor: isCare}">
+        	:class="{ careColor: isCare}"
+          v-show="patientInfo.from!='tymn'">
           <i class="iconfont"
           :class="{ careColor: isCare}"
-          :style="{marginRight:5+'px', fontSize:12+'px'}">&#xe604;</i>
+          :style="{marginRight:5+'px', fontSize:12+'px'}"
+          >&#xe604;</i>
           {{isCare?'取消关心':'特别关心'}}
         </el-button>
       </el-col>
     </el-row>
     <!-- 疾病名称 -->
-    <el-row class="personResult">
+    <el-row class="personResult" v-show="patientInfo.from!='tymn'">
       <el-col :span="12">
         <span>疾病名称&nbsp;:&nbsp;</span>
         <span>{{patientInfo.icdName}}</span>
       </el-col>
     </el-row>
+     <!-- 所属科室 -->
+    <el-row class="personResult" v-show="patientInfo.from=='tymn'">
+      <el-col :span="12">
+        <span>所属科室&nbsp;:&nbsp;</span>
+        <span>{{patientInfo.department}}</span>
+      </el-col>
+    </el-row>
     <!-- 手机号码 -->
     <el-row class="personResult">
       <el-col :span="12">
-        <span>手机号码&nbsp;:&nbsp;</span>
+        <span>联系电话&nbsp;:&nbsp;</span>
         <span>{{patientInfo.mobile}}</span>
+      </el-col>
+    </el-row>
+    <!-- 预约看诊时间 -->
+    <el-row class="personResult">
+      <el-col :span="12">
+        <span>预约看诊时间&nbsp;:&nbsp;</span>
+        <span>{{patientInfo.orderTime}}</span>
+      </el-col>
+    </el-row>
+    <!-- AI通知时间 -->
+    <el-row class="personResult" v-show="patientInfo.from=='tymn'">
+      <el-col :span="12">
+        <span>AI通知时间&nbsp;:&nbsp;</span>
+        <span>{{patientInfo.visitStartTime}}</span>
       </el-col>
     </el-row>
 	</div>

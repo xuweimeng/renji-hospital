@@ -14,10 +14,7 @@
         border-bottom-left-radius: 4px;
       }
       .el-form-item__content {
-        width: calc(100% - 80px);
-        // .el-select {
-        //   width: 100%;
-        // }
+        width: calc(100% - 90px);
         .el-date-editor {
           width: 100%;
           .el-range-separator {
@@ -55,4 +52,8 @@
 .upnum {
   background: aliceblue;
   padding-left: 10px;
+}
+/** 给dialog header添加下划线 **/
+.dialogBorder .el-dialog__header {
+  border-bottom: 1px solid #EBEEF5;
 }

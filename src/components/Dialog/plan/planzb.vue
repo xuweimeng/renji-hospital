@@ -23,7 +23,12 @@
       </el-row>
      </div>
     <div class='content3'>
-      <el-row style='height:47px;margin-top:14px;'>
+      <el-row style='height:47px;margin-top:14px;' v-if="patientInfo.from == 'tymn'">
+        <el-col :span='24' style="text-align: center;">
+          <el-button type='danger' plain  @click='modelOutTymz' v-show="patientInfo.status=='3'">终止</el-button>
+        </el-col>
+      </el-row>
+      <el-row style='height:47px;margin-top:14px;' v-else>
         <el-col :span='12'  v-if="patientInfo.status === 0">
           <el-button type='button' @click='modelOut'>不通过</el-button>
         </el-col>
@@ -39,6 +44,9 @@
 			@sendReason='sendReason'
 			@closeChildren='closeChildren'>
 		</ex-select>
+    <!-- 特约门诊 -->
+    <not-pass-dialog ref="notPassDialog" @getNotPassReason="getNotPassReason">
+    </not-pass-dialog>
   </div>
 </template>
 
@@ -47,6 +55,7 @@ import { followUp } from 'RJZL_API/followPlan';
 import { hzList } from 'RJZL_API/patientList';
 import { mapState } from 'vuex';
 import ExSelect from 'components/dialog/exSelect';
+import NotPassDialog from 'RJZL/specialDoctor/notPassDialog';
 export default {
   data() {
     return {
@@ -55,24 +64,32 @@ export default {
       numbers: '', // 总次数
       noCheck: false,
       ids: '',
-      notPassReason: ''
+      notPassReason: '',
     };
   },
   components: {
-    ExSelect
+    ExSelect,
+    NotPassDialog
   },
   mounted() {
     this.getView();
   },
   computed: {
     ...mapState({
-      'patientInfo': state => state.user.scopeRowData.row
+      'patientInfo': state => state.user.scopeRowData.row,
+      'departmentName': state => state.user.departmentName,
     })
   },
   methods: {
     getView() {
+      let paramId
+      if(this.patientInfo.from == 'tymn') {
+        paramId = this.patientInfo.taskId
+      } else {
+         paramId = this.patientInfo.id
+      }
       followUp.detail({
-        'id': this.patientInfo.id,
+        'id': paramId,
       }).then((res) => {
         if (res.code === 0) {
           this.modelFollplanData = res.data;
@@ -92,6 +109,9 @@ export default {
     /** 不通过 */
     modelOut() {
       this.noCheck = true;
+    },
+    modelOutTymz() {
+      this.$refs.notPassDialog.noCheckDg = true
     },
     /** 通过 */
     modelPass() {
@@ -165,12 +185,21 @@ export default {
         'isDed': '1'
       }).then((res) => {
       });
+    },
+    getNotPassReason(item) {
+      if(item) {
+        this.$emit('closeChildrenPlan', false)
+      }
     }
   },
   watch: {
     /** 监听患者id是否变化 */
     patientInfo(newV, oldV) {
       if (newV.id !== oldV.id) {
+        this.getView();
+      }
+      // 特约门诊
+      if (newV.taskId !== oldV.taskId) {
         this.getView();
       }
     }

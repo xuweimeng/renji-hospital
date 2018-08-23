@@ -3,7 +3,7 @@
  */
 import Layout from '@/views/layout/Layout';
 
-const roles = ['乐清六院'];
+const roles = ['乐清第六人民医院'];
 
 export const LQ_PhysicalExamination = [
   {

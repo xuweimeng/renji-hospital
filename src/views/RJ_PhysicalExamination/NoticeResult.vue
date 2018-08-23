@@ -166,7 +166,7 @@
           orderTimeEnd: null
         },
         tableData: [],
-        hzxxId:"",   //患者id
+        hzxxId: '', // 患者id
         totalPage: 0, // 总页数
         dataLoading: false, // 表格数据请求等待;
         pickerOptions: {
@@ -226,7 +226,7 @@
       detailBtn(scope) {
         this.dataTail = scope.row;
         this.patientId = scope.row.id;
-        this.hzxxId = scope.row.hzxxId; //患者id
+        this.hzxxId = scope.row.hzxxId; // 患者id
         this.$refs.record.dialogTableVisible = true;
       },
       /**

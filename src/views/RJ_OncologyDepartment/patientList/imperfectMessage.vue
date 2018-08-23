@@ -6,15 +6,15 @@
 <script>
   export default {
     name: 'imperfectMessage',
-    data () {
+    data() {
       return {
-      }
+      };
     },
-    mounted (){
+    mounted() {
     },
     methods: {
-    },
-  }
+    }
+  };
 </script>
 <style lang="scss">
   .imperfectMessage {

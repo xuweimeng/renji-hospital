@@ -14,76 +14,74 @@
 	  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
 	  <div class="el-upload__tip" slot="tip"><a href="/assets/templatedoc/cologyTemp.xls">下载Excel模板</a></div>
 	</el-upload>
-	<el-button type="primary" @click="testBtn">test</el-button>
+	<!-- <el-button type="primary" @click="testBtn">test</el-button> -->
 	</div>
 </template>
 
 <script>
-	import { upload } from 'RJZL_API/patientList'
+	import { upload } from 'RJZL_API/patientList';
 	export default {
-		name: 'step2',
-		data () {
-			return {
-				upload: upload,
-				sendData: {
-					adminId: sessionStorage.getItem('userId'), // userid
-				},
-			}
-		},
-		methods: {
-			/** @description */
-			beforeUpload (file) {
-				console.log(this.$refs.uploademo.data)
-				const extension = file.name.split('.')[1] === 'xls'
-				const extension1 = file.name.split('.')[1] === 'xlsx'
-				if (!extension && !extension1) {
-					this.$message.error('上传格式只能为xls或者xlsx!')
-				}
-			},
-			/**
+	  name: 'step2',
+	  data() {
+	    return {
+	      upload: upload,
+	      sendData: {
+	        adminId: sessionStorage.getItem('userId') // userid
+	      }
+	    };
+	  },
+	  methods: {
+	    /** @description */
+	    beforeUpload(file) {
+	      console.log(this.$refs.uploademo.data);
+	      const extension = file.name.split('.')[1] === 'xls';
+	      const extension1 = file.name.split('.')[1] === 'xlsx';
+	      if (!extension && !extension1) {
+	        this.$message.error('上传格式只能为xls或者xlsx!');
+	      }
+	    },
+	    /**
 			 * [onSuccess description]
 			 * @description 上传成功
 			 * @DateTime    2018-04-19
 			 */
-			onSuccess (response) {
-				response = JSON.parse(response)
-				if (response.code == 3) {
-					this.$message.error(response.message)
-				} else {
-					this.$message.success('上传成功!')
-					this.$store.dispatch('getUploadNum', response)
-					this.$emit('stepFun', 1)
-				}
-			},
-			/**
+	    onSuccess(response) {
+	      response = JSON.parse(response);
+	      if (response.code == 3) {
+	        this.$message.error(response.message);
+	      } else {
+	        this.$message.success('上传成功!');
+	        this.$store.dispatch('getUploadNum', response);
+	        this.$emit('stepFun', 1);
+	      }
+	    },
+	    /**
 			 * [onError description]
 			 * @description 上传失败
 			 * @DateTime    2018-04-19
 			 */
-			onError (response) {
-				this.$message.error(JSON.parse(response.message))
-			}
-		}
-	}
+	    onError(response) {
+	      this.$message.error(JSON.parse(response.message));
+	    }
+	  }
+	};
 </script>
 
 <style lang="scss">
 	.upload-demo {
-			position: absolute;
-      top: 20%;
-			left: 50%;
-      transform: translateY(-50%);
-      transform: translateX(-50%);
-			.el-upload__tip {
+			margin: 50px auto;
+			width: 360px;
+			a{
+				display: block;
+				border-radius: 5px;
+				height: 35px;
+				line-height: 35px;
 				text-align: center;
-				color: #409EFF;
-				font-size: 15px;
-				a {
-					color: #666;
-					&:hover {
-						color: #409EFF;
-					}
-				}
+				background-color: #f80;
+				color: #fff;
+				font-size: 13px;
+				width: 100px;
+				margin: 15px auto;
 			}
 		}
 </style>
