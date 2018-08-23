@@ -13,8 +13,8 @@ if (process.env.NODE_ENV === 'development') {
   // baseURL = 'http://192.168.3.26:8081'; // chanji
   // baseURL = 'http://192.168.3.69:8081'; // fugou
   // baseURL = 'http://192.168.3.33:8087'; // daogou
-  // baseURL = 'http://192.168.1.218:8093';
-  baseURL = '/api';
+  baseURL = 'http://192.168.1.218:8093';
+  // baseURL = '/api';
   // baseURL = '/api'; // api的base_url
   // baseURL = 'http://60.190.86.50:6016'; // api的base_url
 }
@@ -139,8 +139,8 @@ const fetch = (type, url, params) => {
           reject(new Error(resultData.message));
         }
       }).catch((error) => {
-      reject(error);
-    });
+        reject(error);
+      });
   });
 };
 
