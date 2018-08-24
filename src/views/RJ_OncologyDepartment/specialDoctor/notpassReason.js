@@ -4,10 +4,10 @@ const notpassReasonOptions = [
     value: '',
     label: '请选择'
   },
-  {
-    value: '1',
-    label: '医生已死亡'
-  },
+  // {
+  //   value: '1',
+  //   label: '医生已死亡'
+  // },
   {
     value: '2',
     label: '医生不接受随访'
