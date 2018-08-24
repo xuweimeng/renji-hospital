@@ -24,7 +24,7 @@
           <i class="el-icon-edit"></i>
         </div>
         <div class="notice-content">
-          <p class="text-center">已随访人次</p>
+          <p class="text-center">已随访人数</p>
           <p class="text-center green-font">{{getAdminInfo.hadVisitPeopleCount}}</p>
         </div>
       </el-col>

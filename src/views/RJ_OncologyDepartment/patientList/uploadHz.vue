@@ -29,7 +29,7 @@
 	      data1: {
 	        adminId: sessionStorage.getItem('userId')
 	      },
-	      step: 1 // 步骤
+	      step: 0 // 步骤
 	    };
 	  },
 	  components: {
