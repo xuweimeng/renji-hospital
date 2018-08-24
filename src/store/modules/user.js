@@ -75,7 +75,7 @@ const user = {
         commit('SET_NAME', data.username);
         setParameter('name', data.username);
         sessionStorage.setItem('userId', data.id);// 用户id
-        
+
         sessionStorage.setItem('laterhours', response.laterhours);// 用户等待时间
         // 配置用户头像
         commit('SET_AVATAR', response.data.aipictureurl);
@@ -159,7 +159,7 @@ const user = {
       const hospitalMap = {
         海宁市中心医院: require('../../assets/login/haining.png'),
         上海市仁济医院: require('../../assets/login/renji.png'),
-        乐清六院: require('../../assets/login/leqing.png'),
+        乐清第六人民医院: require('../../assets/login/leqing.png'),
         昆明金碧社区医院: require('../../assets/login/kunmingjinbi.png')
       };
       const getInfo = (res, callBack) => {
