@@ -408,8 +408,8 @@
 			 * 修改手机号弹框
 			 */
 	    resetMobile(scope) {
-      this.newMobile = '';
-      this.patientId = '';
+			  this.newMobile = '';
+				this.patientId = '';
 	      this.resetMobileDg = true;
 	      this.oldMobile = scope.row.jtdh;
 	      this.patientId = scope.row.hzxxId;

@@ -14,7 +14,6 @@
 	  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
 	  <div class="el-upload__tip" slot="tip"><a href="/assets/templatedoc/cologyTemp.xls">下载Excel模板</a></div>
 	</el-upload>
-	<!-- <el-button type="primary" @click="testBtn">test</el-button> -->
 	</div>
 </template>
 

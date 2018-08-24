@@ -1,12 +1,5 @@
 <template>
 	<div class="step2">
-		<!-- <el-row class="upnum">
-			<el-col :span="24">
-				上传结果：共<strong>{{Number(uploadNum.data.successNum) + Number(uploadNum.data.failNum)}}</strong>条&nbsp;|
-				&nbsp;成功 <strong>{{uploadNum.data.successNum}}</strong> 条&nbsp;|
-				&nbsp;失败<span>{{uploadNum.data.failNum}}</span>条
-				</el-col>
-		</el-row> -->
 		<el-alert
 			style="margin:10px 0"
 			:title="`上传结果：共${Number(uploadNum.data.successNum) + Number(uploadNum.data.failNum)}条 |
@@ -78,9 +71,6 @@
 			</el-tab-pane>
 				<!-- 上传失败 -->
 			<el-tab-pane label="上传失败" name="second">
-				<el-row class="finishjb">
-					<el-col class="center" :span="24">共<span class="red">{{uploadNum.data.failNum}}</span>条上传失败，以下患者请重新上传信息</el-col>
-				</el-row>
 				<el-alert
 					style="margin:10px 0"
 					:title="`共${uploadNum.data.failNum}条上传失败，以下患者请重新上传信息`"
@@ -153,8 +143,6 @@
 	  ],
 	  mounted() {
 	    this.successList();
-	    console.log('test', this.uploadNum);
-	    console.log(typeof (this.uploadNum));
 	  },
 	  components: {
 	    Disease
