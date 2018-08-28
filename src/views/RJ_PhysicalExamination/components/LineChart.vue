@@ -161,7 +161,7 @@ export default {
             data: expectedData.length === 1 ? expectedData : []
           },
           {
-            name: 'expected', itemStyle: {
+            name: '数量', itemStyle: {
               normal: {
                 color: 'rgba(0,191,183,1)',
                 lineStyle: {
