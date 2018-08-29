@@ -26,4 +26,4 @@
 ├── .travis.yml                // 自动化CI配置
 ├── favicon.ico                // favicon图标
 ├── index.html                 // html模板
-└── package.json               // package.json
+└── package.json               // package.json2
