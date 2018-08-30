@@ -60,7 +60,7 @@
                     <span class="record_header_sexAndage">
                         {{baseData.znjqrHzxx.brxb}}
                     </span>
-                    <el-tag v-if="baseData.gzTag">
+                    <el-tag v-if="baseData.gzTag" >
                         {{baseData.gzTag}}
                     </el-tag>
                 </h3>
@@ -87,13 +87,16 @@
                 <el-step v-for="(item,index) in ordersList" :key="item.id" :title="`第${index+1}次通知`">
                   <div slot="description">
                     <p>开始通知时间:{{item.dateEnd}}</p>
-                    <el-tag type="primary">
+                    <el-tag type="primary" style="height: auto;white-space: normal;">
                       {{item.CollectionIndex}}
                     </el-tag>
                   </div>
                 </el-step>
               </el-steps>
             </div>
+          <div style="text-align: center;margin-top: 10px;" v-if="isComplete==0">
+            <el-button type="danger" @click="cancelAction">终止</el-button>
+          </div>
         </el-dialog>
     </div>
 </template>
@@ -107,6 +110,12 @@ export default {
       type: String
     },
     hzxxId:{
+      type: String
+    },
+    /**
+     * 1代表终止 0代表没有终止按钮
+     **/
+    isComplete:{
       type: String
     },
     /**
@@ -141,6 +150,12 @@ export default {
   mounted() {},
   methods: {
     /**
+     * 终止原因
+     **/
+    cancelAction(){
+      this.$emit("stopAction")
+    },
+    /**
      * @function 获取基础数据
      * @param  {type} id {description}
      * @return {type} {description}
@@ -151,6 +166,7 @@ export default {
         id: id
       })
         .then(res => {
+          console.log(res)
           // 基础数据赋值
           this.baseData = res.data;
           this.ordersList =

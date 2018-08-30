@@ -193,7 +193,7 @@ export default {
         this.$message.error('请选择标签状态');
         return false;
       }
-      PatientList.customerList
+      PatientList
         .updateIsLive({
           hzxxId: this.tagId,
           isDed: this.tagValue

@@ -195,7 +195,6 @@
 		<div class="step3" v-if="step === 3">
 			<i class="el-icon-success"></i>
 			<p class="sussP">发起成功!</p>
-			<!-- <p class="sussP1">通知人数：10人</p> -->
 		</div>
 		</transition>
 		<!-- 步骤一已选中患者 -->
@@ -557,10 +556,12 @@ export default {
             this.sendData.brxb = this.searchParams.brxb;
             this.sendData.sfzh = this.searchParams.sfzh;
             this.sendData.xzzQtdz = this.searchParams.xzzQtdz;
-            this.sendData.orderTimeBegin = this.searchParams.beginTime;
-            this.sendData.orderTimeEnd = this.searchParams.endTime;
-            this.sendData.icd = this.searchParams.diseaseId;
-            this.sendData.jtdh = this.searchParams.mobile;
+            this.sendData.orderTimeBegin = this.searchParams.orderTimeBegin;
+            this.sendData.orderTimeEnd = this.searchParams.orderTimeEnd;
+            this.sendData.icd = this.searchParams.icd;
+            this.sendData.ageBegin = this.searchParams.ageBegin;
+            this.sendData.ageEnd = this.searchParams.ageEnd;
+            this.sendData.jtdh = this.searchParams.jtdh;
           }
           InitiateNotification.confirmationFollowUp(this.sendData)
             .then(res => {
@@ -581,4 +582,20 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.step3{
+ >i{
+   font-size: 100px;
+   color: #67c23a;
+   margin:  20px auto;
+   display: block;
+   width: 100px;
+ }
+ >p{
+   text-align: center;
+   font-size: 25px;
+
+ }
+}
+</style>
 

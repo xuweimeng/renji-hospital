@@ -56,9 +56,11 @@
       <el-col :span="24">
         <el-table :data="tableAll" border style="margin-bottom: 10px;" ref="patientlist" class="wayTable" v-loading="loading1" >
           <el-table-column prop="brxm" label="姓名" align="center">
-            <!--<template slot-scope="scope">-->
-              <!--<Icon class="el-icon-star-off"></Icon>-->
-            <!--</template>-->
+            <template slot-scope="scope">
+              <i class="el-icon-star-off" style="float: left; margin-top: 6px;padding-left: 30px;" v-if="scope.row.isvip==1"></i>
+              <span>{{scope.row.brxm}}</span>
+
+            </template>
 
           </el-table-column>
           <el-table-column prop="jtdh" label="联系电话" align="center">
@@ -383,16 +385,20 @@ export default {
             orderTime: initDateTime
           })
             .then(res => {
+              console.log(res.message)
               if (res.code == 0) {
                 this.$message.success(res.message);
                 this.isModify = false;
                 this.list();
                 this.repeatFlag = true;
+              }else{
+                this.$message.error(res.message);
               }
             })
             .catch(res => {
+              var resDate = res+""
               this.repeatFlag = true;
-              this.$message.error(res);
+//              this.$message.error(resDate);
             });
         }
       });

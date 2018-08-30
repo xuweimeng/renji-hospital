@@ -33,7 +33,7 @@
           :data="tableData"
           border fit highlight-current-row
         >
-          <el-table-column type="selection"  width="55" align="center"></el-table-column>
+          <el-table-column type="selection"  width="55" align="center" :selectable="checkboxInit"></el-table-column>
           <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
           <el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
           <el-table-column prop="sfzh" label="身份证号" align="center"></el-table-column>
@@ -65,8 +65,8 @@
           <el-table-column prop="schemeName" label="方案名称" align="center"></el-table-column>
           <el-table-column prop="orderTime" label="客户预约时间" align="center"></el-table-column>
           <el-table-column prop="visitStartTime" label="AI通知开始时间" align="center"></el-table-column>
-          <el-table-column prop="visitStartTime" label="终止时间" align="center"></el-table-column>
-          <el-table-column prop="visitStartTime" label="终止人" align="center"></el-table-column>
+          <el-table-column prop="dateVet" label="终止时间" align="center"></el-table-column>
+          <el-table-column prop="operator" label="终止人" align="center"></el-table-column>
           <el-table-column label="详情" align="center" >
             <template slot-scope="scope">
               <el-button size="mini" type="primary" @click="showInfo(scope)">详情</el-button>
@@ -81,7 +81,7 @@
     </el-tabs>
 
     <!-- 审核不通过 -->
-    <el-dialog title="审核不通过原因" :visible.sync="noCheck" width="350px"   @close="cancelSelect">
+    <el-dialog title="终止原因" :visible.sync="noCheck" width="350px"   @close="cancelSelect">
       <el-row slot>
         <el-col :span="24" style="margin-bottom: 20px;">
           <el-select v-model="selectCheck" placeholder="请选择"  popper-class="selectOut">
@@ -89,7 +89,7 @@
           </el-select>
         </el-col>
         <el-col :span="24" >
-          <span>详情</span>
+          <span style="line-height: 35px;">详情</span>
           <el-input
             type="textarea"
             :rows="2"
@@ -118,7 +118,7 @@
             :clearable="true"
             :fetch-suggestions="nameChangeAction"
             placeholder="请输入内容"
-            style="width: 330px;"
+            style="width: 372px;"
             @select="handleSelect"
           >
             <template slot-scope="{ item }">
@@ -175,8 +175,6 @@
             type="date"
             style="float: left;"
             v-model="ruleForm.visitStartTime"
-            default-time='8:00:00'
-            value-format="yyyy-MM-dd HH:mm:ss"
             placeholder="AI通知日期">
           </el-date-picker>
         </el-form-item>
@@ -193,7 +191,7 @@
       </el-form>
     </el-dialog>
 
-    <plan-info ref="record"   :patientId="patientId"  :hzxxId="hzxxId" :isGastroenteroscopy="false"></plan-info>
+    <plan-info ref="record"   :patientId="patientId"  :hzxxId="hzxxId" :isGastroenteroscopy="false" :isComplete="isComplete" @stopAction="cancelAction"></plan-info>
   </div>
 </template>
 <script>
@@ -224,7 +222,22 @@
         }
         callback();
       };
+      /**
+       * 验证AI通知日期
+       **/
+      var validVisitStartTime =(rule, value, callback)=>{
+        if(!value){
+          return callback(new Error('请选择AI通知时间'));
+        }
+        var Time = new Date(this.ruleForm.orderTime).getTime();
+        if(new Date(value).getTime()>Time){
+          return callback(new Error('通知日期不得大于预约时间'));
+        }
+        callback();
+      };
       return {
+        isStop:false,   //判断是否已经成功终止
+        isComplete:"",            //0代表可以终止  1代表不终止的
         notPassRemark:"",         //终止原因详情
         isDataOrderTime:true,    //初始化加载客户预约日期判断  是不是第一次
         questionschemeDate:"",  //方案列表
@@ -246,7 +259,7 @@
           sfzh: '', // 身份证号
           schemeName: '',   //方案名称
           activeType: 9,
-          status:"3",    //状态3 已排期 4 已取消
+          status:"3,6",    //状态3 已排期 4 已取消
         },
         nosearchParams: {
           adminId: sessionStorage.getItem("userId"),
@@ -325,7 +338,7 @@
             { validator: validOrderTime, trigger: 'change' }
           ],
           visitStartTime: [
-            { validator: this.validVisitStartTime, trigger: 'change' }
+            { validator: validVisitStartTime, trigger: 'change' }
           ],
 
         },
@@ -342,6 +355,27 @@
       ...mapGetters(['token'])
     },
     methods: {
+      /**
+       * 当已经完成的不可点
+       **/
+      checkboxInit(row){
+        if(row.isComplete==0){
+          return 1
+        }else{
+          return 0
+        }
+      },
+      /**
+       * 终止按钮
+       **/
+      cancelAction(){
+        console.log("1111111111111111")
+        this.isStop = false;
+        this.termination(this.patientId);
+        if(this.isStop){
+          this.$refs.record.dialogTableVisible = false;
+        }
+      },
       /**
        * 获取当前日期 进行封装
        **/
@@ -362,18 +396,9 @@
       orderTimeAction(){
           this.isDataOrderTime = false;
       },
-      /**
-       * 验证AI通知日期
-       **/
-      validVisitStartTime (rule, value, callback){
-        if(!value){
-          return callback(new Error('请选择AI通知时间'));
-        }
-        if(new Date(value).getTime()>new Date(this.ruleForm.orderTime).getTime()){
-          return callback(new Error('通知日期不得大于预约时间'));
-        }
-        callback();
-      },
+
+
+
       /**
        * 选择名字  出现对应人的个人信息
        **/
@@ -392,12 +417,12 @@
           let data = res.data;
           for(const item of res.data){
             if(!item.age){
-              item.name = item.brxm + "&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:#67c23a'>" +item.jtdh +"</span>&nbsp;&nbsp;&nbsp;&nbsp; <sapn style='color:#f56c6c;'> "+item.brxb+"</span>";
+              item.name = item.brxm + "&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:#67c23a'>" +item.jtdh +"</span>&nbsp;&nbsp;&nbsp;&nbsp; <sapn style='color:#f56c6c;'> "+item.brxb+"</span><span  class='select-name'>选择</span>";
             }else{
               if(!item.brxb){
-                item.name = item.brxm + "&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:#67c23a'>  " +item.jtdh +"</span>&nbsp;&nbsp;&nbsp;&nbsp; <sapn style='color:#f56c6c;'>"+item.age+"</span>";
+                item.name = item.brxm + "&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:#67c23a'>  " +item.jtdh +"</span>&nbsp;&nbsp;&nbsp;&nbsp; <sapn style='color:#f56c6c;'>"+item.age+"</span><span class='select-name'>选择</span>";
               }else{
-                item.name = item.brxm + "&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:#67c23a'>  " +item.jtdh +"</span>&nbsp;&nbsp;&nbsp;&nbsp; <sapn style='color:#f56c6c;'>"+item.age+"/"+item.brxb+"</span>";
+                item.name = item.brxm + "&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:#67c23a'>  " +item.jtdh +"</span>&nbsp;&nbsp;&nbsp;&nbsp; <sapn style='color:#f56c6c;'>"+item.age+"/"+item.brxb+"</span><span class='select-name'>选择</span>";
               }
 
             }
@@ -452,7 +477,7 @@
         this.noCheck = false;
         this.selectCheck = '';
         this.notPassRemark ='';
-        this.checkId = [];
+//        this.checkId = [];
       },
       /**
        * @function 搜索按钮
@@ -460,7 +485,7 @@
        */
       getDataAction() {
         if (!this.dataRecord) {
-          this.searchParams.status =3;
+          this.searchParams.status ='3,6';
           this.tableLoading = true;
           this.searchParams.pager = 1;
           this.getData();
@@ -504,6 +529,15 @@
        * @return {type} {description}
        */
       showInfo(scope) {
+        if(scope.row.isComplete){
+          if(scope.row.isComplete!='0'){
+            this.isComplete ='1';
+          }else{
+            this.isComplete ='0'
+          }
+        }else{
+          this.isComplete ='1';
+        }
         this.patientId = scope.row.id;
         this.hzxxId = scope.row.hzxxId; //患者id
         this.$refs.record.dialogTableVisible = true;
@@ -526,7 +560,6 @@
         for (const iterator of this.checkId) {
           ids.push(iterator.id);
         }
-
         if (this.selectCheck) {
           if (this.recordFlag === 1) {
             this.handleCheck(ids, this.selectCheck); // 单条终止
@@ -551,12 +584,14 @@
           notPassRemark: this.notPassRemark
         })
           .then(res => {
+            this.isStop = true;
             this.getData();
             this.noCheck = false;
             this.selectCheck = '';
             this.notPassRemark = '';
           })
           .catch(error => {
+//            this.$message.error(error+"")
             console.log(error);
           });
       },
@@ -580,6 +615,7 @@
             this.notPassRemark = '';
           })
           .catch(error => {
+//            this.$message.error(error+"")
             console.log(error);
           });
       },
@@ -647,14 +683,12 @@
                 return false;
               }
             }
-            console.log(44444444444444444444444)
             if (!this.isRepeat) {
               this.isRepeat = true;
               initiateNotification.GastroenteroscopyTemporary(this.ruleForm)
                 .then(res => {
-                  console.log(res.suceess)
                   if (res.code == 0) {
-                    if(!res.suceess){
+                    if(res.success=='false'){
                       this.$message.error(res.message);
                       this.isRepeat = false;
                        return false;
@@ -719,12 +753,15 @@
        * @param  {type} id {description}
        * @return {type} {description}
        */
-      termination(id) {
+      termination(id,isComplete) {
         this.checkId = [
           {
             id: id
           }
         ];
+        if(isComplete==0){
+          this.isComplete = 0;
+        }
         // 单个终止
         this.recordFlag = 1;
         this.noCheck = true;
@@ -733,5 +770,19 @@
   };
 </script>
 
+<style>
+.select-name{
+  width: 55px;
+  height:28px ;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 29px;
+  float: right;
+  color: #fff;
+  margin-top: 2px;
+  background-color: #409EFF;
+  border-color: #409EFF;
+}
 
+</style>
 
