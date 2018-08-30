@@ -22,75 +22,72 @@
 </template>
 
 <script>
-	import { hzList } from "RJZL_API/patientList";
-	import { mapState } from 'vuex'
-	import 'swiper/dist/css/swiper.css'
-	import { swiper, swiperSlide } from 'vue-awesome-swiper'
-	export default {
-		data () {
-			return {
-			  swiperOption: {//swiper
-	        slidesPerView: 4,
-	        spaceBetween: 30,
-	        slidesPerGroup: 4,
-	        loop: false,
-	        loopFillGroupWithBlank: true,
-	        navigation: {
-	          nextEl: '.swiper-button-next',
-	          prevEl: '.swiper-button-prev'
-	        },
-        },
-        swiperDate: [],//患者就诊档案时间
-        selectNumber: 0,//当前选中的就诊时间
-			}
-		},
-		components:{
-      swiper,
-      swiperSlide
-    },
-    mounted () {
-			this.getVisitTime()
-		},
-		computed: {
-      ...mapState({
-        "patientInfo": state => state.user.scopeRowData.row
-      })
-    },
-    methods: {
-    	getVisitTime () {
-    		hzList.getRecordDate({
-          'patientId': this.patientInfo.hzxxId
-        }).then((res)=>{
-          if(res.code === 0) {
-            res.data.forEach( (item, index) => {
-              item === null ? res.data.splice(index, 1): item
-            })
-            this.swiperDate = res.data
-            if(res.data.length>0) {
-              this.$store.dispatch('getVisitTime', res.data[0].diagnosetime)
-            } else {
-              this.$store.dispatch('getVisitTime', '')
-            }
+import { hzList } from 'RJZL_API/patientList';
+import { mapState } from 'vuex';
+import 'swiper/dist/css/swiper.css';
+import { swiper, swiperSlide } from 'vue-awesome-swiper';
+export default {
+  data() {
+    return {
+      swiperOption: { // swiper
+        slidesPerView: 4,
+        spaceBetween: 30,
+        slidesPerGroup: 4,
+        loop: false,
+        loopFillGroupWithBlank: true,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
+        }
+      },
+      swiperDate: [], // 患者就诊档案时间
+      selectNumber: 0 // 当前选中的就诊时间
+    };
+  },
+  components: {
+    swiper,
+    swiperSlide
+  },
+  mounted() {
+    this.getVisitTime();
+  },
+  computed: {
+    ...mapState({
+      'patientInfo': state => state.user.scopeRowData.row
+    })
+  },
+  methods: {
+    getVisitTime() {
+      hzList.getRecordDate({
+        'patientId': this.patientInfo.hzxxId
+      }).then((res) => {
+        if (res.code === 0) {
+          res.data.forEach((item, index) => {
+            item === null ? res.data.splice(index, 1) : item;
+          });
+          this.swiperDate = res.data;
+          if (res.data.length > 0) {
+            this.$store.dispatch('getVisitTime', res.data[0].diagnosetime);
+          } else {
+            this.$store.dispatch('getVisitTime', '');
           }
-        }).catch((error)=>{
-          console.log(error)
-        })
-			},
-			/** 选择时间 */
-      sliderClick (item,index) {
-				this.selectNumber = index
-				this.$store.dispatch('getVisitTime', item.diagnosetime)
-			},
-		},
-		watch: {
-			patientInfo(newV, oldV) {
-				console.log(newV, oldV)
-				if(newV.hzxxId != oldV.hzxxId) {
-					this.getVisitTime()
-				}
+        }
+      });
+    },
+    /** 选择时间 */
+    sliderClick(item, index) {
+      this.selectNumber = index;
+      this.$store.dispatch('getVisitTime', item.diagnosetime);
+    }
+  },
+  watch: {
+    patientInfo(newV, oldV) {
+      if (newV.hzxxId !== oldV.hzxxId) {
+        this.getVisitTime();
       }
-		}
-	}
+    }
+  }
+};
 </script>
 
 <style lang="scss">

@@ -266,10 +266,7 @@
       </el-row>
     </el-dialog>
     <!-- 患者档案 -->
-		<hz-file
-			:hzDialog="hzDialog"
-			@closeChildren="closeChildren">
-    </hz-file>
+		<hz-file ref="hzFileRef" />
   </div>
 </template>
 <script>
@@ -285,77 +282,77 @@
   import FollowCount from './echarts/followCount';
   import DiseasePie from './echarts/diseasePie';
   import MedicinePie from './echarts/medicinePie';
-  import Cookies from 'js-cookie'
+  import Cookies from 'js-cookie';
+  import { mapState } from 'vuex';
   export default {
     name: 'Homepage',
     data() {
       return {
         exportChart: exportChart, // 导出图表
-        userId: '',//医生id
-        laterhours: '',//距上次登录
+        userId: '', // 医生id
+        laterhours: '', // 距上次登录
         dateLoginlc: '', // 上次登录时间
-        isinspectPlength:true,
-        PhysicalExSet:{},   //体检套餐信息
-        //医生个人信息
+        isinspectPlength: true,
+        PhysicalExSet: {}, // 体检套餐信息
+        // 医生个人信息
         getAdminInfo: {
-          aipicTureUrl: '',//头像url
-          realname: '',//医生姓名
-          AiName: '',//头像名字
-          needClCount: '',//随访结果待处理
-          hadVisitCount: '',//已随访
-          hadVisitPeopleCount: '',//患者数
-          needShCount: '',//随访方案待处理
+          aipicTureUrl: '', // 头像url
+          realname: '', // 医生姓名
+          AiName: '', // 头像名字
+          needClCount: '', // 随访结果待处理
+          hadVisitCount: '', // 已随访
+          hadVisitPeopleCount: '', // 患者数
+          needShCount: '', // 随访方案待处理
         },
-        PhysicalProject:{},   //体检项目
+        PhysicalProject: {}, // 体检项目
+        // 随访数量统计
+        selectRadio: 1, // 随访数量(7天,30天)
+        switchX: [], // x轴
+        switchY: [], // y轴
+        // 绑定头像
+        innerVisible: false, // 绑定头像
+        cwtx: null, // 选中的宠物index
+        imgList: [], // 12生肖头像列表
+        // 患者总体情况分析
+        hzfxTabActive: 0, // 患者分析(近7天/30天/半年)
+        diagnoseInfoData: [], // 疾病分布情况
 
-        //随访数量统计
-        selectRadio: 1,//随访数量(7天,30天)
-        switchX: [],//x轴
-        switchY: [],//y轴
-        //绑定头像
-        innerVisible: false,//绑定头像
-        cwtx: null,//选中的宠物index
-        imgList: [],//12生肖头像列表
-        //患者总体情况分析
-        hzfxTabActive: 0,//患者分析(近7天/30天/半年)
-        diagnoseInfoData: [],//疾病分布情况
-
-        bqyz: {},//随访记过处理(病情严重)
-        bqwd: {},//随访记过处理(病情稳定)
-        value1: '',//select.model
-        value2: '',//select.model
-        value3: '',//select.model
-        value4: '',//select.model
-        yyycData: [],//用药依从性data
+        bqyz: {}, // 随访记过处理(病情严重)
+        bqwd: {}, // 随访记过处理(病情稳定)
+        value1: '', // select.model
+        value2: '', // select.model
+        value3: '', // select.model
+        value4: '', // select.model
+        yyycData: [], // 用药依从性data
         options: [],
 
         value: '',
-        percent1: null,//规律
-        percent2: null,//间断
-        percent3: null,//不服用
-        totalbt1: 0,//随访疾病分类总人数
-        totalbt2: 0,//用药依从性总人数
+        percent1: null, // 规律
+        percent2: null, // 间断
+        percent3: null, // 不服用
+        totalbt1: 0, // 随访疾病分类总人数
+        totalbt2: 0, // 用药依从性总人数
         SpecialtableData: [],
-        page:1,
-        currentPagehome: 1,//分页
-        totalPagehome: null,//table总条数
-        currenthref: '',//12生肖地址前缀
-        dialogVisible: false,//记录弹框
-        patientInfo: {},//记录个人信息
-        patientId: '',//病人id
-        taskId: '',//获取病人的taskId
-        isCare: false,//点击记录后，查看病人是否被关注
-        ypxx: '1',//药品信息
-        clientId:"",  //客户id
-        selectNumber: 0,//选中第几次
-        activeName1: 'a0',//指标折线图选中下标
-        activeName2: '1',//随访语音折叠面板
-        tabActive: 0,//当前选中的tab0全部患者1特别关心
-        modelData:[],//患者指标
-        targetTab: [],//指标tab
+        page: 1,
+        currentPagehome: 1, // 分页
+        totalPagehome: null, // table总条数
+        currenthref: '', // 12生肖地址前缀
+        dialogVisible: false, // 记录弹框
+        patientInfo: {}, // 记录个人信息
+        patientId: '', // 病人id
+        taskId: '', // 获取病人的taskId
+        isCare: false, // 点击记录后，查看病人是否被关注
+        ypxx: '1', // 药品信息
+        clientId: '', // 客户id
+        selectNumber: 0, // 选中第几次
+        activeName1: 'a0', // 指标折线图选中下标
+        activeName2: '1', // 随访语音折叠面板
+        tabActive: 0, // 当前选中的tab0全部患者1特别关心
+        modelData: [], // 患者指标
+        targetTab: [], // 指标tab
         xChart: [],
         yChart: [],
-        swiperOption: {//swiper
+        swiperOption: { // swiper
           slidesPerView: 4,
           spaceBetween: 30,
           slidesPerGroup: 4,
@@ -364,34 +361,29 @@
           navigation: {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev'
-          },
+          }
         },
-        swiperDate: [],//患者就诊档案时间
-        sliderNumber: null,//当前选中的就诊时间
+        swiperDate: [], // 患者就诊档案时间
+        sliderNumber: null, // 当前选中的就诊时间
         zyData: [],
         mzData: [],
         loading4: false,
-        isNull: false,//患者的住院门诊为都为视空
-        dialogWay: false,//内层弹框
+        isNull: false, // 患者的住院门诊为都为视空
+        dialogWay: false, // 内层弹框
         selecOptions: [],
-        selecOptions: [],
-        modelData: [],
-        targetTab: [],
-        isResolveText:'',//判断当前用户是否有处理意见
-        taskId: '',
-
-        yyHrec: '',//语音地址
-        tabLabel:'',
+        isResolveText: '', // 判断当前用户是否有处理意见
+        yyHrec: '', // 语音地址
+        tabLabel: '',
         showAnimal: false,
         loadingHp: true,
         leaveHospital: '',
-        syhz: false,//特别关心loading
+        syhz: false, // 特别关心loading
         loadingsfjg: false,
         sfyd: false,
-        attrTaskId: '',//门住随访时间的taskId
-        advice1: false,//暂不处理
-        currentName: '',//当前患者姓名
-        btnState: '',//当前处理意见类型
+        attrTaskId: '', // 门住随访时间的taskId
+        advice1: false, // 暂不处理
+        currentName: '', // 当前患者姓名
+        btnState: '', // 当前处理意见类型
         hzDialog: false, // 患者就诊档案弹框
         base64Url1: '', // 随访数量统计
         base64Url2: '', // 疾病分布
@@ -406,7 +398,7 @@
         showTopPageData: [], // 出院随访简报
         openCollapse: '1', // 出院随访简报默认打开成功通知
         showTotal: null // 出院随访简报应随访人数
-      }
+      };
     },
     components: {
       swiper,
@@ -416,14 +408,19 @@
       DiseasePie,
       MedicinePie
     },
+    computed: {
+      ...mapState({
+        'getCareStatus': state => state.user.getCareStatus
+      })
+    },
     mounted() {
-      this.getUserId();//用药依从性
-      this.getNoticedDate();   //显示医生信息记录次数
-      this.SpecialCare(1)//特别关心
-      this.visitCountInfo(1)//随访数量统计
-      this.diagnoseInfo(0);//疾病分布分布情况
-      this.getUseEatInfo(0);//用药依从性
-      this.showTopPage() // 首页出院随访简报
+      this.getUserId();// 用药依从性
+      this.getNoticedDate(); // 显示医生信息记录次数
+      this.SpecialCare(1); // 特别关心
+      this.visitCountInfo(1); // 随访数量统计
+      this.diagnoseInfo(0); // 疾病分布分布情况
+      this.getUseEatInfo(0);// 用药依从性
+      this.showTopPage(); //  首页出院随访简报
     },
     methods: {
       /**
@@ -436,12 +433,7 @@
         this.laterhours = Cookies.get('laterhourslc')
         this.dateLoginlc = Cookies.get('dateLoginlc')
       },
-      /** 监听子组件关闭 */
-      closeChildren (val) {
-        this.hzDialog = false
-        this.SpecialCare(this.currentPagehome)
-      },
-    /**
+      /**
       * 获取十二生肖
       * @function findAiPictureList
       * @param {String} adminId 医生id
@@ -449,80 +441,62 @@
       */
       findAiPictureList(userId) {
         commonUrl.findAiPictureList({
-          "adminId": sessionStorage.getItem('userId'),
-          "fromsys": 'web'
+          'adminId': sessionStorage.getItem('userId'),
+          'fromsys': 'web'
         }).then((res) => {
-          //12生肖地址前缀
-          var url = location.href
+          // 12生肖地址前缀
+          var url = location.href;
           var reg = new RegExp(/(\w+):\/\/([^/:]+)(:\d*)?/)
           var result = url.match(reg);
-          this.currenthref = result[0]+'/'
-          res.data.SysConfigLsit.forEach((item)=>{
-            item.value = this.currenthref+item.value
-          })
-          this.imgList = res.data.SysConfigLsit
+          this.currenthref = result[0] + '/';
+          res.data.SysConfigLsit.forEach((item) => {
+            item.value = this.currenthref + item.value;
+          });
+          this.imgList = res.data.SysConfigLsit;
         }).catch((error) => {
-          console.log(error)
-        })
+          console.log(error);
+        });
       },
       /**
        * 获取首页数据
        **/
-      getNoticedDate(){
+      getNoticedDate() {
         // let DateLoading = this.$loading({
         //   target:document.getElementsByClassName('content-wrapper')[0]
         // });
+
         rjPage.adminInfo({
-          "adminId": sessionStorage.getItem('userId'),
+          'adminId': sessionStorage.getItem('userId'),
         }).then((res) => {
-          if(res.code === 0) {
-            if (res.data.aipicTureUrl != '') {
-              let url = location.href
-              let reg = new RegExp(/(\w+):\/\/([^/:]+)(:\d*)?/)
-              let result = url.match(reg);
-              this.currenthref = result[0]
-              res.data.aipicTureUrl = this.currenthref + '/'+ res.data.aipicTureUrl
+          if (res.code === 0) {
+            if (res.data.aipicTureUrl !== '') {
+              const url = location.href;
+              const reg = new RegExp(/(\w+):\/\/([^/:]+)(:\d*)?/);
+              const result = url.match(reg);
+              this.currenthref = result[0];
+              res.data.aipicTureUrl = this.currenthref + '/' + res.data.aipicTureUrl;
             } else {
-              this.innerVisible = true
-              this.findAiPictureList()
+              this.innerVisible = true;
+              this.findAiPictureList();
             }
-            this.getAdminInfo = res.data
+            this.getAdminInfo = res.data;
             // DateLoading.close();
-          }else {
-            this.$message.error(res.message)
+          } else {
+            this.$message.error(res.message);
           }
         }).catch((error) => {
-          console.log(error)
-        })
+          console.log(error);
+        });
       },
-
       /**
-       * 统计7天或30天体检通知数量
-       *  "type":1 //日期类型，1：7天，2:30天
-       **/
-      noticedCountDateList(){
-        commonUrl.noticedCountDate({
-          "type": 1,
-        }).then((res) => {
-          if(res.code == "0") {
-
-          }else {
-            this.$message.error(res.message)
-          }
-        }).catch((error) => {
-          console.log(error)
-        })
-      },
-
-    /**
       * 选择用户头像
       * @function selectIcon
       * @param    {object} item  头像
       * @param    {String} index 头像index
       */
-      selectIcon(item,index) {
-      this.cwtx = index
-      this.selectKey = item.key
+      selectIcon(item, index) {
+        this.cwtx = index;
+        this.selectKey = item.key;
       },
       /**
        * 绑定宠物头像
@@ -531,26 +505,26 @@
        * @param {String} aiPictureCode 仇无头像code
        */
       finBtn() {
-        if(this.selectKey) {
-          this.innerVisible = false
+        if (this.selectKey) {
+          this.innerVisible = false;
           commonUrl.bindAiPicture({
-            "adminId": this.userId,
-            "aiPictureCode":  this.selectKey
+            'adminId': this.userId,
+            'aiPictureCode': this.selectKey
           }).then((res) => {
-            if(res.code == "0") {
-            this.$message.success(res.message)
-            this.getNoticedDate()
-            }else {
-              this.$message.error(res.message)
+            if (res.code == '0') {
+              this.$message.success(res.message);
+              this.getNoticedDate();
+            } else {
+              this.$message.error(res.message);
             }
           }).catch((error) => {
-            console.log(error)
+            console.log(error);
           })
-        }else {
-          this.$message.error('请选择头像!')
+        } else {
+          this.$message.error('请选择头像!');
         }
       },
-    /**
+      /**
       * 疾病分布情况
       * @function diagnoseInfo
       * @param {String} adminId 医生id
@@ -660,7 +634,7 @@
       selectNumberFun(value) {
         this.getVisistOrderResult(value)
       },
-    /**
+      /**
       * 用药依从性
       * @function getUseEatInfo
       * @param {String} adminId 医生id
@@ -866,104 +840,13 @@
       *获取记录信息
       */
       wayButton(scope) {
-        console.log('test');
-
-        this.hzDialog = true
-        this.$store.dispatch('getScopeRowData', scope)
+        this.$refs.hzFileRef.hzDialog = true;
+        this.$store.dispatch('getScopeRowData', scope);
+        this.$store.dispatch('getCareStatus', scope.row.hzxxId);
       },
       /*
       *已处理
       */
-      handleislike() {
-        if(this.isCare) {
-          //取消关注
-          const h = this.$createElement;
-          this.$msgbox({
-            title: '消息',
-            message: h('div', {
-              style:'text-align:center'
-            }, [
-            h('img', {
-                attrs: {src: '../../static/images/animal.png'},
-                style:'width: 60px;height:52px;margin:0 auto;'
-              },null),
-              h('p', null, '确定取消关心吗?'),
-            ]),
-            showCancelButton: true,
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            customClass: 'careMsgBox',
-            cancelButtonClass: 'cancelButtonStyle',
-            confirmButtonClass: 'confirmButtonStyle',
-            beforeClose: (action, instance, done) => {
-              done();
-            }
-          }).then(action => {
-            //取消关注
-            commonUrl.updateGz({
-              'diagnoseType':3,
-              'adminId':this.userId,
-              'patientId': this.patientId,//患者的id （必填）
-              'operateType': 0,//(操作类型 1:关注 0：取消关注) （必填）
-              'operateTag':'' //关注的标签
-            }).then((res)=>{
-              if(res.code == 0) {
-                this.isCare = false
-                this.patientInfo.GzTag = '';
-                this.SpecialCare();
-                this.dialogVisible = false;
-              }else{
-                this.$message.error(res.message);
-              }
-            }).catch((error)=>{
-              console.log(error)
-            })
-          }).catch(()=>{
-
-          });
-        }else {
-          //增加关注
-          this.$prompt('  ','添加标签', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            inputPlaceholder: '请输入标签',
-            customClass: 'careMsgBoxAdd',
-            cancelButtonClass: 'cancelButtonStyle',
-            confirmButtonClass: 'confirmButtonStyle',
-          }).then(({ value }) => {
-            if(!value) {
-              this.$message.error('标签不能为空!');
-            }else if(value.toString().length<6){
-              commonUrl.updateGz({
-                diagnoseType:3,
-                'adminId':this.userId,
-                'patientId': this.patientId,//患者的id （必填）
-                'operateType': 1,//(操作类型 1:关注 0：取消关注) （必填）
-                'operateTag': value //关注的标签
-              }).then((res)=>{
-                if(res.code == 0) {
-                  this.isCare = true
-                  this.$message({
-                    type: 'success',
-                    message: '关注成功!'
-                  });
-                  this.getPatinetInfo()
-                }
-              }).catch((error)=>{
-                console.log(error)
-              })
-            }else{
-              this.$message.error('标签长度不能大于5!')
-            }
-
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '取消输入'
-            });
-          });
-        }
-      },
       outputBase () {
         let _this = this
         // 全屏loading
@@ -1051,7 +934,15 @@
             this.showTotal = getPhone + notGetPhone
           }
         })
-      },
+      }
+    },
+    watch: {
+      getCareStatus(newV, oldV){
+        if (newV.refresh!=oldV.refresh) {
+          this.$refs.hzFileRef.hzDialog = false;
+          this.SpecialCare(this.currentPagehome)
+        }
+      }
     }
   };
 </script>

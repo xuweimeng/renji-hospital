@@ -63,134 +63,54 @@
 				</router-link>
       </li>
     </ul>
-		<!-- 查询 -->
-		<!-- <el-row class="common-search">
-      <el-form label-position="center" label-width="80px" :inline="true" :model="formInline">
-			  <el-col :span="6">
-			  	<el-form-item label="姓名">
-				    <el-input v-model="formInline.name" placeholder="请输入姓名" size="medium" clearable ></el-input>
-				  </el-form-item>
-				</el-col>
-				<el-col :span="6">
-			  	<el-form-item label="联系电话">
-				    <el-input v-model="formInline.mobile" placeholder="请输入联系电话" size="medium" clearable ></el-input>
-				  </el-form-item>
-				</el-col>
-				<el-col :span="6">
-			  	<el-form-item label="疾病名称">
-				    <el-select
-					    v-model="formInline.icdName"
-					    filterable
-					    remote
-					    clearable
-					    placeholder="请输入关键词"
-					    :remote-method="remoteMethod"
-					    :loading="queryLoading"
-              size="medium" >
-					    <el-option
-					      v-for="(item, index) in options4"
-					      :key="index"
-					      :label="item.label"
-					      :value="item.value">
-					    </el-option>
-					  </el-select>
-				  </el-form-item>
-				</el-col>
-				<el-col :span="6">
-			  	<el-form-item label="性别">
-				    <el-select v-model="formInline.sex" placeholder="性别" size="medium" >
-				      <el-option label="全部" value=""></el-option>
-				      <el-option label="男" value="男"></el-option>
-				      <el-option label="女" value="女"></el-option>
-				    </el-select>
-				  </el-form-item>
-				</el-col>
-				<el-col :span="6">
-			  	<el-form-item label="标签">
-						<el-select v-model="formInline.isdeath" placeholder="请选择患者标签" size="medium" >
-							<el-option label="全部" value=""></el-option>
-							<el-option label="正常" value="0"></el-option>
-							<el-option label="死亡" value="1"></el-option>
-						</el-select>
-					</el-form-item>
-				</el-col>
-			  <el-col :span="6">
-			  	<el-form-item label="年龄">
-				  	<el-row>
-				  		<el-col :span="11"><el-input v-model="formInline.startAge" placeholder="0" size="medium"  clearable></el-input></el-col>
-				  		<el-col :span="2" style="text-align: center;">-</el-col>
-				  		<el-col :span="11"><el-input v-model="formInline.endAge" size="medium" clearable></el-input></el-col>
-				  	</el-row>
-			  	</el-form-item>
-			  </el-col>
-			  <el-col :span="6">
-			  	<el-button type="primary" size="small" @click="searchBtn">查询</el-button>
-			  </el-col>
-			</el-form>
-		</el-row> -->
 		<!-- 表格 -->
-        <el-table border fit highlight-current-row  :data="tableData" v-loading="loading">
-          <el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
-          <el-table-column prop="jtdh" label="联系电话" align="center"></el-table-column>
-          <el-table-column label="性别/年龄" align="center" width="110">
-            <template slot-scope="scope">
-              {{scope.row.brxb}} <span v-if="scope.row.brxb && scope.row.age">/</span> {{scope.row.age}}
-            </template>
-          </el-table-column>
-          <el-table-column prop="sourcetime" label="创建时间" align="center"></el-table-column>
-          <el-table-column prop="icdName" label="疾病名称/病种" align="center" show-overflow-tooltip></el-table-column>
-          <el-table-column label="标签" align="center">
-            <template slot-scope="scope">
-              <el-button
-                @click="isdeathBtn(scope.row)"
-                :type="scope.row.state === 1?'danger':'success'"
-                plain
-                size="mini">
-                {{scope.row.state === 1?'死亡':'正常'}}
-              </el-button>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" width="240" align="center">
-            <template slot-scope="scope">
-              <el-button
-                @click="fileBtn(scope)"
-                type="primary"
-                size="mini">
-                档案
-              </el-button>
-              <el-button
-                @click="resetMobile(scope)"
-                type="warning"
-                size="mini">
-                修改手机号
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-		<!-- 分页 -->
-		<!-- <div class="elPage">
-		  <el-pagination
-				@current-change="handleCurrentChange"
-				:current-page.sync="currentPage"
-				:page-size="10"
-				layout="total, prev, pager, next, jumper" :total="totalPage">
-		  </el-pagination>
- 		</div> -->
-
+		<el-table border fit highlight-current-row  :data="tableData" v-loading="loading">
+			<el-table-column prop="brxm" label="姓名" align="center"></el-table-column>
+			<el-table-column prop="jtdh" label="联系电话" align="center"></el-table-column>
+			<el-table-column label="性别/年龄" align="center" width="110">
+				<template slot-scope="scope">
+					{{scope.row.brxb}} <span v-if="scope.row.brxb && scope.row.age">/</span> {{scope.row.age}}
+				</template>
+			</el-table-column>
+			<el-table-column prop="sourcetime" label="创建时间" align="center"></el-table-column>
+			<el-table-column prop="icdName" label="疾病名称/病种" align="center" show-overflow-tooltip></el-table-column>
+			<el-table-column label="标签" align="center">
+				<template slot-scope="scope">
+					<el-button
+						@click="isdeathBtn(scope.row)"
+						:type="scope.row.state === 1?'danger':'success'"
+						plain
+						size="mini">
+						{{scope.row.state === 1?'死亡':'正常'}}
+					</el-button>
+				</template>
+			</el-table-column>
+			<el-table-column label="操作" width="240" align="center">
+				<template slot-scope="scope">
+					<el-button
+						@click="fileBtn(scope)"
+						type="primary"
+						size="mini">
+						档案
+					</el-button>
+					<el-button
+						@click="resetMobile(scope)"
+						type="warning"
+						size="mini">
+						修改手机号
+					</el-button>
+				</template>
+			</el-table-column>
+		</el-table>
 		 <div class="pagination-container" style="text-align:right;margin-top:15px;">
-          <el-pagination style="display:inline-block" background  @current-change="handleCurrentChange" :current-page="currentPage"  :page-size="10" layout="total,  prev, pager, next, jumper" :total="totalPage">
-          </el-pagination>
-        </div>
+				<el-pagination style="display:inline-block" background  @current-change="handleCurrentChange" :current-page="currentPage"  :page-size="10" layout="total,  prev, pager, next, jumper" :total="totalPage">
+				</el-pagination>
+			</div>
 		<!-- 添加患者 -->
 		<add-list :elDialog="showDialog" v-on:closeDialogFun="closeDialogFun"></add-list>
-
-		<!-- <transition name="el-fade-in-linear">
-			<router-view></router-view>
-		</transition> -->
 		<!-- 患者档案 -->
 		<hz-file
-			:hzDialog="hzDialog"
-			@closeChildren="closeChildren">
+			ref="hzFileRef">
 		</hz-file>
 		<!-- 修改患者死亡、正常标签 -->
 		<el-dialog title="修改标签" :visible.sync="updateIsLiveDg" width="500px" custom-class="updateIsLiveDg">
@@ -401,8 +321,9 @@
 			 * @DateTime    2018-04-18
 			 */
 	    fileBtn(scope) {
-      this.hzDialog = true;
+	      this.$refs.hzFileRef.hzDialog = true;
 	      this.$store.dispatch('getScopeRowData', scope);
+	      this.$store.dispatch('getCareStatus', scope.row.hzxxId);
 	    },
 	    /**
 			 * 修改手机号弹框
@@ -572,12 +493,8 @@
 	          }
         }
       }).catch((error) => {
-        	console.log(error);
+	        console.log(error);
       });
-	    },
-	    /** 监听患者详情弹框关闭 */
-	    closeChildren(val) {
-	      this.hzDialog = false;
 	    },
 	    // 添加患者
 	    addListBtn() {
@@ -614,20 +531,6 @@
 <style lang="scss">
 @import '~styles/search';
 
-.hzList {
-	position: relative;
-	.btnOption .el-col{
-		background: #fff;
-    padding: 20px 0 10px 10px;
-    margin-bottom: 10px;
-		border-bottom: 1px solid #f0f0f0;
-	}
-	.elPage {
-		padding: 10px 50px 10px 0;
-		text-align: right;
-		background: #fff;
-	}
-}
 // 修改患者标签状态
 .updateIsLiveDg {
 	.el-dialog__body {

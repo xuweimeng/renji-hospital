@@ -1,4 +1,5 @@
 import { Login } from '@/api/login';
+import { hzList } from 'RJZL_API/patientList';
 import Cookies from 'js-cookie';
 import { getToken, setToken, removeToken, getParameter, setParameter, removeParameter } from '@/utils/auth';
 
@@ -15,7 +16,12 @@ const user = {
     roles: [],
     scopeRowData: {}, // 表格点击操作按钮传递scope.row的数据
     visitTime: '', // 随访结果的时间
-    uploadNum: {} // 患者列表批量上传上传成功失败个数
+    uploadNum: {}, // 患者列表批量上传上传成功失败个数
+    getCareStatus: { // 患者是否北关注
+      isCare: false,
+      GzTag: '',
+      refresh: false
+    }
   },
   // 操作全局基础用户数据
   mutations: {
@@ -59,6 +65,11 @@ const user = {
     // 患者列表批量上传上传成功失败个数
     UPLOADNUM: (state, uploadNum) => {
       state.uploadNum = uploadNum;
+    },
+
+    // 患者列表批量上传上传成功失败个数
+    GETCARESTATUS: (state, getCareStatus) => {
+      state.getCareStatus = getCareStatus;
     }
   },
 
@@ -253,6 +264,29 @@ const user = {
     // 获取个人档案的随访日期(默认获取第一个)
     getUploadNum({ commit }, uploadNum) {
       commit('UPLOADNUM', uploadNum);
+    },
+
+    // 获取当前患者是否被关注
+    getCareStatus( {commit}, getCareStatus) {
+      // 如果是字符串，那么就是从表格按钮点进去的，不是字符串，则是从弹框增加/取消关注点进去的
+      if(typeof(getCareStatus) === 'string') {
+        hzList.getPatientRecord({
+          'adminId': Cookies.get('userId'),
+          'patientId': getCareStatus
+        }).then((res) => {
+          if (res.code === 0) {
+            res.data.islike?res.data.islike = true : res.data.islike = false
+            let obj = {
+              isCare: res.data.islike,
+              GzTag: res.data.GzTag,
+              refresh: false
+            }
+            commit('GETCARESTATUS', obj)
+          }
+        })
+      } else {
+        commit('GETCARESTATUS', getCareStatus)
+      }
     }
 
   }

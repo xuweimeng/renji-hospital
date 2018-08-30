@@ -28,7 +28,7 @@
           </el-col>
         </el-row>
         <el-row style="padding: 0 36px;text-align:left;">
-          <el-col :span="24" style="border-bottom: 1px solid #d8f1ff;color:#333;text-indent:10px;font-size: 14px;margin-top:20px;">
+          <el-col :span="24" style="border-bottom: 1px solid #d8f1ff;color:#333;text-indent:10px;font-size: 14px;margin:20px 0;">
             出院小结
           </el-col>
         </el-row>
@@ -39,89 +39,80 @@
                 诊断&nbsp;:&nbsp;
               </el-col>
               <el-col :span="19" class="text-left">
-                {{item.diagnose}}
+                <span style="color: #f36800;">{{item.diagnose}}</span>
               </el-col>
               <el-col :span="5" class="color666">
                 治疗方案&nbsp;:&nbsp;
               </el-col>
               <el-col :span="19" class="text-left">
-                {{item.treatmentPlan}}
+                <span style="color: #f36800;">{{item.treatmentPlan}}</span>
               </el-col>
             </el-collapse-item>
           </el-collapse>
         </el-row>
       </el-row>
       <!-- 无信息的时候 -->
-      <no-info :isHide="isHide"></no-info>
+      <no-info :isHide="isHide" v-if="isHide"></no-info>
     </el-row>
-
 	</div>
 </template>
-
 <script>
-import { mapState } from 'vuex'
-import { hzList } from "RJZL_API/patientList";
-import NoInfo from '@/components/dialog/noInfo'
-	export default {
-		data () {
-			return {
-				leaveData: [],
-        leaveHospital: ['1'],
-        isHide: false
-			}
-    },
-    components: {
-      NoInfo
-    },
-		computed: {
-			...mapState({
-        "patientInfo": state => state.user.scopeRowData.row,
-        "visitTime": state => state.user.visitTime
-			})
-    },
-		methods: {
-			/**
-       *请求当前时间的患者信息
-       *@function currentPartientInfo
-       *@param {object} item 患者信息
-       */
-      currentPartientInfo() {
-        this.leaveData = {}
-        hzList.getRecordByDate({
-          'adminId': sessionStorage.getItem('userId'),
-          'patientId': this.patientInfo.hzxxId,
-          'date': this.visitTime
-        }).then((res)=>{
-          if(res.code === 0) {
-            this.leaveData = res.data
-            if(res.data.length>0) {
-              this.isHide = false
-            } else {
-              this.isHide = true
-            }
+import { mapState } from 'vuex';
+import { hzList } from 'RJZL_API/patientList';
+import NoInfo from '@/components/dialog/noInfo';
+export default {
+  name: 'leaveText',
+  data() {
+    return {
+      leaveData: [],
+      leaveHospital: '1',
+      isHide: false
+    };
+  },
+  components: {
+    NoInfo
+  },
+  computed: {
+    ...mapState({
+      'patientInfo': state => state.user.scopeRowData.row,
+      'visitTime': state => state.user.visitTime
+    })
+  },
+  methods: {
+    /**
+     *请求当前时间的患者信息
+      *@function currentPartientInfo
+      *@param {object} item 患者信息
+      */
+    currentPartientInfo() {
+      this.leaveData = {};
+      hzList.getRecordByDate({
+        'adminId': sessionStorage.getItem('userId'),
+        'patientId': this.patientInfo.hzxxId,
+        'date': this.visitTime
+      }).then((res) => {
+        if (res.code === 0) {
+          this.leaveData = res.data;
+          if (res.data.length > 0) {
+            this.isHide = false;
+          } else {
+            this.isHide = true;
           }
-        }).catch((error)=>{
-          console.log(error)
-        })
-      },
-		},
-		watch: {
-      visitTime(newV, oldV) {
-        console.log('newV='+newV, 'oldV='+oldV)
-        // if(newV) {
-          this.currentPartientInfo()
-        // }
-      },
-			patientInfo(newV, oldV) {
-        console.log(newV.hzxxId,'text', oldV.hzxxId)
-        if( oldV.hzxxId != newV.hzxxId) {
-          this.currentPartientInfo()
         }
-
-      },
-
-		}
-	}
+      });
+    }
+  },
+  watch: {
+    visitTime(newV, oldV) {
+      this.currentPartientInfo();
+    },
+    patientInfo(newV, oldV) {
+      if (oldV.hzxxId !== newV.hzxxId) {
+        this.currentPartientInfo();
+      }
+    }
+  }
+};
 </script>
 
 <style lang="scss">
@@ -163,7 +154,7 @@ import NoInfo from '@/components/dialog/noInfo'
               height: 30px;
               line-height: 30px;
               text-align: left;
-              background: #f9fcfe;
+              // background: #f9fcfe;
               .el-collapse-item__arrow {
                 line-height: 30px;
               }
