@@ -62,7 +62,7 @@ import echarts from 'echarts'
       this.$nextTick(function() {
         this.defaultArr = this.dataMedicine
         this.defaultTotal = this.total2
-         this.initMedicine()
+        this.initMedicine()
       })
       let _this = this
       window.addEventListener('resize', function() {
@@ -75,6 +75,7 @@ import echarts from 'echarts'
         let _this = this
         this.medicinePieChart = echarts.init(document.getElementById('medicinePie'))
         this.medicinePieChart.setOption({
+          color: ['#69acff', '#ffbd3d', '#fc8c70'],
           tooltip: {
             show: true,
             align:'left',

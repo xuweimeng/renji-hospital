@@ -153,13 +153,10 @@ export default {
                   GzTag: value,
                   refresh: true
                 };
-                console.log('test', addCare)
                 this.$store.dispatch('getCareStatus', addCare);
                 this.$message.success('关注成功!');
               }
-            }).catch((error) => {
-              console.log(error);
-            });
+            })
           } else {
             this.$message.error('标签长度不能大于5!');
           }

@@ -176,7 +176,7 @@
           <div class="sft">
             <!-- 用药依从性 -->
             <div class="sft2" ref="sft2">
-              <medicine-pie :dataMedicine="yyycData" :total2="totalbt2"></medicine-pie>
+              <medicine-pie :dataMedicine="medicineData" :total2="totalbt2"></medicine-pie>
             </div>
             <!-- 疾病分布情况 -->
             <div class="sft1" ref="sft1">
@@ -272,7 +272,6 @@
 <script>
   import { commonUrl } from 'RJZL_API/commonUrl';
   import { rjPage, exportChart } from 'RJZL_API/rjPage';
-  import echart from 'echarts';
   import 'swiper/dist/css/swiper.css';
   import { swiper, swiperSlide } from 'vue-awesome-swiper';
   import HzFile from '@/components/Dialog/hzFile/hzFile';
@@ -289,11 +288,9 @@
     data() {
       return {
         exportChart: exportChart, // 导出图表
-        userId: '', // 医生id
-        laterhours: '', // 距上次登录
-        dateLoginlc: '', // 上次登录时间
-        isinspectPlength: true,
-        PhysicalExSet: {}, // 体检套餐信息
+        userId: Cookies.get('userId'), // 医生id
+        laterhours: Cookies.get('laterhourslc'), // 距上次登录
+        dateLoginlc: Cookies.get('dateLoginlc'), // 上次登录时间
         // 医生个人信息
         getAdminInfo: {
           aipicTureUrl: '', // 头像url
@@ -304,7 +301,6 @@
           hadVisitPeopleCount: '', // 患者数
           needShCount: '', // 随访方案待处理
         },
-        PhysicalProject: {}, // 体检项目
         // 随访数量统计
         selectRadio: 1, // 随访数量(7天,30天)
         switchX: [], // x轴
@@ -316,75 +312,16 @@
         // 患者总体情况分析
         hzfxTabActive: 0, // 患者分析(近7天/30天/半年)
         diagnoseInfoData: [], // 疾病分布情况
-
-        bqyz: {}, // 随访记过处理(病情严重)
-        bqwd: {}, // 随访记过处理(病情稳定)
-        value1: '', // select.model
-        value2: '', // select.model
-        value3: '', // select.model
-        value4: '', // select.model
-        yyycData: [], // 用药依从性data
-        options: [],
-
-        value: '',
-        percent1: null, // 规律
-        percent2: null, // 间断
-        percent3: null, // 不服用
+        medicineData: [], // 用药依从性data
         totalbt1: 0, // 随访疾病分类总人数
         totalbt2: 0, // 用药依从性总人数
         SpecialtableData: [],
-        page: 1,
         currentPagehome: 1, // 分页
         totalPagehome: null, // table总条数
         currenthref: '', // 12生肖地址前缀
-        dialogVisible: false, // 记录弹框
-        patientInfo: {}, // 记录个人信息
-        patientId: '', // 病人id
         taskId: '', // 获取病人的taskId
-        isCare: false, // 点击记录后，查看病人是否被关注
-        ypxx: '1', // 药品信息
-        clientId: '', // 客户id
-        selectNumber: 0, // 选中第几次
-        activeName1: 'a0', // 指标折线图选中下标
-        activeName2: '1', // 随访语音折叠面板
-        tabActive: 0, // 当前选中的tab0全部患者1特别关心
-        modelData: [], // 患者指标
-        targetTab: [], // 指标tab
-        xChart: [],
-        yChart: [],
-        swiperOption: { // swiper
-          slidesPerView: 4,
-          spaceBetween: 30,
-          slidesPerGroup: 4,
-          loop: false,
-          loopFillGroupWithBlank: true,
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev'
-          }
-        },
-        swiperDate: [], // 患者就诊档案时间
-        sliderNumber: null, // 当前选中的就诊时间
-        zyData: [],
-        mzData: [],
-        loading4: false,
-        isNull: false, // 患者的住院门诊为都为视空
-        dialogWay: false, // 内层弹框
-        selecOptions: [],
-        isResolveText: '', // 判断当前用户是否有处理意见
-        yyHrec: '', // 语音地址
-        tabLabel: '',
-        showAnimal: false,
-        loadingHp: true,
-        leaveHospital: '',
         syhz: false, // 特别关心loading
-        loadingsfjg: false,
         sfyd: false,
-        attrTaskId: '', // 门住随访时间的taskId
-        advice1: false, // 暂不处理
-        currentName: '', // 当前患者姓名
-        btnState: '', // 当前处理意见类型
-        hzDialog: false, // 患者就诊档案弹框
         base64Url1: '', // 随访数量统计
         base64Url2: '', // 疾病分布
         base64Url3: '', // 用药依从性统计
@@ -414,7 +351,6 @@
       })
     },
     mounted() {
-      this.getUserId();// 用药依从性
       this.getNoticedDate(); // 显示医生信息记录次数
       this.SpecialCare(1); // 特别关心
       this.visitCountInfo(1); // 随访数量统计
@@ -423,16 +359,6 @@
       this.showTopPage(); //  首页出院随访简报
     },
     methods: {
-      /**
-       * 从sessionStorage获取医生id
-       * @function getUserId
-       * @param {String} userId 获取医生id
-       */
-      getUserId() {
-        this.userId = sessionStorage.getItem('userId')
-        this.laterhours = Cookies.get('laterhourslc')
-        this.dateLoginlc = Cookies.get('dateLoginlc')
-      },
       /**
       * 获取十二生肖
       * @function findAiPictureList
@@ -457,16 +383,10 @@
           console.log(error);
         });
       },
-      /**
-       * 获取首页数据
-       **/
+      /** 获取医生信息 */
       getNoticedDate() {
-        // let DateLoading = this.$loading({
-        //   target:document.getElementsByClassName('content-wrapper')[0]
-        // });
-
         rjPage.adminInfo({
-          'adminId': sessionStorage.getItem('userId'),
+          'adminId': this.userId
         }).then((res) => {
           if (res.code === 0) {
             if (res.data.aipicTureUrl !== '') {
@@ -480,7 +400,6 @@
               this.findAiPictureList();
             }
             this.getAdminInfo = res.data;
-            // DateLoading.close();
           } else {
             this.$message.error(res.message);
           }
@@ -489,21 +408,12 @@
         });
       },
       /**
-      * 选择用户头像
-      * @function selectIcon
-      * @param    {object} item  头像
-      * @param    {String} index 头像index
-      */
+      * 选择用户头像 */
       selectIcon(item, index) {
         this.cwtx = index;
         this.selectKey = item.key;
       },
-      /**
-       * 绑定宠物头像
-       * @function finBtn
-       * @param {String} adminId 医生id
-       * @param {String} aiPictureCode 仇无头像code
-       */
+      /** 绑定宠物头像 */
       finBtn() {
         if (this.selectKey) {
           this.innerVisible = false;
@@ -511,15 +421,13 @@
             'adminId': this.userId,
             'aiPictureCode': this.selectKey
           }).then((res) => {
-            if (res.code == '0') {
+            if (res.code === 0) {
               this.$message.success(res.message);
               this.getNoticedDate();
             } else {
               this.$message.error(res.message);
             }
-          }).catch((error) => {
-            console.log(error);
-          })
+          });
         } else {
           this.$message.error('请选择头像!');
         }
@@ -531,108 +439,30 @@
       * @param {String} dateType type
       */
       diagnoseInfo(type) {
+        this.diagnoseInfoData.length = 0;
         rjPage.diagnoseInfo({
           'adminId': sessionStorage.getItem('userId'),
-          'dateType': type,
-        }).then((res)=>{
-          if(res.code == 0) {
-            let qq = [
-              {
-              "color": '#fc8c70',
-              },
-              {
-                "color": '#f9bd48',
-              },
-              {
-              "color": '#fd6388',
-              },
-              {
-              "color": '#69acff',
-              },
-              {
-              "color": '#e9e9e9',
-              },
-            ]
-            let bb = [
-              {
-                "isTrue": false,
-              },
-              {
-                "isTrue": false,
-              },
-              {
-                "isTrue": false,
-              },
-              {
-              "isTrue": false,
-              },
-              {
-                "isTrue": false,
-              }
-            ]
-            //loadingsfjg
-            let dd = []
-            for(let i =0;i<res.data.length;i++){
-              dd.push(Object.assign(qq[i],bb[i]))
-            }
-
-            let tt= []
-            for(let i =0;i<res.data.length;i++){
-              tt.push(Object.assign(dd[i],res.data[i]))
-            }
-
-
-            class Point {
-              constructor(item) {
-                this.value = item.value;
-                this.name = item.name;
-                this.icon = 'circle';
-                this.percent = item.percent;
-                this.itemStyle = {
-                  normal: {
-                    color: item.itemStyle.normal.color
-                  }
-                };
-                this.selected = item.selected
-              }
-            }
-            let mm = []
-            tt.forEach((item) => {
-              mm.push(new Point({
-                value: item.itemCount,
-                name: item.diagnoseName,
-                percent: item.percent,
-                selected: item.isTrue,
-                icon : 'circle',
-                itemStyle: {
-                  normal: {
-                    color: item.color
-                  }
-                },
-              }))
-            })
+          'dateType': type
+        }).then((res) => {
+          if (res.code === 0) {
+            const trueArray = [true, false, false, false, false];
+            res.data.forEach((item, index) => {
+              item.value = item.itemCount;
+              item.name = item.diagnoseName;
+              item.selected = trueArray[index];
+              item.icon = 'circle';
+            });
             //总人数
             if(res.data[0].Count) {
               this.totalbt1 = res.data[0].Count
             }else {
               this.totalbt1 = null
             }
-            this.diagnoseInfoData = []
-            this.diagnoseInfoData = mm
+            this.diagnoseInfoData = res.data
           }else {
             this.$message.error(res.message);
           }
-        }).catch((error)=>{
-          console.log(error)
         })
-      },
-      /**
-      * 监听选择第几次
-      * @function selectNumberFun
-      * @param {String} value 监听选择第几次
-      */
-      selectNumberFun(value) {
-        this.getVisistOrderResult(value)
       },
       /**
       * 用药依从性
@@ -646,108 +476,17 @@
           'dateType': type,
         }).then((res)=>{
           if(res.code == 0) {
-            let qq = [
-              {
-              "color": '#69acff',
-              },{
-              "color": '#ffbd3d',
-              },{
-              "color": '#fc8c70',
-              }
-            ]
-            let bb = [
-              {
-              "isTrue": false,
-              },{
-              "isTrue": false,
-              },{
-              "isTrue": false,
-              }
-            ]
+            const trueArray = [true, false, false];
 
-            let dd = []
-            for(let i =0;i<qq.length;i++){
-              dd.push(Object.assign(qq[i],bb[i]))
-            }
-            let tt= [];
-            var result =[
-              {
-                itemCount:res.data.arrive,
-                diagnoseName:"规律",
-                percent:res.data.arrivePercent
-              },
-              {
-                itemCount:res.data.noArrive,
-                diagnoseName:"间断",
-                percent:res.data.noArrivePercent
-              },{
-                itemCount:res.data.nextArrive,
-                diagnoseName:"不服用",
-                percent:res.data.nextArrivePercent
-              }
-            ]
-            for(let i =0;i<qq.length;i++){
-              tt.push(Object.assign(dd[i],result[i]))
-            }
-            class Point {
-              constructor(item) {
-                this.value = item.value;
-                this.name = item.name;
-                this.icon = 'circle';
-                this.percent = item.percent;
-                this.itemStyle = {
-                  normal: {
-                    color: item.itemStyle.normal.color
-                  }
-                };
-                this.selected = item.selected
-              }
-            }
-            let mm = []
-            tt.forEach((item) => {
-
-              mm.push(new Point({
-                value: item.itemCount,
-                name: item.diagnoseName,
-                percent: item.percent,
-                selected: item.isTrue,
-                icon : 'circle',
-                itemStyle: {
-                  normal: {
-                    color: item.color
-                  }
-                },
-
-              }))
+            res.data.forEach((item, index) => {
+              item.value = item.itemCount;
+              item.name = item.diagnoseName;
+              item.selected = trueArray[index];
+              item.icon = 'circle';
             })
-            this.yyycData = []
-            this.yyycData = mm
-            this.percent1 = ''
-            this.percent2 = ''
-            this.percent3 = ''
-            this.yyycData.forEach((item)=>{
-              if(item.name == '规律') {
-                this.percent1 = item.percent
-              }
-              if(item.name == '间断') {
-                this.percent2 = item.percent
-              }
-              if(item.name == '不服用') {
-                this.percent3 = item.percent
-              }
-
-            })
-
-            if(res.data) {
-              this.totalbt2 = res.data.total
-            }else {
-              this.totalbt2 = 0
-            }
-
+            this.medicineData = res.data
           }
-        }).catch((error)=>{
-          console.log(error)
-        })
+        });
       },
       /**
       * 监听随访统计开关
@@ -828,7 +567,6 @@
           this.syhz = false
         })
       },
-
       /*
       *分页
       */
