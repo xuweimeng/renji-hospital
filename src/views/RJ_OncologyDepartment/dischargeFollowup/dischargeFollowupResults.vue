@@ -34,7 +34,7 @@
       </li>
        <li class="common_search_single common_search_single_date">
           <label class="radio-label" >随访日期</label>
-          <el-date-picker  
+          <el-date-picker
 						@change="timeChange"
 						v-model="createTime"
 						type="daterange"
@@ -47,7 +47,7 @@
       </li>
 			<li class="common_search_single">
         <label class="radio-label" >采集情况</label>
-				<el-select v-model="formInline.resultStatus" placeholder="采集情况" @change="resultStatusChange">
+				<el-select v-model="formInline.collections" placeholder="采集情况" @change="resultStatusChange">
 					<el-option label="全部" value=""></el-option>
 					<el-option label="部分采集" value="1"></el-option>
 					<el-option label="接通未采集" value="3"></el-option>
@@ -83,98 +83,6 @@
         <el-button type="primary" icon="el-icon-search" @click="onSearch">查询</el-button>
       </li>
     </ul>
-		<!-- <el-row class="common-search">
-			<el-form :inline="true" :model="formInline" class="demo-form-inline">
-			  <el-col :span="6">
-			  	<el-form-item label="患者姓名">
-				    <el-input v-model="formInline.brxm" placeholder="请输入患者姓名" clearable></el-input>
-				  </el-form-item>
-				</el-col>
-				<el-col :span="6">
-			  	<el-form-item label="联系电话">
-				    <el-input v-model="formInline.mobile" placeholder="请输入患者联系电话" clearable></el-input>
-				  </el-form-item>
-				</el-col>
-				<el-col :span="6">
-			  	<el-form-item label="随访方案">
-				    <el-input v-model="formInline.schemeName" placeholder="请输入随访方案" clearable></el-input>
-				  </el-form-item>
-				</el-col>
-				<el-col :span="6">
-			  	<el-form-item label="疾病名称">
-				    <el-select
-              v-model="formInline.icdName"
-              filterable
-              remote
-              clearable
-              placeholder="请输入关键词"
-              :remote-method="remoteMethod"
-              :loading="loadingSelect">
-              <el-option
-                v-for="(item, index) in options4"
-                :key="index"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-				  </el-form-item>
-				</el-col>
-				<el-col :span="6">
-					<el-form-item label="随访日期" class="formTime">
-						<el-date-picker
-              @change="timeChange"
-						  v-model="createTime"
-							type="daterange"
-							value-format="yyyy-MM-dd"
-							range-separator="至"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-              :picker-options="pickerTime">
-						</el-date-picker>
-					</el-form-item>
-				</el-col>
-        <el-col :span="6">
-          <el-form-item label="采集情况">
-            <el-select v-model="formInline.collections" placeholder="采集情况" @change="resultStatusChange">
-            	<el-option label="全部" value=""></el-option>
-              <el-option label="部分采集" value="1"></el-option>
-							<el-option label="接通未采集" value="3"></el-option>
-              <el-option label="接通无应答" value="4"></el-option>
-							<el-option label="无异常" value="2"></el-option>
-              <el-option label="有异常" value="6"></el-option>
-							<el-option label="未接通未采集" value="5"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-				<el-col :span="6">
-			  	<el-form-item label="通话状态">
-				    <el-select v-model="formInline.backStatus" placeholder="通话状态">
-              <el-option label="全部" value=""></el-option>
-              <el-option label="呼叫失败" value="1"></el-option>
-              <el-option label="正常通话" value="2"></el-option>
-              <el-option label="通话中" value="3"></el-option>
-              <el-option label="关停机" value="4"></el-option>
-              <el-option label="无人接听" value="5"></el-option>
-              <el-option label="空号" value="6"></el-option>
-              <el-option label="号码有误" value="7"></el-option>
-				    </el-select>
-				  </el-form-item>
-				</el-col>
-				<el-col :span="6" v-if="tabIndex==1">
-			  	<el-form-item label="处理意见">
-				    <el-select v-model="formInline.diseaseInfo" placeholder="处理意见">
-							<el-option label="全部" value="100" ></el-option>
-              <el-option label="病情稳定" value="0"></el-option>
-              <el-option label="通知就诊" value="1"></el-option>
-              <el-option label="暂不处理" value="2"></el-option>
-				    </el-select>
-				  </el-form-item>
-				</el-col>
-			  <el-col :span="6">
-			  	<el-button type="primary" @click="onSearch">查询</el-button>
-			  </el-col>
-			</el-form>
-		</el-row> -->
 		<!-- 表格 -->
     <el-card shadow="never">
 			<el-tabs v-model="activeName" @tab-click="handleClick">
